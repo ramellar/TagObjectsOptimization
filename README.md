@@ -149,10 +149,22 @@ Fill_Isolation_TH3()
 ```
 
 ### Rates
-
-
-
-
+To produce rates go to the `MakeRates` folder, adapt to your needs `Rate_ZeroBias_Run323755_unpacked.C` and `Rate_ZeroBias_Run323755_newnTT.C` and run:
+```bash
+root -l
+.L Rate_ZeroBias_Run323755_unpacked.C+
+Rate()
+```
+and 
+```bash
+root -l
+.L Rate_ZeroBias_Run323755_newnTT.C+
+Rate()
+```
+Having computed the rates, they can be plotted going to the `PlotRates` folder, adapting to your needs `CompareRates_Run323755_newnTT_withunpacked.C`, and running:
+```bash
+root -l CompareRates_Run323755_newnTT_withunpacked.C
+```
 
 
 
