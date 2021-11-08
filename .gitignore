@@ -1,6 +1,7 @@
 *.pyc
 *.root
 *.so
+*.pcm
 *.pdf
 *.zip
 fit.exe
