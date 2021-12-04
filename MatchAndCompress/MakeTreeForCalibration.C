@@ -23,9 +23,12 @@
 using namespace std;
 
 
-void MakeTreeForCalibration(TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_MERGED_2021_10_19.root")
+void MakeTreeForCalibration()
 
 {
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_MERGED_2021_11_22.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_MATCHED_2021_11_22.root";
+
   TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
   data.Add(InputFileName.Data());
 
@@ -162,7 +165,6 @@ void MakeTreeForCalibration(TString InputFileName = "/data_CMS/cms/motta/Run3pre
   int out_Nvtx = 0;
   float out_Target = 0;
 
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_MATCHED_2021_10_19.root";
 
   TFile f(OutputFileName.Data(),"RECREATE");
   TTree outTree("outTreeForCalibration","outTreeForCalibration");  

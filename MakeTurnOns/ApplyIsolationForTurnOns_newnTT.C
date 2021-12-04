@@ -23,10 +23,10 @@
 
 using namespace std;
 
-void ApplyIsolationForTurnOns(TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2021_10_19.root", Bool_t nTTRange = kFALSE)
+void ApplyIsolationForTurnOns(TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2021_11_22.root", Bool_t nTTRange = kFALSE)
 {
   std::map<TString,TH3F*> histosIsolation;
-  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV0.root");
+  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV1.root");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
     {
@@ -335,7 +335,7 @@ void ApplyIsolationForTurnOns(TString InputFileName = "/data_CMS/cms/motta/Run3p
       
     }
 
-  TString FileNameOut = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_TURNONS_2021_10_19";
+  TString FileNameOut = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_TURNONS_2021_11_22";
   // TString FileNameOut = "turnOns_2017Layer1Calibration";
   if(nTTRange) FileNameOut += "_nTTRange";
   FileNameOut += ".root";

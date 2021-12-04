@@ -2,9 +2,10 @@ import ROOT
 #from GBR2LUT import GBR2LUT
 from GBR2LUTEmulator import GBR2LUTEmulator
 
-inputFile = "forests/GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV0_results.root"
+version = "V1"
 
-version = "V0"
+inputFile = "forests/GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimization{}_results.root".format(version)
+
 sortedShapesFile = "CompressionCalibIdent/compressedSortedShapes.txt"
 
 header = """

@@ -74,6 +74,15 @@ For Monte Carlo (MC), we implemented a truth matching rather than a Tag & Probe 
 
 After having produced the input object `hadd` all the files.
 
+
+Jobs on ZeroBias are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_ZeroBias.py`
+Before launching this you need to fix
+* the `isMC` flag
+* the input folder and file list
+The datasets that have to be used are among the ones listed here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TriggerStudiesChangesInDataTaking2018
+
+After having produced the input object `hadd` all the files.
+
 ### Merging, matching, and compression
 Enter `MergeTrees` and run `make clean ; make`.
 
@@ -139,15 +148,6 @@ root -l
 Fill_Isolation_TH3()
 ```
 
-### TurnONs
-Now that also the isolation has been created we can test everything on the turn-on curves. 
-To do so go to the `MakeTurnOns` folder, adapt to adapt to your needs `ApplyIsolationForTurnOns_newnTT.C` and run:
-```bash
-root -l
-.L ApplyIsolationForTurnOns_newnTT.C+
-Fill_Isolation_TH3()
-```
-
 ### Rates
 To produce rates go to the `MakeRates` folder, adapt to your needs `Rate_ZeroBias_Run323755_unpacked.C` and `Rate_ZeroBias_Run323755_newnTT.C` and run:
 ```bash
@@ -166,6 +166,14 @@ Having computed the rates, they can be plotted going to the `PlotRates` folder, 
 root -l CompareRates_Run323755_newnTT_withunpacked.C
 ```
 
+### TurnONs
+Now that also the isolation has been created we can test everything on the turn-on curves. 
+To do so go to the `MakeTurnOns` folder, adapt to to your needs `ApplyIsolationForTurnOns_newnTT.C` and run:
+```bash
+root -l
+.L ApplyIsolationForTurnOns_newnTT.C+
+Fill_Isolation_TH3()
+```
 
 
 

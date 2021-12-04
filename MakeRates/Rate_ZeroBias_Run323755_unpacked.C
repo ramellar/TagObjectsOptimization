@@ -23,7 +23,7 @@ using namespace std;
 
 void Rate()
 {
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755/EphemeralZeroBias_2018D_Run323755.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755/EphemeralZeroBias_2018D_Run323755.root";
   // TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755_CALIBRATED.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); 
@@ -149,7 +149,7 @@ void Rate()
       rate_Iso_DiTau->SetBinContent(i+1,pt_Iso_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
     }
 
-  TFile f("histos_rate_ZeroBias_Run323755_optimizationV0_unpacked.root","RECREATE");
+  TFile f("histos_rate_ZeroBias_Run323755_optimizationV1_unpacked.root","RECREATE");
 
   pt_IsoInf_DiTau->Write();
   pt_Iso_DiTau->Write();
