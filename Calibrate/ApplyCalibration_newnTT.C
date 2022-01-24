@@ -244,7 +244,7 @@ Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
   return -1;
 }
 
-void ApplyCalibration()
+void ApplyCalibration(float calibThr = 1.7)
 {
   // SHAPE COMMENT OUT
   // TFile f_shapes("/home/llr/cms/cadamuro/Tau_ShapeVeto/CMSSW_8_0_10/src/L1Trigger/L1TNtuples/ShapeVeto/shapes_signal.root");
@@ -272,12 +272,14 @@ void ApplyCalibration()
   // TH3F* shapes_vs_isolation_vs_pt = new TH3F("shapes_vs_isolation_vs_pt","shapes_vs_isolation_vs_pt",nShapes-1,shapesBins,nIsolation-1,isolationBins,NbinsIEt2-1,hardcodedIetBins2double);
   // shapes_vs_isolation_vs_pt->Clear();
 
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2021_11_22.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2021_11_22.root";
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2021_11_22.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_15.root";
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV1.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV1");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV1");
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
 
   TFile f_in(InputFileName.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
@@ -488,18 +490,20 @@ void ApplyCalibration()
       // cout<<"L1Tau_hasEM = "<<L1Tau_hasEM<<endl;
       // cout<<"h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1) = "<<h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1)<<endl;
 
+      float calibThr = 1.7;
+
       if(!out_L1Tau_isMerged)
 	{
 	  out_L1Tau_CalibConstant = h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
 	  // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
-	  if(out_L1Tau_CalibConstant>1.7) out_L1Tau_CalibConstant = 1.7;
+	  if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
 	  out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
 	}
       else
 	{
 	  out_L1Tau_CalibConstant = h_LUT_isMerged1->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
 	  // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
-	  if(out_L1Tau_CalibConstant>1.7) out_L1Tau_CalibConstant = 1.7;
+	  if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
 	  out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
 	}
 

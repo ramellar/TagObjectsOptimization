@@ -23,11 +23,14 @@
 
 using namespace std;
 
-void ApplyCalibrationZeroBias()
+void ApplyCalibrationZeroBias(float calibThr = 1.7)
 // void ApplyCalibrationZeroBias(TString InputFileName = "Ntuple_ZeroBias_With2017Layer1_ShapeVeto_20_02_17.root")
 {
+
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
   TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755/EphemeralZeroBias_2018D_Run323755.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/EphemeralZeroBias_2018D_Run323755_CALIBRATED.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run323755_CALIBRATED.root";
 
   // TFile f_2DShapeVetos("ShapeVeto/TwoDShapeVetos.root","READ");
   // TH2I* TwoDShapeVetos = (TH2I*)f_2DShapeVetos.Get("TwoDShapeVetos");
@@ -59,9 +62,9 @@ void ApplyCalibrationZeroBias()
   // TH3F* shapes_vs_isolation_vs_pt = new TH3F("shapes_vs_isolation_vs_pt","shapes_vs_isolation_vs_pt",nShapes-1,shapesBins,nIsolation-1,isolationBins,NbinsIEt2-1,hardcodedIetBins2double);
   // shapes_vs_isolation_vs_pt->Clear();
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV1.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV1");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV1"); 
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3"); 
  
   TH1F* histo_shape = new TH1F("histo_shape","histo_shape",256,0,256);
   TH1F* histo_symmShape = new TH1F("histo_symmShape","histo_symmShape",256,0,256);
@@ -130,7 +133,7 @@ void ApplyCalibrationZeroBias()
 
 
   std::map<TString,TH3F*> histosIsolation;
-  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV1.root","READ");
+  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3_calibThr"+intgr+"p"+decim+".root","READ");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
     {
@@ -355,7 +358,7 @@ void ApplyCalibrationZeroBias()
 	  if(!out_l1tEmuIsMerged->at(iL1Tau))
 	    {
 	      Float_t CalibConstant = h_LUT_isMerged0->GetBinContent(abs(out_compressedieta->at(iL1Tau))+1,out_compressedE->at(iL1Tau)+1,out_l1tEmuHasEM->at(iL1Tau)+1);
-	      if(CalibConstant>1.7) CalibConstant = 1.7;
+	      if(CalibConstant>calibThr) CalibConstant = calibThr;
 	      int thr = int(round(CalibConstant/4.*1024))*2;
 	      int calibPtInt = ((out_l1tEmuRawEt->at(iL1Tau)*thr)>>9);
 	      // cout<<"int = "<<calibPtInt/2.<<endl;
@@ -367,7 +370,7 @@ void ApplyCalibrationZeroBias()
 	  else
 	    {
 	      Float_t CalibConstant = h_LUT_isMerged1->GetBinContent(abs(out_compressedieta->at(iL1Tau))+1,out_compressedE->at(iL1Tau)+1,out_l1tEmuHasEM->at(iL1Tau)+1);
-	      if(CalibConstant>1.7) CalibConstant = 1.7;
+	      if(CalibConstant>calibThr) CalibConstant = calibThr;
 	      int thr = int(round(CalibConstant/4.*1024))*2;
 	      int calibPtInt = ((out_l1tEmuRawEt->at(iL1Tau)*thr)>>9);
 	      // if(CalibConstant>1.3) CalibConstant = 1.3;

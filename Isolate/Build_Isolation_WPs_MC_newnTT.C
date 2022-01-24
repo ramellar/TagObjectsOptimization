@@ -32,10 +32,13 @@ const Int_t NbinsnTT2 = 32+1;
 
 using namespace std;
 
-void Build_Isolation_WPs()
+void Build_Isolation_WPs(float calibThr = 1.7)
 {
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+
   TChain data("outTreeCalibrated");
-  data.Add("/data_CMS/cms/motta/Run3preparation/2021_11_22_optimizationV1/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2021_11_22.root");
+  data.Add("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_15.root");
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
   TH2F* isoEt_vs_nVtx_barrel = new TH2F("isoEt_vs_nVtx_barrel","isoEt_vs_nVtx_barrel",150,0.,150.,100,0.,100.);
@@ -201,7 +204,7 @@ void Build_Isolation_WPs()
     }
   
 
-  TFile f_out("LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV1.root","RECREATE");
+  TFile f_out("LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3_calibThr"+intgr+"p"+decim+".root","RECREATE");
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();

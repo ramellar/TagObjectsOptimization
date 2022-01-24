@@ -21,10 +21,14 @@
 
 using namespace std;
 
-void Rate()
+void Rate(int run, float calibThr = 1.7)
 {
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755/EphemeralZeroBias_2018D_Run323755.root";
-  // TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755_CALIBRATED.root";
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+
+  TString run_str = to_string(run);
+
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"/EphemeralZeroBias_2018D_Run"+run_str+".root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); 
   // TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
@@ -68,9 +72,10 @@ void Rate()
     { 
       inTree->GetEntry(i);
       if(i%10000==0) cout<<"Entry #"<<i<<endl; 
-      if(in_lumi<53 || in_lumi>96) continue;
-      // if(in_lumi<46 || in_lumi>300) continue;
-      // if(in_lumi<46 || in_lumi>626) continue;
+      // SET RUN INFO
+      if (run == 323755) { if(in_lumi<44 || in_lumi>544) continue; } // Run323755
+      if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; } // Run323775 --> very smal numer of lumisections!!
+
       Float_t weight = 1.;
 
       ++Denominator;
@@ -133,8 +138,16 @@ void Rate()
 	}
     } //new
 
-  float nb = 2556.;
-  float thisLumiRun = 1.600E34;
+  // SET RUN INFO
+  float nb = 2554.; // Run323755 and Run323775
+  float thisLumiRun = 0.;
+  if (run == 323755) thisLumiRun = 1.6225E34; // Run323755
+  if (run == 323775) thisLumiRun = 1.736E34; // Run323775 --> very smal numer of lumisections!!
+  if (thisLumiRun == 0.)
+  {
+    std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
+    return;
+  }
   float scaleToLumi = 2.00E34;
   float scale = 0.001*(nb*11245.6)*scaleToLumi/thisLumiRun;
 
@@ -149,7 +162,7 @@ void Rate()
       rate_Iso_DiTau->SetBinContent(i+1,pt_Iso_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
     }
 
-  TFile f("histos_rate_ZeroBias_Run323755_optimizationV1_unpacked.root","RECREATE");
+  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+"_unpacked.root","RECREATE");
 
   pt_IsoInf_DiTau->Write();
   pt_Iso_DiTau->Write();

@@ -1,10 +1,33 @@
-{
+#include <TROOT.h>
+#include <TFile.h>
+#include <iostream>
+#include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
+#include <TMath.h>
+#include <TCanvas.h>
+#include <TLegend.h>
+#include <TPaveText.h>
+#include <TStyle.h>
+#include <sstream>
+#include <TBranchElement.h>
+#include <fstream>
+#include <map>
+
+using namespace std;
+
+void compare(int run, float calibThr = 1.7) {
+  TString run_str = to_string(run);
+
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+
   bool Draw_Options = kTRUE;
   
   gStyle->SetOptStat(000000);
   //TFile f_mode("./Trees_modeparam/histos_rate_Run305310_92X_mode.root","READ");
-  TFile f_mean("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_rate_ZeroBias_Run323755_optimizationV0.root","READ");
-  TFile f_unpacked("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_rate_ZeroBias_Run323755_optimizationV0_unpacked.root","READ");  
+  TFile f_mean("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+".root","READ");
+  TFile f_unpacked("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
 
   //TH1F* rate_NewLayer1_noIso_mode   = (TH1F*)f_mode.Get("rate_noCut_EGTau");    
   TH1F* rate_NewLayer1_noIso_mean   = (TH1F*)f_mean.Get("rate_noCut_DiTau");
@@ -45,7 +68,7 @@
   TH1F* rate_NewLayer1_Iso_unpacked     = (TH1F*)f_unpacked.Get("rate_Iso_DiTau");
 
   //TString CanvasName = "./Trees/Comparison_Rate_DiTau_Iso_Run305310";
-  TString CanvasName = "Comparison_Rate_Run323755_newnTT_unpacked";
+  TString CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV3_calibThr"+intgr+"p"+decim;
   TString CanvasNamePdf = CanvasName ;
   CanvasNamePdf += ".pdf";
   TString CanvasNameRoot = CanvasName ;
@@ -197,7 +220,7 @@
   //rate_NewLayer1_noIso_mean->Draw("same");
    
   TPaveText* texl = new TPaveText(0.05,0.87,0.95,0.99,"NDC");
-  texl->AddText("CMS Internal, #sqrt{s}=13 TeV, Run #323755 (2018)");
+  texl->AddText("CMS Internal, #sqrt{s}=13 TeV, Run #"+run_str+" (2018)");
   // texl->AddText("CMS Internal, #sqrt{s}=13 TeV, Run #277069 (2064 bunches), 81<lumi<300");
 
   texl->SetTextSize(0.04);
@@ -395,21 +418,21 @@
   ratioPlot22_unpacked->SetLineColor(kRed);
   ratioPlot22_unpacked->Draw("same");
   
-  ratioPlot->GetXaxis()->SetLabelSize(0.09);
-  ratioPlot->GetYaxis()->SetLabelSize(0.09);
+  ratioPlot22_mean->GetXaxis()->SetLabelSize(0.09);
+  ratioPlot22_mean->GetYaxis()->SetLabelSize(0.09);
 
-  ratioPlot->GetYaxis()->SetTitleSize(0.09);
-  ratioPlot->SetTitle("");
+  ratioPlot22_mean->GetYaxis()->SetTitleSize(0.09);
+  ratioPlot22_mean->SetTitle("");
   // ratioPlot->GetXaxis()->SetRangeUser(20.,100.);
-  ratioPlot->GetXaxis()->SetRangeUser(20.,60.);
+  ratioPlot22_mean->GetXaxis()->SetRangeUser(20.,60.);
   // ratioPlot->GetXaxis()->SetRangeUser(0.,40.);
-  ratioPlot->GetYaxis()->SetRangeUser(0.,2.);
-  ratioPlot->GetYaxis()->SetTitle("iso(Option)/non-iso");
-  ratioPlot->GetXaxis()->SetTitle("E_{T}^{L1}(#tau) threshold [GeV]");
+  ratioPlot22_mean->GetYaxis()->SetRangeUser(0.,2.);
+  ratioPlot22_mean->GetYaxis()->SetTitle("iso(Option)/non-iso");
+  ratioPlot22_mean->GetXaxis()->SetTitle("E_{T}^{L1}(#tau) threshold [GeV]");
   // ratioPlot->GetXaxis()->SetTitleOffset(1.3);
-  ratioPlot->GetXaxis()->SetTitleSize(0.11);
+  ratioPlot22_mean->GetXaxis()->SetTitleSize(0.11);
   // ratioPlot->GetYaxis()->SetTitle("New/Currently online");
-  ratioPlot->GetYaxis()->SetTitleOffset(0.5);
+  ratioPlot22_mean->GetYaxis()->SetTitleOffset(0.5);
 
   // TLine line2(20., 1., 100., 1.);
   TLine line2(20., 1., 60., 1.);
@@ -418,8 +441,10 @@
   line2.SetLineStyle(2);
   //line2.Draw("same");
 
-  c.SaveAs(CanvasNamePdf.Data());
-  c.SaveAs(CanvasNameRoot.Data());
+  TString PDFs = "PDFs/";
+  TString ROOTs = "ROOTs/";
+  c.SaveAs(PDFs+CanvasNamePdf.Data());
+  c.SaveAs(ROOTs+CanvasNameRoot.Data());
 
   //find first threshold giving < 10 kHz.
   Double_t Target = 14;

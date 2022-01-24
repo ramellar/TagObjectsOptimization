@@ -16,11 +16,16 @@
 
 using namespace std;
 
-void compare(TString tag, TString opt="0") {    
+void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
+    TString run_str = to_string(run);
+
+    TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+    TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+
     gStyle->SetOptStat(000000);
 
-    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run323755_optimizationV1_"+tag+".root","READ");
-    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run323755_optimizationV1_unpacked.root","READ");  
+    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
+    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
 
     TH1F* rate_NewLayer1_noIso_mean       = (TH1F*)f_mean->Get("rate_noCut_DiTau");
     TH1F* rate_NewLayer1_noIso_unpacked   = (TH1F*)f_unpacked->Get("rate_noCut_DiTau");
@@ -56,7 +61,7 @@ void compare(TString tag, TString opt="0") {
     TH1F* rate_NewLayer1_Option31_extrap_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_31_extrap");
     TH1F* rate_NewLayer1_Option22_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_22");
 
-    TString CanvasName = "Comparison_Rate_"+tag+"_"+opt+"_Run323755_newnTT_unpacked";
+    TString CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
     TString CanvasNameRoot = CanvasName ;
@@ -80,167 +85,167 @@ void compare(TString tag, TString opt="0") {
     rate_NewLayer1_noIso_unpacked->GetXaxis()->SetRangeUser(20.,60.);
     rate_NewLayer1_noIso_unpacked->GetYaxis()->SetTitle("Di-#tau rate [kHz]");
     rate_NewLayer1_noIso_unpacked->SetLineColor(kBlack);
-    rate_NewLayer1_noIso_unpacked->SetLineWidth(2);
+    rate_NewLayer1_noIso_unpacked->SetLineWidth(1);
     rate_NewLayer1_noIso_unpacked->Draw();
 
     rate_NewLayer1_noIso_mean->SetLineColor(kBlack);
-    rate_NewLayer1_noIso_mean->SetLineWidth(2);
+    rate_NewLayer1_noIso_mean->SetLineWidth(1);
     rate_NewLayer1_noIso_mean->SetLineStyle(5);
     rate_NewLayer1_noIso_mean->Draw("same");
 
     rate_NewLayer1_OptionA_mean->SetLineColor(kRed);
-    rate_NewLayer1_OptionA_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionA_mean->SetLineWidth(1);
     rate_NewLayer1_OptionA_mean->Draw("same");
 
     rate_NewLayer1_OptionB_mean->SetLineColor(kRed-4);
-    rate_NewLayer1_OptionB_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionB_mean->SetLineWidth(1);
     rate_NewLayer1_OptionB_mean->Draw("same");
 
     rate_NewLayer1_OptionC_mean->SetLineColor(kRed-7);
-    rate_NewLayer1_OptionC_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionC_mean->SetLineWidth(1);
     rate_NewLayer1_OptionC_mean->Draw("same");
 
     rate_NewLayer1_OptionD_mean->SetLineColor(kRed-9);
-    rate_NewLayer1_OptionD_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionD_mean->SetLineWidth(1);
     rate_NewLayer1_OptionD_mean->Draw("same");
 
     rate_NewLayer1_OptionE_mean->SetLineColor(kRed-10);
-    rate_NewLayer1_OptionE_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionE_mean->SetLineWidth(1);
     rate_NewLayer1_OptionE_mean->Draw("same");
 
     rate_NewLayer1_OptionF_mean->SetLineColor(kMagenta);
-    rate_NewLayer1_OptionF_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionF_mean->SetLineWidth(1);
     rate_NewLayer1_OptionF_mean->Draw("same");
 
     rate_NewLayer1_OptionG_mean->SetLineColor(kMagenta-4);
-    rate_NewLayer1_OptionG_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionG_mean->SetLineWidth(1);
     rate_NewLayer1_OptionG_mean->Draw("same");
 
     rate_NewLayer1_OptionH_mean->SetLineColor(kMagenta-7);
-    rate_NewLayer1_OptionH_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionH_mean->SetLineWidth(1);
     rate_NewLayer1_OptionH_mean->Draw("same");
 
     rate_NewLayer1_OptionI_mean->SetLineColor(kMagenta-9);
-    rate_NewLayer1_OptionI_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionI_mean->SetLineWidth(1);
     rate_NewLayer1_OptionI_mean->Draw("same");
 
     rate_NewLayer1_OptionJ_mean->SetLineColor(kMagenta-10);
-    rate_NewLayer1_OptionJ_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionJ_mean->SetLineWidth(1);
     rate_NewLayer1_OptionJ_mean->Draw("same");
 
     rate_NewLayer1_OptionK_mean->SetLineColor(kBlue);
-    rate_NewLayer1_OptionK_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionK_mean->SetLineWidth(1);
     rate_NewLayer1_OptionK_mean->Draw("same");
 
     rate_NewLayer1_OptionL_mean->SetLineColor(kBlue);
-    rate_NewLayer1_OptionL_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionL_mean->SetLineWidth(1);
     rate_NewLayer1_OptionL_mean->Draw("same");
 
     rate_NewLayer1_OptionM_mean->SetLineColor(kBlue-7);
-    rate_NewLayer1_OptionM_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionM_mean->SetLineWidth(1);
     rate_NewLayer1_OptionM_mean->Draw("same");
 
     rate_NewLayer1_OptionN_mean->SetLineColor(kBlue-9);
-    rate_NewLayer1_OptionN_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionN_mean->SetLineWidth(1);
     rate_NewLayer1_OptionN_mean->Draw("same");
 
     rate_NewLayer1_OptionO_mean->SetLineColor(kBlue-10);
-    rate_NewLayer1_OptionO_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionO_mean->SetLineWidth(1);
     rate_NewLayer1_OptionO_mean->Draw("same");
 
     rate_NewLayer1_OptionP_mean->SetLineColor(kCyan);
-    rate_NewLayer1_OptionP_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionP_mean->SetLineWidth(1);
     rate_NewLayer1_OptionP_mean->Draw("same");
 
     rate_NewLayer1_OptionQ_mean->SetLineColor(kCyan-4);
-    rate_NewLayer1_OptionQ_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionQ_mean->SetLineWidth(1);
     rate_NewLayer1_OptionQ_mean->Draw("same");
 
     rate_NewLayer1_OptionR_mean->SetLineColor(kCyan-7);
-    rate_NewLayer1_OptionR_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionR_mean->SetLineWidth(1);
     rate_NewLayer1_OptionR_mean->Draw("same");
 
     rate_NewLayer1_OptionS_mean->SetLineColor(kCyan-9);
-    rate_NewLayer1_OptionS_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionS_mean->SetLineWidth(1);
     rate_NewLayer1_OptionS_mean->Draw("same");
 
     rate_NewLayer1_OptionT_mean->SetLineColor(kCyan-10);
-    rate_NewLayer1_OptionT_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionT_mean->SetLineWidth(1);
     rate_NewLayer1_OptionT_mean->Draw("same");
 
     rate_NewLayer1_OptionU_mean->SetLineColor(kGreen);
-    rate_NewLayer1_OptionU_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionU_mean->SetLineWidth(1);
     rate_NewLayer1_OptionU_mean->Draw("same");
 
     rate_NewLayer1_OptionV_mean->SetLineColor(kGreen-4);
-    rate_NewLayer1_OptionV_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionV_mean->SetLineWidth(1);
     rate_NewLayer1_OptionV_mean->Draw("same");
 
     rate_NewLayer1_OptionW_mean->SetLineColor(kGreen-7);
-    rate_NewLayer1_OptionW_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionW_mean->SetLineWidth(1);
     rate_NewLayer1_OptionW_mean->Draw("same");
 
     rate_NewLayer1_OptionX_mean->SetLineColor(kGreen-9);
-    rate_NewLayer1_OptionX_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionX_mean->SetLineWidth(1);
     rate_NewLayer1_OptionX_mean->Draw("same");
 
     rate_NewLayer1_OptionY_mean->SetLineColor(kGreen-10);
-    rate_NewLayer1_OptionY_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionY_mean->SetLineWidth(1);
     rate_NewLayer1_OptionY_mean->Draw("same");
 
     rate_NewLayer1_OptionZ_mean->SetLineColor(kYellow);
-    rate_NewLayer1_OptionZ_mean->SetLineWidth(2);
+    rate_NewLayer1_OptionZ_mean->SetLineWidth(1);
     rate_NewLayer1_OptionZ_mean->Draw("same");
 
     rate_NewLayer1_Option22_mean->SetLineColor(kGray+1);
-    rate_NewLayer1_Option22_mean->SetLineWidth(2);
+    rate_NewLayer1_Option22_mean->SetLineWidth(1);
     rate_NewLayer1_Option22_mean->Draw("same");
 
     rate_NewLayer1_Option31_extrap_mean->SetLineColor(kGray+2);
-    rate_NewLayer1_Option31_extrap_mean->SetLineWidth(2);
+    rate_NewLayer1_Option31_extrap_mean->SetLineWidth(1);
     rate_NewLayer1_Option31_extrap_mean->Draw("same");
 
     TPaveText* texl = new TPaveText(0.05,0.87,0.95,0.99,"NDC");
-    texl->AddText("CMS Internal, #sqrt{s}=13 TeV, Run #323755 (2018)");
+    texl->AddText("CMS Internal, #sqrt{s}=13 TeV, Run #"+run_str+" (2018)");
     texl->SetTextSize(0.04);
     texl->SetFillStyle(0);
     texl->SetBorderSize(0);
     texl->Draw("same");
 
-    TLegend* leg = new TLegend(0.29,0.64,0.81,0.87);
+    TLegend* leg = new TLegend(0.65,0.35,0.81,0.87);
     leg->SetBorderSize(0);
-    leg->SetTextSize(0.035);
+    leg->SetTextSize(0.02);
     leg->SetHeader("Linearly scaled to 2.0E34");
 
     leg->AddEntry(rate_NewLayer1_noIso_unpacked,"Di-#tau no-iso, unpacked","L");
     leg->AddEntry(rate_NewLayer1_noIso_mean,"Di-#tau no-iso, mean","L");
 
-    leg->AddEntry(rate_NewLayer1_OptionA_mean,"Di-#tau iso (Option A)","L");
-    leg->AddEntry(rate_NewLayer1_OptionB_mean,"Di-#tau iso (Option B)","L");
-    leg->AddEntry(rate_NewLayer1_OptionC_mean,"Di-#tau iso (Option C)","L");
-    leg->AddEntry(rate_NewLayer1_OptionD_mean,"Di-#tau iso (Option D)","L");
-    leg->AddEntry(rate_NewLayer1_OptionE_mean,"Di-#tau iso (Option E)","L");
-    leg->AddEntry(rate_NewLayer1_OptionF_mean,"Di-#tau iso (Option F)","L");
-    leg->AddEntry(rate_NewLayer1_OptionG_mean,"Di-#tau iso (Option G)","L");
-    leg->AddEntry(rate_NewLayer1_OptionH_mean,"Di-#tau iso (Option H)","L");
-    leg->AddEntry(rate_NewLayer1_OptionI_mean,"Di-#tau iso (Option I)","L");
-    leg->AddEntry(rate_NewLayer1_OptionJ_mean,"Di-#tau iso (Option J)","L");
-    leg->AddEntry(rate_NewLayer1_OptionK_mean,"Di-#tau iso (Option K)","L");
-    leg->AddEntry(rate_NewLayer1_OptionL_mean,"Di-#tau iso (Option L)","L");
-    leg->AddEntry(rate_NewLayer1_OptionM_mean,"Di-#tau iso (Option M)","L");
-    leg->AddEntry(rate_NewLayer1_OptionN_mean,"Di-#tau iso (Option N)","L");
-    leg->AddEntry(rate_NewLayer1_OptionO_mean,"Di-#tau iso (Option O)","L");
-    leg->AddEntry(rate_NewLayer1_OptionP_mean,"Di-#tau iso (Option P)","L");
-    leg->AddEntry(rate_NewLayer1_OptionQ_mean,"Di-#tau iso (Option Q)","L");
-    leg->AddEntry(rate_NewLayer1_OptionR_mean,"Di-#tau iso (Option R)","L");
-    leg->AddEntry(rate_NewLayer1_OptionS_mean,"Di-#tau iso (Option S)","L");
-    leg->AddEntry(rate_NewLayer1_OptionT_mean,"Di-#tau iso (Option T)","L");
-    leg->AddEntry(rate_NewLayer1_OptionU_mean,"Di-#tau iso (Option U)","L");
-    leg->AddEntry(rate_NewLayer1_OptionV_mean,"Di-#tau iso (Option V)","L");
-    leg->AddEntry(rate_NewLayer1_OptionW_mean,"Di-#tau iso (Option W)","L");
-    leg->AddEntry(rate_NewLayer1_OptionX_mean,"Di-#tau iso (Option X)","L");
-    leg->AddEntry(rate_NewLayer1_OptionY_mean,"Di-#tau iso (Option Y)","L");
-    leg->AddEntry(rate_NewLayer1_OptionZ_mean,"Di-#tau iso (Option Z)","L");
+    leg->AddEntry(rate_NewLayer1_OptionA_mean,"Di-#tau iso (Option A"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionB_mean,"Di-#tau iso (Option B"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionC_mean,"Di-#tau iso (Option C"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionD_mean,"Di-#tau iso (Option D"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionE_mean,"Di-#tau iso (Option E"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionF_mean,"Di-#tau iso (Option F"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionG_mean,"Di-#tau iso (Option G"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionH_mean,"Di-#tau iso (Option H"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionI_mean,"Di-#tau iso (Option I"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionJ_mean,"Di-#tau iso (Option J"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionK_mean,"Di-#tau iso (Option K"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionL_mean,"Di-#tau iso (Option L"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionM_mean,"Di-#tau iso (Option M"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionN_mean,"Di-#tau iso (Option N"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionO_mean,"Di-#tau iso (Option O"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionP_mean,"Di-#tau iso (Option P"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionQ_mean,"Di-#tau iso (Option Q"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionR_mean,"Di-#tau iso (Option R"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionS_mean,"Di-#tau iso (Option S"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionT_mean,"Di-#tau iso (Option T"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionU_mean,"Di-#tau iso (Option U"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionV_mean,"Di-#tau iso (Option V"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionW_mean,"Di-#tau iso (Option W"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionX_mean,"Di-#tau iso (Option X"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionY_mean,"Di-#tau iso (Option Y"+opt+")","L");
+    leg->AddEntry(rate_NewLayer1_OptionZ_mean,"Di-#tau iso (Option Z"+opt+")","L");
 
     leg->AddEntry(rate_NewLayer1_Option22_mean,"Di-#tau iso (Option 22)","L");
     leg->AddEntry(rate_NewLayer1_Option31_extrap_mean,"Di-#tau iso (Option 31)","L");
@@ -733,37 +738,37 @@ void compare(TString tag, TString opt="0") {
 
     cout<<"if (tag==\""+tag+"\" and opt==\""+opt+"\")" << endl;
     cout<< "{" << endl;
-    cout<<"    Double_t Threshold_NewLayer1_noIso   = "<<Threshold_NewLayer1_noIso-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_noIso_unpacked = "<<Threshold_NewLayer1_noIso_unpacked-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_Iso_unpacked = "<<Threshold_NewLayer1_Iso_unpacked-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionA = "<<Threshold_NewLayer1_OptionA-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionB = "<<Threshold_NewLayer1_OptionB-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionC = "<<Threshold_NewLayer1_OptionC-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionD = "<<Threshold_NewLayer1_OptionD-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionE = "<<Threshold_NewLayer1_OptionE-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionF = "<<Threshold_NewLayer1_OptionF-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionG = "<<Threshold_NewLayer1_OptionG-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionH = "<<Threshold_NewLayer1_OptionH-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionI = "<<Threshold_NewLayer1_OptionI-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionJ = "<<Threshold_NewLayer1_OptionJ-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionK = "<<Threshold_NewLayer1_OptionK-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionL = "<<Threshold_NewLayer1_OptionL-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionM = "<<Threshold_NewLayer1_OptionM-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionN = "<<Threshold_NewLayer1_OptionN-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionO = "<<Threshold_NewLayer1_OptionO-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionP = "<<Threshold_NewLayer1_OptionP-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionQ = "<<Threshold_NewLayer1_OptionQ-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionR = "<<Threshold_NewLayer1_OptionR-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionS = "<<Threshold_NewLayer1_OptionS-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionT = "<<Threshold_NewLayer1_OptionT-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionU = "<<Threshold_NewLayer1_OptionU-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionV = "<<Threshold_NewLayer1_OptionV-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionW = "<<Threshold_NewLayer1_OptionW-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionX = "<<Threshold_NewLayer1_OptionX-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionY = "<<Threshold_NewLayer1_OptionY-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_OptionZ = "<<Threshold_NewLayer1_OptionZ-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_Option22 = "<<Threshold_NewLayer1_Option22-0.49<<";"<<endl;
-    cout<<"    Double_t Threshold_NewLayer1_Option31_extrap = "<<Threshold_NewLayer1_Option31_extrap-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_noIso   = "<<Threshold_NewLayer1_noIso-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_noIso_unpacked = "<<Threshold_NewLayer1_noIso_unpacked-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_Iso_unpacked = "<<Threshold_NewLayer1_Iso_unpacked-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionA = "<<Threshold_NewLayer1_OptionA-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionB = "<<Threshold_NewLayer1_OptionB-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionC = "<<Threshold_NewLayer1_OptionC-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionD = "<<Threshold_NewLayer1_OptionD-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionE = "<<Threshold_NewLayer1_OptionE-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionF = "<<Threshold_NewLayer1_OptionF-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionG = "<<Threshold_NewLayer1_OptionG-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionH = "<<Threshold_NewLayer1_OptionH-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionI = "<<Threshold_NewLayer1_OptionI-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionJ = "<<Threshold_NewLayer1_OptionJ-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionK = "<<Threshold_NewLayer1_OptionK-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionL = "<<Threshold_NewLayer1_OptionL-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionM = "<<Threshold_NewLayer1_OptionM-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionN = "<<Threshold_NewLayer1_OptionN-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionO = "<<Threshold_NewLayer1_OptionO-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionP = "<<Threshold_NewLayer1_OptionP-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionQ = "<<Threshold_NewLayer1_OptionQ-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionR = "<<Threshold_NewLayer1_OptionR-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionS = "<<Threshold_NewLayer1_OptionS-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionT = "<<Threshold_NewLayer1_OptionT-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionU = "<<Threshold_NewLayer1_OptionU-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionV = "<<Threshold_NewLayer1_OptionV-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionW = "<<Threshold_NewLayer1_OptionW-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionX = "<<Threshold_NewLayer1_OptionX-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionY = "<<Threshold_NewLayer1_OptionY-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_OptionZ = "<<Threshold_NewLayer1_OptionZ-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_Option22 = "<<Threshold_NewLayer1_Option22-0.49<<";"<<endl;
+    cout<<"    Threshold_NewLayer1_Option31_extrap = "<<Threshold_NewLayer1_Option31_extrap-0.49<<";"<<endl;
     cout<< "}" << endl;
     
 

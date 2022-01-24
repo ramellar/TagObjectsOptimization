@@ -22,7 +22,7 @@
 
 using namespace std;
 
-void Rate()
+void Rate(int run, float calibThr = 1.7)
 {
   // TFile f_2DShapeVetos("/home/llr/cms/mperez/TauTrigger/CMSSW_9_2_10/src/TauTagAndProbe/TauTagAndProbe/test/ShapeVeto/TwoDShapeVetos.root","READ");
   // TH2I* TwoDShapeVetos_0p6_10_50 = (TH2I*)f_2DShapeVetos.Get("TwoDShapeVetos_0p6_10_50");
@@ -68,9 +68,13 @@ void Rate()
   // cout<<"weight = "<<weight<<endl;
 
   */
-  
+
+  TString run_str = to_string(run);
+
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
   std::map<TString,TH3F*> histosIsolation;
-  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV0.root","READ");
+  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3_calibThr"+intgr+"p"+decim+".root","READ");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
     {
@@ -108,7 +112,7 @@ void Rate()
   // cout << histosIsolation["LUT_WP50"]->GetBinContent(1,1,1) << endl;
   // return;
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755_CALIBRATED.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
@@ -338,12 +342,10 @@ void Rate()
     {
       inTree->GetEntry(i);
       if(i%10000==0) cout<<"Entry #"<<i<<endl; 
-      if(in_lumi<44 || in_lumi>544) continue; // SET RUN INFO
+      // SET RUN INFO
+      if (run == 323755) { if(in_lumi<44 || in_lumi>544) continue; } // Run323755
+      if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; } // Run323775 --> very smal numer of lumisections!!
 
-      // if(in_lumi<60 || in_lumi>455) continue;
-
-      //if(in_lumi<48 || in_lumi>221) continue;
-      // if(in_lumi<48 || in_lumi>530) continue;
 
       // if(PU_per_LS.find(in_lumi)==PU_per_LS.end()) continue;
       // Float_t weight = PU_per_LS[48]/PU_per_LS[in_lumi];
@@ -2041,8 +2043,15 @@ void Rate()
   cout<<"DiTauCounterPass = "<<DiTauCounterPass<<endl;
 
   // SET RUN INFO
-  float nb = 2544.;
-  float thisLumiRun = 1.6225E34;
+  float nb = 2544.; // Run323755 and Run323775
+  float thisLumiRun = 0.;
+  if (run == 323755) thisLumiRun = 1.6225E34; // Run323755
+  if (run == 323775) thisLumiRun = 1.736E34; // Run323775 --> very smal numer of lumisections!!
+  if (thisLumiRun == 0.)
+  {
+    std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
+    return;
+  }
   float scaleToLumi = 2.00E34;
   float scale = 0.001*(nb*11245.6)*scaleToLumi/thisLumiRun;
 
@@ -2405,7 +2414,7 @@ void Rate()
   //     //rate_Stage1->SetBinContent(i+1,pt_Stage1->Integral(i+1,1201)/dataStage1.GetEntries()*scale);
   //   }
 
-  TFile f("histos_rate_ZeroBias_Run323755_optimizationV0.root","RECREATE");
+  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+".root","RECREATE");
   Iso_MinBias->Write();
   Correction_Factor->Write();
   Correction_Factor_IEt_30->Write();
