@@ -23,14 +23,15 @@
 
 using namespace std;
 
-void ApplyCalibrationZeroBias(float calibThr = 1.7)
+void ApplyCalibrationZeroBias(int run, float calibThr = 1.7)
 // void ApplyCalibrationZeroBias(TString InputFileName = "Ntuple_ZeroBias_With2017Layer1_ShapeVeto_20_02_17.root")
 {
+  TString run_str = to_string(run);
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755/EphemeralZeroBias_2018D_Run323755.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run323755_CALIBRATED.root";
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"/EphemeralZeroBias_2018D_Run"+run_str+".root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
 
   // TFile f_2DShapeVetos("ShapeVeto/TwoDShapeVetos.root","READ");
   // TH2I* TwoDShapeVetos = (TH2I*)f_2DShapeVetos.Get("TwoDShapeVetos");
