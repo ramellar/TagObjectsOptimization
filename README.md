@@ -121,15 +121,16 @@ Now that the TH4 histos have been created, adapt to your needs the `MakeTauCalib
 ```bash
 root -l
 .L MakeTauCalibLUT_<whatevertag>.C+
-MakeTauCalibLUT()
+MakeTauCalibLUT() # insert needed arguments
 ```
 
 Now that the LUTs have been created, we can apply the calibration to teh L1 objects. Adapt to your needs `ApplyCalibration_newnTT.C`
 ```bash
 root -l
 .L ApplyCalibration_newnTT.C+
-ApplyCalibration("<whatevername>.root")
+ApplyCalibration() # insert needed arguments
 ```
+
 ### Isolation
 Now that the calibration has been done the isolation needs to be compute and applyed.
 To do so go to the `Isolate` folder.
@@ -138,33 +139,73 @@ To compute the isolation, adapt to your needs the `Build_Isolation_WPs_MC_newnTT
 ```bash
 root -l
 .L Build_Isolation_WPs_MC_newnTT.C+
-Build_Isolation_WPs()
+Build_Isolation_WPs() # insert needed arguments
 ```
 
 Then the relaxation of the isolation needs to be performed. To do so, adapt to your needs `Fill_Isolation_TH3_MC_newnTT.C` and run:
 ```bash
 root -l
 .L Fill_Isolation_TH3_MC_newnTT.C+
-Fill_Isolation_TH3()
+Fill_Isolation_TH3() # insert needed arguments
+```
+or
+```bash
+root -l
+.L Fill_Isolation_TH3_MC_newnTT_gridSearch.C+
+Fill_Isolation_TH3() # insert needed arguments
+```
+to start a a grid search over the possible relaxation schemes that give rise to different turnON shapes.
+
+### Calibration of ZeroBias
+Enter `Calibrate/`, adapt to your needs `ApplyCalibrationZeroBias_nTT.C` and run:
+```bash
+root -l
+.L ApplyCalibrationZeroBias_nTT.C+
+ApplyCalibrationZeroBias() # insert needed arguments
 ```
 
 ### Rates
 To produce rates go to the `MakeRates` folder, adapt to your needs `Rate_ZeroBias_Run323755_unpacked.C` and `Rate_ZeroBias_Run323755_newnTT.C` and run:
 ```bash
 root -l
-.L Rate_ZeroBias_Run323755_unpacked.C+
-Rate()
+.L Rate_ZeroBias_unpacked.C+
+Rate() # insert needed arguments
 ```
 and 
 ```bash
 root -l
-.L Rate_ZeroBias_Run323755_newnTT.C+
-Rate()
+.L Rate_ZeroBias_newnTT.C+
+Rate() # insert needed arguments
 ```
-Having computed the rates, they can be plotted going to the `PlotRates` folder, adapting to your needs `CompareRates_Run323755_newnTT_withunpacked.C`, and running:
+or 
 ```bash
-root -l CompareRates_Run323755_newnTT_withunpacked.C
+root -l
+.L Rate_ZeroBias_newnTT_gridSearch.C+
+Rate() # insert needed arguments
 ```
+if you are doing the grid search over the possible relaxation parametrizations.
+
+Having computed the rates, they can be plotted going to the `PlotRates` folder, adapting to your needs `CompareRates_newnTT_withunpacked.C`, and running:
+```bash
+root -l 
+.L CompareRates_newnTT_withunpacked.C
+compare() # insert needed arguments
+```
+or
+```bash
+root -l 
+.L CompareRates_gridSearch_newnTT_withunpacked.C
+compare() # insert needed arguments
+```
+if you are doing the grid search over the possible relaxation parametrizations.
+
+In case you want to evaluate the rate you would get from a specific relaxation skim at a fixed threshold you can use:
+```bash
+root -l
+.L BestRatesAtFixedThr_gridSearch.C+
+compare() # insert needed arguments
+```
+this will print out `.txt` files with the value of the rate for the differnt optons. (This must be done after the rates have been computed in the usual manner as explained above)
 
 ### TurnONs
 Now that also the isolation has been created we can test everything on the turn-on curves. 
@@ -172,15 +213,47 @@ To do so go to the `MakeTurnOns` folder, adapt to to your needs `ApplyIsolationF
 ```bash
 root -l
 .L ApplyIsolationForTurnOns_newnTT.C+
-Fill_Isolation_TH3()
+ApplyIsolationForTurnOns() # insert needed arguments
 ```
-Having computed the turnONs, they can be plotted going to the `PlotTurnOns` folder, adapting to your needs `CompareTurnOns_Run323755_newnTT_withunpacked.C`, and running:
+or 
 ```bash
-root -l CompareTurnOns_Run323755_newnTT_withunpacked.C
+root -l
+.L ApplyIsolationForTurnOns_newnTT_gridSearch.C+
+ApplyIsolationForTurnOns() # insert needed arguments
 ```
+if you are doing the grid search over the possible relaxation parametrizations.
 
+Having computed the turnONs, they can be plotted going to the `PlotTurnOns` folder, adapting to your needs `CompareTunrOns_withunpacked.C`, and running:
+```bash
+root -l
+.L CompareTunrOns_withunpacked.C
+compare() # insert needed arguments
+```
+or
+```bash
+root -l
+.L CompareTunrOns_gridSearch_withunpacked.C
+compare() # insert needed arguments
+```
+if you are doing the grid search over the possible relaxation parametrizations.
 
-
-
-
-
+The plots produced above will be a bit crouded and difficult to read. FO this reason a second plotting folder is used where only selected turnons will be plotted.
+Move to `PlotGoodGridSearch/` and run one of the followings after having adapted the scripts to your needs:
+```bash
+root -l
+.L GoodTurnOns_gridSearch.C
+compare() # insert needed arguments
+```
+or
+```bash
+root -l
+.L BestFMturnOns_gridSearch.C
+compare() # insert needed arguments
+```
+or
+```bash
+root -l
+.L FinalComparison_gridSearch.C
+compare() # insert needed arguments
+```
+These three scripts all allow to plot what we define as "good turnons" depending on different comparison options (i.e. a turn on can be defined as good if it has a certain acceptance, a certain efficiency at a certain pT, or any other possible definition)
