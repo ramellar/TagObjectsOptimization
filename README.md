@@ -3,9 +3,7 @@ Set of tools to evaluate tau trigger performance on T&amp;P
 
 ## Foreword
 This package is based on the developments done by Olivier Davignon, Luca Cadamuro, and Jean-Baptiste Sauvan.
-The original work done by them can be found mainly at these two links:
-https://github.com/davignon/TauTagAndProbe/tree/master/TauTagAndProbe
-https://github.com/jbsauvan/RegressionTraining
+The original work done by them can be found mainly at these two links: [NTuples production](https://github.com/davignon/TauTagAndProbe/tree/master/TauTagAndProbe), [Objects calibration](https://github.com/jbsauvan/RegressionTraining)
 
 This forlder is an attempt to put together all of the developments done on top of these two folders in one single repositoty and one tool: ONE TOOL TO OPTIMIZE THEM ALL - CIT.
 
@@ -43,6 +41,8 @@ L1T emulation relevant GlobalTags in `CMSSW_11_0_2` are:
 * for run2 data reprocessing `110X_dataRun2_v12`
 * for run2 mc `110X_mcRun2_asymptotic_v6`
 * for run3 mc `110X_mcRun3_2021_realistic_v6(9)`
+
+This instalation instructions work only for CMSSW_11_0_2, to use the updated CMSSW_12_0_2 version refer to [these instructions](https://github.com/jonamotta/TauTagAndProbe/tree/CMSSW_12_0_2-l1t-integration-v110.0) for the TauTagAndProbe package and the production of the NTuples. On the other hand, still use the instructions above to do the optimization of teh objects.
 
 ## Tool utilization
 To do the optimization two things are needed:
