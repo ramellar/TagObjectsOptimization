@@ -8,6 +8,9 @@ The original work done by them can be found mainly at these two links: [NTuples 
 This forlder is an attempt to put together all of the developments done on top of these two folders in one single repositoty and one tool: ONE TOOL TO OPTIMIZE THEM ALL - CIT.
 
 ## Install instructions
+These instalation instructions work only for CMSSW_11_0_2. To use the updated CMSSW_12_0_2 version for the TauTagAndProbe package and the production of the NTuples refer to [these instructions](https://github.com/jonamotta/TauTagAndProbe/tree/CMSSW_12_0_2-l1t-integration-v110.0). On the other hand, still use the following instructions to do the optimization of the objects (even if NTuples are produced with CMSSW_12_0_2).
+
+
 ```bash
 cmsrel CMSSW_11_0_2
 cd CMSSW_11_0_2/src
@@ -41,8 +44,6 @@ L1T emulation relevant GlobalTags in `CMSSW_11_0_2` are:
 * for run2 data reprocessing `110X_dataRun2_v12`
 * for run2 mc `110X_mcRun2_asymptotic_v6`
 * for run3 mc `110X_mcRun3_2021_realistic_v6(9)`
-
-This instalation instructions work only for CMSSW_11_0_2, to use the updated CMSSW_12_0_2 version refer to [these instructions](https://github.com/jonamotta/TauTagAndProbe/tree/CMSSW_12_0_2-l1t-integration-v110.0) for the TauTagAndProbe package and the production of the NTuples. On the other hand, still use the instructions above to do the optimization of teh objects.
 
 ## Tool utilization
 To do the optimization two things are needed:
