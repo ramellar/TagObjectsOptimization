@@ -24,8 +24,8 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
 
     gStyle->SetOptStat(000000);
 
-    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
-    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
+    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
+    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
 
     TH1F* rate_NewLayer1_noIso_mean       = (TH1F*)f_mean->Get("rate_noCut_DiTau");
     TH1F* rate_NewLayer1_noIso_unpacked   = (TH1F*)f_unpacked->Get("rate_noCut_DiTau");
@@ -61,7 +61,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     TH1F* rate_NewLayer1_Option31_extrap_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_31_extrap");
     TH1F* rate_NewLayer1_Option22_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_22");
 
-    TString CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
+    TString CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
     TString CanvasNameRoot = CanvasName ;

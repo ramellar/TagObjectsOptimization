@@ -113,7 +113,7 @@ void plotResolutions(int run, int vers = 3, float calibThr = 1.7, TString fitOpt
     // TH1F* eta_resol_etaBin1p5to2p1 = new TH1F("eta_resol_etaBin1p5to2p1","eta_resol_etaBin1p5to2p1",60,0,3);
 
 
-    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_06_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_06.root";
+    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_28.root";
     TFile f(InputFileName.Data(),"READ");
     TTree* inTree = (TTree*)f.Get("outTreeCalibrated");
 
@@ -231,36 +231,35 @@ void plotResolutions(int run, int vers = 3, float calibThr = 1.7, TString fitOpt
     f.Close();
 
 
-    TString InputFileName_data = "/data_CMS/cms/motta/Run3preparation/2022_01_06_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
-    TFile f_data(InputFileName_data.Data(),"READ");
-    TTree* inTree_data = (TTree*)f_data.Get("outTreeCalibrated");
+    // TString InputFileName_data = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
+    // TFile f_data(InputFileName_data.Data(),"READ");
+    // TTree* inTree_data = (TTree*)f_data.Get("outTreeCalibrated");
 
-    std::vector<int>           *in_L1Tau_nTT_data = 0;
-    std::vector<float>         *in_L1Tau_pt_data = 0;
-    std::vector<float>         *in_L1Tau_eta_data = 0;
-    std::vector<float>         *in_L1Tau_CalibPt_data = 0;
+    // std::vector<int>           *in_L1Tau_nTT_data = 0;
+    // std::vector<float>         *in_L1Tau_pt_data = 0;
+    // std::vector<float>         *in_L1Tau_eta_data = 0;
+    // std::vector<float>         *in_L1Tau_CalibPt_data = 0;
 
-    inTree_data->SetBranchAddress("L1Tau_nTT", &in_L1Tau_nTT_data);
-    inTree_data->SetBranchAddress("L1Tau_pt", &in_L1Tau_pt_data);
-    inTree_data->SetBranchAddress("L1Tau_eta", &in_L1Tau_eta_data);
-    inTree_data->SetBranchAddress("L1Tau_CalibPt", &in_L1Tau_CalibPt_data);
+    // inTree_data->SetBranchAddress("L1Tau_nTT", &in_L1Tau_nTT_data);
+    // inTree_data->SetBranchAddress("L1Tau_pt", &in_L1Tau_pt_data);
+    // inTree_data->SetBranchAddress("L1Tau_eta", &in_L1Tau_eta_data);
+    // inTree_data->SetBranchAddress("L1Tau_CalibPt", &in_L1Tau_CalibPt_data);
 
-    for(UInt_t i = 0 ; i < inTree_data->GetEntries() ; ++i)
-    {
-        inTree_data->GetEntry(i);
+    // for(UInt_t i = 0 ; i < inTree_data->GetEntries() ; ++i)
+    // {
+    //     inTree_data->GetEntry(i);
         
-        for(UInt_t iTau = 0 ; iTau < in_L1Tau_CalibPt_data->size() ; ++iTau)
-        {
-            if(in_L1Tau_nTT_data->at(iTau)<60 && nTTRange) continue;
-            if(fabs(in_L1Tau_eta_data->at(iTau))>2.1) continue;
+    //     for(UInt_t iTau = 0 ; iTau < in_L1Tau_CalibPt_data->size() ; ++iTau)
+    //     {
+    //         if(in_L1Tau_nTT_data->at(iTau)<60 && nTTRange) continue;
+    //         if(fabs(in_L1Tau_eta_data->at(iTau))>2.1) continue;
             
-            // FILL PT RESPONSE - FULL INCLUSIVE
-            pt_response_ptInclusive_data->Fill( in_L1Tau_CalibPt_data->at(iTau) / in_L1Tau_pt_data->at(iTau) );
-        }
-    }
-    f_data.Close();
+    //         // FILL PT RESPONSE - FULL INCLUSIVE
+    //         pt_response_ptInclusive_data->Fill( in_L1Tau_CalibPt_data->at(iTau) / in_L1Tau_pt_data->at(iTau) );
+    //     }
+    // }
+    // f_data.Close();
 
-    std:cout << "test";
 
     // NORMALIZE THE HISTOGRAMS
     pt_barrel_resp_ptInclusive->Scale(1.0/pt_barrel_resp_ptInclusive->Integral());
@@ -302,7 +301,7 @@ void plotResolutions(int run, int vers = 3, float calibThr = 1.7, TString fitOpt
     pt_resp_MinusEtaBin1to1p5->Scale(1.0/pt_resp_MinusEtaBin1to1p5->Integral());
     pt_resp_MinusEtaBin1p5to2p1->Scale(1.0/pt_resp_MinusEtaBin1p5to2p1->Integral());
 
-    pt_response_ptInclusive_data->Scale(1.0/pt_response_ptInclusive_data->Integral());
+    //pt_response_ptInclusive_data->Scale(1.0/pt_response_ptInclusive_data->Integral());
     pt_response_ptInclusive_mc->Scale(1.0/pt_response_ptInclusive_mc->Integral());
 
     // FIT CRYSTALBALL FUNCTIONS
@@ -1240,36 +1239,36 @@ void plotResolutions(int run, int vers = 3, float calibThr = 1.7, TString fitOpt
     //##########
     // plot resolution in pt inclusive
 
-    TCanvas c7("c7","c7",650,600);
-    c7.SetLeftMargin(0.15);
-    c7.SetGrid();
-    c7.cd();
+    // TCanvas c7("c7","c7",650,600);
+    // c7.SetLeftMargin(0.15);
+    // c7.SetGrid();
+    // c7.cd();
 
-    TPad *pad22 = new TPad("pad22", "pad22", 0., 0., 1., 1.);
-    pad22->SetLeftMargin(0.15);
-    pad22->SetGridx();         // Vertical grid
-    pad22->SetGridy();         // Vertical grid
-    pad22->Draw();             // Draw the upper pad: pad1
-    pad22->cd();               // pad1 becomes the current pad
+    // TPad *pad22 = new TPad("pad22", "pad22", 0., 0., 1., 1.);
+    // pad22->SetLeftMargin(0.15);
+    // pad22->SetGridx();         // Vertical grid
+    // pad22->SetGridy();         // Vertical grid
+    // pad22->Draw();             // Draw the upper pad: pad1
+    // pad22->cd();               // pad1 becomes the current pad
 
-    pt_response_ptInclusive_data->SetLineColor(kBlack);
-    pt_response_ptInclusive_data->SetMarkerStyle(8);
-    pt_response_ptInclusive_data->SetMarkerColor(kBlack);
-    pt_response_ptInclusive_data->SetTitle("");
-    pt_response_ptInclusive_data->GetXaxis()->SetTitle("Offline p_{T}(#tau) [GeV]");
-    pt_response_ptInclusive_data->GetYaxis()->SetTitle("p^{L1}_{T}(#tau) resolution");
-    //pt_response_ptInclusive_data->GetYaxis()->SetRangeUser(0.,0.3);
-    pt_response_ptInclusive_data->Draw("E0");
-    pt_response_ptInclusive_mc->SetLineColor(kRed);
-    pt_response_ptInclusive_mc->SetMarkerStyle(8);
-    pt_response_ptInclusive_mc->SetMarkerColor(kRed);
-    pt_response_ptInclusive_mc->SetTitle("");
-    pt_response_ptInclusive_mc->Draw("E0 same");
-    leg->Clear();
-    leg->AddEntry(pt_response_ptInclusive_mc,"Run3 MC VBFHTauTau M125","L");
-    leg->AddEntry(pt_response_ptInclusive_data,"Data 2018D - Run"+run_str,"L");
-    leg->Draw("same");
-    texl->Draw("same");
+    // pt_response_ptInclusive_data->SetLineColor(kBlack);
+    // pt_response_ptInclusive_data->SetMarkerStyle(8);
+    // pt_response_ptInclusive_data->SetMarkerColor(kBlack);
+    // pt_response_ptInclusive_data->SetTitle("");
+    // pt_response_ptInclusive_data->GetXaxis()->SetTitle("Offline p_{T}(#tau) [GeV]");
+    // pt_response_ptInclusive_data->GetYaxis()->SetTitle("p^{L1}_{T}(#tau) resolution");
+    // //pt_response_ptInclusive_data->GetYaxis()->SetRangeUser(0.,0.3);
+    // pt_response_ptInclusive_data->Draw("E0");
+    // pt_response_ptInclusive_mc->SetLineColor(kRed);
+    // pt_response_ptInclusive_mc->SetMarkerStyle(8);
+    // pt_response_ptInclusive_mc->SetMarkerColor(kRed);
+    // pt_response_ptInclusive_mc->SetTitle("");
+    // pt_response_ptInclusive_mc->Draw("E0 same");
+    // leg->Clear();
+    // leg->AddEntry(pt_response_ptInclusive_mc,"Run3 MC VBFHTauTau M125","L");
+    // leg->AddEntry(pt_response_ptInclusive_data,"Data 2018D - Run"+run_str,"L");
+    // leg->Draw("same");
+    // texl->Draw("same");
 
-    c7.SaveAs("plots/data/Run"+run_str+"comparison_pt_resolution_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"_inclusivePtEta.png");
+    // c7.SaveAs("plots/data/Run"+run_str+"comparison_pt_resolution_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"_inclusivePtEta.png");
 }

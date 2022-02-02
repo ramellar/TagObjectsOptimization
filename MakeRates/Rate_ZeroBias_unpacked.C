@@ -30,8 +30,7 @@ void Rate(int run, float calibThr = 1.7)
 
   TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"/EphemeralZeroBias_2018D_Run"+run_str+".root";
   TFile f_in(FileName_in.Data(),"READ");
-  TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); 
-  // TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
+  TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
   //Replace by unpacked stuff from input file that you produced with ApplyCalibrationUnpacked.C
   ULong64_t       in_EventNumber =  0;
@@ -45,17 +44,19 @@ void Rate(int run, float calibThr = 1.7)
  
   inTree->SetBranchAddress("EventNumber", &in_EventNumber);
   inTree->SetBranchAddress("RunNumber", &in_RunNumber);
+  // branches of uncalibrated EphemeralZeroBias NTuples
   inTree->SetBranchAddress("lumi", &in_lumi);
- // inTree->SetBranchAddress("L1Tau_pt",&in_l1tPt);
   inTree->SetBranchAddress("l1tPt",&in_l1tPt);
-  //inTree->SetBranchAddress("L1Tau_eta",&in_l1tEta);
   inTree->SetBranchAddress("l1tEta",&in_l1tEta);
-  //inTree->SetBranchAddress("L1Tau_phi",&in_l1tPhi);
   inTree->SetBranchAddress("l1tPhi",&in_l1tPhi);
-  //inTree->SetBranchAddress("L1Tau_Qual",&in_l1tQual);
   inTree->SetBranchAddress("l1tQual",&in_l1tQual);
-  //inTree->SetBranchAddress("L1Tau_Iso",&in_l1tIso);
   inTree->SetBranchAddress("l1tIso",&in_l1tIso);
+  // branches of calibrated EphemeralZeroBias NTuples
+  //inTree->SetBranchAddress("L1Tau_pt",&in_l1tPt);
+  //inTree->SetBranchAddress("L1Tau_eta",&in_l1tEta);
+  //inTree->SetBranchAddress("L1Tau_phi",&in_l1tPhi);
+  //inTree->SetBranchAddress("L1Tau_Qual",&in_l1tQual);
+  //inTree->SetBranchAddress("L1Tau_Iso",&in_l1tIso);
 
   TH1F* pt_IsoInf = new TH1F("pt_IsoInf","pt_IsoInf",240,0.,240.);
   TH1F* pt_Iso = new TH1F("pt_Iso","pt_Iso",240,0.,240.);
@@ -74,7 +75,7 @@ void Rate(int run, float calibThr = 1.7)
       if(i%10000==0) cout<<"Entry #"<<i<<endl; 
       // SET RUN INFO
       if (run == 323755) { if(in_lumi<44 || in_lumi>544) continue; } // Run323755
-      if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; } // Run323775 --> very smal numer of lumisections!!
+      if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; } // Run323775 --> very smal number of lumisections!!
 
       Float_t weight = 1.;
 
@@ -142,7 +143,7 @@ void Rate(int run, float calibThr = 1.7)
   float nb = 2554.; // Run323755 and Run323775
   float thisLumiRun = 0.;
   if (run == 323755) thisLumiRun = 1.6225E34; // Run323755
-  if (run == 323775) thisLumiRun = 1.736E34; // Run323775 --> very smal numer of lumisections!!
+  if (run == 323775) thisLumiRun = 1.736E34; // Run323775 --> very smal number of lumisections!!
   if (thisLumiRun == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
@@ -162,7 +163,7 @@ void Rate(int run, float calibThr = 1.7)
       rate_Iso_DiTau->SetBinContent(i+1,pt_Iso_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
     }
 
-  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+"_unpacked.root","RECREATE");
+  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+"_unpacked.root","RECREATE");
 
   pt_IsoInf_DiTau->Write();
   pt_Iso_DiTau->Write();

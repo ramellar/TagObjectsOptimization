@@ -48,8 +48,8 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
     std::map<TString,TH3F*> histosIsolation;
-    TFile f_Isolation("LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3_calibThr"+intgr+"p"+decim+".root","READ");
-    TFile LUTs_Options("LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","RECREATE");
+    TFile f_Isolation("LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6_calibThr"+intgr+"p"+decim+".root","READ");
+    TFile LUTs_Options("LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","RECREATE");
 
     for(UInt_t i = 0 ; i < 101 ; ++i)
         {

@@ -74,7 +74,7 @@ void Rate(int run, float calibThr = 1.7)
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
   std::map<TString,TH3F*> histosIsolation;
-  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3_calibThr"+intgr+"p"+decim+".root","READ");
+  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6_calibThr"+intgr+"p"+decim+".root","READ");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
     {
@@ -112,7 +112,7 @@ void Rate(int run, float calibThr = 1.7)
   // cout << histosIsolation["LUT_WP50"]->GetBinContent(1,1,1) << endl;
   // return;
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
@@ -2414,7 +2414,7 @@ void Rate(int run, float calibThr = 1.7)
   //     //rate_Stage1->SetBinContent(i+1,pt_Stage1->Integral(i+1,1201)/dataStage1.GetEntries()*scale);
   //   }
 
-  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+".root","RECREATE");
+  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+".root","RECREATE");
   Iso_MinBias->Write();
   Correction_Factor->Write();
   Correction_Factor_IEt_30->Write();

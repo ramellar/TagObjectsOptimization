@@ -26,13 +26,14 @@ void compare(int run, float calibThr = 1.7) {
 
     gStyle->SetOptStat(000000);
 
-    TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_2022_01_15.root","READ");
+    TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_2022_01_28.root","READ");
 
-    TGraphAsymmErrors* rate_NewLayer1_noIso_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_noIso_by_pt");
+    TGraphAsymmErrors* turnOn_NewLayer1_unpacked_Iso = (TGraphAsymmErrors*)f->Get("divide_unpacked_Iso_by_unpacked");
+    TGraphAsymmErrors* turnOn_NewLayer1_noIso_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_noIso_by_pt");
+    TGraphAsymmErrors* turnOn_NewLayer1_Option22_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option22_by_pt");
+    TGraphAsymmErrors* turnOn_NewLayer1_Option31_extrap_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option31_extrap_by_pt");
 
-    TGraphAsymmErrors* rate_NewLayer1_Option22_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option22_by_pt");
-    TGraphAsymmErrors* rate_NewLayer1_Option31_extrap_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option31_extrap_by_pt");
-
+    TString fm_unpackedIso = std::to_string( int( ((TVectorT<float>*)f->Get("fm_unpackedIso"))->Max() ) );
     TString fm_noIso_mean = std::to_string( int( ((TVectorT<float>*)f->Get("fm_noIso"))->Max() ) );
     TString fm_Option22_mean = std::to_string( int( ((TVectorT<float>*)f->Get("fm_Option22"))->Max() ) );
     TString fm_Option31_extrap_mean = std::to_string( int( ((TVectorT<float>*)f->Get("fm_Option31_extrap"))->Max() ) );
@@ -41,7 +42,7 @@ void compare(int run, float calibThr = 1.7) {
     // TString thr_Option22_mean = std::to_string( int( ((TVectorT<float>*)f->Get("thr_Option22"))->Max() ) );
     // TString thr_Option31_extrap_mean = std::to_string( int( ((TVectorT<float>*)f->Get("thr_Option31_extrap"))->Max() ) );
 
-    TString CanvasName = "Comparison_TurnOn_Run"+run_str+"_newnTT_unpacked_optimizationV3_calibThr"+intgr+"p"+decim;
+    TString CanvasName = "Comparison_TurnOn_Run"+run_str+"_newnTT_unpacked_optimizationV6_calibThr"+intgr+"p"+decim;
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
 
@@ -59,18 +60,22 @@ void compare(int run, float calibThr = 1.7) {
     pad1->cd();               // pad1 becomes the current pad
     //pad1->SetLogy();
 
-    rate_NewLayer1_noIso_mean->SetLineColor(kBlack);
-    rate_NewLayer1_noIso_mean->SetLineWidth(2);
-    rate_NewLayer1_noIso_mean->GetXaxis()->SetLimits(15,120.);
-    rate_NewLayer1_noIso_mean->Draw();
+    turnOn_NewLayer1_noIso_mean->SetLineColor(kBlack);
+    turnOn_NewLayer1_noIso_mean->SetLineWidth(2);
+    turnOn_NewLayer1_noIso_mean->GetXaxis()->SetLimits(15,120.);
+    turnOn_NewLayer1_noIso_mean->Draw();
 
-    rate_NewLayer1_Option22_mean->SetLineColor(kGray+1);
-    rate_NewLayer1_Option22_mean->SetLineWidth(2);
-    rate_NewLayer1_Option22_mean->Draw("same");
+    turnOn_NewLayer1_unpacked_Iso->SetLineColor(kRed);
+    turnOn_NewLayer1_unpacked_Iso->SetLineWidth(2);
+    turnOn_NewLayer1_unpacked_Iso->Draw("same");
 
-    rate_NewLayer1_Option31_extrap_mean->SetLineColor(kGray+2);
-    rate_NewLayer1_Option31_extrap_mean->SetLineWidth(2);
-    rate_NewLayer1_Option31_extrap_mean->Draw("same");
+    turnOn_NewLayer1_Option22_mean->SetLineColor(kGray+1);
+    turnOn_NewLayer1_Option22_mean->SetLineWidth(2);
+    turnOn_NewLayer1_Option22_mean->Draw("same");
+
+    turnOn_NewLayer1_Option31_extrap_mean->SetLineColor(kGray+2);
+    turnOn_NewLayer1_Option31_extrap_mean->SetLineWidth(2);
+    turnOn_NewLayer1_Option31_extrap_mean->Draw("same");
 
     TPaveText* texl = new TPaveText(0.05,0.87,0.95,0.99,"NDC");
     texl->AddText("CMS Internal, #sqrt{s}=13 TeV, Run #"+run_str+" (2018)");
@@ -84,9 +89,10 @@ void compare(int run, float calibThr = 1.7) {
     leg->SetTextSize(0.02);
     leg->SetHeader("Linearly scaled to 2.0E34");
 
-    leg->AddEntry(rate_NewLayer1_noIso_mean,"Di-#tau no-iso, mean - FM="+fm_noIso_mean,"L");
-    leg->AddEntry(rate_NewLayer1_Option22_mean,"Di-#tau iso (Option 22) - FM="+fm_Option22_mean,"L");
-    leg->AddEntry(rate_NewLayer1_Option31_extrap_mean,"Di-#tau iso (Option 31) - FM="+fm_Option31_extrap_mean,"L");
+    leg->AddEntry(turnOn_NewLayer1_noIso_mean,"Di-#tau no-iso, mean - FM="+fm_noIso_mean,"L");
+    leg->AddEntry(turnOn_NewLayer1_unpacked_Iso,"Di-#tau unpacked iso, FM="+fm_unpackedIso,"L");
+    leg->AddEntry(turnOn_NewLayer1_Option22_mean,"Di-#tau iso (Option 22) - FM="+fm_Option22_mean,"L");
+    leg->AddEntry(turnOn_NewLayer1_Option31_extrap_mean,"Di-#tau iso (Option 31) - FM="+fm_Option31_extrap_mean,"L");
 
     leg->Draw("same");
 

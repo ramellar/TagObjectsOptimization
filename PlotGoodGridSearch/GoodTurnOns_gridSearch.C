@@ -19,7 +19,7 @@
 using namespace std;
 
 bool isGoodTurnON(TGraphAsymmErrors* baseline, TGraphAsymmErrors* newOpt) {
-    Int_t point1 = 9;
+    Int_t point1 = 8;
     Int_t point2 = 14;
     Double_t y;
     Double_t th;
@@ -40,15 +40,20 @@ bool isGoodTurnON(TGraphAsymmErrors* baseline, TGraphAsymmErrors* newOpt) {
     return good;
 }
 
-void compare(int run, TString tag, TString opt="0", TString baseline="22", float calibThr = 1.7) {
+void compare(int run, TString tag, TString opt="0", TString baseline="22", int fixedThr = 0, float calibThr = 1.7) {
     TString run_str = to_string(run);
+
+    TString fixedThreshold = to_string(fixedThr);
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
     
     gStyle->SetOptStat(000000);
 
-    TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_15.root","READ");
+    TFile* f;
+    if (fixedThr==0) f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root", "READ");
+    else             f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDTHR"+fixedThreshold+"_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root", "READ");
+    
 
     TGraphAsymmErrors* turnon_NewLayer1_noIso_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_noIso_by_pt");
     TGraphAsymmErrors* turnon_NewLayer1_Option22_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option22_by_pt");
@@ -80,8 +85,8 @@ void compare(int run, TString tag, TString opt="0", TString baseline="22", float
     TGraphAsymmErrors* turnon_NewLayer1_OptionY_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_OptionY"+opt+"_by_pt");
     TGraphAsymmErrors* turnon_NewLayer1_OptionZ_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_OptionZ"+opt+"_by_pt");
 
-    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
-    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
+    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
+    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
 
     TH1F* rate_NewLayer1_noIso_mean       = (TH1F*)f_mean->Get("rate_noCut_DiTau");
     TH1F* rate_NewLayer1_noIso_unpacked   = (TH1F*)f_unpacked->Get("rate_noCut_DiTau");
@@ -146,8 +151,10 @@ void compare(int run, TString tag, TString opt="0", TString baseline="22", float
     TString fm_OptionY = std::to_string( int( ((TVectorT<float>*)f->Get("fm_OptionY"))->Max() ) );
     TString fm_OptionZ = std::to_string( int( ((TVectorT<float>*)f->Get("fm_OptionZ"))->Max() ) );
 
-
-    TString CanvasName = "Comparison_TurnOn_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
+    TString CanvasName = "Comparison_TurnOn_Run"+run_str+"_newnTT_unpacked_optimizationV6gs";
+    if (fixedThr==0) CanvasName = CanvasName+"_FIXEDRATE";
+    else             CanvasName = CanvasName+"_FIXEDTHR"+fixedThreshold;
+    CanvasName = CanvasName+"_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
 

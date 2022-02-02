@@ -21,10 +21,10 @@ using namespace std;
 void isLowerRate(std::vector< std::pair<TString, float> > &orderedHz, float newHz, TString name) {
     for (long unsigned int i = 0; i < orderedHz.size(); ++i)
     {
-        if (newHz >= orderedHz[i].second && newHz >= 13 && newHz <= 20) {
+        //if (newHz >= orderedHz[i].second && newHz >= 13 && newHz <= 20) {
             orderedHz.insert( orderedHz.begin()+i, std::pair(name, newHz) );
             break;
-        }
+        //}
     }
 }
 
@@ -50,7 +50,7 @@ void compare(int run, float calibThr = 1.7) {
     {
         TString tag = tags[i];
 
-        TFile* f = new TFile("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
+        TFile* f = new TFile("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
 
         for (long unsigned int j = 0; j < opts.size(); ++j)
         {
@@ -151,12 +151,12 @@ void compare(int run, float calibThr = 1.7) {
     orderedHzAt32.pop_back(); // remove init entry
     orderedHzAt33.pop_back(); // "
 
-    TString Filename32 = "BestRatesAt32Thr.txt";
+    TString Filename32 = "BestRatesAt32Thr_optimizationV6.txt";
     ofstream file32;
     file32.open(Filename32, std::ofstream::trunc);
-    file32 << "noIso :  kHz=" << Hz_noIso->Max() << std::endl;
-    file32 << "Option22 :  kHz=" << Hz_Option22->Max() << std::endl;
-    file32 << "Option31_extrap :  kHz=" << Hz_Option31_extrap->Max() << std::endl;
+    file32 << "noIso :  kHz=" << Hz_noIso[0][0] << std::endl;
+    file32 << "Option22 :  kHz=" << Hz_Option22[0][0] << std::endl;
+    file32 << "Option31_extrap :  kHz=" << Hz_Option31_extrap[0][0] << std::endl;
     file32 << std::endl << std::endl;
     for (long unsigned int i = 0; i < orderedHzAt32.size(); ++i)
     {
@@ -164,12 +164,12 @@ void compare(int run, float calibThr = 1.7) {
     }
     file32.close();
 
-    TString Filename33 = "BestRatesAt33Thr.txt";
+    TString Filename33 = "BestRatesAt33Thr_optimizationV6.txt";
     ofstream file33;
     file33.open(Filename33, std::ofstream::trunc);
-    file33 << "noIso :  kHz=" << Hz_noIso->Min() << std::endl;
-    file33 << "Option22 :  kHz=" << Hz_Option22->Min() << std::endl;
-    file33 << "Option31_extrap :  kHz=" << Hz_Option31_extrap->Min() << std::endl;
+    file33 << "noIso :  kHz=" << Hz_noIso[0][1] << std::endl;
+    file33 << "Option22 :  kHz=" << Hz_Option22[0][1] << std::endl;
+    file33 << "Option31_extrap :  kHz=" << Hz_Option31_extrap[0][1] << std::endl;
     file33 << std::endl << std::endl;
     for (long unsigned int i = 0; i < orderedHzAt33.size(); ++i)
     {

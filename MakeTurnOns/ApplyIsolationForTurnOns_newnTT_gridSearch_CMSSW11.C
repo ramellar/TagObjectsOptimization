@@ -72,23 +72,25 @@ float acceptacePercentage(TH1F* pass, TH1F* tot, float pt) {
     return pass->Integral(binxp,pass->GetNbinsX()+1) / tot->Integral(binxp,tot->GetNbinsX()+1);
 }
 
-void ApplyIsolationForTurnOns(int run, TString tag, TString opt="0", float calibThr = 1.7, Bool_t nTTRange = kFALSE)
+void ApplyIsolationForTurnOns(int run, TString tag, TString opt="0", int fixedThr = 0, float calibThr = 1.7, Bool_t nTTRange = kFALSE)
 {
-    int fixedThr = 0;
-
     TString run_str = to_string(run);
+
+    TString fixedThreshold = to_string(fixedThr)
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_15.root";
+    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_28.root";
 
-    TString FileNameOut = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_15";
+    TString FileNameOut;
+    if (fixedThr==0) FileNameOut = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28";
+    else             FileNameOut = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDTHR"+fixedThreshold+"_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28";
     if(nTTRange) FileNameOut += "_nTTRange";
     FileNameOut += ".root";
 
     std::map<TString,TH3F*> histosIsolation;
-    TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV3gs_calibThr"+intgr+"p"+decim+"_"+tag+".root");
+    TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root");
 
     for(UInt_t i = 0 ; i < 101 ; ++i)
     {

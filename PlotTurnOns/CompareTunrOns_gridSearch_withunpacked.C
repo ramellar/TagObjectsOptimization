@@ -18,15 +18,20 @@
 
 using namespace std;
 
-void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
+void compare(int run, TString tag, TString opt="0", int fixedThr = 0, float calibThr = 1.7) {
     TString run_str = to_string(run);
+
+    TString fixedThreshold = to_string(fixedThr);
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
     gStyle->SetOptStat(000000);
 
-    TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_21_optimizationV4_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_21.root","READ");
+    TFile* f;
+    if (fixedThr==0) f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root", "READ");
+    else             f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDTHR"+fixedThreshold+"_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root", "READ");
+    
 
     TGraphAsymmErrors* turnOn_NewLayer1_noIso_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_noIso_by_pt");
 
@@ -122,7 +127,10 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     TString thr_OptionZ = std::to_string( int( ((TVectorT<float>*)f->Get("thr_OptionZ"))[0][0] ) +1 );
 
 
-    TString CanvasName = "Comparison_TurnOn_Run"+run_str+"_newnTT_unpacked_optimizationV4gs_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
+    TString CanvasName = "Comparison_TurnOn_Run"+run_str+"_newnTT_unpacked_optimizationV6gs";
+    if (fixedThr==0) CanvasName = CanvasName+"_FIXEDRATE";
+    else             CanvasName = CanvasName+"_FIXEDTHR"+fixedThreshold;
+    CanvasName = CanvasName+"_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
 

@@ -19,7 +19,7 @@
 using namespace std;
 
 bool isGoodTurnON(TGraphAsymmErrors* baseline, TGraphAsymmErrors* newOpt, float tunronThr, float limitTurnonThr) {
-    Int_t point1 = 9;
+    Int_t point1 = 8;
     Int_t point2 = 14;
     Double_t y;
     Double_t th;
@@ -62,7 +62,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
     gStyle->SetOptStat(000000);
 
     std::vector<TString> tags = {"effMin0p0", "effMin0p1", "effMin0p2", "effMin0p3", "effMin0p4", "effMin0p5", "effMin0p5", "effMin0p6", "effMin0p7", "effMin0p8", "effMin0p9"};
-    std::vector<TString> opts = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
+    std::vector<TString> opts = {"1", "2", "3", "4", "5", "6", "7", "8"};
 
     std::vector< std::pair<TString, std::pair<float,float>> > orderedFM = { std::pair("init", std::pair(0,0)) };
     std::vector<float> dummy = {0, 0, 0, 0};
@@ -92,7 +92,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
         {
             TString opt = opts[j];
 
-            TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_15.root","READ");
+            TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root","READ");
 
             TGraphAsymmErrors* turnon_NewLayer1_Option22_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option22_by_pt");
             TGraphAsymmErrors* turnon_NewLayer1_Option31_extrap_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option31_extrap_by_pt");
@@ -282,7 +282,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
 
     TString thrLim = to_string(int(round(limitTurnonThr)));
     if (limitTurnonThr==99) thrLim = "None";
-    TString Filename = "plotsBestFMturnons_Run"+run_str+"/Comparison_TurnOn_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV3gs_calibThr"+intgr+"p"+decim+"_betterThan"+baseline+"_thrLeq"+thrLim+".txt";
+    TString Filename = "plotsBestFMturnons_Run"+run_str+"/Comparison_TurnOn_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV6gs_calibThr"+intgr+"p"+decim+"_betterThan"+baseline+"_thrLeq"+thrLim+".txt";
     ofstream file;
     file.open(Filename, std::ofstream::trunc);
     file << "noIso :  FM=" << fm_noIso << " - THR=" << thr_noIso << " - ACC@0GeV = " << acceptance_noIso[0] << " - ACC@20GeV = " << acceptance_noIso[1] << " - ACC@40GeV = " << acceptance_noIso[2] << " - ACC@60GeV = " << acceptance_noIso[3] << std::endl;
@@ -316,7 +316,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
     //pad1->SetLogy();
     //pad1->SetLogx();
 
-    TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_effMin0p0_0_2022_01_15.root","READ");
+    TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_effMin0p0_0_2022_01_28.root","READ");
     TGraphAsymmErrors* turnon_NewLayer1_Option22_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option22_by_pt");
     TGraphAsymmErrors* turnon_NewLayer1_Option31_extrap_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option31_extrap_by_pt");
     TGraphAsymmErrors* turnon_NewLayer1_noIso_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_noIso_by_pt");
@@ -363,7 +363,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
         {
             if (FM >= fm_Option22) // TH == thr_Option22 and
             {
-                TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+effMin+"_"+option+"_2022_01_15.root","READ");
+                TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+effMin+"_"+option+"_2022_01_28.root","READ");
 
                 TGraphAsymmErrors* turnon = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option"+point+"_by_pt");
                 turnon->SetLineColor(colors[j]); ++j;
@@ -378,7 +378,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
         {
             if (FM >= fm_Option31_extrap) //TH == thr_Option31_extrap and
             {
-                TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+effMin+"_"+option+"_2022_01_15.root","READ");
+                TFile* f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+effMin+"_"+option+"_2022_01_28.root","READ");
 
                 TGraphAsymmErrors* turnon = (TGraphAsymmErrors*)f->Get("divide_pt_pass_Option"+point+"_by_pt");
                 turnon->SetLineColor(colors[j]); ++j;
@@ -396,7 +396,7 @@ void compare(int run, TString baseline="22", float limitTurnonThr=99, bool zoom=
 
     TString tag = "";
     if (zoom) tag = "_zoom";
-    c.SaveAs("plotsBestFMturnons_Run"+run_str+"/Comparison_TurnOn_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV3gs_calibThr"+intgr+"p"+decim+"_betterThan"+baseline+"_thrLeq"+thrLim+tag+".pdf");
+    c.SaveAs("plotsBestFMturnons_Run"+run_str+"/Comparison_TurnOn_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV6gs_calibThr"+intgr+"p"+decim+"_betterThan"+baseline+"_thrLeq"+thrLim+tag+".pdf");
 
 
 }

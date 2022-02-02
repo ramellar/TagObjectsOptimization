@@ -274,12 +274,12 @@ void ApplyCalibration(float calibThr = 1.7)
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2021_11_22.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_15.root";
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2022_01_28.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_28.root";
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
 
   TFile f_in(InputFileName.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");

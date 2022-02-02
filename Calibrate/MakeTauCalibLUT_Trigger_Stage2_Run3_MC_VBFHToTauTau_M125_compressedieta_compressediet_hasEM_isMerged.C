@@ -17,17 +17,23 @@
 #include <TBranchElement.h>
 #include <fstream>
 #include <string>
+#include <stdio.h>
 
 void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
 {
+  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
+  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+  // rename the folder name t o include the possible differences in calibratio saturation
+  rename("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6" , "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim);
+
   TFile* fLUTS ;
-  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3.root");
-  else fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3.root");
+  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6.root");
+  else fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6.root");
 
   TH3F* LUT_isMerged0 ;
   TH3F* LUT_isMerged1 ;//calibration constant is a number c(compressedieta, compressediet, hasEM, isMerged)
-  LUT_isMerged0 = (TH3F*) fLUTS->Get ("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
-  LUT_isMerged1 = (TH3F*) fLUTS->Get ("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3");
+  LUT_isMerged0 = (TH3F*) fLUTS->Get ("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
+  LUT_isMerged1 = (TH3F*) fLUTS->Get ("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
 
   cout << "LUT name: " << LUT_isMerged0->GetName() << endl;
   cout << "LUT name: " << LUT_isMerged1->GetName() << endl;
@@ -55,9 +61,7 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   TString outFile ;
   //if(withLayer1) outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
   //else outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
-  TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
-  TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs/LUTcalibration_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV3_calibThr"+intgr+"p"+decim+".txt";
+  outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs/LUTcalibration_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6_calibThr"+intgr+"p"+decim+".txt";
 
   std::ofstream LUTfile (outFile.Data());
 
