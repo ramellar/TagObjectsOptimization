@@ -18,9 +18,10 @@
 
 using namespace std;
 
-void compare(int run, TString tag, TString opt="0", int fixedThr = 0, float calibThr = 1.7) {
+void compare(int targetRate = 14, int fixedThr = 0, TString tag="effMin0p0", TString opt="0", int run=-1, float calibThr = 1.7) {
     TString run_str = to_string(run);
 
+    TString fixedRate = to_string(targetRate);
     TString fixedThreshold = to_string(fixedThr);
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
@@ -28,10 +29,15 @@ void compare(int run, TString tag, TString opt="0", int fixedThr = 0, float cali
 
     gStyle->SetOptStat(000000);
 
+    TString fileName = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS";
+    if (fixedThr==0) fileName += "_FIXEDRATE"+fixedRate+"kHz";
+    else             fileName += "_FIXEDTHR"+fixedThreshold+"GeV";
+    if (run==-1)     fileName += "_SingleNeutrino112XpuReweighted";
+    else             fileName += "_Run"+run_str;
+    fileName += "_gs_"+tag+"_"+opt+"_2022_03_15.root";
+
     TFile* f;
-    if (fixedThr==0) f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root", "READ");
-    else             f = new TFile("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDTHR"+fixedThreshold+"_Run"+run_str+"_gs_"+tag+"_"+opt+"_2022_01_28.root", "READ");
-    
+    f = new TFile(fileName.Data(), "READ");
 
     TGraphAsymmErrors* turnOn_NewLayer1_noIso_mean = (TGraphAsymmErrors*)f->Get("divide_pt_pass_noIso_by_pt");
 
@@ -127,10 +133,13 @@ void compare(int run, TString tag, TString opt="0", int fixedThr = 0, float cali
     TString thr_OptionZ = std::to_string( int( ((TVectorT<float>*)f->Get("thr_OptionZ"))[0][0] ) +1 );
 
 
-    TString CanvasName = "Comparison_TurnOn_Run"+run_str+"_newnTT_unpacked_optimizationV6gs";
-    if (fixedThr==0) CanvasName = CanvasName+"_FIXEDRATE";
-    else             CanvasName = CanvasName+"_FIXEDTHR"+fixedThreshold;
-    CanvasName = CanvasName+"_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
+    TString CanvasName = "Comparison_TurnOn";
+    if (run==-1)     CanvasName += "_SingleNeutrino112XpuReweighted";
+    else             CanvasName += "_Run"+run_str;
+    CanvasName += "_newnTT_unpacked_optimizationV10gs";
+    if (fixedThr==0) CanvasName += "_FIXEDRATE"+fixedRate+"kHz";
+    else             CanvasName += "_FIXEDTHR"+fixedThreshold+"GeV";
+    CanvasName += "_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
 
@@ -314,7 +323,7 @@ void compare(int run, TString tag, TString opt="0", int fixedThr = 0, float cali
 
     leg->Draw("same");
 
-    TString PDFs = "PDFs/";
+    TString PDFs = "PDFs/optimizationV10/";
     c.SaveAs(PDFs+CanvasNamePdf.Data());
 
     f->Close();

@@ -16,16 +16,30 @@
 
 using namespace std;
 
-void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
+void compare(TString tag="effMin0p0", TString opt="0", TString parametrisation = "linear", Double_t Kfact = 0.0, float targetRate = 14, int run=323755, TString nuGlobalTag = "122X", bool Run3reweight = false, float calibThr = 1.7) {
     TString run_str = to_string(run);
+
+    TString isPUReweighted = "";
+    if(Run3reweight) isPUReweighted = "puReweighted";
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
+    TString Kintgr = to_string(Kfact).substr(0, to_string(Kfact).find("."));
+    TString Kdecim = to_string(Kfact).substr(2, to_string(Kfact).find("."));
+
     gStyle->SetOptStat(000000);
 
-    TFile* f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
-    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");  
+    TFile* f_mean;
+    if(nuGlobalTag!="0"){ 
+        if(parametrisation=="linear"){ f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_SingleNeutrino"+nuGlobalTag+isPUReweighted+"_Run3_MC_optimizationV13gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+".root","READ"); }
+        else                         { f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_SingleNeutrino"+nuGlobalTag+isPUReweighted+"_Run3_MC_optimizationV13gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+".root","READ"); }
+    }
+    else {
+        if(parametrisation=="linear"){ f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+".root","READ"); }
+        else                         { f_mean = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+".root","READ"); }
+    }
+    TFile* f_unpacked = new TFile("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_unpacked.root","READ");
 
     TH1F* rate_NewLayer1_noIso_mean       = (TH1F*)f_mean->Get("rate_noCut_DiTau");
     TH1F* rate_NewLayer1_noIso_unpacked   = (TH1F*)f_unpacked->Get("rate_noCut_DiTau");
@@ -58,10 +72,49 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     TH1F* rate_NewLayer1_OptionY_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_Y"+opt);
     TH1F* rate_NewLayer1_OptionZ_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_Z"+opt);
 
-    TH1F* rate_NewLayer1_Option31_extrap_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_31_extrap");
+    TH1F* rate_NewLayer1_Option1_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_1");
+    TH1F* rate_NewLayer1_Option2_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_2");
+    TH1F* rate_NewLayer1_Option3_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_3");
+    TH1F* rate_NewLayer1_Option4_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_4");
+    TH1F* rate_NewLayer1_Option5_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_5");
+    TH1F* rate_NewLayer1_Option6_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_6");
+    TH1F* rate_NewLayer1_Option7_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_7");
+    TH1F* rate_NewLayer1_Option8_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_8");
+    TH1F* rate_NewLayer1_Option9_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_9");
+    TH1F* rate_NewLayer1_Option10_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_10");
+    TH1F* rate_NewLayer1_Option11_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_11");
+    TH1F* rate_NewLayer1_Option12_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_12");
+    TH1F* rate_NewLayer1_Option13_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_13");
+    TH1F* rate_NewLayer1_Option14_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_14");
+    TH1F* rate_NewLayer1_Option15_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_15");
+    TH1F* rate_NewLayer1_Option16_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_16");
+    TH1F* rate_NewLayer1_Option17_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_17");
+    TH1F* rate_NewLayer1_Option18_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_18");
+    TH1F* rate_NewLayer1_Option19_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_19");
+    TH1F* rate_NewLayer1_Option20_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_20");
+    TH1F* rate_NewLayer1_Option21_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_21");
     TH1F* rate_NewLayer1_Option22_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_22");
+    TH1F* rate_NewLayer1_Option23_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_23");
+    TH1F* rate_NewLayer1_Option24_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_24");
+    TH1F* rate_NewLayer1_Option25_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_25");
+    TH1F* rate_NewLayer1_Option26_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_26");
+    TH1F* rate_NewLayer1_Option27_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_27");
+    TH1F* rate_NewLayer1_Option28_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_28");
+    TH1F* rate_NewLayer1_Option29_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_29");
+    TH1F* rate_NewLayer1_Option30_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_30");
+    TH1F* rate_NewLayer1_Option31_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_31");
+    TH1F* rate_NewLayer1_Option31_extrap_mean = (TH1F*)f_mean->Get("rate_DiTau_Progression_31_extrap");
 
-    TString CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+"_"+opt;
+/*
+    TString CanvasName = "";
+    if(nuGlobalTag!="0") {
+        if(parametrisation=="linear"){ CanvasName = "Comparison_Rate_SingleNeutrino"+nuGlobalTag+isPUReweighted+"_Run"+run_str+"_newnTT_unpacked_optimizationV13gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+"_"+opt; }
+        else                         { CanvasName = "Comparison_Rate_SingleNeutrino"+nuGlobalTag+isPUReweighted+"_Run"+run_str+"_newnTT_unpacked_optimizationV13gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+"_"+opt; }
+    }
+    else {
+        if(parametrisation=="linear"){ CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV13gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+"_"+opt; }
+        else                         { CanvasName = "Comparison_Rate_Run"+run_str+"_newnTT_unpacked_optimizationV13gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+"_"+opt; }
+    }
     TString CanvasNamePdf = CanvasName ;
     CanvasNamePdf += ".pdf";
     TString CanvasNameRoot = CanvasName ;
@@ -413,14 +466,14 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     ratioPlotA_mean->GetXaxis()->SetTitleSize(0.11);
     ratioPlotA_mean->GetYaxis()->SetTitleOffset(0.5);
 
-    TString PDFs = "PDFs/";
+    TString PDFs = "PDFs/optimizationV13/";
     TString ROOTs = "ROOTs/";
     c.SaveAs(PDFs+CanvasNamePdf.Data());
     c.SaveAs(ROOTs+CanvasNameRoot.Data());
- 
+*/
 
-    //find first threshold giving < 10 kHz.
-    Double_t Target = 14;
+    //find first threshold giving < targetRate kHz.
+    Double_t Target = targetRate;
 
     Double_t Threshold_NewLayer1_noIso = 0.;
     Double_t Threshold_NewLayer1_noIso_unpacked = 0.;
@@ -452,11 +505,41 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     Double_t Threshold_NewLayer1_OptionY = 0.;
     Double_t Threshold_NewLayer1_OptionZ = 0.;
 
+    Double_t Threshold_NewLayer1_Option1 = 0.;
+    Double_t Threshold_NewLayer1_Option2 = 0.;
+    Double_t Threshold_NewLayer1_Option3 = 0.;
+    Double_t Threshold_NewLayer1_Option4 = 0.;
+    Double_t Threshold_NewLayer1_Option5 = 0.;
+    Double_t Threshold_NewLayer1_Option6 = 0.;
+    Double_t Threshold_NewLayer1_Option7 = 0.;
+    Double_t Threshold_NewLayer1_Option8 = 0.;
+    Double_t Threshold_NewLayer1_Option9 = 0.;
+    Double_t Threshold_NewLayer1_Option10 = 0.;
+    Double_t Threshold_NewLayer1_Option11 = 0.;
+    Double_t Threshold_NewLayer1_Option12 = 0.;
+    Double_t Threshold_NewLayer1_Option13 = 0.;
+    Double_t Threshold_NewLayer1_Option14 = 0.;
+    Double_t Threshold_NewLayer1_Option15 = 0.;
+    Double_t Threshold_NewLayer1_Option16 = 0.;
+    Double_t Threshold_NewLayer1_Option17 = 0.;
+    Double_t Threshold_NewLayer1_Option18 = 0.;
+    Double_t Threshold_NewLayer1_Option19 = 0.;
+    Double_t Threshold_NewLayer1_Option20 = 0.;
+    Double_t Threshold_NewLayer1_Option21 = 0.;
     Double_t Threshold_NewLayer1_Option22 = 0.;
+    Double_t Threshold_NewLayer1_Option23 = 0.;
+    Double_t Threshold_NewLayer1_Option24 = 0.;
+    Double_t Threshold_NewLayer1_Option25 = 0.;
+    Double_t Threshold_NewLayer1_Option26 = 0.;
+    Double_t Threshold_NewLayer1_Option27 = 0.;
+    Double_t Threshold_NewLayer1_Option28 = 0.;
+    Double_t Threshold_NewLayer1_Option29 = 0.;
+    Double_t Threshold_NewLayer1_Option30 = 0.;
+    Double_t Threshold_NewLayer1_Option31 = 0.;
     Double_t Threshold_NewLayer1_Option31_extrap = 0.;
-        
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_noIso_mean->GetNbinsX() ; ++i)
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_noIso_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_noIso_mean->GetBinContent(i)<=Target)
         {
@@ -465,7 +548,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_noIso_unpacked->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_noIso_unpacked->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_noIso_unpacked->GetBinContent(i)<=Target)
         {
@@ -474,7 +557,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_Iso_unpacked->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Iso_unpacked->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_Iso_unpacked->GetBinContent(i)<=Target)
         {
@@ -484,7 +567,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     }
 
     
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionA_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionA_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionA_mean->GetBinContent(i)<=Target)
         {
@@ -493,7 +576,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionB_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionB_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionB_mean->GetBinContent(i)<=Target)
         {
@@ -502,7 +585,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionC_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionC_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionC_mean->GetBinContent(i)<=Target)
         {
@@ -511,7 +594,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionD_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionD_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionD_mean->GetBinContent(i)<=Target)
         {
@@ -520,7 +603,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionE_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionE_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionE_mean->GetBinContent(i)<=Target)
         {
@@ -529,7 +612,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionF_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionF_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionF_mean->GetBinContent(i)<=Target)
         {
@@ -538,7 +621,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionG_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionG_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionG_mean->GetBinContent(i)<=Target)
         {
@@ -547,7 +630,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionH_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionH_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionH_mean->GetBinContent(i)<=Target)
         {
@@ -556,7 +639,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionI_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionI_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionI_mean->GetBinContent(i)<=Target)
         {
@@ -565,7 +648,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionJ_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionJ_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionJ_mean->GetBinContent(i)<=Target)
         {
@@ -574,7 +657,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionK_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionK_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionK_mean->GetBinContent(i)<=Target)
         {
@@ -583,7 +666,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionL_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionL_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionL_mean->GetBinContent(i)<=Target)
         {
@@ -592,7 +675,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionM_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionM_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionM_mean->GetBinContent(i)<=Target)
         {
@@ -601,7 +684,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionN_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionN_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionN_mean->GetBinContent(i)<=Target)
         {
@@ -610,7 +693,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionO_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionO_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionO_mean->GetBinContent(i)<=Target)
         {
@@ -619,7 +702,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionP_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionP_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionP_mean->GetBinContent(i)<=Target)
         {
@@ -628,7 +711,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionQ_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionQ_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionQ_mean->GetBinContent(i)<=Target)
         {
@@ -637,7 +720,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionR_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionR_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionR_mean->GetBinContent(i)<=Target)
         {
@@ -646,7 +729,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionS_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionS_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionS_mean->GetBinContent(i)<=Target)
         {
@@ -655,7 +738,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionT_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionT_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionT_mean->GetBinContent(i)<=Target)
         {
@@ -664,7 +747,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionU_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionU_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionU_mean->GetBinContent(i)<=Target)
         {
@@ -673,7 +756,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionV_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionV_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionV_mean->GetBinContent(i)<=Target)
         {
@@ -682,7 +765,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionW_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionW_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionW_mean->GetBinContent(i)<=Target)
         {
@@ -691,7 +774,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionX_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionX_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionX_mean->GetBinContent(i)<=Target)
         {
@@ -700,7 +783,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionY_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionY_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionY_mean->GetBinContent(i)<=Target)
         {
@@ -709,7 +792,7 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_OptionZ_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_OptionZ_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_OptionZ_mean->GetBinContent(i)<=Target)
         {
@@ -718,29 +801,340 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
         }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_Option22_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option1_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option1_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option1 = rate_NewLayer1_Option1_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option2_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option2_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option2 = rate_NewLayer1_Option2_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option3_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option3_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option3 = rate_NewLayer1_Option3_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option4_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option4_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option4 = rate_NewLayer1_Option4_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option5_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option5_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option5 = rate_NewLayer1_Option5_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option6_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option6_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option6 = rate_NewLayer1_Option6_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option7_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option7_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option7 = rate_NewLayer1_Option7_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option8_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option8_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option8 = rate_NewLayer1_Option8_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option9_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option9_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option9 = rate_NewLayer1_Option9_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option10_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option10_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option10 = rate_NewLayer1_Option10_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option11_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option11_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option11 = rate_NewLayer1_Option11_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option12_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option12_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option12 = rate_NewLayer1_Option12_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option13_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option13_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option13 = rate_NewLayer1_Option13_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option14_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option14_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option14 = rate_NewLayer1_Option14_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option15_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option15_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option15 = rate_NewLayer1_Option15_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option16_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option16_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option16 = rate_NewLayer1_Option16_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option17_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option17_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option17 = rate_NewLayer1_Option17_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option18_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option18_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option18 = rate_NewLayer1_Option18_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option19_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option19_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option19 = rate_NewLayer1_Option19_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option20_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option20_mean->GetBinContent(i)<=Target)
+    {
+        Threshold_NewLayer1_Option20 = rate_NewLayer1_Option20_mean->GetBinLowEdge(i);
+        break;
+    }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option21_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option21_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option21 = rate_NewLayer1_Option21_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option22_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_Option22_mean->GetBinContent(i)<=Target)
-        {
-            Threshold_NewLayer1_Option22 = rate_NewLayer1_Option22_mean->GetBinLowEdge(i);
-            break;
-        }
+            {
+                Threshold_NewLayer1_Option22 = rate_NewLayer1_Option22_mean->GetBinLowEdge(i);
+                break;
+            }
     }
 
-    for(UInt_t i = 1 ; i <= rate_NewLayer1_Option31_extrap_mean->GetNbinsX() ; ++i)
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option23_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option23_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option23 = rate_NewLayer1_Option23_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option24_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option24_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option24 = rate_NewLayer1_Option24_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option25_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option25_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option25 = rate_NewLayer1_Option25_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option26_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option26_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option26 = rate_NewLayer1_Option26_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option27_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option27_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option27 = rate_NewLayer1_Option27_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option28_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option28_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option28 = rate_NewLayer1_Option28_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option29_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option29_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option29 = rate_NewLayer1_Option29_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option30_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option30_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option30 = rate_NewLayer1_Option30_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option31_mean->GetNbinsX() ; ++i)
+    {
+        if(rate_NewLayer1_Option31_mean->GetBinContent(i)<=Target)
+            {
+                Threshold_NewLayer1_Option31 = rate_NewLayer1_Option31_mean->GetBinLowEdge(i);
+                break;
+            }
+    }
+
+    for(Int_t i = 1 ; i <= rate_NewLayer1_Option31_extrap_mean->GetNbinsX() ; ++i)
     {
         if(rate_NewLayer1_Option31_extrap_mean->GetBinContent(i)<=Target)
-        {
-            Threshold_NewLayer1_Option31_extrap = rate_NewLayer1_Option31_extrap_mean->GetBinLowEdge(i);
-            break;
-        }
+            {
+                Threshold_NewLayer1_Option31_extrap = rate_NewLayer1_Option31_extrap_mean->GetBinLowEdge(i);
+                break;
+            }
     }
 
-    cout<<"if (tag==\""+tag+"\" and opt==\""+opt+"\")" << endl;
+    if (tag=="effMin0p0" && opt=="0")
+    {
+        cout<<"Threshold_NewLayer1_noIso   = "<<Threshold_NewLayer1_noIso-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_noIso_unpacked = "<<Threshold_NewLayer1_noIso_unpacked-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Iso_unpacked = "<<Threshold_NewLayer1_Iso_unpacked-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option1 = "<<Threshold_NewLayer1_Option1-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option2 = "<<Threshold_NewLayer1_Option2-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option3 = "<<Threshold_NewLayer1_Option3-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option4 = "<<Threshold_NewLayer1_Option4-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option5 = "<<Threshold_NewLayer1_Option5-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option6 = "<<Threshold_NewLayer1_Option6-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option7 = "<<Threshold_NewLayer1_Option7-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option8 = "<<Threshold_NewLayer1_Option8-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option9 = "<<Threshold_NewLayer1_Option9-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option10 = "<<Threshold_NewLayer1_Option10-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option11 = "<<Threshold_NewLayer1_Option11-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option12 = "<<Threshold_NewLayer1_Option12-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option13 = "<<Threshold_NewLayer1_Option13-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option14 = "<<Threshold_NewLayer1_Option14-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option15 = "<<Threshold_NewLayer1_Option15-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option16 = "<<Threshold_NewLayer1_Option16-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option17 = "<<Threshold_NewLayer1_Option17-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option18 = "<<Threshold_NewLayer1_Option18-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option19 = "<<Threshold_NewLayer1_Option19-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option20 = "<<Threshold_NewLayer1_Option20-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option21 = "<<Threshold_NewLayer1_Option21-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option22 = "<<Threshold_NewLayer1_Option22-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option23 = "<<Threshold_NewLayer1_Option23-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option24 = "<<Threshold_NewLayer1_Option24-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option25 = "<<Threshold_NewLayer1_Option25-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option26 = "<<Threshold_NewLayer1_Option26-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option27 = "<<Threshold_NewLayer1_Option27-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option28 = "<<Threshold_NewLayer1_Option28-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option29 = "<<Threshold_NewLayer1_Option29-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option30 = "<<Threshold_NewLayer1_Option30-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option31 = "<<Threshold_NewLayer1_Option31-0.49<<";"<<endl;
+        cout<<"Threshold_NewLayer1_Option31_extrap = "<<Threshold_NewLayer1_Option31_extrap-0.49<<";"<<endl;
+
+        cout<<"if (tag==\""+tag+"\" and opt==\""+opt+"\")" << endl;
+    }
+    else {
+        cout<<"else if (tag==\""+tag+"\" and opt==\""+opt+"\")" << endl;
+    }
+    
     cout<< "{" << endl;
-    cout<<"    Threshold_NewLayer1_noIso   = "<<Threshold_NewLayer1_noIso-0.49<<";"<<endl;
-    cout<<"    Threshold_NewLayer1_noIso_unpacked = "<<Threshold_NewLayer1_noIso_unpacked-0.49<<";"<<endl;
-    cout<<"    Threshold_NewLayer1_Iso_unpacked = "<<Threshold_NewLayer1_Iso_unpacked-0.49<<";"<<endl;
     cout<<"    Threshold_NewLayer1_OptionA = "<<Threshold_NewLayer1_OptionA-0.49<<";"<<endl;
     cout<<"    Threshold_NewLayer1_OptionB = "<<Threshold_NewLayer1_OptionB-0.49<<";"<<endl;
     cout<<"    Threshold_NewLayer1_OptionC = "<<Threshold_NewLayer1_OptionC-0.49<<";"<<endl;
@@ -767,8 +1161,6 @@ void compare(int run, TString tag, TString opt="0", float calibThr = 1.7) {
     cout<<"    Threshold_NewLayer1_OptionX = "<<Threshold_NewLayer1_OptionX-0.49<<";"<<endl;
     cout<<"    Threshold_NewLayer1_OptionY = "<<Threshold_NewLayer1_OptionY-0.49<<";"<<endl;
     cout<<"    Threshold_NewLayer1_OptionZ = "<<Threshold_NewLayer1_OptionZ-0.49<<";"<<endl;
-    cout<<"    Threshold_NewLayer1_Option22 = "<<Threshold_NewLayer1_Option22-0.49<<";"<<endl;
-    cout<<"    Threshold_NewLayer1_Option31_extrap = "<<Threshold_NewLayer1_Option31_extrap-0.49<<";"<<endl;
     cout<< "}" << endl;
     
 

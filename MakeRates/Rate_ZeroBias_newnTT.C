@@ -22,7 +22,7 @@
 
 using namespace std;
 
-void Rate(int run, float calibThr = 1.7)
+void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, float calibThr = 1.7)
 {
   // TFile f_2DShapeVetos("/home/llr/cms/mperez/TauTrigger/CMSSW_9_2_10/src/TauTagAndProbe/TauTagAndProbe/test/ShapeVeto/TwoDShapeVetos.root","READ");
   // TH2I* TwoDShapeVetos_0p6_10_50 = (TH2I*)f_2DShapeVetos.Get("TwoDShapeVetos_0p6_10_50");
@@ -73,8 +73,16 @@ void Rate(int run, float calibThr = 1.7)
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
+
+  TString Kintgr = to_string(Kfact).substr(0, to_string(Kfact).find("."));
+  TString Kdecim = to_string(Kfact).substr(2, to_string(Kfact).find("."));
+
   std::map<TString,TH3F*> histosIsolation;
-  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6_calibThr"+intgr+"p"+decim+".root","READ");
+  
+  TString fIsoName = "";
+  if(parametrisation=="linear") fIsoName = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+"_linear.root";
+  else                          fIsoName = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+  TFile f_Isolation(fIsoName, "READ");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
     {
@@ -112,11 +120,11 @@ void Rate(int run, float calibThr = 1.7)
   // cout << histosIsolation["LUT_WP50"]->GetBinContent(1,1,1) << endl;
   // return;
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs_CALIBRATED.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
-  Int_t       in_EventNumber =  0;
+  Int_t           in_EventNumber =  0;
   Int_t           in_RunNumber =  0;
   Int_t           in_lumi =  0;
   vector<float>   *in_l1tEmuPt =  0;
@@ -2413,8 +2421,12 @@ void Rate(int run, float calibThr = 1.7)
   //     // rate_IsoCut_Linear_DiTau->SetBinContent(i+1,pt_IsoLinear_DiTau->Integral(i+1,1201)/Denominator*scale);
   //     //rate_Stage1->SetBinContent(i+1,pt_Stage1->Integral(i+1,1201)/dataStage1.GetEntries()*scale);
   //   }
+  
+  TString TFileName = "";  
+  if(parametrisation=="linear") TFileName = "histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_linear.root";
+  else                          TFileName = "histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+  TFile f(TFileName,"RECREATE");
 
-  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+".root","RECREATE");
   Iso_MinBias->Write();
   Correction_Factor->Write();
   Correction_Factor_IEt_30->Write();

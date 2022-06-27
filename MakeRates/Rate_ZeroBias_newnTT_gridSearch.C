@@ -44,7 +44,7 @@ void Rate(int run, TString tag, float calibThr = 1.7)
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
     std::map<TString,TH3F*> histosIsolation;
-    TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
+    TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV10gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
 
     for(UInt_t i = 0 ; i < 101 ; ++i)
         {
@@ -90,7 +90,7 @@ void Rate(int run, TString tag, float calibThr = 1.7)
     // cout << histosIsolation["LUT_WP50"]->GetBinContent(1,1,1) << endl;
     // return;
 
-    TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_CALIBRATED.root";
+    TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs_CALIBRATED.root";
     TFile f_in(FileName_in.Data(),"READ");
     TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
@@ -10719,7 +10719,7 @@ void Rate(int run, TString tag, float calibThr = 1.7)
     //     //rate_Stage1->SetBinContent(i+1,pt_Stage1->Integral(i+1,1201)/dataStage1.GetEntries()*scale);
     //   }
 
-    TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","RECREATE");
+    TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV10gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","RECREATE");
     Iso_MinBias->Write();
     Correction_Factor->Write();
     Correction_Factor_IEt_30->Write();
@@ -11860,6 +11860,162 @@ void Rate(int run, TString tag, float calibThr = 1.7)
     Hz_Option31_extrap[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_31_extrap);
     Hz_Option31_extrap.Write("Hz_Option31_extrap");
     std::cout << "Option31_extrap : rate@thr32 = " << Hz_Option31_extrap[0] << "  -  rate@thr33 = " << Hz_Option31_extrap[1] << std::endl; 
+
+    TVectorF Hz_OptionA0(2);
+    Hz_OptionA0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_A1);
+    Hz_OptionA0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_A1);
+    Hz_OptionA0.Write("Hz_OptionA0");
+    std::cout << "OptionA0 : rate@thr32 = " << Hz_OptionA0[0] << "  -  rate@thr33 = " << Hz_OptionA0[1] << std::endl; 
+
+    TVectorF Hz_OptionB0(2);
+    Hz_OptionB0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_B1);
+    Hz_OptionB0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_B1);
+    Hz_OptionB0.Write("Hz_OptionB0");
+    std::cout << "OptionB0 : rate@thr32 = " << Hz_OptionB0[0] << "  -  rate@thr33 = " << Hz_OptionB0[1] << std::endl; 
+
+    TVectorF Hz_OptionC0(2);
+    Hz_OptionC0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_C1);
+    Hz_OptionC0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_C1);
+    Hz_OptionC0.Write("Hz_OptionC0");
+    std::cout << "OptionC0 : rate@thr32 = " << Hz_OptionC0[0] << "  -  rate@thr33 = " << Hz_OptionC0[1] << std::endl; 
+
+    TVectorF Hz_OptionD0(2);
+    Hz_OptionD0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_D1);
+    Hz_OptionD0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_D1);
+    Hz_OptionD0.Write("Hz_OptionD0");
+    std::cout << "OptionD0 : rate@thr32 = " << Hz_OptionD0[0] << "  -  rate@thr33 = " << Hz_OptionD0[1] << std::endl; 
+
+    TVectorF Hz_OptionE0(2);
+    Hz_OptionE0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_E1);
+    Hz_OptionE0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_E1);
+    Hz_OptionE0.Write("Hz_OptionE0");
+    std::cout << "OptionE0 : rate@thr32 = " << Hz_OptionE0[0] << "  -  rate@thr33 = " << Hz_OptionE0[1] << std::endl; 
+
+    TVectorF Hz_OptionF0(2);
+    Hz_OptionF0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_F1);
+    Hz_OptionF0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_F1);
+    Hz_OptionF0.Write("Hz_OptionF0");
+    std::cout << "OptionF0 : rate@thr32 = " << Hz_OptionF0[0] << "  -  rate@thr33 = " << Hz_OptionF0[1] << std::endl; 
+
+    TVectorF Hz_OptionG0(2);
+    Hz_OptionG0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_G1);
+    Hz_OptionG0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_G1);
+    Hz_OptionG0.Write("Hz_OptionG0");
+    std::cout << "OptionG0 : rate@thr32 = " << Hz_OptionG0[0] << "  -  rate@thr33 = " << Hz_OptionG0[1] << std::endl; 
+
+    TVectorF Hz_OptionH0(2);
+    Hz_OptionH0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_H1);
+    Hz_OptionH0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_H1);
+    Hz_OptionH0.Write("Hz_OptionH0");
+    std::cout << "OptionH0 : rate@thr32 = " << Hz_OptionH0[0] << "  -  rate@thr33 = " << Hz_OptionH0[1] << std::endl; 
+
+    TVectorF Hz_OptionI0(2);
+    Hz_OptionI0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_I1);
+    Hz_OptionI0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_I1);
+    Hz_OptionI0.Write("Hz_OptionI0");
+    std::cout << "OptionI0 : rate@thr32 = " << Hz_OptionI0[0] << "  -  rate@thr33 = " << Hz_OptionI0[1] << std::endl; 
+
+    TVectorF Hz_OptionJ0(2);
+    Hz_OptionJ0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_J1);
+    Hz_OptionJ0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_J1);
+    Hz_OptionJ0.Write("Hz_OptionJ0");
+    std::cout << "OptionJ0 : rate@thr32 = " << Hz_OptionJ0[0] << "  -  rate@thr33 = " << Hz_OptionJ0[1] << std::endl; 
+
+    TVectorF Hz_OptionK0(2);
+    Hz_OptionK0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_K1);
+    Hz_OptionK0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_K1);
+    Hz_OptionK0.Write("Hz_OptionK0");
+    std::cout << "OptionK0 : rate@thr32 = " << Hz_OptionK0[0] << "  -  rate@thr33 = " << Hz_OptionK0[1] << std::endl; 
+
+    TVectorF Hz_OptionL0(2);
+    Hz_OptionL0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_L1);
+    Hz_OptionL0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_L1);
+    Hz_OptionL0.Write("Hz_OptionL0");
+    std::cout << "OptionL0 : rate@thr32 = " << Hz_OptionL0[0] << "  -  rate@thr33 = " << Hz_OptionL0[1] << std::endl; 
+
+    TVectorF Hz_OptionM0(2);
+    Hz_OptionM0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_M1);
+    Hz_OptionM0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_M1);
+    Hz_OptionM0.Write("Hz_OptionM0");
+    std::cout << "OptionM0 : rate@thr32 = " << Hz_OptionM0[0] << "  -  rate@thr33 = " << Hz_OptionM0[1] << std::endl; 
+
+    TVectorF Hz_OptionN0(2);
+    Hz_OptionN0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_N1);
+    Hz_OptionN0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_N1);
+    Hz_OptionN0.Write("Hz_OptionN0");
+    std::cout << "OptionN0 : rate@thr32 = " << Hz_OptionN0[0] << "  -  rate@thr33 = " << Hz_OptionN0[1] << std::endl; 
+
+    TVectorF Hz_OptionO0(2);
+    Hz_OptionO0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_O1);
+    Hz_OptionO0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_O1);
+    Hz_OptionO0.Write("Hz_OptionO0");
+    std::cout << "OptionO0 : rate@thr32 = " << Hz_OptionO0[0] << "  -  rate@thr33 = " << Hz_OptionO0[1] << std::endl; 
+
+    TVectorF Hz_OptionP0(2);
+    Hz_OptionP0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_P1);
+    Hz_OptionP0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_P1);
+    Hz_OptionP0.Write("Hz_OptionP0");
+    std::cout << "OptionP0 : rate@thr32 = " << Hz_OptionP0[0] << "  -  rate@thr33 = " << Hz_OptionP0[1] << std::endl; 
+
+    TVectorF Hz_OptionQ0(2);
+    Hz_OptionQ0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_Q1);
+    Hz_OptionQ0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_Q1);
+    Hz_OptionQ0.Write("Hz_OptionQ0");
+    std::cout << "OptionQ0 : rate@thr32 = " << Hz_OptionQ0[0] << "  -  rate@thr33 = " << Hz_OptionQ0[1] << std::endl; 
+
+    TVectorF Hz_OptionR0(2);
+    Hz_OptionR0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_R1);
+    Hz_OptionR0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_R1);
+    Hz_OptionR0.Write("Hz_OptionR0");
+    std::cout << "OptionR0 : rate@thr32 = " << Hz_OptionR0[0] << "  -  rate@thr33 = " << Hz_OptionR0[1] << std::endl; 
+
+    TVectorF Hz_OptionS0(2);
+    Hz_OptionS0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_S1);
+    Hz_OptionS0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_S1);
+    Hz_OptionS0.Write("Hz_OptionS0");
+    std::cout << "OptionS0 : rate@thr32 = " << Hz_OptionS0[0] << "  -  rate@thr33 = " << Hz_OptionS0[1] << std::endl; 
+
+    TVectorF Hz_OptionT0(2);
+    Hz_OptionT0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_T1);
+    Hz_OptionT0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_T1);
+    Hz_OptionT0.Write("Hz_OptionT0");
+    std::cout << "OptionT0 : rate@thr32 = " << Hz_OptionT0[0] << "  -  rate@thr33 = " << Hz_OptionT0[1] << std::endl; 
+
+    TVectorF Hz_OptionU0(2);
+    Hz_OptionU0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_U1);
+    Hz_OptionU0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_U1);
+    Hz_OptionU0.Write("Hz_OptionU0");
+    std::cout << "OptionU0 : rate@thr32 = " << Hz_OptionU0[0] << "  -  rate@thr33 = " << Hz_OptionU0[1] << std::endl; 
+
+    TVectorF Hz_OptionV0(2);
+    Hz_OptionV0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_V1);
+    Hz_OptionV0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_V1);
+    Hz_OptionV0.Write("Hz_OptionV0");
+    std::cout << "OptionV0 : rate@thr32 = " << Hz_OptionV0[0] << "  -  rate@thr33 = " << Hz_OptionV0[1] << std::endl; 
+
+    TVectorF Hz_OptionW0(2);
+    Hz_OptionW0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_W1);
+    Hz_OptionW0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_W1);
+    Hz_OptionW0.Write("Hz_OptionW0");
+    std::cout << "OptionW0 : rate@thr32 = " << Hz_OptionW0[0] << "  -  rate@thr33 = " << Hz_OptionW0[1] << std::endl; 
+
+    TVectorF Hz_OptionX0(2);
+    Hz_OptionX0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_X1);
+    Hz_OptionX0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_X1);
+    Hz_OptionX0.Write("Hz_OptionX0");
+    std::cout << "OptionX0 : rate@thr32 = " << Hz_OptionX0[0] << "  -  rate@thr33 = " << Hz_OptionX0[1] << std::endl; 
+
+    TVectorF Hz_OptionY0(2);
+    Hz_OptionY0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_Y1);
+    Hz_OptionY0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_Y1);
+    Hz_OptionY0.Write("Hz_OptionY0");
+    std::cout << "OptionY0 : rate@thr32 = " << Hz_OptionY0[0] << "  -  rate@thr33 = " << Hz_OptionY0[1] << std::endl; 
+
+    TVectorF Hz_OptionZ0(2);
+    Hz_OptionZ0[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_Z1);
+    Hz_OptionZ0[1] = rateAtFixedThreshold(targetB, rate_DiTau_Progression_Z1);
+    Hz_OptionZ0.Write("Hz_OptionZ0");
+    std::cout << "OptionZ0 : rate@thr32 = " << Hz_OptionZ0[0] << "  -  rate@thr33 = " << Hz_OptionZ0[1] << std::endl; 
 
     TVectorF Hz_OptionA1(2);
     Hz_OptionA1[0] = rateAtFixedThreshold(targetA, rate_DiTau_Progression_A1);

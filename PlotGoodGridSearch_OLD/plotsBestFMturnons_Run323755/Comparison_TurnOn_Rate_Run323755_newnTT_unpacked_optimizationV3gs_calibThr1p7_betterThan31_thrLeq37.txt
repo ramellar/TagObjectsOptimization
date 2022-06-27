@@ -1,0 +1,23 @@
+noIso :  FM=57317 - THR=42.51
+Option22 :  FM=66019 - THR=35.51
+Option31_extrap :  FM=65309 - THR=36.51
+
+
+effMin0p9 OptionG7 : FM=66345 - THR=36.51
+effMin0p9 OptionW7 : FM=66280 - THR=36.51
+effMin0p9 OptionH7 : FM=66270 - THR=36.51
+effMin0p9 OptionM8 : FM=66259 - THR=36.51
+effMin0p9 OptionX7 : FM=66149 - THR=36.51
+effMin0p8 OptionP2 : FM=66118 - THR=36.51
+effMin0p9 OptionO8 : FM=66112 - THR=36.51
+effMin0p9 OptionN8 : FM=66112 - THR=36.51
+effMin0p8 OptionZ1 : FM=66102 - THR=36.51
+effMin0p8 OptionJ1 : FM=66020 - THR=36.51
+effMin0p8 OptionG3 : FM=65982 - THR=36.51
+effMin0p8 OptionA2 : FM=65884 - THR=36.51
+effMin0p8 OptionQ2 : FM=65841 - THR=36.51
+effMin0p8 OptionX3 : FM=65754 - THR=36.51
+effMin0p8 OptionR2 : FM=65642 - THR=36.51
+effMin0p8 OptionH3 : FM=65540 - THR=36.51
+effMin0p8 OptionO4 : FM=65539 - THR=36.51
+effMin0p8 OptionY3 : FM=65476 - THR=36.51

@@ -2,7 +2,7 @@ import ROOT
 #from GBR2LUT import GBR2LUT
 from GBR2LUTEmulator import GBR2LUTEmulator
 
-version = "V6"
+version = "V13"
 
 inputFile = "forests/GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimization{}_results.root".format(version)
 

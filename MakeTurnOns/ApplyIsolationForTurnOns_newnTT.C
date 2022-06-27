@@ -58,19 +58,24 @@ float integral(TH1F* fine_pt, float xp) {
   return fine_pt->Integral(binxp,fine_pt->GetNbinsX());
 }
 
-void ApplyIsolationForTurnOns(int run, float calibThr = 1.7, Bool_t nTTRange = kFALSE)
+void ApplyIsolationForTurnOns(int run, int targetRate = 14, float calibThr = 1.7, Bool_t nTTRange = kFALSE)
 {
-  TString run_str = to_string(run);
+  TString run_str = to_string(run); // run=-1 corresponds to rate evaluated with SingleNeutrino MC
+
+  TString fixedRate = to_string(targetRate);
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-  TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_28.root";
+  TString InputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_06_10.root";
 
-  TString FileNameOut = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE_Run"+run_str+"_2022_01_28";
+  TString FileNameOut = "";
+  if (run==-1) FileNameOut = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE"+fixedRate+"kHz_SingleNeutrino120X_2022_06_10";
+  else         FileNameOut = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_TURNONS_FIXEDRATE"+fixedRate+"kHz_Run"+run_str+"_2022_06_10";
+  
 
   std::map<TString,TH3F*> histosIsolation;
-  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6_calibThr"+intgr+"p"+decim+".root");
+  TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV12_calibThr"+intgr+"p"+decim+".root");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
     {
@@ -255,45 +260,6 @@ void ApplyIsolationForTurnOns(int run, float calibThr = 1.7, Bool_t nTTRange = k
   //TH1F* pt_pass_Option22_ShapeVeto_0p2_25_60  = new TH1F("pt_pass_Option22_ShapeVeto_0p2_25_60" ,"pt_pass_Option22_ShapeVeto_0p2_25_60" ,21,binning);
   //TH1F* pt_pass_Option22_ShapeVeto_0p2_20_100  = new TH1F("pt_pass_Option22_ShapeVeto_0p2_20_100" ,"pt_pass_Option22_ShapeVeto_0p2_20_100" ,21,binning);
 
-  
-  // OLD VALUES
-  // Double_t Threshold_NewLayer1_noIso   = 38.51;
-  // Double_t Threshold_NewLayer1_Option1 = 24.51;
-  // Double_t Threshold_NewLayer1_Option2 = 29.51;
-  // Double_t Threshold_NewLayer1_Option3 = 31.51;
-  // Double_t Threshold_NewLayer1_Option4 = 32.51;
-  // Double_t Threshold_NewLayer1_Option5 = 33.51;
-  // Double_t Threshold_NewLayer1_Option6 = 36.51;
-  // Double_t Threshold_NewLayer1_Option7 = 36.51;
-  // Double_t Threshold_NewLayer1_Option8 = 27.51;
-  // Double_t Threshold_NewLayer1_Option9 = 36.51;
-  // Double_t Threshold_NewLayer1_Option10 = 36.51;
-  // Double_t Threshold_NewLayer1_Option11 = 36.51;
-  // Double_t Threshold_NewLayer1_Option12 = 38.51;
-  // Double_t Threshold_NewLayer1_Option13 = 38.51;
-  // Double_t Threshold_NewLayer1_Option14 = 38.51;
-  // Double_t Threshold_NewLayer1_Option15 = 34.51;
-  // Double_t Threshold_NewLayer1_Option16 = 38.51;
-  // Double_t Threshold_NewLayer1_Option17 = 38.51;
-  // Double_t Threshold_NewLayer1_Option18 = 38.51;
-  // Double_t Threshold_NewLayer1_Option19 = 38.51;
-  // Double_t Threshold_NewLayer1_Option20 = 38.51;
-  // Double_t Threshold_NewLayer1_Option21 = 35.51;
-  // Double_t Threshold_NewLayer1_Option22 = 33.51;
-  Double_t Threshold_NewLayer1_Option22_threshold25 = 24.51;
-  // // Double_t Threshold_NewLayer1_Option22 = 29.51;
-  // Double_t Threshold_NewLayer1_Option23 = 28.51;
-  // Double_t Threshold_NewLayer1_Option24 = 27.51;
-  // Double_t Threshold_NewLayer1_Option25 = 29.51;
-  // Double_t Threshold_NewLayer1_Option26 = 26.51;
-  // Double_t Threshold_NewLayer1_Option27 = 32.51;
-  // Double_t Threshold_NewLayer1_Option28 = 27.51;
-  // Double_t Threshold_NewLayer1_Option29 = 28.51;
-  // Double_t Threshold_NewLayer1_Option30 = 29.51;
-  // Double_t Threshold_NewLayer1_Option31 = 33.51;
-  // Double_t Threshold_NewLayer1_Option31_extrap = 33.51;
-  Double_t Threshold_NewLayer1_Option31_extrap_threshold25 = 24.51;
-
   Double_t Threshold_NewLayer1_noIso   = 0.0;
   Double_t Threshold_NewLayer1_Option1 = 0.0;
   Double_t Threshold_NewLayer1_Option2 = 0.0;
@@ -330,238 +296,69 @@ void ApplyIsolationForTurnOns(int run, float calibThr = 1.7, Bool_t nTTRange = k
   Double_t Threshold_NewLayer1_noIso_unpacked = 0.0;
   Double_t Threshold_NewLayer1_Iso_unpacked = 0.0;
 
-  // V6 OPTIMIZATION
-  if (run==323755)
-  {
-    Threshold_NewLayer1_noIso   = 40.51;
-    Threshold_NewLayer1_Option1 = 36.51;
-    Threshold_NewLayer1_Option2 = 38.51;
-    Threshold_NewLayer1_Option3 = 39.51;
+  Double_t Threshold_NewLayer1_Option22_threshold25 = 24.51;
+  Double_t Threshold_NewLayer1_Option31_extrap_threshold25 = 24.51;
+
+  // V12 OPTIMIZATION
+  if(targetRate==12) {
+    std::cout << "fixed rate value not investigated -> try another one" << std::endl;
+    std::cout << "fixing 0.0GeV thresholds" << std::endl;
+  }
+  else if(targetRate==14) {
+    Threshold_NewLayer1_noIso   = 48.51;
+    Threshold_NewLayer1_noIso_unpacked = 43.51;
+    Threshold_NewLayer1_Iso_unpacked = 35.51;
+    Threshold_NewLayer1_Option1 = 25.51;
+    Threshold_NewLayer1_Option2 = 35.51;
+    Threshold_NewLayer1_Option3 = 37.51;
     Threshold_NewLayer1_Option4 = 39.51;
-    Threshold_NewLayer1_Option5 = 39.51;
-    Threshold_NewLayer1_Option6 = 40.51;
-    Threshold_NewLayer1_Option7 = 40.51;
-    Threshold_NewLayer1_Option8 = 33.51;
-    Threshold_NewLayer1_Option9 = 40.51;
-    Threshold_NewLayer1_Option10 = 40.51;
-    Threshold_NewLayer1_Option11 = 40.51;
-    Threshold_NewLayer1_Option12 = 40.51;
-    Threshold_NewLayer1_Option13 = 40.51;
-    Threshold_NewLayer1_Option14 = 40.51;
-    Threshold_NewLayer1_Option15 = 39.51;
-    Threshold_NewLayer1_Option16 = 40.51;
-    Threshold_NewLayer1_Option17 = 40.51;
-    Threshold_NewLayer1_Option18 = 40.51;
-    Threshold_NewLayer1_Option19 = 40.51;
-    Threshold_NewLayer1_Option20 = 40.51;
-    Threshold_NewLayer1_Option21 = 39.51;
-    Threshold_NewLayer1_Option22 = 34.51;
-    Threshold_NewLayer1_Option23 = 33.51;
-    Threshold_NewLayer1_Option24 = 32.51;
-    Threshold_NewLayer1_Option25 = 37.51;
-    Threshold_NewLayer1_Option26 = 30.51;
+    Threshold_NewLayer1_Option5 = 40.51;
+    Threshold_NewLayer1_Option6 = 48.51;
+    Threshold_NewLayer1_Option7 = 48.51;
+    Threshold_NewLayer1_Option8 = 27.51;
+    Threshold_NewLayer1_Option9 = 48.51;
+    Threshold_NewLayer1_Option10 = 48.51;
+    Threshold_NewLayer1_Option11 = 48.51;
+    Threshold_NewLayer1_Option12 = 48.51;
+    Threshold_NewLayer1_Option13 = 48.51;
+    Threshold_NewLayer1_Option14 = 48.51;
+    Threshold_NewLayer1_Option15 = 42.51;
+    Threshold_NewLayer1_Option16 = 48.51;
+    Threshold_NewLayer1_Option17 = 48.51;
+    Threshold_NewLayer1_Option18 = 48.51;
+    Threshold_NewLayer1_Option19 = 48.51;
+    Threshold_NewLayer1_Option20 = 48.51;
+    Threshold_NewLayer1_Option21 = 43.51;
+    Threshold_NewLayer1_Option22 = 30.51;
+    Threshold_NewLayer1_Option23 = 28.51;
+    Threshold_NewLayer1_Option24 = 26.51;
+    Threshold_NewLayer1_Option25 = 32.51;
+    Threshold_NewLayer1_Option26 = 25.51;
     Threshold_NewLayer1_Option27 = 39.51;
-    Threshold_NewLayer1_Option28 = 31.51;
-    Threshold_NewLayer1_Option29 = 34.51;
-    Threshold_NewLayer1_Option30 = 38.51;
-    Threshold_NewLayer1_Option31 = 37.51;
-    Threshold_NewLayer1_Option31_extrap = 35.51;
-    Threshold_NewLayer1_noIso_unpacked = 42.51;
-    Threshold_NewLayer1_Iso_unpacked = 33.51;
+    Threshold_NewLayer1_Option28 = 27.51;
+    Threshold_NewLayer1_Option29 = 29.51;
+    Threshold_NewLayer1_Option30 = 35.51;
+    Threshold_NewLayer1_Option31 = 34.51;
+    Threshold_NewLayer1_Option31_extrap = 32.51;
   }
-  if (run==323775)
-  {
-    Threshold_NewLayer1_noIso   = 39.51;
-    Threshold_NewLayer1_Option1 = 30.51;
-    Threshold_NewLayer1_Option2 = 34.51;
-    Threshold_NewLayer1_Option3 = 35.51;
-    Threshold_NewLayer1_Option4 = 35.51;
-    Threshold_NewLayer1_Option5 = 36.51;
-    Threshold_NewLayer1_Option6 = 38.51;
-    Threshold_NewLayer1_Option7 = 38.51;
-    Threshold_NewLayer1_Option8 = 31.51;
-    Threshold_NewLayer1_Option9 = 38.51;
-    Threshold_NewLayer1_Option10 = 38.51;
-    Threshold_NewLayer1_Option11 = 38.51;
-    Threshold_NewLayer1_Option12 = 39.51;
-    Threshold_NewLayer1_Option13 = 39.51;
-    Threshold_NewLayer1_Option14 = 39.51;
-    Threshold_NewLayer1_Option15 = 36.51;
-    Threshold_NewLayer1_Option16 = 39.51;
-    Threshold_NewLayer1_Option17 = 39.51;
-    Threshold_NewLayer1_Option18 = 39.51;
-    Threshold_NewLayer1_Option19 = 39.51;
-    Threshold_NewLayer1_Option20 = 39.51;
-    Threshold_NewLayer1_Option21 = 37.51;
-    Threshold_NewLayer1_Option22 = 32.51;
-    Threshold_NewLayer1_Option23 = 31.51;
-    Threshold_NewLayer1_Option24 = 30.51;
-    Threshold_NewLayer1_Option25 = 33.51;
-    Threshold_NewLayer1_Option26 = 28.51;
-    Threshold_NewLayer1_Option27 = 35.51;
-    Threshold_NewLayer1_Option28 = 30.51;
-    Threshold_NewLayer1_Option29 = 31.51;
-    Threshold_NewLayer1_Option30 = 34.51;
-    Threshold_NewLayer1_Option31 = 35.51;
-    Threshold_NewLayer1_Option31_extrap = 34.51;
-    Threshold_NewLayer1_noIso_unpacked = 40.51;
-    Threshold_NewLayer1_Iso_unpacked = 32.51;
+  else if(targetRate==16) {
+    std::cout << "fixed rate value not investigated -> try another one" << std::endl;
+    std::cout << "fixing 0.0GeV thresholds" << std::endl;
+  }
+  else if(targetRate==18) {
+    std::cout << "fixed rate value not investigated -> try another one" << std::endl;
+    std::cout << "fixing 0.0GeV thresholds" << std::endl;
+  }
+  else if(targetRate==20){
+    std::cout << "fixed rate value not investigated -> try another one" << std::endl;
+    std::cout << "fixing 0.0GeV thresholds" << std::endl;
+  }
+  else {
+    std::cout << "fixed rate value not investigated -> try another one" << std::endl;
+    std::cout << "fixing 0.0GeV thresholds" << std::endl;
   }
 
 
-  // V1/V2/V3 OPTIMIZATION
-  // if (run==323755)
-  // {
-  //   Threshold_NewLayer1_noIso   = 42.51;
-  //   Threshold_NewLayer1_Option1 = 38.51;
-  //   Threshold_NewLayer1_Option2 = 39.51;
-  //   Threshold_NewLayer1_Option3 = 40.51;
-  //   Threshold_NewLayer1_Option4 = 40.51;
-  //   Threshold_NewLayer1_Option5 = 40.51;
-  //   Threshold_NewLayer1_Option6 = 42.51;
-  //   Threshold_NewLayer1_Option7 = 42.51;
-  //   Threshold_NewLayer1_Option8 = 35.51;
-  //   Threshold_NewLayer1_Option9 = 42.51;
-  //   Threshold_NewLayer1_Option10 = 42.51;
-  //   Threshold_NewLayer1_Option11 = 42.51;
-  //   Threshold_NewLayer1_Option12 = 42.51;
-  //   Threshold_NewLayer1_Option13 = 42.51;
-  //   Threshold_NewLayer1_Option14 = 42.51;
-  //   Threshold_NewLayer1_Option15 = 40.51;
-  //   Threshold_NewLayer1_Option16 = 42.51;
-  //   Threshold_NewLayer1_Option17 = 42.51;
-  //   Threshold_NewLayer1_Option18 = 42.51;
-  //   Threshold_NewLayer1_Option19 = 42.51;
-  //   Threshold_NewLayer1_Option20 = 42.51;
-  //   Threshold_NewLayer1_Option21 = 41.51;
-  //   Threshold_NewLayer1_Option22 = 35.51;
-  //   Threshold_NewLayer1_Option23 = 34.51;
-  //   Threshold_NewLayer1_Option24 = 33.51;
-  //   Threshold_NewLayer1_Option25 = 39.51;
-  //   Threshold_NewLayer1_Option26 = 32.51;
-  //   Threshold_NewLayer1_Option27 = 40.51;
-  //   Threshold_NewLayer1_Option28 = 32.51;
-  //   Threshold_NewLayer1_Option29 = 36.51;
-  //   Threshold_NewLayer1_Option30 = 39.51;
-  //   Threshold_NewLayer1_Option31 = 37.51;
-  //   Threshold_NewLayer1_Option31_extrap = 36.51;
-  //   Threshold_NewLayer1_noIso_unpacked = 41.51;
-  //   Threshold_NewLayer1_Iso_unpacked = 33.51;
-  // }
-  // if (run==323775)
-  // {
-  //   Threshold_NewLayer1_noIso   = 40.51;
-  //   Threshold_NewLayer1_Option1 = 34.51;
-  //   Threshold_NewLayer1_Option2 = 36.51;
-  //   Threshold_NewLayer1_Option3 = 37.51;
-  //   Threshold_NewLayer1_Option4 = 38.51;
-  //   Threshold_NewLayer1_Option5 = 38.51;
-  //   Threshold_NewLayer1_Option6 = 39.51;
-  //   Threshold_NewLayer1_Option7 = 39.51;
-  //   Threshold_NewLayer1_Option8 = 32.51;
-  //   Threshold_NewLayer1_Option9 = 39.51;
-  //   Threshold_NewLayer1_Option10 = 40.51;
-  //   Threshold_NewLayer1_Option11 = 40.51;
-  //   Threshold_NewLayer1_Option12 = 40.51;
-  //   Threshold_NewLayer1_Option13 = 40.51;
-  //   Threshold_NewLayer1_Option14 = 40.51;
-  //   Threshold_NewLayer1_Option15 = 38.51;
-  //   Threshold_NewLayer1_Option16 = 40.51;
-  //   Threshold_NewLayer1_Option17 = 40.51;
-  //   Threshold_NewLayer1_Option18 = 40.51;
-  //   Threshold_NewLayer1_Option19 = 40.51;
-  //   Threshold_NewLayer1_Option20 = 40.51;
-  //   Threshold_NewLayer1_Option21 = 39.51;
-  //   Threshold_NewLayer1_Option22 = 33.51;
-  //   Threshold_NewLayer1_Option23 = 32.51;
-  //   Threshold_NewLayer1_Option24 = 31.51;
-  //   Threshold_NewLayer1_Option25 = 35.51;
-  //   Threshold_NewLayer1_Option26 = 30.51;
-  //   Threshold_NewLayer1_Option27 = 37.51;
-  //   Threshold_NewLayer1_Option28 = 31.51;
-  //   Threshold_NewLayer1_Option29 = 33.51;
-  //   Threshold_NewLayer1_Option30 = 36.51;
-  //   Threshold_NewLayer1_Option31 = 35.51;
-  //   Threshold_NewLayer1_Option31_extrap = 35.51;
-  //   Threshold_NewLayer1_noIso_unpacked = 40.51;
-  //   Threshold_NewLayer1_Iso_unpacked = 32.51;
-  // }
-
-  // V2 calibThr1p1
-  // Double_t Threshold_NewLayer1_noIso   = 42.51;
-  // Double_t Threshold_NewLayer1_Option1 = 38.51;
-  // Double_t Threshold_NewLayer1_Option2 = 39.51;
-  // Double_t Threshold_NewLayer1_Option3 = 40.51;
-  // Double_t Threshold_NewLayer1_Option4 = 40.51;
-  // Double_t Threshold_NewLayer1_Option5 = 40.51;
-  // Double_t Threshold_NewLayer1_Option6 = 42.51;
-  // Double_t Threshold_NewLayer1_Option7 = 42.51;
-  // Double_t Threshold_NewLayer1_Option8 = 35.51;
-  // Double_t Threshold_NewLayer1_Option9 = 42.51;
-  // Double_t Threshold_NewLayer1_Option10 = 42.51;
-  // Double_t Threshold_NewLayer1_Option11 = 42.51;
-  // Double_t Threshold_NewLayer1_Option12 = 42.51;
-  // Double_t Threshold_NewLayer1_Option13 = 42.51;
-  // Double_t Threshold_NewLayer1_Option14 = 42.51;
-  // Double_t Threshold_NewLayer1_Option15 = 40.51;
-  // Double_t Threshold_NewLayer1_Option16 = 42.51;
-  // Double_t Threshold_NewLayer1_Option17 = 42.51;
-  // Double_t Threshold_NewLayer1_Option18 = 42.51;
-  // Double_t Threshold_NewLayer1_Option19 = 42.51;
-  // Double_t Threshold_NewLayer1_Option20 = 42.51;
-  // Double_t Threshold_NewLayer1_Option21 = 41.51;
-  // Double_t Threshold_NewLayer1_Option22 = 35.51;
-  // Double_t Threshold_NewLayer1_Option23 = 34.51;
-  // Double_t Threshold_NewLayer1_Option24 = 33.51;
-  // Double_t Threshold_NewLayer1_Option25 = 39.51;
-  // Double_t Threshold_NewLayer1_Option26 = 31.51;
-  // Double_t Threshold_NewLayer1_Option27 = 40.51;
-  // Double_t Threshold_NewLayer1_Option28 = 32.51;
-  // Double_t Threshold_NewLayer1_Option29 = 36.51;
-  // Double_t Threshold_NewLayer1_Option30 = 39.51;
-  // Double_t Threshold_NewLayer1_Option31 = 37.51;
-  // Double_t Threshold_NewLayer1_Option31_extrap = 36.51;
-  // Double_t Threshold_NewLayer1_noIso_unpacked = 42.51;
-  // Double_t Threshold_NewLayer1_Iso_unpacked = 34.51;
-
-  // V2 calibThr0p7
-  // Double_t Threshold_NewLayer1_noIso   = 30.51;
-  // Double_t Threshold_NewLayer1_Option1 = 28.51;
-  // Double_t Threshold_NewLayer1_Option2 = 29.51;
-  // Double_t Threshold_NewLayer1_Option3 = 29.51;
-  // Double_t Threshold_NewLayer1_Option4 = 29.51;
-  // Double_t Threshold_NewLayer1_Option5 = 30.51;
-  // Double_t Threshold_NewLayer1_Option6 = 30.51;
-  // Double_t Threshold_NewLayer1_Option7 = 30.51;
-  // Double_t Threshold_NewLayer1_Option8 = 25.51;
-  // Double_t Threshold_NewLayer1_Option9 = 30.51;
-  // Double_t Threshold_NewLayer1_Option10 = 30.51;
-  // Double_t Threshold_NewLayer1_Option11 = 30.51;
-  // Double_t Threshold_NewLayer1_Option12 = 30.51;
-  // Double_t Threshold_NewLayer1_Option13 = 30.51;
-  // Double_t Threshold_NewLayer1_Option14 = 30.51;
-  // Double_t Threshold_NewLayer1_Option15 = 30.51;
-  // Double_t Threshold_NewLayer1_Option16 = 30.51;
-  // Double_t Threshold_NewLayer1_Option17 = 30.51;
-  // Double_t Threshold_NewLayer1_Option18 = 30.51;
-  // Double_t Threshold_NewLayer1_Option19 = 30.51;
-  // Double_t Threshold_NewLayer1_Option20 = 30.51;
-  // Double_t Threshold_NewLayer1_Option21 = 30.51;
-  // Double_t Threshold_NewLayer1_Option22 = 25.51;
-  // Double_t Threshold_NewLayer1_Option23 = 24.51;
-  // Double_t Threshold_NewLayer1_Option24 = 23.51;
-  // Double_t Threshold_NewLayer1_Option25 = 29.51;
-  // Double_t Threshold_NewLayer1_Option26 = 22.51;
-  // Double_t Threshold_NewLayer1_Option27 = 29.51;
-  // Double_t Threshold_NewLayer1_Option28 = 22.51;
-  // Double_t Threshold_NewLayer1_Option29 = 25.51;
-  // Double_t Threshold_NewLayer1_Option30 = 29.51;
-  // Double_t Threshold_NewLayer1_Option31 = 27.51;
-  // Double_t Threshold_NewLayer1_Option31_extrap = 25.51;
-  // Double_t Threshold_NewLayer1_noIso_unpacked = 42.51;
-  // Double_t Threshold_NewLayer1_Iso_unpacked = 34.51;
-
- 
   map<int, int> remap;
   remap[0] = 6 ;
   remap[1] = 5 ;
@@ -727,36 +524,38 @@ void ApplyIsolationForTurnOns(int run, float calibThr = 1.7, Bool_t nTTRange = k
       //if(in_L1Tau_CalibPt>=Threshold_NewLayer1_Option22 && in_L1Tau_Iso<=Cut_L1Tau_Iso_Option22 && L1Tau_PassShapeVeto_0p2_20_100) pt_pass_Option22_ShapeVeto_0p2_20_100->Fill(in_OfflineTau_pt);
     }
 
-  TString unpacked_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"/EphemeralZeroBias_2018D_Run"+run_str+".root";
-  TFile f_in_unpacked(unpacked_in.Data(),"READ");
-  TTree* inTree_upacked = (TTree*)f_in_unpacked.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
+  TString Run2unpacked_in = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12_calibThr"+intgr+"p"+decim+"/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_06_10.root";
+  TFile f_in_Run2unpacked(Run2unpacked_in.Data(),"READ");
 
-  vector<float>   *in_l1tPt =  0;
-  vector<float>   *in_l1tEta =  0;
-  vector<int>     *in_l1tIso = 0;
+  TTree* inTree_Run2upacked = (TTree*)f_in_Run2unpacked.Get("Ntuplizer_noTagAndProbe/TagAndProbe"); // tree of uncalibrated EphemeralZeroBias NTuples
+
+  float Run2PtThr = 31.51; // 2018 thr 31.51
+
+  float in_offlinePt = 0;
+  float in_l1tPt = 0;
+  float in_l1tEta = 0;
+  int   in_l1tIso = 0;
   // branches of uncalibrated EphemeralZeroBias NTuples
-  inTree_upacked->SetBranchAddress("l1tPt",&in_l1tPt);
-  inTree_upacked->SetBranchAddress("l1tEta",&in_l1tEta);
-  inTree_upacked->SetBranchAddress("l1tIso",&in_l1tIso);
+  inTree_Run2upacked->SetBranchAddress("tauPt",&in_offlinePt);
+  inTree_Run2upacked->SetBranchAddress("l1tPt",&in_l1tPt);
+  inTree_Run2upacked->SetBranchAddress("l1tEta",&in_l1tEta);
+  inTree_Run2upacked->SetBranchAddress("l1tIso",&in_l1tIso);
 
-  TH1F* unpacked = new TH1F("unpacked","unpacked",21,binning);
-  TH1F* unpacked_Iso = new TH1F("unpacked_Iso","unpacked_Iso",21,binning);
-  TH1F* fine_pass_unpacked_Iso   = new TH1F("fine_pass_unpacked_Iso"  ,"fine_pass_unpacked_Iso"  ,42,fine_bins);
+  TH1F* Run2unpacked = new TH1F("Run2unpacked","Run2unpacked",21,binning);
+  TH1F* Run2unpacked_Iso = new TH1F("Run2unpacked_Iso","Run2unpacked_Iso",21,binning);
+  TH1F* fine_pass_Run2unpacked_Iso   = new TH1F("fine_pass_Run2unpacked_Iso"  ,"fine_pass_Run2unpacked_Iso"  ,42,fine_bins);
 
-  for(UInt_t i = 0 ; i < inTree_upacked->GetEntries() ; ++i)
-    {
-      inTree_upacked->GetEntry(i);
+  for(UInt_t i = 0 ; i < inTree_Run2upacked->GetEntries() ; ++i)
+  {
+    inTree_Run2upacked->GetEntry(i);
 
-      for(long unsigned int iL1Tau = 0 ; iL1Tau < in_l1tPt->size() ; ++iL1Tau)
-      {
-        if(fabs(in_l1tEta->at(iL1Tau))>2.1) continue;
+    if(fabs(in_l1tEta)>2.1) continue;
 
-        unpacked->Fill(in_l1tPt->at(iL1Tau));
-        if(in_l1tPt->at(iL1Tau)>=Threshold_NewLayer1_Iso_unpacked && in_l1tIso->at(iL1Tau)>0) unpacked_Iso->Fill(in_l1tPt->at(iL1Tau));
-        if(in_l1tPt->at(iL1Tau)>=Threshold_NewLayer1_Iso_unpacked && in_l1tIso->at(iL1Tau)>0) fine_pass_unpacked_Iso->Fill(in_l1tPt->at(iL1Tau));
-      }
-    }
-
+    Run2unpacked->Fill(in_offlinePt);
+    if(in_l1tPt>=Run2PtThr && in_l1tIso>0) Run2unpacked_Iso->Fill(in_offlinePt);
+    if(in_l1tPt>=Run2PtThr && in_l1tIso>0) fine_pass_Run2unpacked_Iso->Fill(in_offlinePt);
+  }
+  
 
   // TString FileNameOut = "turnOns_2017Layer1Calibration";
   if(nTTRange) FileNameOut += "_nTTRange";
@@ -909,8 +708,153 @@ void ApplyIsolationForTurnOns(int run, float calibThr = 1.7, Bool_t nTTRange = k
   //turnOn_Option22_ShapeVeto_0p2_20_100->Write();
 
 
-  TGraphAsymmErrors* turnOn_unpacked_Iso = new TGraphAsymmErrors(unpacked_Iso,unpacked,"cp");
-  turnOn_unpacked_Iso->Write();
+  TGraphAsymmErrors* turnOn_Run2unpacked_Iso = new TGraphAsymmErrors(Run2unpacked_Iso,Run2unpacked,"cp");
+  turnOn_Run2unpacked_Iso->Write();
+
+  TVectorF thr_noIso(1);
+  thr_noIso[0] = Threshold_NewLayer1_noIso;
+  thr_noIso.Write("thr_noIso");
+
+  TVectorF thr_noIso_unpacked(1);
+  thr_noIso_unpacked[0] = Threshold_NewLayer1_noIso_unpacked;
+  thr_noIso_unpacked.Write("thr_noIso_unpacked");
+
+  TVectorF thr_Iso_unpacked(1);
+  thr_Iso_unpacked[0] = Threshold_NewLayer1_Iso_unpacked;
+  thr_Iso_unpacked.Write("thr_Iso_unpacked");
+
+  TVectorF thr_Run2unpackedIso(1);
+  thr_Run2unpackedIso[0] = Run2PtThr;
+  thr_Run2unpackedIso.Write("thr_Run2unpackedIso");
+
+  TVectorF thr_Option1(1);
+  thr_Option1[0] = Threshold_NewLayer1_Option1;
+  thr_Option1.Write("thr_Option1");
+
+  TVectorF thr_Option2(1);
+  thr_Option2[0] = Threshold_NewLayer1_Option2;
+  thr_Option2.Write("thr_Option2");
+
+  TVectorF thr_Option3(1);
+  thr_Option3[0] = Threshold_NewLayer1_Option3;
+  thr_Option3.Write("thr_Option3");
+
+  TVectorF thr_Option4(1);
+  thr_Option4[0] = Threshold_NewLayer1_Option4;
+  thr_Option4.Write("thr_Option4");
+
+  TVectorF thr_Option5(1);
+  thr_Option5[0] = Threshold_NewLayer1_Option5;
+  thr_Option5.Write("thr_Option5");
+
+  TVectorF thr_Option6(1);
+  thr_Option6[0] = Threshold_NewLayer1_Option6;
+  thr_Option6.Write("thr_Option6");
+
+  TVectorF thr_Option7(1);
+  thr_Option7[0] = Threshold_NewLayer1_Option7;
+  thr_Option7.Write("thr_Option7");
+
+  TVectorF thr_Option8(1);
+  thr_Option8[0] = Threshold_NewLayer1_Option8;
+  thr_Option8.Write("thr_Option8");
+
+  TVectorF thr_Option9(1);
+  thr_Option9[0] = Threshold_NewLayer1_Option9;
+  thr_Option9.Write("thr_Option9");
+
+  TVectorF thr_Option10(1);
+  thr_Option10[0] = Threshold_NewLayer1_Option10;
+  thr_Option10.Write("thr_Option10");
+
+  TVectorF thr_Option11(1);
+  thr_Option11[0] = Threshold_NewLayer1_Option11;
+  thr_Option11.Write("thr_Option11");
+
+  TVectorF thr_Option12(1);
+  thr_Option12[0] = Threshold_NewLayer1_Option12;
+  thr_Option12.Write("thr_Option12");
+
+  TVectorF thr_Option13(1);
+  thr_Option13[0] = Threshold_NewLayer1_Option13;
+  thr_Option13.Write("thr_Option13");
+
+  TVectorF thr_Option14(1);
+  thr_Option14[0] = Threshold_NewLayer1_Option14;
+  thr_Option14.Write("thr_Option14");
+
+  TVectorF thr_Option15(1);
+  thr_Option15[0] = Threshold_NewLayer1_Option15;
+  thr_Option15.Write("thr_Option15");
+
+  TVectorF thr_Option16(1);
+  thr_Option16[0] = Threshold_NewLayer1_Option16;
+  thr_Option16.Write("thr_Option16");
+
+  TVectorF thr_Option17(1);
+  thr_Option17[0] = Threshold_NewLayer1_Option17;
+  thr_Option17.Write("thr_Option17");
+
+  TVectorF thr_Option18(1);
+  thr_Option18[0] = Threshold_NewLayer1_Option18;
+  thr_Option18.Write("thr_Option18");
+
+  TVectorF thr_Option19(1);
+  thr_Option19[0] = Threshold_NewLayer1_Option19;
+  thr_Option19.Write("thr_Option19");
+
+  TVectorF thr_Option20(1);
+  thr_Option20[0] = Threshold_NewLayer1_Option20;
+  thr_Option20.Write("thr_Option20");
+
+  TVectorF thr_Option21(1);
+  thr_Option21[0] = Threshold_NewLayer1_Option21;
+  thr_Option21.Write("thr_Option21");
+
+  TVectorF thr_Option22(1);
+  thr_Option22[0] = Threshold_NewLayer1_Option22;
+  thr_Option22.Write("thr_Option22");
+
+  TVectorF thr_Option23(1);
+  thr_Option23[0] = Threshold_NewLayer1_Option23;
+  thr_Option23.Write("thr_Option23");
+
+  TVectorF thr_Option24(1);
+  thr_Option24[0] = Threshold_NewLayer1_Option24;
+  thr_Option24.Write("thr_Option24");
+
+  TVectorF thr_Option25(1);
+  thr_Option25[0] = Threshold_NewLayer1_Option25;
+  thr_Option25.Write("thr_Option25");
+
+  TVectorF thr_Option26(1);
+  thr_Option26[0] = Threshold_NewLayer1_Option26;
+  thr_Option26.Write("thr_Option26");
+
+  TVectorF thr_Option27(1);
+  thr_Option27[0] = Threshold_NewLayer1_Option27;
+  thr_Option27.Write("thr_Option27");
+
+  TVectorF thr_Option28(1);
+  thr_Option28[0] = Threshold_NewLayer1_Option28;
+  thr_Option28.Write("thr_Option28");
+
+  TVectorF thr_Option29(1);
+  thr_Option29[0] = Threshold_NewLayer1_Option29;
+  thr_Option29.Write("thr_Option29");
+
+  TVectorF thr_Option30(1);
+  thr_Option30[0] = Threshold_NewLayer1_Option30;
+  thr_Option30.Write("thr_Option30");
+
+  TVectorF thr_Option31(1);
+  thr_Option31[0] = Threshold_NewLayer1_Option31;
+  thr_Option31.Write("thr_Option31");
+
+  TVectorF thr_Option31_extrap(1);
+  thr_Option31_extrap[0] = Threshold_NewLayer1_Option31_extrap;
+  thr_Option31_extrap.Write("thr_Option31_extrap");
+
 
   float interp_eff = 0.8;
 
@@ -1136,11 +1080,11 @@ void ApplyIsolationForTurnOns(int run, float calibThr = 1.7, Bool_t nTTRange = k
   fm_Option31_extrap_threshold25.Write("fm_Option31_extrap_threshold25");
   std::cout << "turnOn_Option31_extrap_threshold25 -> pt@"+std::to_string(interp_eff)+"eff = " << fm_Option31_extrap_threshold25[0] << " - #(tau pass pt@"+std::to_string(interp_eff)+"eff && pass trg) = " << fm_Option31_extrap_threshold25[1] << std::endl;
 
-  TVectorF fm_unpackedIso(2);
-  fm_unpackedIso[0] = linear_interp(turnOn_unpacked_Iso, interp_eff);
-  fm_unpackedIso[1] = integral(fine_pass_unpacked_Iso, fm_unpackedIso[0]);
-  fm_unpackedIso.Write("fm_unpackedIso");
-  std::cout << "turnOn_unpacked_Iso -> pt@"+std::to_string(interp_eff)+"eff = " << fm_unpackedIso[0] << " - #(tau pass pt@"+std::to_string(interp_eff)+"eff && pass trg) = " << fm_unpackedIso[1] << std::endl;
+  TVectorF fm_Run2unpackedIso(2);
+  fm_Run2unpackedIso[0] = linear_interp(turnOn_Run2unpacked_Iso, interp_eff);
+  fm_Run2unpackedIso[1] = integral(fine_pass_Run2unpacked_Iso, fm_Run2unpackedIso[0]);
+  fm_Run2unpackedIso.Write("fm_Run2unpackedIso");
+  std::cout << "turnOn_Run2unpacked_Iso -> pt@"+std::to_string(interp_eff)+"eff = " << fm_Run2unpackedIso[0] << " - #(tau pass pt@"+std::to_string(interp_eff)+"eff && pass trg) = " << fm_Run2unpackedIso[1] << std::endl;
 
 
 }

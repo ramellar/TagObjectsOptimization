@@ -21,35 +21,65 @@
 
 using namespace std;
 
-Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Efficiency_low_MinPt, Double_t Reaching_100pc_at)
+Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Efficiency_low_MinPt, Double_t Reaching_100pc_at, TString parametrisation, Double_t Kfact)
 {
-    Double_t Efficiency = 0; 
-    Double_t Pt = IEt/2.;
+  Double_t Efficiency = 0; 
+  Double_t Pt = IEt/2.;
 
-    if(Pt>=Reaching_100pc_at) Efficiency = 1.;
-    else if(Pt<MinPt) Efficiency = Efficiency_low_MinPt;
-    else
+  if(parametrisation=="linear")
+    {
+      if(Pt>=Reaching_100pc_at) Efficiency = 1.;
+      else if(Pt<MinPt) Efficiency = Efficiency_low_MinPt;
+      else
         {
-            Double_t Slope = (1.-Efficiency_low_MinPt)/(Reaching_100pc_at-MinPt);
-            Efficiency = Slope*Pt + (1. - Slope*Reaching_100pc_at);
-            // Efficiency = (Effiency_low_MinPt-(1.-Effiency_low_MinPt)) + (1.-Effiency_low_MinPt)/(Reaching_100pc_at-MinPt)*Pt;
+          Double_t Slope = (1.-Efficiency_low_MinPt)/(Reaching_100pc_at-MinPt);
+          Efficiency = Slope*Pt + (1. - Slope*Reaching_100pc_at);
         }
 
-    if(Efficiency<0) Efficiency = 0.;
-    if(Efficiency>=1) Efficiency = 1.;
+      if(Efficiency<0) Efficiency = 0.;
+      if(Efficiency>=1) Efficiency = 1.;
+    }
+  else if(parametrisation=="quadratic")
+    {
+      if(Pt>=Reaching_100pc_at) Efficiency = 1.;
+      else if(Pt<MinPt) Efficiency = Efficiency_low_MinPt;
+      else
+        {
+          Double_t Slope = (1.-Efficiency_low_MinPt)/(Reaching_100pc_at-MinPt);
+          Double_t Kmax  = Slope/(MinPt-Reaching_100pc_at);
 
-    return Efficiency ;
+          Efficiency = Slope*Pt + (1. - Slope*Reaching_100pc_at) + Kmax*Kfact * (Pt - MinPt) * (Pt - Reaching_100pc_at);
+        }
+
+      if(Efficiency<0) Efficiency = 0.;
+      if(Efficiency>=1) Efficiency = 1.;
+    }
+  else if(parametrisation=="sigmoid")
+    {
+      Efficiency = (1-Efficiency_low_MinPt) / (1+exp(-(Pt-(Reaching_100pc_at+MinPt)/2)*Kfact)) + Efficiency_low_MinPt;
+      
+      if(Efficiency<0) Efficiency = 0.;
+      if(Efficiency>=1) Efficiency = 1.;
+    }
+
+  return Efficiency ;
 }
 
 
-void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
+void Fill_Isolation_TH3(float effMin, TString tag, TString parametrisation = "linear", Double_t Kfact = 0.0, float calibThr = 1.7)
 {
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
+    TString Kintgr = to_string(Kfact).substr(0, to_string(Kfact).find("."));
+    TString Kdecim = to_string(Kfact).substr(2, to_string(Kfact).find("."));
+
     std::map<TString,TH3F*> histosIsolation;
-    TFile f_Isolation("LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6_calibThr"+intgr+"p"+decim+".root","READ");
-    TFile LUTs_Options("LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","RECREATE");
+    TFile f_Isolation("ROOTs4LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+".root","READ");
+    TString TFileName = "";
+    if(parametrisation=="linear") TFileName = "ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+".root";
+    else                          TFileName = "ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+".root";
+    TFile LUTs_Options(TFileName,"RECREATE");
 
     for(UInt_t i = 0 ; i < 101 ; ++i)
         {
@@ -374,7 +404,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
             // for(Int_t k = 0 ; k < NbinsnTT-1 ; ++k)
             {
                 //Progression_1
-                Double_t Efficiency_Progression_1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.1, 50.);
+                Double_t Efficiency_Progression_1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.1, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_1>=0.9999) Efficiency_Progression_1 = 1.0001;
                 Int_t Int_Efficiency_Progression_1 = int(Efficiency_Progression_1*100);
                 ostringstream convert_Progression_1;
@@ -387,7 +417,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //        cout<<"after progression 1"<<endl;
 
                 //Progression_2
-                Double_t Efficiency_Progression_2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.4, 50.);
+                Double_t Efficiency_Progression_2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.4, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_2>=0.9999) Efficiency_Progression_2 = 1.0001;
                 Int_t Int_Efficiency_Progression_2 = int(Efficiency_Progression_2*100);
                 ostringstream convert_Progression_2;
@@ -400,7 +430,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //        cout<<"after progression 2"<<endl;
 
                 //Progression_3
-                Double_t Efficiency_Progression_3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 50.);
+                Double_t Efficiency_Progression_3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_3>=0.9999) Efficiency_Progression_3 = 1.0001;
                 Int_t Int_Efficiency_Progression_3 = int(Efficiency_Progression_3*100);
                 ostringstream convert_Progression_3;
@@ -412,7 +442,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
 
 
                 //Progression_4
-                Double_t Efficiency_Progression_4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.6, 50.);
+                Double_t Efficiency_Progression_4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.6, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_4>=0.9999) Efficiency_Progression_4 = 1.0001;
                 Int_t Int_Efficiency_Progression_4 = int(Efficiency_Progression_4*100);
                 ostringstream convert_Progression_4;
@@ -432,7 +462,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //  }
 
                 //Progression_5
-                Double_t Efficiency_Progression_5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.7, 50.);
+                Double_t Efficiency_Progression_5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.7, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_5>=0.9999) Efficiency_Progression_5 = 1.0001;
                 Int_t Int_Efficiency_Progression_5 = int(Efficiency_Progression_5*100);
                 ostringstream convert_Progression_5;
@@ -443,7 +473,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_5);
 
                 //Progression_6
-                Double_t Efficiency_Progression_6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 40.);
+                Double_t Efficiency_Progression_6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 40., parametrisation, Kfact);
                 if(Efficiency_Progression_6>=0.9999) Efficiency_Progression_6 = 1.0001;
                 Int_t Int_Efficiency_Progression_6 = int(Efficiency_Progression_6*100);
                 ostringstream convert_Progression_6;
@@ -456,7 +486,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //        cout<<"after progression 6"<<endl;
 
                 //Progression_7
-                Double_t Efficiency_Progression_7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 40.);
+                Double_t Efficiency_Progression_7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 40., parametrisation, Kfact);
                 if(Efficiency_Progression_7>=0.9999) Efficiency_Progression_7 = 1.0001;
                 Int_t Int_Efficiency_Progression_7 = int(Efficiency_Progression_7*100);
                 ostringstream convert_Progression_7;
@@ -467,7 +497,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_7);
 
                 //Progression_8
-                Double_t Efficiency_Progression_8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 60.);
+                Double_t Efficiency_Progression_8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.5, 60., parametrisation, Kfact);
                 if(Efficiency_Progression_8>=0.9999) Efficiency_Progression_8 = 1.0001;
                 Int_t Int_Efficiency_Progression_8 = int(Efficiency_Progression_8*100);
                 ostringstream convert_Progression_8;
@@ -478,7 +508,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_8);
 
                 //Progression_9
-                Double_t Efficiency_Progression_9 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.6, 40.);
+                Double_t Efficiency_Progression_9 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.6, 40., parametrisation, Kfact);
                 if(Efficiency_Progression_9>=0.9999) Efficiency_Progression_9 = 1.0001;
                 Int_t Int_Efficiency_Progression_9 = int(Efficiency_Progression_9*100);
                 ostringstream convert_Progression_9;
@@ -489,7 +519,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_9->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_9);
 
                 //Progression_10
-                Double_t Efficiency_Progression_10 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.7, 40.);
+                Double_t Efficiency_Progression_10 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.7, 40., parametrisation, Kfact);
                 if(Efficiency_Progression_10>=0.9999) Efficiency_Progression_10 = 1.0001;
                 Int_t Int_Efficiency_Progression_10 = int(Efficiency_Progression_10*100);
                 ostringstream convert_Progression_10;
@@ -500,7 +530,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_10->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_10);
 
                 //Progression_11
-                Double_t Efficiency_Progression_11 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.7, 40.);
+                Double_t Efficiency_Progression_11 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.7, 40., parametrisation, Kfact);
                 if(Efficiency_Progression_11>=0.9999) Efficiency_Progression_11 = 1.0001;
                 Int_t Int_Efficiency_Progression_11 = int(Efficiency_Progression_11*100);
                 ostringstream convert_Progression_11;
@@ -513,7 +543,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //        cout<<"after progression 11"<<endl;
 
                 //Progression_12
-                Double_t Efficiency_Progression_12 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.7, 35.);
+                Double_t Efficiency_Progression_12 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.7, 35., parametrisation, Kfact);
                 if(Efficiency_Progression_12>=0.9999) Efficiency_Progression_12 = 1.0001;
                 Int_t Int_Efficiency_Progression_12 = int(Efficiency_Progression_12*100);
                 ostringstream convert_Progression_12;
@@ -524,7 +554,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_12->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_12);
 
                 //Progression_13
-                Double_t Efficiency_Progression_13 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.6, 35.);
+                Double_t Efficiency_Progression_13 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.6, 35., parametrisation, Kfact);
                 if(Efficiency_Progression_13>=0.9999) Efficiency_Progression_13 = 1.0001;
                 Int_t Int_Efficiency_Progression_13 = int(Efficiency_Progression_13*100);
                 ostringstream convert_Progression_13;
@@ -535,7 +565,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_13->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_13);
 
                 //Progression_14
-                Double_t Efficiency_Progression_14 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.5, 35.);
+                Double_t Efficiency_Progression_14 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.5, 35., parametrisation, Kfact);
                 if(Efficiency_Progression_14>=0.9999) Efficiency_Progression_14 = 1.0001;
                 Int_t Int_Efficiency_Progression_14 = int(Efficiency_Progression_14*100);
                 ostringstream convert_Progression_14;
@@ -546,7 +576,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_14->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_14);
 
                 //Progression_15
-                Double_t Efficiency_Progression_15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.7, 50.);
+                Double_t Efficiency_Progression_15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.7, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_15>=0.9999) Efficiency_Progression_15 = 1.0001;
                 Int_t Int_Efficiency_Progression_15 = int(Efficiency_Progression_15*100);
                 ostringstream convert_Progression_15;
@@ -559,8 +589,8 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //        cout<<"after progression 15"<<endl;
 
                 //Progression_16
-                Double_t Efficiency_Progression_16 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 23., 0., 30.);
-                // Double_t Efficiency_Progression_16 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0., 30.);
+                Double_t Efficiency_Progression_16 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 23., 0., 30., parametrisation, Kfact);
+                // Double_t Efficiency_Progression_16 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0., 30., parametrisation, Kfact);
                 //cout<<"Efficiency_Progression_16 = "<<Efficiency_Progression_16<<endl;
                 if(Efficiency_Progression_16>=0.9999) Efficiency_Progression_16 = 1.0001;
                 Int_t Int_Efficiency_Progression_16 = int(Efficiency_Progression_16*100);
@@ -572,7 +602,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_16->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_16);
 
                 //Progression_17
-                Double_t Efficiency_Progression_17 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 15., 0., 30.);
+                Double_t Efficiency_Progression_17 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 15., 0., 30., parametrisation, Kfact);
                 if(Efficiency_Progression_17>=0.9999) Efficiency_Progression_17 = 1.0001;
                 Int_t Int_Efficiency_Progression_17 = int(Efficiency_Progression_17*100);
                 ostringstream convert_Progression_17;
@@ -583,7 +613,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_17->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_17);
 
                 //Progression_18
-                Double_t Efficiency_Progression_18 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0., 35.);
+                Double_t Efficiency_Progression_18 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0., 35., parametrisation, Kfact);
                 if(Efficiency_Progression_18>=0.9999) Efficiency_Progression_18 = 1.0001;
                 Int_t Int_Efficiency_Progression_18 = int(Efficiency_Progression_18*100);
                 ostringstream convert_Progression_18;
@@ -594,7 +624,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_18->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_18);
                 
                 //Progression_19
-                Double_t Efficiency_Progression_19 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 15., 0., 35.);
+                Double_t Efficiency_Progression_19 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 15., 0., 35., parametrisation, Kfact);
                 //cout<<"Efficiency_Progression_19 = "<<Efficiency_Progression_19<<endl;
                 if(Efficiency_Progression_19>=0.9999) Efficiency_Progression_19 = 1.0001;
                 Int_t Int_Efficiency_Progression_19 = int(Efficiency_Progression_19*100);
@@ -606,7 +636,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_19->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_19);
 
                 //Progression_20
-                Double_t Efficiency_Progression_20 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10., 0., 35.);
+                Double_t Efficiency_Progression_20 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10., 0., 35., parametrisation, Kfact);
                 if(Efficiency_Progression_20>=0.9999) Efficiency_Progression_20 = 1.0001;
                 Int_t Int_Efficiency_Progression_20 = int(Efficiency_Progression_20*100);
                 ostringstream convert_Progression_20;
@@ -622,7 +652,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //cout<<"i = "<<i<<endl;
                 //        cout<<"j = "<<j<<endl;
                 //        cout<<"k = "<<k<<endl;
-                Double_t Efficiency_Progression_21 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.80, 50.);
+                Double_t Efficiency_Progression_21 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.80, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_21>=0.9999) Efficiency_Progression_21 = 1.0001;
                 Int_t Int_Efficiency_Progression_21 = int(Efficiency_Progression_21*100);
                 //        cout<<"Int_Efficiency_Progression_21 = "<<Int_Efficiency_Progression_21<<endl;
@@ -658,9 +688,9 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 }
                 LUT_Progression_21->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_21);
 
-                Double_t Efficiency_Progression_22 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.70, 70.);
+                Double_t Efficiency_Progression_22 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.70, 70., parametrisation, Kfact);
                 cout<<"Bin j = "<<j<<", TargetEfficiency = "<<Efficiency_Progression_22<<endl;
-                // Double_t Efficiency_Progression_22 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.60, 80.);
+                // Double_t Efficiency_Progression_22 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.60, 80., parametrisation, Kfact);
                 if(Efficiency_Progression_22>=0.9999) Efficiency_Progression_22 = 1.0001;
                 Int_t Int_Efficiency_Progression_22 = int(Efficiency_Progression_22*100);
                 ostringstream convert_Progression_22;
@@ -673,7 +703,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
 
 
 
-                Double_t Efficiency_Progression_23 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.60, 70.);
+                Double_t Efficiency_Progression_23 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.60, 70., parametrisation, Kfact);
                 if(Efficiency_Progression_23>=0.9999) Efficiency_Progression_23 = 1.0001;
                 Int_t Int_Efficiency_Progression_23 = int(Efficiency_Progression_23*100);
                 ostringstream convert_Progression_23;
@@ -683,7 +713,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_23==100) IsoCut_Progression_23 = 1000;
                 LUT_Progression_23->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_23);
 
-                Double_t Efficiency_Progression_24 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.50, 70.);
+                Double_t Efficiency_Progression_24 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.50, 70., parametrisation, Kfact);
                 if(Efficiency_Progression_24>=0.9999) Efficiency_Progression_24 = 1.0001;
                 Int_t Int_Efficiency_Progression_24 = int(Efficiency_Progression_24*100);
                 ostringstream convert_Progression_24;
@@ -693,7 +723,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_24==100) IsoCut_Progression_24 = 1000;
                 LUT_Progression_24->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_24);
 
-                Double_t Efficiency_Progression_25 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.20, 50.);
+                Double_t Efficiency_Progression_25 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.20, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_25>=0.9999) Efficiency_Progression_25 = 1.0001;
                 Int_t Int_Efficiency_Progression_25 = int(Efficiency_Progression_25*100);
                 ostringstream convert_Progression_25;
@@ -703,7 +733,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_25==100) IsoCut_Progression_25 = 1000;
                 LUT_Progression_25->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_25);
 
-                Double_t Efficiency_Progression_26 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.40, 70.);
+                Double_t Efficiency_Progression_26 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.40, 70., parametrisation, Kfact);
                 if(Efficiency_Progression_26>=0.9999) Efficiency_Progression_26 = 1.0001;
                 Int_t Int_Efficiency_Progression_26 = int(Efficiency_Progression_26*100);
                 ostringstream convert_Progression_26;
@@ -713,7 +743,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_26==100) IsoCut_Progression_26 = 1000;
                 LUT_Progression_26->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_26);
 
-                Double_t Efficiency_Progression_27 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.50, 50.);
+                Double_t Efficiency_Progression_27 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.50, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_27>=0.9999) Efficiency_Progression_27 = 1.0001;
                 Int_t Int_Efficiency_Progression_27 = int(Efficiency_Progression_27*100);
                 ostringstream convert_Progression_27;
@@ -723,7 +753,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_27==100) IsoCut_Progression_27 = 1000;
                 LUT_Progression_27->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_27);
 
-                Double_t Efficiency_Progression_28 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.60, 80.);
+                Double_t Efficiency_Progression_28 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.60, 80., parametrisation, Kfact);
                 if(Efficiency_Progression_28>=0.9999) Efficiency_Progression_28 = 1.0001;
                 Int_t Int_Efficiency_Progression_28 = int(Efficiency_Progression_28*100);
                 ostringstream convert_Progression_28;
@@ -733,7 +763,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_28==100) IsoCut_Progression_28 = 1000;
                 LUT_Progression_28->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_28);
 
-                Double_t Efficiency_Progression_29 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.50, 60.);
+                Double_t Efficiency_Progression_29 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.50, 60., parametrisation, Kfact);
                 if(Efficiency_Progression_29>=0.9999) Efficiency_Progression_29 = 1.0001;
                 Int_t Int_Efficiency_Progression_29 = int(Efficiency_Progression_29*100);
                 ostringstream convert_Progression_29;
@@ -743,7 +773,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(Int_Efficiency_Progression_29==100) IsoCut_Progression_29 = 1000;
                 LUT_Progression_29->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_29);
 
-                Double_t Efficiency_Progression_30 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.30, 50.);
+                Double_t Efficiency_Progression_30 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.30, 50., parametrisation, Kfact);
                 if(Efficiency_Progression_30>=0.9999) Efficiency_Progression_30 = 1.0001;
                 Int_t Int_Efficiency_Progression_30 = int(Efficiency_Progression_30*100);
                 ostringstream convert_Progression_30;
@@ -754,9 +784,9 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_30->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_30);
 
 
-                Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.78, 70.);
-                // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.75, 70.);
-                // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.40, 60.);
+                Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.78, 70., parametrisation, Kfact);
+                // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.75, 70., parametrisation, Kfact);
+                // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.40, 60., parametrisation, Kfact);
                 if(Efficiency_Progression_31>=0.9999) Efficiency_Progression_31 = 1.0001;
                 Int_t Int_Efficiency_Progression_31 = int(Efficiency_Progression_31*100);
                 if(Int_Efficiency_Progression_31<99 && (i+1)==4) Int_Efficiency_Progression_31 = Int_Efficiency_Progression_31-10;
@@ -771,9 +801,9 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 if(k+1<=StartingFrom) LUT_Progression_31->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_31);
                 else  LUT_Progression_31->SetBinContent(i+1,j+1,k+1,Int_t(IsoCut_Progression_31+RelaxingParameter*(k+1-StartingFrom)));
 
-                // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.80, 70.);
-                // // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.75, 70.);
-                // // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.40, 60.);
+                // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.80, 70., parametrisation, Kfact);
+                // // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.75, 70., parametrisation, Kfact);
+                // // Double_t Efficiency_Progression_31 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 20., 0.40, 60., parametrisation, Kfact);
                 // if(Efficiency_Progression_31>=0.9999) Efficiency_Progression_31 = 1.0001;
                 // Int_t Int_Efficiency_Progression_31 = int(Efficiency_Progression_31*100);
                 // ostringstream convert_Progression_31;
@@ -784,8 +814,8 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 // LUT_Progression_31->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_31);
 
 
-                // Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.70, 70.);
-                // // Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.85, 70.);
+                // Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.70, 70., parametrisation, Kfact);
+                // // Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.85, 70., parametrisation, Kfact);
                 // if(Efficiency_Progression_31_bin15>=0.9999) Efficiency_Progression_31_bin15 = 1.0001;
                 // Int_t Int_Efficiency_Progression_31_bin15 = int(Efficiency_Progression_31_bin15*100);
                 // if(Int_Efficiency_Progression_31_bin15<99 && (i+1)==4) Int_Efficiency_Progression_31_bin15 = Int_Efficiency_Progression_31_bin15-12;
@@ -809,8 +839,8 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 //    LUT_Progression_31_extrap->SetBinContent(i+1,j+1,k+1,1000);   
                 //  }
 
-                Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 30., 0.84, 75.);
-                // Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.85, 70.);
+                Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 30., 0.84, 75., parametrisation, Kfact);
+                // Double_t Efficiency_Progression_31_bin15 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25., 0.85, 70., parametrisation, Kfact);
                 if(Efficiency_Progression_31_bin15>=0.9999) Efficiency_Progression_31_bin15 = 1.0001;
                 Int_t Int_Efficiency_Progression_31_bin15 = int(Efficiency_Progression_31_bin15*100);
                 if(Int_Efficiency_Progression_31_bin15<99 && (i+1)==4) Int_Efficiency_Progression_31_bin15 = Int_Efficiency_Progression_31_bin15-6;
@@ -841,7 +871,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 // START OF FULL BLOWN GRID SEARCH
 
                 //Progression_A0
-                Double_t Efficiency_Progression_A0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 25);
+                Double_t Efficiency_Progression_A0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 25, parametrisation, Kfact);
                 if(Efficiency_Progression_A0>=0.9999) Efficiency_Progression_A0 = 1.0001;
                 Int_t Int_Efficiency_Progression_A0 = int(Efficiency_Progression_A0*100);
                 ostringstream convert_Progression_A0;
@@ -852,7 +882,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A0);
 
                 //Progression_B0
-                Double_t Efficiency_Progression_B0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 28);
+                Double_t Efficiency_Progression_B0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 28, parametrisation, Kfact);
                 if(Efficiency_Progression_B0>=0.9999) Efficiency_Progression_B0 = 1.0001;
                 Int_t Int_Efficiency_Progression_B0 = int(Efficiency_Progression_B0*100);
                 ostringstream convert_Progression_B0;
@@ -863,7 +893,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B0);
 
                 //Progression_C0
-                Double_t Efficiency_Progression_C0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 31);
+                Double_t Efficiency_Progression_C0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 31, parametrisation, Kfact);
                 if(Efficiency_Progression_C0>=0.9999) Efficiency_Progression_C0 = 1.0001;
                 Int_t Int_Efficiency_Progression_C0 = int(Efficiency_Progression_C0*100);
                 ostringstream convert_Progression_C0;
@@ -874,7 +904,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C0);
 
                 //Progression_D0
-                Double_t Efficiency_Progression_D0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 34);
+                Double_t Efficiency_Progression_D0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 34, parametrisation, Kfact);
                 if(Efficiency_Progression_D0>=0.9999) Efficiency_Progression_D0 = 1.0001;
                 Int_t Int_Efficiency_Progression_D0 = int(Efficiency_Progression_D0*100);
                 ostringstream convert_Progression_D0;
@@ -885,7 +915,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D0);
 
                 //Progression_E0
-                Double_t Efficiency_Progression_E0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 37);
+                Double_t Efficiency_Progression_E0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 37, parametrisation, Kfact);
                 if(Efficiency_Progression_E0>=0.9999) Efficiency_Progression_E0 = 1.0001;
                 Int_t Int_Efficiency_Progression_E0 = int(Efficiency_Progression_E0*100);
                 ostringstream convert_Progression_E0;
@@ -896,7 +926,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E0);
 
                 //Progression_F0
-                Double_t Efficiency_Progression_F0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 40);
+                Double_t Efficiency_Progression_F0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 40, parametrisation, Kfact);
                 if(Efficiency_Progression_F0>=0.9999) Efficiency_Progression_F0 = 1.0001;
                 Int_t Int_Efficiency_Progression_F0 = int(Efficiency_Progression_F0*100);
                 ostringstream convert_Progression_F0;
@@ -907,7 +937,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F0);
 
                 //Progression_G0
-                Double_t Efficiency_Progression_G0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 43);
+                Double_t Efficiency_Progression_G0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_G0>=0.9999) Efficiency_Progression_G0 = 1.0001;
                 Int_t Int_Efficiency_Progression_G0 = int(Efficiency_Progression_G0*100);
                 ostringstream convert_Progression_G0;
@@ -918,7 +948,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G0);
 
                 //Progression_H0
-                Double_t Efficiency_Progression_H0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 46);
+                Double_t Efficiency_Progression_H0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_H0>=0.9999) Efficiency_Progression_H0 = 1.0001;
                 Int_t Int_Efficiency_Progression_H0 = int(Efficiency_Progression_H0*100);
                 ostringstream convert_Progression_H0;
@@ -929,7 +959,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H0);
 
                 //Progression_I0
-                Double_t Efficiency_Progression_I0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 49);
+                Double_t Efficiency_Progression_I0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_I0>=0.9999) Efficiency_Progression_I0 = 1.0001;
                 Int_t Int_Efficiency_Progression_I0 = int(Efficiency_Progression_I0*100);
                 ostringstream convert_Progression_I0;
@@ -940,7 +970,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I0);
 
                 //Progression_J0
-                Double_t Efficiency_Progression_J0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 51);
+                Double_t Efficiency_Progression_J0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 51, parametrisation, Kfact);
                 if(Efficiency_Progression_J0>=0.9999) Efficiency_Progression_J0 = 1.0001;
                 Int_t Int_Efficiency_Progression_J0 = int(Efficiency_Progression_J0*100);
                 ostringstream convert_Progression_J0;
@@ -951,7 +981,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J0);
 
                 //Progression_K0
-                Double_t Efficiency_Progression_K0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 54);
+                Double_t Efficiency_Progression_K0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 54, parametrisation, Kfact);
                 if(Efficiency_Progression_K0>=0.9999) Efficiency_Progression_K0 = 1.0001;
                 Int_t Int_Efficiency_Progression_K0 = int(Efficiency_Progression_K0*100);
                 ostringstream convert_Progression_K0;
@@ -962,7 +992,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K0);
 
                 //Progression_L0
-                Double_t Efficiency_Progression_L0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 57);
+                Double_t Efficiency_Progression_L0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 57, parametrisation, Kfact);
                 if(Efficiency_Progression_L0>=0.9999) Efficiency_Progression_L0 = 1.0001;
                 Int_t Int_Efficiency_Progression_L0 = int(Efficiency_Progression_L0*100);
                 ostringstream convert_Progression_L0;
@@ -973,7 +1003,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L0);
 
                 //Progression_M0
-                Double_t Efficiency_Progression_M0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 60);
+                Double_t Efficiency_Progression_M0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 60, parametrisation, Kfact);
                 if(Efficiency_Progression_M0>=0.9999) Efficiency_Progression_M0 = 1.0001;
                 Int_t Int_Efficiency_Progression_M0 = int(Efficiency_Progression_M0*100);
                 ostringstream convert_Progression_M0;
@@ -984,7 +1014,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M0);
 
                 //Progression_N0
-                Double_t Efficiency_Progression_N0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 63);
+                Double_t Efficiency_Progression_N0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 63, parametrisation, Kfact);
                 if(Efficiency_Progression_N0>=0.9999) Efficiency_Progression_N0 = 1.0001;
                 Int_t Int_Efficiency_Progression_N0 = int(Efficiency_Progression_N0*100);
                 ostringstream convert_Progression_N0;
@@ -995,7 +1025,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N0);
 
                 //Progression_O0
-                Double_t Efficiency_Progression_O0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 66);
+                Double_t Efficiency_Progression_O0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 66, parametrisation, Kfact);
                 if(Efficiency_Progression_O0>=0.9999) Efficiency_Progression_O0 = 1.0001;
                 Int_t Int_Efficiency_Progression_O0 = int(Efficiency_Progression_O0*100);
                 ostringstream convert_Progression_O0;
@@ -1006,7 +1036,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O0);
 
                 //Progression_P0
-                Double_t Efficiency_Progression_P0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 69);
+                Double_t Efficiency_Progression_P0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_P0>=0.9999) Efficiency_Progression_P0 = 1.0001;
                 Int_t Int_Efficiency_Progression_P0 = int(Efficiency_Progression_P0*100);
                 ostringstream convert_Progression_P0;
@@ -1017,7 +1047,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P0);
 
                 //Progression_Q0
-                Double_t Efficiency_Progression_Q0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 71);
+                Double_t Efficiency_Progression_Q0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 71, parametrisation, Kfact);
                 if(Efficiency_Progression_Q0>=0.9999) Efficiency_Progression_Q0 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q0 = int(Efficiency_Progression_Q0*100);
                 ostringstream convert_Progression_Q0;
@@ -1028,7 +1058,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q0);
 
                 //Progression_R0
-                Double_t Efficiency_Progression_R0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 74);
+                Double_t Efficiency_Progression_R0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 10, effMin, 74, parametrisation, Kfact);
                 if(Efficiency_Progression_R0>=0.9999) Efficiency_Progression_R0 = 1.0001;
                 Int_t Int_Efficiency_Progression_R0 = int(Efficiency_Progression_R0*100);
                 ostringstream convert_Progression_R0;
@@ -1039,7 +1069,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R0);
 
                 //Progression_S0
-                Double_t Efficiency_Progression_S0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 28);
+                Double_t Efficiency_Progression_S0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 28, parametrisation, Kfact);
                 if(Efficiency_Progression_S0>=0.9999) Efficiency_Progression_S0 = 1.0001;
                 Int_t Int_Efficiency_Progression_S0 = int(Efficiency_Progression_S0*100);
                 ostringstream convert_Progression_S0;
@@ -1050,7 +1080,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S0);
 
                 //Progression_T0
-                Double_t Efficiency_Progression_T0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 31);
+                Double_t Efficiency_Progression_T0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 31, parametrisation, Kfact);
                 if(Efficiency_Progression_T0>=0.9999) Efficiency_Progression_T0 = 1.0001;
                 Int_t Int_Efficiency_Progression_T0 = int(Efficiency_Progression_T0*100);
                 ostringstream convert_Progression_T0;
@@ -1061,7 +1091,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T0);
 
                 //Progression_U0
-                Double_t Efficiency_Progression_U0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 34);
+                Double_t Efficiency_Progression_U0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 34, parametrisation, Kfact);
                 if(Efficiency_Progression_U0>=0.9999) Efficiency_Progression_U0 = 1.0001;
                 Int_t Int_Efficiency_Progression_U0 = int(Efficiency_Progression_U0*100);
                 ostringstream convert_Progression_U0;
@@ -1072,7 +1102,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U0);
 
                 //Progression_V0
-                Double_t Efficiency_Progression_V0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 37);
+                Double_t Efficiency_Progression_V0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 37, parametrisation, Kfact);
                 if(Efficiency_Progression_V0>=0.9999) Efficiency_Progression_V0 = 1.0001;
                 Int_t Int_Efficiency_Progression_V0 = int(Efficiency_Progression_V0*100);
                 ostringstream convert_Progression_V0;
@@ -1083,7 +1113,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V0);
 
                 //Progression_W0
-                Double_t Efficiency_Progression_W0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 40);
+                Double_t Efficiency_Progression_W0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 40, parametrisation, Kfact);
                 if(Efficiency_Progression_W0>=0.9999) Efficiency_Progression_W0 = 1.0001;
                 Int_t Int_Efficiency_Progression_W0 = int(Efficiency_Progression_W0*100);
                 ostringstream convert_Progression_W0;
@@ -1094,7 +1124,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W0);
 
                 //Progression_X0
-                Double_t Efficiency_Progression_X0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 43);
+                Double_t Efficiency_Progression_X0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_X0>=0.9999) Efficiency_Progression_X0 = 1.0001;
                 Int_t Int_Efficiency_Progression_X0 = int(Efficiency_Progression_X0*100);
                 ostringstream convert_Progression_X0;
@@ -1105,7 +1135,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X0);
 
                 //Progression_Y0
-                Double_t Efficiency_Progression_Y0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 46);
+                Double_t Efficiency_Progression_Y0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_Y0>=0.9999) Efficiency_Progression_Y0 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y0 = int(Efficiency_Progression_Y0*100);
                 ostringstream convert_Progression_Y0;
@@ -1116,7 +1146,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y0);
 
                 //Progression_Z0
-                Double_t Efficiency_Progression_Z0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 49);
+                Double_t Efficiency_Progression_Z0 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_Z0>=0.9999) Efficiency_Progression_Z0 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z0 = int(Efficiency_Progression_Z0*100);
                 ostringstream convert_Progression_Z0;
@@ -1127,7 +1157,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z0->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z0);
 
                 //Progression_A1
-                Double_t Efficiency_Progression_A1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 52);
+                Double_t Efficiency_Progression_A1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_A1>=0.9999) Efficiency_Progression_A1 = 1.0001;
                 Int_t Int_Efficiency_Progression_A1 = int(Efficiency_Progression_A1*100);
                 ostringstream convert_Progression_A1;
@@ -1138,7 +1168,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A1);
 
                 //Progression_B1
-                Double_t Efficiency_Progression_B1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 54);
+                Double_t Efficiency_Progression_B1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 54, parametrisation, Kfact);
                 if(Efficiency_Progression_B1>=0.9999) Efficiency_Progression_B1 = 1.0001;
                 Int_t Int_Efficiency_Progression_B1 = int(Efficiency_Progression_B1*100);
                 ostringstream convert_Progression_B1;
@@ -1149,7 +1179,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B1);
 
                 //Progression_C1
-                Double_t Efficiency_Progression_C1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 57);
+                Double_t Efficiency_Progression_C1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 57, parametrisation, Kfact);
                 if(Efficiency_Progression_C1>=0.9999) Efficiency_Progression_C1 = 1.0001;
                 Int_t Int_Efficiency_Progression_C1 = int(Efficiency_Progression_C1*100);
                 ostringstream convert_Progression_C1;
@@ -1160,7 +1190,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C1);
 
                 //Progression_D1
-                Double_t Efficiency_Progression_D1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 60);
+                Double_t Efficiency_Progression_D1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 60, parametrisation, Kfact);
                 if(Efficiency_Progression_D1>=0.9999) Efficiency_Progression_D1 = 1.0001;
                 Int_t Int_Efficiency_Progression_D1 = int(Efficiency_Progression_D1*100);
                 ostringstream convert_Progression_D1;
@@ -1171,7 +1201,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D1);
 
                 //Progression_E1
-                Double_t Efficiency_Progression_E1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 63);
+                Double_t Efficiency_Progression_E1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 63, parametrisation, Kfact);
                 if(Efficiency_Progression_E1>=0.9999) Efficiency_Progression_E1 = 1.0001;
                 Int_t Int_Efficiency_Progression_E1 = int(Efficiency_Progression_E1*100);
                 ostringstream convert_Progression_E1;
@@ -1182,7 +1212,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E1);
 
                 //Progression_F1
-                Double_t Efficiency_Progression_F1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 66);
+                Double_t Efficiency_Progression_F1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 66, parametrisation, Kfact);
                 if(Efficiency_Progression_F1>=0.9999) Efficiency_Progression_F1 = 1.0001;
                 Int_t Int_Efficiency_Progression_F1 = int(Efficiency_Progression_F1*100);
                 ostringstream convert_Progression_F1;
@@ -1193,7 +1223,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F1);
 
                 //Progression_G1
-                Double_t Efficiency_Progression_G1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 69);
+                Double_t Efficiency_Progression_G1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_G1>=0.9999) Efficiency_Progression_G1 = 1.0001;
                 Int_t Int_Efficiency_Progression_G1 = int(Efficiency_Progression_G1*100);
                 ostringstream convert_Progression_G1;
@@ -1204,7 +1234,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G1);
 
                 //Progression_H1
-                Double_t Efficiency_Progression_H1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 72);
+                Double_t Efficiency_Progression_H1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_H1>=0.9999) Efficiency_Progression_H1 = 1.0001;
                 Int_t Int_Efficiency_Progression_H1 = int(Efficiency_Progression_H1*100);
                 ostringstream convert_Progression_H1;
@@ -1215,7 +1245,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H1);
 
                 //Progression_I1
-                Double_t Efficiency_Progression_I1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 74);
+                Double_t Efficiency_Progression_I1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 74, parametrisation, Kfact);
                 if(Efficiency_Progression_I1>=0.9999) Efficiency_Progression_I1 = 1.0001;
                 Int_t Int_Efficiency_Progression_I1 = int(Efficiency_Progression_I1*100);
                 ostringstream convert_Progression_I1;
@@ -1226,7 +1256,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I1);
 
                 //Progression_J1
-                Double_t Efficiency_Progression_J1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 77);
+                Double_t Efficiency_Progression_J1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 13, effMin, 77, parametrisation, Kfact);
                 if(Efficiency_Progression_J1>=0.9999) Efficiency_Progression_J1 = 1.0001;
                 Int_t Int_Efficiency_Progression_J1 = int(Efficiency_Progression_J1*100);
                 ostringstream convert_Progression_J1;
@@ -1237,7 +1267,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J1);
 
                 //Progression_K1
-                Double_t Efficiency_Progression_K1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 31);
+                Double_t Efficiency_Progression_K1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 31, parametrisation, Kfact);
                 if(Efficiency_Progression_K1>=0.9999) Efficiency_Progression_K1 = 1.0001;
                 Int_t Int_Efficiency_Progression_K1 = int(Efficiency_Progression_K1*100);
                 ostringstream convert_Progression_K1;
@@ -1248,7 +1278,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K1);
 
                 //Progression_L1
-                Double_t Efficiency_Progression_L1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 34);
+                Double_t Efficiency_Progression_L1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 34, parametrisation, Kfact);
                 if(Efficiency_Progression_L1>=0.9999) Efficiency_Progression_L1 = 1.0001;
                 Int_t Int_Efficiency_Progression_L1 = int(Efficiency_Progression_L1*100);
                 ostringstream convert_Progression_L1;
@@ -1259,7 +1289,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L1);
 
                 //Progression_M1
-                Double_t Efficiency_Progression_M1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 37);
+                Double_t Efficiency_Progression_M1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 37, parametrisation, Kfact);
                 if(Efficiency_Progression_M1>=0.9999) Efficiency_Progression_M1 = 1.0001;
                 Int_t Int_Efficiency_Progression_M1 = int(Efficiency_Progression_M1*100);
                 ostringstream convert_Progression_M1;
@@ -1270,7 +1300,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M1);
 
                 //Progression_N1
-                Double_t Efficiency_Progression_N1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 40);
+                Double_t Efficiency_Progression_N1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 40, parametrisation, Kfact);
                 if(Efficiency_Progression_N1>=0.9999) Efficiency_Progression_N1 = 1.0001;
                 Int_t Int_Efficiency_Progression_N1 = int(Efficiency_Progression_N1*100);
                 ostringstream convert_Progression_N1;
@@ -1281,7 +1311,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N1);
 
                 //Progression_O1
-                Double_t Efficiency_Progression_O1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 43);
+                Double_t Efficiency_Progression_O1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_O1>=0.9999) Efficiency_Progression_O1 = 1.0001;
                 Int_t Int_Efficiency_Progression_O1 = int(Efficiency_Progression_O1*100);
                 ostringstream convert_Progression_O1;
@@ -1292,7 +1322,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O1);
 
                 //Progression_P1
-                Double_t Efficiency_Progression_P1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 46);
+                Double_t Efficiency_Progression_P1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_P1>=0.9999) Efficiency_Progression_P1 = 1.0001;
                 Int_t Int_Efficiency_Progression_P1 = int(Efficiency_Progression_P1*100);
                 ostringstream convert_Progression_P1;
@@ -1303,7 +1333,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P1);
 
                 //Progression_Q1
-                Double_t Efficiency_Progression_Q1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 49);
+                Double_t Efficiency_Progression_Q1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_Q1>=0.9999) Efficiency_Progression_Q1 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q1 = int(Efficiency_Progression_Q1*100);
                 ostringstream convert_Progression_Q1;
@@ -1314,7 +1344,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q1);
 
                 //Progression_R1
-                Double_t Efficiency_Progression_R1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 52);
+                Double_t Efficiency_Progression_R1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_R1>=0.9999) Efficiency_Progression_R1 = 1.0001;
                 Int_t Int_Efficiency_Progression_R1 = int(Efficiency_Progression_R1*100);
                 ostringstream convert_Progression_R1;
@@ -1325,7 +1355,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R1);
 
                 //Progression_S1
-                Double_t Efficiency_Progression_S1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 55);
+                Double_t Efficiency_Progression_S1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_S1>=0.9999) Efficiency_Progression_S1 = 1.0001;
                 Int_t Int_Efficiency_Progression_S1 = int(Efficiency_Progression_S1*100);
                 ostringstream convert_Progression_S1;
@@ -1336,7 +1366,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S1);
 
                 //Progression_T1
-                Double_t Efficiency_Progression_T1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 57);
+                Double_t Efficiency_Progression_T1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 57, parametrisation, Kfact);
                 if(Efficiency_Progression_T1>=0.9999) Efficiency_Progression_T1 = 1.0001;
                 Int_t Int_Efficiency_Progression_T1 = int(Efficiency_Progression_T1*100);
                 ostringstream convert_Progression_T1;
@@ -1347,7 +1377,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T1);
 
                 //Progression_U1
-                Double_t Efficiency_Progression_U1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 60);
+                Double_t Efficiency_Progression_U1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 60, parametrisation, Kfact);
                 if(Efficiency_Progression_U1>=0.9999) Efficiency_Progression_U1 = 1.0001;
                 Int_t Int_Efficiency_Progression_U1 = int(Efficiency_Progression_U1*100);
                 ostringstream convert_Progression_U1;
@@ -1358,7 +1388,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U1);
 
                 //Progression_V1
-                Double_t Efficiency_Progression_V1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 63);
+                Double_t Efficiency_Progression_V1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 63, parametrisation, Kfact);
                 if(Efficiency_Progression_V1>=0.9999) Efficiency_Progression_V1 = 1.0001;
                 Int_t Int_Efficiency_Progression_V1 = int(Efficiency_Progression_V1*100);
                 ostringstream convert_Progression_V1;
@@ -1369,7 +1399,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V1);
 
                 //Progression_W1
-                Double_t Efficiency_Progression_W1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 66);
+                Double_t Efficiency_Progression_W1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 66, parametrisation, Kfact);
                 if(Efficiency_Progression_W1>=0.9999) Efficiency_Progression_W1 = 1.0001;
                 Int_t Int_Efficiency_Progression_W1 = int(Efficiency_Progression_W1*100);
                 ostringstream convert_Progression_W1;
@@ -1380,7 +1410,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W1);
 
                 //Progression_X1
-                Double_t Efficiency_Progression_X1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 69);
+                Double_t Efficiency_Progression_X1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_X1>=0.9999) Efficiency_Progression_X1 = 1.0001;
                 Int_t Int_Efficiency_Progression_X1 = int(Efficiency_Progression_X1*100);
                 ostringstream convert_Progression_X1;
@@ -1391,7 +1421,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X1);
 
                 //Progression_Y1
-                Double_t Efficiency_Progression_Y1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 72);
+                Double_t Efficiency_Progression_Y1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_Y1>=0.9999) Efficiency_Progression_Y1 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y1 = int(Efficiency_Progression_Y1*100);
                 ostringstream convert_Progression_Y1;
@@ -1402,7 +1432,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y1);
 
                 //Progression_Z1
-                Double_t Efficiency_Progression_Z1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 75);
+                Double_t Efficiency_Progression_Z1 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_Z1>=0.9999) Efficiency_Progression_Z1 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z1 = int(Efficiency_Progression_Z1*100);
                 ostringstream convert_Progression_Z1;
@@ -1413,7 +1443,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z1->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z1);
 
                 //Progression_A2
-                Double_t Efficiency_Progression_A2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 77);
+                Double_t Efficiency_Progression_A2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 77, parametrisation, Kfact);
                 if(Efficiency_Progression_A2>=0.9999) Efficiency_Progression_A2 = 1.0001;
                 Int_t Int_Efficiency_Progression_A2 = int(Efficiency_Progression_A2*100);
                 ostringstream convert_Progression_A2;
@@ -1424,7 +1454,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A2);
 
                 //Progression_B2
-                Double_t Efficiency_Progression_B2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 80);
+                Double_t Efficiency_Progression_B2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 16, effMin, 80, parametrisation, Kfact);
                 if(Efficiency_Progression_B2>=0.9999) Efficiency_Progression_B2 = 1.0001;
                 Int_t Int_Efficiency_Progression_B2 = int(Efficiency_Progression_B2*100);
                 ostringstream convert_Progression_B2;
@@ -1435,7 +1465,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B2);
 
                 //Progression_C2
-                Double_t Efficiency_Progression_C2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 34);
+                Double_t Efficiency_Progression_C2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 34, parametrisation, Kfact);
                 if(Efficiency_Progression_C2>=0.9999) Efficiency_Progression_C2 = 1.0001;
                 Int_t Int_Efficiency_Progression_C2 = int(Efficiency_Progression_C2*100);
                 ostringstream convert_Progression_C2;
@@ -1446,7 +1476,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C2);
 
                 //Progression_D2
-                Double_t Efficiency_Progression_D2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 37);
+                Double_t Efficiency_Progression_D2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 37, parametrisation, Kfact);
                 if(Efficiency_Progression_D2>=0.9999) Efficiency_Progression_D2 = 1.0001;
                 Int_t Int_Efficiency_Progression_D2 = int(Efficiency_Progression_D2*100);
                 ostringstream convert_Progression_D2;
@@ -1457,7 +1487,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D2);
 
                 //Progression_E2
-                Double_t Efficiency_Progression_E2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 40);
+                Double_t Efficiency_Progression_E2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 40, parametrisation, Kfact);
                 if(Efficiency_Progression_E2>=0.9999) Efficiency_Progression_E2 = 1.0001;
                 Int_t Int_Efficiency_Progression_E2 = int(Efficiency_Progression_E2*100);
                 ostringstream convert_Progression_E2;
@@ -1468,7 +1498,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E2);
 
                 //Progression_F2
-                Double_t Efficiency_Progression_F2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 43);
+                Double_t Efficiency_Progression_F2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_F2>=0.9999) Efficiency_Progression_F2 = 1.0001;
                 Int_t Int_Efficiency_Progression_F2 = int(Efficiency_Progression_F2*100);
                 ostringstream convert_Progression_F2;
@@ -1479,7 +1509,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F2);
 
                 //Progression_G2
-                Double_t Efficiency_Progression_G2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 46);
+                Double_t Efficiency_Progression_G2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_G2>=0.9999) Efficiency_Progression_G2 = 1.0001;
                 Int_t Int_Efficiency_Progression_G2 = int(Efficiency_Progression_G2*100);
                 ostringstream convert_Progression_G2;
@@ -1490,7 +1520,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G2);
 
                 //Progression_H2
-                Double_t Efficiency_Progression_H2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 49);
+                Double_t Efficiency_Progression_H2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_H2>=0.9999) Efficiency_Progression_H2 = 1.0001;
                 Int_t Int_Efficiency_Progression_H2 = int(Efficiency_Progression_H2*100);
                 ostringstream convert_Progression_H2;
@@ -1501,7 +1531,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H2);
 
                 //Progression_I2
-                Double_t Efficiency_Progression_I2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 52);
+                Double_t Efficiency_Progression_I2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_I2>=0.9999) Efficiency_Progression_I2 = 1.0001;
                 Int_t Int_Efficiency_Progression_I2 = int(Efficiency_Progression_I2*100);
                 ostringstream convert_Progression_I2;
@@ -1512,7 +1542,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I2);
 
                 //Progression_J2
-                Double_t Efficiency_Progression_J2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 55);
+                Double_t Efficiency_Progression_J2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_J2>=0.9999) Efficiency_Progression_J2 = 1.0001;
                 Int_t Int_Efficiency_Progression_J2 = int(Efficiency_Progression_J2*100);
                 ostringstream convert_Progression_J2;
@@ -1523,7 +1553,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J2);
 
                 //Progression_K2
-                Double_t Efficiency_Progression_K2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 58);
+                Double_t Efficiency_Progression_K2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_K2>=0.9999) Efficiency_Progression_K2 = 1.0001;
                 Int_t Int_Efficiency_Progression_K2 = int(Efficiency_Progression_K2*100);
                 ostringstream convert_Progression_K2;
@@ -1534,7 +1564,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K2);
 
                 //Progression_L2
-                Double_t Efficiency_Progression_L2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 60);
+                Double_t Efficiency_Progression_L2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 60, parametrisation, Kfact);
                 if(Efficiency_Progression_L2>=0.9999) Efficiency_Progression_L2 = 1.0001;
                 Int_t Int_Efficiency_Progression_L2 = int(Efficiency_Progression_L2*100);
                 ostringstream convert_Progression_L2;
@@ -1545,7 +1575,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L2);
 
                 //Progression_M2
-                Double_t Efficiency_Progression_M2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 63);
+                Double_t Efficiency_Progression_M2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 63, parametrisation, Kfact);
                 if(Efficiency_Progression_M2>=0.9999) Efficiency_Progression_M2 = 1.0001;
                 Int_t Int_Efficiency_Progression_M2 = int(Efficiency_Progression_M2*100);
                 ostringstream convert_Progression_M2;
@@ -1556,7 +1586,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M2);
 
                 //Progression_N2
-                Double_t Efficiency_Progression_N2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 66);
+                Double_t Efficiency_Progression_N2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 66, parametrisation, Kfact);
                 if(Efficiency_Progression_N2>=0.9999) Efficiency_Progression_N2 = 1.0001;
                 Int_t Int_Efficiency_Progression_N2 = int(Efficiency_Progression_N2*100);
                 ostringstream convert_Progression_N2;
@@ -1567,7 +1597,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N2);
 
                 //Progression_O2
-                Double_t Efficiency_Progression_O2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 69);
+                Double_t Efficiency_Progression_O2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_O2>=0.9999) Efficiency_Progression_O2 = 1.0001;
                 Int_t Int_Efficiency_Progression_O2 = int(Efficiency_Progression_O2*100);
                 ostringstream convert_Progression_O2;
@@ -1578,7 +1608,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O2);
 
                 //Progression_P2
-                Double_t Efficiency_Progression_P2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 72);
+                Double_t Efficiency_Progression_P2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_P2>=0.9999) Efficiency_Progression_P2 = 1.0001;
                 Int_t Int_Efficiency_Progression_P2 = int(Efficiency_Progression_P2*100);
                 ostringstream convert_Progression_P2;
@@ -1589,7 +1619,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P2);
 
                 //Progression_Q2
-                Double_t Efficiency_Progression_Q2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 75);
+                Double_t Efficiency_Progression_Q2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_Q2>=0.9999) Efficiency_Progression_Q2 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q2 = int(Efficiency_Progression_Q2*100);
                 ostringstream convert_Progression_Q2;
@@ -1600,7 +1630,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q2);
 
                 //Progression_R2
-                Double_t Efficiency_Progression_R2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 78);
+                Double_t Efficiency_Progression_R2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_R2>=0.9999) Efficiency_Progression_R2 = 1.0001;
                 Int_t Int_Efficiency_Progression_R2 = int(Efficiency_Progression_R2*100);
                 ostringstream convert_Progression_R2;
@@ -1611,7 +1641,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R2);
 
                 //Progression_S2
-                Double_t Efficiency_Progression_S2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 80);
+                Double_t Efficiency_Progression_S2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 80, parametrisation, Kfact);
                 if(Efficiency_Progression_S2>=0.9999) Efficiency_Progression_S2 = 1.0001;
                 Int_t Int_Efficiency_Progression_S2 = int(Efficiency_Progression_S2*100);
                 ostringstream convert_Progression_S2;
@@ -1622,7 +1652,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S2);
 
                 //Progression_T2
-                Double_t Efficiency_Progression_T2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 83);
+                Double_t Efficiency_Progression_T2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 19, effMin, 83, parametrisation, Kfact);
                 if(Efficiency_Progression_T2>=0.9999) Efficiency_Progression_T2 = 1.0001;
                 Int_t Int_Efficiency_Progression_T2 = int(Efficiency_Progression_T2*100);
                 ostringstream convert_Progression_T2;
@@ -1633,7 +1663,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T2);
 
                 //Progression_U2
-                Double_t Efficiency_Progression_U2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 37);
+                Double_t Efficiency_Progression_U2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 37, parametrisation, Kfact);
                 if(Efficiency_Progression_U2>=0.9999) Efficiency_Progression_U2 = 1.0001;
                 Int_t Int_Efficiency_Progression_U2 = int(Efficiency_Progression_U2*100);
                 ostringstream convert_Progression_U2;
@@ -1644,7 +1674,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U2);
 
                 //Progression_V2
-                Double_t Efficiency_Progression_V2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 40);
+                Double_t Efficiency_Progression_V2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 40, parametrisation, Kfact);
                 if(Efficiency_Progression_V2>=0.9999) Efficiency_Progression_V2 = 1.0001;
                 Int_t Int_Efficiency_Progression_V2 = int(Efficiency_Progression_V2*100);
                 ostringstream convert_Progression_V2;
@@ -1655,7 +1685,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V2);
 
                 //Progression_W2
-                Double_t Efficiency_Progression_W2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 43);
+                Double_t Efficiency_Progression_W2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_W2>=0.9999) Efficiency_Progression_W2 = 1.0001;
                 Int_t Int_Efficiency_Progression_W2 = int(Efficiency_Progression_W2*100);
                 ostringstream convert_Progression_W2;
@@ -1666,7 +1696,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W2);
 
                 //Progression_X2
-                Double_t Efficiency_Progression_X2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 46);
+                Double_t Efficiency_Progression_X2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_X2>=0.9999) Efficiency_Progression_X2 = 1.0001;
                 Int_t Int_Efficiency_Progression_X2 = int(Efficiency_Progression_X2*100);
                 ostringstream convert_Progression_X2;
@@ -1677,7 +1707,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X2);
 
                 //Progression_Y2
-                Double_t Efficiency_Progression_Y2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 49);
+                Double_t Efficiency_Progression_Y2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_Y2>=0.9999) Efficiency_Progression_Y2 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y2 = int(Efficiency_Progression_Y2*100);
                 ostringstream convert_Progression_Y2;
@@ -1688,7 +1718,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y2);
 
                 //Progression_Z2
-                Double_t Efficiency_Progression_Z2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 52);
+                Double_t Efficiency_Progression_Z2 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_Z2>=0.9999) Efficiency_Progression_Z2 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z2 = int(Efficiency_Progression_Z2*100);
                 ostringstream convert_Progression_Z2;
@@ -1699,7 +1729,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z2->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z2);
 
                 //Progression_A3
-                Double_t Efficiency_Progression_A3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 55);
+                Double_t Efficiency_Progression_A3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_A3>=0.9999) Efficiency_Progression_A3 = 1.0001;
                 Int_t Int_Efficiency_Progression_A3 = int(Efficiency_Progression_A3*100);
                 ostringstream convert_Progression_A3;
@@ -1710,7 +1740,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A3);
 
                 //Progression_B3
-                Double_t Efficiency_Progression_B3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 58);
+                Double_t Efficiency_Progression_B3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_B3>=0.9999) Efficiency_Progression_B3 = 1.0001;
                 Int_t Int_Efficiency_Progression_B3 = int(Efficiency_Progression_B3*100);
                 ostringstream convert_Progression_B3;
@@ -1721,7 +1751,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B3);
 
                 //Progression_C3
-                Double_t Efficiency_Progression_C3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 61);
+                Double_t Efficiency_Progression_C3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_C3>=0.9999) Efficiency_Progression_C3 = 1.0001;
                 Int_t Int_Efficiency_Progression_C3 = int(Efficiency_Progression_C3*100);
                 ostringstream convert_Progression_C3;
@@ -1732,7 +1762,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C3);
 
                 //Progression_D3
-                Double_t Efficiency_Progression_D3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 63);
+                Double_t Efficiency_Progression_D3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 63, parametrisation, Kfact);
                 if(Efficiency_Progression_D3>=0.9999) Efficiency_Progression_D3 = 1.0001;
                 Int_t Int_Efficiency_Progression_D3 = int(Efficiency_Progression_D3*100);
                 ostringstream convert_Progression_D3;
@@ -1743,7 +1773,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D3);
 
                 //Progression_E3
-                Double_t Efficiency_Progression_E3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 66);
+                Double_t Efficiency_Progression_E3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 66, parametrisation, Kfact);
                 if(Efficiency_Progression_E3>=0.9999) Efficiency_Progression_E3 = 1.0001;
                 Int_t Int_Efficiency_Progression_E3 = int(Efficiency_Progression_E3*100);
                 ostringstream convert_Progression_E3;
@@ -1754,7 +1784,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E3);
 
                 //Progression_F3
-                Double_t Efficiency_Progression_F3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 69);
+                Double_t Efficiency_Progression_F3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_F3>=0.9999) Efficiency_Progression_F3 = 1.0001;
                 Int_t Int_Efficiency_Progression_F3 = int(Efficiency_Progression_F3*100);
                 ostringstream convert_Progression_F3;
@@ -1765,7 +1795,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F3);
 
                 //Progression_G3
-                Double_t Efficiency_Progression_G3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 72);
+                Double_t Efficiency_Progression_G3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_G3>=0.9999) Efficiency_Progression_G3 = 1.0001;
                 Int_t Int_Efficiency_Progression_G3 = int(Efficiency_Progression_G3*100);
                 ostringstream convert_Progression_G3;
@@ -1776,7 +1806,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G3);
 
                 //Progression_H3
-                Double_t Efficiency_Progression_H3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 75);
+                Double_t Efficiency_Progression_H3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_H3>=0.9999) Efficiency_Progression_H3 = 1.0001;
                 Int_t Int_Efficiency_Progression_H3 = int(Efficiency_Progression_H3*100);
                 ostringstream convert_Progression_H3;
@@ -1787,7 +1817,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H3);
 
                 //Progression_I3
-                Double_t Efficiency_Progression_I3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 78);
+                Double_t Efficiency_Progression_I3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_I3>=0.9999) Efficiency_Progression_I3 = 1.0001;
                 Int_t Int_Efficiency_Progression_I3 = int(Efficiency_Progression_I3*100);
                 ostringstream convert_Progression_I3;
@@ -1798,7 +1828,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I3);
 
                 //Progression_J3
-                Double_t Efficiency_Progression_J3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 81);
+                Double_t Efficiency_Progression_J3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_J3>=0.9999) Efficiency_Progression_J3 = 1.0001;
                 Int_t Int_Efficiency_Progression_J3 = int(Efficiency_Progression_J3*100);
                 ostringstream convert_Progression_J3;
@@ -1809,7 +1839,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J3);
 
                 //Progression_K3
-                Double_t Efficiency_Progression_K3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 83);
+                Double_t Efficiency_Progression_K3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 83, parametrisation, Kfact);
                 if(Efficiency_Progression_K3>=0.9999) Efficiency_Progression_K3 = 1.0001;
                 Int_t Int_Efficiency_Progression_K3 = int(Efficiency_Progression_K3*100);
                 ostringstream convert_Progression_K3;
@@ -1820,7 +1850,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K3);
 
                 //Progression_L3
-                Double_t Efficiency_Progression_L3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 86);
+                Double_t Efficiency_Progression_L3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 22, effMin, 86, parametrisation, Kfact);
                 if(Efficiency_Progression_L3>=0.9999) Efficiency_Progression_L3 = 1.0001;
                 Int_t Int_Efficiency_Progression_L3 = int(Efficiency_Progression_L3*100);
                 ostringstream convert_Progression_L3;
@@ -1831,7 +1861,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L3);
 
                 //Progression_M3
-                Double_t Efficiency_Progression_M3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 40);
+                Double_t Efficiency_Progression_M3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 40, parametrisation, Kfact);
                 if(Efficiency_Progression_M3>=0.9999) Efficiency_Progression_M3 = 1.0001;
                 Int_t Int_Efficiency_Progression_M3 = int(Efficiency_Progression_M3*100);
                 ostringstream convert_Progression_M3;
@@ -1842,7 +1872,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M3);
 
                 //Progression_N3
-                Double_t Efficiency_Progression_N3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 43);
+                Double_t Efficiency_Progression_N3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_N3>=0.9999) Efficiency_Progression_N3 = 1.0001;
                 Int_t Int_Efficiency_Progression_N3 = int(Efficiency_Progression_N3*100);
                 ostringstream convert_Progression_N3;
@@ -1853,7 +1883,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N3);
 
                 //Progression_O3
-                Double_t Efficiency_Progression_O3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 46);
+                Double_t Efficiency_Progression_O3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_O3>=0.9999) Efficiency_Progression_O3 = 1.0001;
                 Int_t Int_Efficiency_Progression_O3 = int(Efficiency_Progression_O3*100);
                 ostringstream convert_Progression_O3;
@@ -1864,7 +1894,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O3);
 
                 //Progression_P3
-                Double_t Efficiency_Progression_P3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 49);
+                Double_t Efficiency_Progression_P3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_P3>=0.9999) Efficiency_Progression_P3 = 1.0001;
                 Int_t Int_Efficiency_Progression_P3 = int(Efficiency_Progression_P3*100);
                 ostringstream convert_Progression_P3;
@@ -1875,7 +1905,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P3);
 
                 //Progression_Q3
-                Double_t Efficiency_Progression_Q3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 52);
+                Double_t Efficiency_Progression_Q3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_Q3>=0.9999) Efficiency_Progression_Q3 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q3 = int(Efficiency_Progression_Q3*100);
                 ostringstream convert_Progression_Q3;
@@ -1886,7 +1916,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q3);
 
                 //Progression_R3
-                Double_t Efficiency_Progression_R3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 55);
+                Double_t Efficiency_Progression_R3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_R3>=0.9999) Efficiency_Progression_R3 = 1.0001;
                 Int_t Int_Efficiency_Progression_R3 = int(Efficiency_Progression_R3*100);
                 ostringstream convert_Progression_R3;
@@ -1897,7 +1927,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R3);
 
                 //Progression_S3
-                Double_t Efficiency_Progression_S3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 58);
+                Double_t Efficiency_Progression_S3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_S3>=0.9999) Efficiency_Progression_S3 = 1.0001;
                 Int_t Int_Efficiency_Progression_S3 = int(Efficiency_Progression_S3*100);
                 ostringstream convert_Progression_S3;
@@ -1908,7 +1938,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S3);
 
                 //Progression_T3
-                Double_t Efficiency_Progression_T3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 61);
+                Double_t Efficiency_Progression_T3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_T3>=0.9999) Efficiency_Progression_T3 = 1.0001;
                 Int_t Int_Efficiency_Progression_T3 = int(Efficiency_Progression_T3*100);
                 ostringstream convert_Progression_T3;
@@ -1919,7 +1949,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T3);
 
                 //Progression_U3
-                Double_t Efficiency_Progression_U3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 64);
+                Double_t Efficiency_Progression_U3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_U3>=0.9999) Efficiency_Progression_U3 = 1.0001;
                 Int_t Int_Efficiency_Progression_U3 = int(Efficiency_Progression_U3*100);
                 ostringstream convert_Progression_U3;
@@ -1930,7 +1960,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U3);
 
                 //Progression_V3
-                Double_t Efficiency_Progression_V3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 66);
+                Double_t Efficiency_Progression_V3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 66, parametrisation, Kfact);
                 if(Efficiency_Progression_V3>=0.9999) Efficiency_Progression_V3 = 1.0001;
                 Int_t Int_Efficiency_Progression_V3 = int(Efficiency_Progression_V3*100);
                 ostringstream convert_Progression_V3;
@@ -1941,7 +1971,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V3);
 
                 //Progression_W3
-                Double_t Efficiency_Progression_W3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 69);
+                Double_t Efficiency_Progression_W3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_W3>=0.9999) Efficiency_Progression_W3 = 1.0001;
                 Int_t Int_Efficiency_Progression_W3 = int(Efficiency_Progression_W3*100);
                 ostringstream convert_Progression_W3;
@@ -1952,7 +1982,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W3);
 
                 //Progression_X3
-                Double_t Efficiency_Progression_X3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 72);
+                Double_t Efficiency_Progression_X3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_X3>=0.9999) Efficiency_Progression_X3 = 1.0001;
                 Int_t Int_Efficiency_Progression_X3 = int(Efficiency_Progression_X3*100);
                 ostringstream convert_Progression_X3;
@@ -1963,7 +1993,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X3);
 
                 //Progression_Y3
-                Double_t Efficiency_Progression_Y3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 75);
+                Double_t Efficiency_Progression_Y3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_Y3>=0.9999) Efficiency_Progression_Y3 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y3 = int(Efficiency_Progression_Y3*100);
                 ostringstream convert_Progression_Y3;
@@ -1974,7 +2004,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y3);
 
                 //Progression_Z3
-                Double_t Efficiency_Progression_Z3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 78);
+                Double_t Efficiency_Progression_Z3 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_Z3>=0.9999) Efficiency_Progression_Z3 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z3 = int(Efficiency_Progression_Z3*100);
                 ostringstream convert_Progression_Z3;
@@ -1985,7 +2015,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z3->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z3);
 
                 //Progression_A4
-                Double_t Efficiency_Progression_A4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 81);
+                Double_t Efficiency_Progression_A4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_A4>=0.9999) Efficiency_Progression_A4 = 1.0001;
                 Int_t Int_Efficiency_Progression_A4 = int(Efficiency_Progression_A4*100);
                 ostringstream convert_Progression_A4;
@@ -1996,7 +2026,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A4);
 
                 //Progression_B4
-                Double_t Efficiency_Progression_B4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 84);
+                Double_t Efficiency_Progression_B4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_B4>=0.9999) Efficiency_Progression_B4 = 1.0001;
                 Int_t Int_Efficiency_Progression_B4 = int(Efficiency_Progression_B4*100);
                 ostringstream convert_Progression_B4;
@@ -2007,7 +2037,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B4);
 
                 //Progression_C4
-                Double_t Efficiency_Progression_C4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 86);
+                Double_t Efficiency_Progression_C4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 86, parametrisation, Kfact);
                 if(Efficiency_Progression_C4>=0.9999) Efficiency_Progression_C4 = 1.0001;
                 Int_t Int_Efficiency_Progression_C4 = int(Efficiency_Progression_C4*100);
                 ostringstream convert_Progression_C4;
@@ -2018,7 +2048,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C4);
 
                 //Progression_D4
-                Double_t Efficiency_Progression_D4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 89);
+                Double_t Efficiency_Progression_D4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 25, effMin, 89, parametrisation, Kfact);
                 if(Efficiency_Progression_D4>=0.9999) Efficiency_Progression_D4 = 1.0001;
                 Int_t Int_Efficiency_Progression_D4 = int(Efficiency_Progression_D4*100);
                 ostringstream convert_Progression_D4;
@@ -2029,7 +2059,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D4);
 
                 //Progression_E4
-                Double_t Efficiency_Progression_E4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 43);
+                Double_t Efficiency_Progression_E4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 43, parametrisation, Kfact);
                 if(Efficiency_Progression_E4>=0.9999) Efficiency_Progression_E4 = 1.0001;
                 Int_t Int_Efficiency_Progression_E4 = int(Efficiency_Progression_E4*100);
                 ostringstream convert_Progression_E4;
@@ -2040,7 +2070,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E4);
 
                 //Progression_F4
-                Double_t Efficiency_Progression_F4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 46);
+                Double_t Efficiency_Progression_F4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_F4>=0.9999) Efficiency_Progression_F4 = 1.0001;
                 Int_t Int_Efficiency_Progression_F4 = int(Efficiency_Progression_F4*100);
                 ostringstream convert_Progression_F4;
@@ -2051,7 +2081,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F4);
 
                 //Progression_G4
-                Double_t Efficiency_Progression_G4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 49);
+                Double_t Efficiency_Progression_G4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_G4>=0.9999) Efficiency_Progression_G4 = 1.0001;
                 Int_t Int_Efficiency_Progression_G4 = int(Efficiency_Progression_G4*100);
                 ostringstream convert_Progression_G4;
@@ -2062,7 +2092,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G4);
 
                 //Progression_H4
-                Double_t Efficiency_Progression_H4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 52);
+                Double_t Efficiency_Progression_H4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_H4>=0.9999) Efficiency_Progression_H4 = 1.0001;
                 Int_t Int_Efficiency_Progression_H4 = int(Efficiency_Progression_H4*100);
                 ostringstream convert_Progression_H4;
@@ -2073,7 +2103,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H4);
 
                 //Progression_I4
-                Double_t Efficiency_Progression_I4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 55);
+                Double_t Efficiency_Progression_I4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_I4>=0.9999) Efficiency_Progression_I4 = 1.0001;
                 Int_t Int_Efficiency_Progression_I4 = int(Efficiency_Progression_I4*100);
                 ostringstream convert_Progression_I4;
@@ -2084,7 +2114,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I4);
 
                 //Progression_J4
-                Double_t Efficiency_Progression_J4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 58);
+                Double_t Efficiency_Progression_J4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_J4>=0.9999) Efficiency_Progression_J4 = 1.0001;
                 Int_t Int_Efficiency_Progression_J4 = int(Efficiency_Progression_J4*100);
                 ostringstream convert_Progression_J4;
@@ -2095,7 +2125,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J4);
 
                 //Progression_K4
-                Double_t Efficiency_Progression_K4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 61);
+                Double_t Efficiency_Progression_K4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_K4>=0.9999) Efficiency_Progression_K4 = 1.0001;
                 Int_t Int_Efficiency_Progression_K4 = int(Efficiency_Progression_K4*100);
                 ostringstream convert_Progression_K4;
@@ -2106,7 +2136,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K4);
 
                 //Progression_L4
-                Double_t Efficiency_Progression_L4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 64);
+                Double_t Efficiency_Progression_L4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_L4>=0.9999) Efficiency_Progression_L4 = 1.0001;
                 Int_t Int_Efficiency_Progression_L4 = int(Efficiency_Progression_L4*100);
                 ostringstream convert_Progression_L4;
@@ -2117,7 +2147,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L4);
 
                 //Progression_M4
-                Double_t Efficiency_Progression_M4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 67);
+                Double_t Efficiency_Progression_M4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_M4>=0.9999) Efficiency_Progression_M4 = 1.0001;
                 Int_t Int_Efficiency_Progression_M4 = int(Efficiency_Progression_M4*100);
                 ostringstream convert_Progression_M4;
@@ -2128,7 +2158,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M4);
 
                 //Progression_N4
-                Double_t Efficiency_Progression_N4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 69);
+                Double_t Efficiency_Progression_N4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 69, parametrisation, Kfact);
                 if(Efficiency_Progression_N4>=0.9999) Efficiency_Progression_N4 = 1.0001;
                 Int_t Int_Efficiency_Progression_N4 = int(Efficiency_Progression_N4*100);
                 ostringstream convert_Progression_N4;
@@ -2139,7 +2169,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N4);
 
                 //Progression_O4
-                Double_t Efficiency_Progression_O4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 72);
+                Double_t Efficiency_Progression_O4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_O4>=0.9999) Efficiency_Progression_O4 = 1.0001;
                 Int_t Int_Efficiency_Progression_O4 = int(Efficiency_Progression_O4*100);
                 ostringstream convert_Progression_O4;
@@ -2150,7 +2180,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O4);
 
                 //Progression_P4
-                Double_t Efficiency_Progression_P4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 75);
+                Double_t Efficiency_Progression_P4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_P4>=0.9999) Efficiency_Progression_P4 = 1.0001;
                 Int_t Int_Efficiency_Progression_P4 = int(Efficiency_Progression_P4*100);
                 ostringstream convert_Progression_P4;
@@ -2161,7 +2191,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P4);
 
                 //Progression_Q4
-                Double_t Efficiency_Progression_Q4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 78);
+                Double_t Efficiency_Progression_Q4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_Q4>=0.9999) Efficiency_Progression_Q4 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q4 = int(Efficiency_Progression_Q4*100);
                 ostringstream convert_Progression_Q4;
@@ -2172,7 +2202,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q4);
 
                 //Progression_R4
-                Double_t Efficiency_Progression_R4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 81);
+                Double_t Efficiency_Progression_R4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_R4>=0.9999) Efficiency_Progression_R4 = 1.0001;
                 Int_t Int_Efficiency_Progression_R4 = int(Efficiency_Progression_R4*100);
                 ostringstream convert_Progression_R4;
@@ -2183,7 +2213,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R4);
 
                 //Progression_S4
-                Double_t Efficiency_Progression_S4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 84);
+                Double_t Efficiency_Progression_S4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_S4>=0.9999) Efficiency_Progression_S4 = 1.0001;
                 Int_t Int_Efficiency_Progression_S4 = int(Efficiency_Progression_S4*100);
                 ostringstream convert_Progression_S4;
@@ -2194,7 +2224,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S4);
 
                 //Progression_T4
-                Double_t Efficiency_Progression_T4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 87);
+                Double_t Efficiency_Progression_T4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_T4>=0.9999) Efficiency_Progression_T4 = 1.0001;
                 Int_t Int_Efficiency_Progression_T4 = int(Efficiency_Progression_T4*100);
                 ostringstream convert_Progression_T4;
@@ -2205,7 +2235,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T4);
 
                 //Progression_U4
-                Double_t Efficiency_Progression_U4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 89);
+                Double_t Efficiency_Progression_U4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 89, parametrisation, Kfact);
                 if(Efficiency_Progression_U4>=0.9999) Efficiency_Progression_U4 = 1.0001;
                 Int_t Int_Efficiency_Progression_U4 = int(Efficiency_Progression_U4*100);
                 ostringstream convert_Progression_U4;
@@ -2216,7 +2246,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U4);
 
                 //Progression_V4
-                Double_t Efficiency_Progression_V4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 92);
+                Double_t Efficiency_Progression_V4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 28, effMin, 92, parametrisation, Kfact);
                 if(Efficiency_Progression_V4>=0.9999) Efficiency_Progression_V4 = 1.0001;
                 Int_t Int_Efficiency_Progression_V4 = int(Efficiency_Progression_V4*100);
                 ostringstream convert_Progression_V4;
@@ -2227,7 +2257,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V4);
 
                 //Progression_W4
-                Double_t Efficiency_Progression_W4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 46);
+                Double_t Efficiency_Progression_W4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 46, parametrisation, Kfact);
                 if(Efficiency_Progression_W4>=0.9999) Efficiency_Progression_W4 = 1.0001;
                 Int_t Int_Efficiency_Progression_W4 = int(Efficiency_Progression_W4*100);
                 ostringstream convert_Progression_W4;
@@ -2238,7 +2268,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W4);
 
                 //Progression_X4
-                Double_t Efficiency_Progression_X4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 49);
+                Double_t Efficiency_Progression_X4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_X4>=0.9999) Efficiency_Progression_X4 = 1.0001;
                 Int_t Int_Efficiency_Progression_X4 = int(Efficiency_Progression_X4*100);
                 ostringstream convert_Progression_X4;
@@ -2249,7 +2279,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X4);
 
                 //Progression_Y4
-                Double_t Efficiency_Progression_Y4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 52);
+                Double_t Efficiency_Progression_Y4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_Y4>=0.9999) Efficiency_Progression_Y4 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y4 = int(Efficiency_Progression_Y4*100);
                 ostringstream convert_Progression_Y4;
@@ -2260,7 +2290,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y4);
 
                 //Progression_Z4
-                Double_t Efficiency_Progression_Z4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 55);
+                Double_t Efficiency_Progression_Z4 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_Z4>=0.9999) Efficiency_Progression_Z4 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z4 = int(Efficiency_Progression_Z4*100);
                 ostringstream convert_Progression_Z4;
@@ -2271,7 +2301,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z4->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z4);
 
                 //Progression_A5
-                Double_t Efficiency_Progression_A5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 58);
+                Double_t Efficiency_Progression_A5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_A5>=0.9999) Efficiency_Progression_A5 = 1.0001;
                 Int_t Int_Efficiency_Progression_A5 = int(Efficiency_Progression_A5*100);
                 ostringstream convert_Progression_A5;
@@ -2282,7 +2312,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A5);
 
                 //Progression_B5
-                Double_t Efficiency_Progression_B5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 61);
+                Double_t Efficiency_Progression_B5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_B5>=0.9999) Efficiency_Progression_B5 = 1.0001;
                 Int_t Int_Efficiency_Progression_B5 = int(Efficiency_Progression_B5*100);
                 ostringstream convert_Progression_B5;
@@ -2293,7 +2323,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B5);
 
                 //Progression_C5
-                Double_t Efficiency_Progression_C5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 64);
+                Double_t Efficiency_Progression_C5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_C5>=0.9999) Efficiency_Progression_C5 = 1.0001;
                 Int_t Int_Efficiency_Progression_C5 = int(Efficiency_Progression_C5*100);
                 ostringstream convert_Progression_C5;
@@ -2304,7 +2334,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C5);
 
                 //Progression_D5
-                Double_t Efficiency_Progression_D5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 67);
+                Double_t Efficiency_Progression_D5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_D5>=0.9999) Efficiency_Progression_D5 = 1.0001;
                 Int_t Int_Efficiency_Progression_D5 = int(Efficiency_Progression_D5*100);
                 ostringstream convert_Progression_D5;
@@ -2315,7 +2345,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D5);
 
                 //Progression_E5
-                Double_t Efficiency_Progression_E5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 70);
+                Double_t Efficiency_Progression_E5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 70, parametrisation, Kfact);
                 if(Efficiency_Progression_E5>=0.9999) Efficiency_Progression_E5 = 1.0001;
                 Int_t Int_Efficiency_Progression_E5 = int(Efficiency_Progression_E5*100);
                 ostringstream convert_Progression_E5;
@@ -2326,7 +2356,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E5);
 
                 //Progression_F5
-                Double_t Efficiency_Progression_F5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 72);
+                Double_t Efficiency_Progression_F5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 72, parametrisation, Kfact);
                 if(Efficiency_Progression_F5>=0.9999) Efficiency_Progression_F5 = 1.0001;
                 Int_t Int_Efficiency_Progression_F5 = int(Efficiency_Progression_F5*100);
                 ostringstream convert_Progression_F5;
@@ -2337,7 +2367,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F5);
 
                 //Progression_G5
-                Double_t Efficiency_Progression_G5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 75);
+                Double_t Efficiency_Progression_G5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_G5>=0.9999) Efficiency_Progression_G5 = 1.0001;
                 Int_t Int_Efficiency_Progression_G5 = int(Efficiency_Progression_G5*100);
                 ostringstream convert_Progression_G5;
@@ -2348,7 +2378,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G5);
 
                 //Progression_H5
-                Double_t Efficiency_Progression_H5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 78);
+                Double_t Efficiency_Progression_H5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_H5>=0.9999) Efficiency_Progression_H5 = 1.0001;
                 Int_t Int_Efficiency_Progression_H5 = int(Efficiency_Progression_H5*100);
                 ostringstream convert_Progression_H5;
@@ -2359,7 +2389,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H5);
 
                 //Progression_I5
-                Double_t Efficiency_Progression_I5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 81);
+                Double_t Efficiency_Progression_I5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_I5>=0.9999) Efficiency_Progression_I5 = 1.0001;
                 Int_t Int_Efficiency_Progression_I5 = int(Efficiency_Progression_I5*100);
                 ostringstream convert_Progression_I5;
@@ -2370,7 +2400,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I5);
 
                 //Progression_J5
-                Double_t Efficiency_Progression_J5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 84);
+                Double_t Efficiency_Progression_J5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_J5>=0.9999) Efficiency_Progression_J5 = 1.0001;
                 Int_t Int_Efficiency_Progression_J5 = int(Efficiency_Progression_J5*100);
                 ostringstream convert_Progression_J5;
@@ -2381,7 +2411,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J5);
 
                 //Progression_K5
-                Double_t Efficiency_Progression_K5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 87);
+                Double_t Efficiency_Progression_K5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_K5>=0.9999) Efficiency_Progression_K5 = 1.0001;
                 Int_t Int_Efficiency_Progression_K5 = int(Efficiency_Progression_K5*100);
                 ostringstream convert_Progression_K5;
@@ -2392,7 +2422,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K5);
 
                 //Progression_L5
-                Double_t Efficiency_Progression_L5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 90);
+                Double_t Efficiency_Progression_L5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 90, parametrisation, Kfact);
                 if(Efficiency_Progression_L5>=0.9999) Efficiency_Progression_L5 = 1.0001;
                 Int_t Int_Efficiency_Progression_L5 = int(Efficiency_Progression_L5*100);
                 ostringstream convert_Progression_L5;
@@ -2403,7 +2433,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L5);
 
                 //Progression_M5
-                Double_t Efficiency_Progression_M5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 92);
+                Double_t Efficiency_Progression_M5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 92, parametrisation, Kfact);
                 if(Efficiency_Progression_M5>=0.9999) Efficiency_Progression_M5 = 1.0001;
                 Int_t Int_Efficiency_Progression_M5 = int(Efficiency_Progression_M5*100);
                 ostringstream convert_Progression_M5;
@@ -2414,7 +2444,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M5);
 
                 //Progression_N5
-                Double_t Efficiency_Progression_N5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 95);
+                Double_t Efficiency_Progression_N5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 31, effMin, 95, parametrisation, Kfact);
                 if(Efficiency_Progression_N5>=0.9999) Efficiency_Progression_N5 = 1.0001;
                 Int_t Int_Efficiency_Progression_N5 = int(Efficiency_Progression_N5*100);
                 ostringstream convert_Progression_N5;
@@ -2425,7 +2455,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N5);
 
                 //Progression_O5
-                Double_t Efficiency_Progression_O5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 49);
+                Double_t Efficiency_Progression_O5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 49, parametrisation, Kfact);
                 if(Efficiency_Progression_O5>=0.9999) Efficiency_Progression_O5 = 1.0001;
                 Int_t Int_Efficiency_Progression_O5 = int(Efficiency_Progression_O5*100);
                 ostringstream convert_Progression_O5;
@@ -2436,7 +2466,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O5);
 
                 //Progression_P5
-                Double_t Efficiency_Progression_P5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 52);
+                Double_t Efficiency_Progression_P5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_P5>=0.9999) Efficiency_Progression_P5 = 1.0001;
                 Int_t Int_Efficiency_Progression_P5 = int(Efficiency_Progression_P5*100);
                 ostringstream convert_Progression_P5;
@@ -2447,7 +2477,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P5);
 
                 //Progression_Q5
-                Double_t Efficiency_Progression_Q5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 55);
+                Double_t Efficiency_Progression_Q5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_Q5>=0.9999) Efficiency_Progression_Q5 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q5 = int(Efficiency_Progression_Q5*100);
                 ostringstream convert_Progression_Q5;
@@ -2458,7 +2488,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q5);
 
                 //Progression_R5
-                Double_t Efficiency_Progression_R5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 58);
+                Double_t Efficiency_Progression_R5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_R5>=0.9999) Efficiency_Progression_R5 = 1.0001;
                 Int_t Int_Efficiency_Progression_R5 = int(Efficiency_Progression_R5*100);
                 ostringstream convert_Progression_R5;
@@ -2469,7 +2499,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R5);
 
                 //Progression_S5
-                Double_t Efficiency_Progression_S5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 61);
+                Double_t Efficiency_Progression_S5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_S5>=0.9999) Efficiency_Progression_S5 = 1.0001;
                 Int_t Int_Efficiency_Progression_S5 = int(Efficiency_Progression_S5*100);
                 ostringstream convert_Progression_S5;
@@ -2480,7 +2510,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S5);
 
                 //Progression_T5
-                Double_t Efficiency_Progression_T5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 64);
+                Double_t Efficiency_Progression_T5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_T5>=0.9999) Efficiency_Progression_T5 = 1.0001;
                 Int_t Int_Efficiency_Progression_T5 = int(Efficiency_Progression_T5*100);
                 ostringstream convert_Progression_T5;
@@ -2491,7 +2521,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T5);
 
                 //Progression_U5
-                Double_t Efficiency_Progression_U5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 67);
+                Double_t Efficiency_Progression_U5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_U5>=0.9999) Efficiency_Progression_U5 = 1.0001;
                 Int_t Int_Efficiency_Progression_U5 = int(Efficiency_Progression_U5*100);
                 ostringstream convert_Progression_U5;
@@ -2502,7 +2532,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U5);
 
                 //Progression_V5
-                Double_t Efficiency_Progression_V5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 70);
+                Double_t Efficiency_Progression_V5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 70, parametrisation, Kfact);
                 if(Efficiency_Progression_V5>=0.9999) Efficiency_Progression_V5 = 1.0001;
                 Int_t Int_Efficiency_Progression_V5 = int(Efficiency_Progression_V5*100);
                 ostringstream convert_Progression_V5;
@@ -2513,7 +2543,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V5);
 
                 //Progression_W5
-                Double_t Efficiency_Progression_W5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 73);
+                Double_t Efficiency_Progression_W5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 73, parametrisation, Kfact);
                 if(Efficiency_Progression_W5>=0.9999) Efficiency_Progression_W5 = 1.0001;
                 Int_t Int_Efficiency_Progression_W5 = int(Efficiency_Progression_W5*100);
                 ostringstream convert_Progression_W5;
@@ -2524,7 +2554,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W5);
 
                 //Progression_X5
-                Double_t Efficiency_Progression_X5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 75);
+                Double_t Efficiency_Progression_X5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 75, parametrisation, Kfact);
                 if(Efficiency_Progression_X5>=0.9999) Efficiency_Progression_X5 = 1.0001;
                 Int_t Int_Efficiency_Progression_X5 = int(Efficiency_Progression_X5*100);
                 ostringstream convert_Progression_X5;
@@ -2535,7 +2565,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X5);
 
                 //Progression_Y5
-                Double_t Efficiency_Progression_Y5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 78);
+                Double_t Efficiency_Progression_Y5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_Y5>=0.9999) Efficiency_Progression_Y5 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y5 = int(Efficiency_Progression_Y5*100);
                 ostringstream convert_Progression_Y5;
@@ -2546,7 +2576,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y5);
 
                 //Progression_Z5
-                Double_t Efficiency_Progression_Z5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 81);
+                Double_t Efficiency_Progression_Z5 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_Z5>=0.9999) Efficiency_Progression_Z5 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z5 = int(Efficiency_Progression_Z5*100);
                 ostringstream convert_Progression_Z5;
@@ -2557,7 +2587,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z5->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z5);
 
                 //Progression_A6
-                Double_t Efficiency_Progression_A6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 84);
+                Double_t Efficiency_Progression_A6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_A6>=0.9999) Efficiency_Progression_A6 = 1.0001;
                 Int_t Int_Efficiency_Progression_A6 = int(Efficiency_Progression_A6*100);
                 ostringstream convert_Progression_A6;
@@ -2568,7 +2598,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A6);
 
                 //Progression_B6
-                Double_t Efficiency_Progression_B6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 87);
+                Double_t Efficiency_Progression_B6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_B6>=0.9999) Efficiency_Progression_B6 = 1.0001;
                 Int_t Int_Efficiency_Progression_B6 = int(Efficiency_Progression_B6*100);
                 ostringstream convert_Progression_B6;
@@ -2579,7 +2609,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B6);
 
                 //Progression_C6
-                Double_t Efficiency_Progression_C6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 90);
+                Double_t Efficiency_Progression_C6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 90, parametrisation, Kfact);
                 if(Efficiency_Progression_C6>=0.9999) Efficiency_Progression_C6 = 1.0001;
                 Int_t Int_Efficiency_Progression_C6 = int(Efficiency_Progression_C6*100);
                 ostringstream convert_Progression_C6;
@@ -2590,7 +2620,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C6);
 
                 //Progression_D6
-                Double_t Efficiency_Progression_D6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 93);
+                Double_t Efficiency_Progression_D6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 93, parametrisation, Kfact);
                 if(Efficiency_Progression_D6>=0.9999) Efficiency_Progression_D6 = 1.0001;
                 Int_t Int_Efficiency_Progression_D6 = int(Efficiency_Progression_D6*100);
                 ostringstream convert_Progression_D6;
@@ -2601,7 +2631,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D6);
 
                 //Progression_E6
-                Double_t Efficiency_Progression_E6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 95);
+                Double_t Efficiency_Progression_E6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 95, parametrisation, Kfact);
                 if(Efficiency_Progression_E6>=0.9999) Efficiency_Progression_E6 = 1.0001;
                 Int_t Int_Efficiency_Progression_E6 = int(Efficiency_Progression_E6*100);
                 ostringstream convert_Progression_E6;
@@ -2612,7 +2642,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E6);
 
                 //Progression_F6
-                Double_t Efficiency_Progression_F6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 98);
+                Double_t Efficiency_Progression_F6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 34, effMin, 98, parametrisation, Kfact);
                 if(Efficiency_Progression_F6>=0.9999) Efficiency_Progression_F6 = 1.0001;
                 Int_t Int_Efficiency_Progression_F6 = int(Efficiency_Progression_F6*100);
                 ostringstream convert_Progression_F6;
@@ -2623,7 +2653,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F6);
 
                 //Progression_G6
-                Double_t Efficiency_Progression_G6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 52);
+                Double_t Efficiency_Progression_G6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 52, parametrisation, Kfact);
                 if(Efficiency_Progression_G6>=0.9999) Efficiency_Progression_G6 = 1.0001;
                 Int_t Int_Efficiency_Progression_G6 = int(Efficiency_Progression_G6*100);
                 ostringstream convert_Progression_G6;
@@ -2634,7 +2664,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G6);
 
                 //Progression_H6
-                Double_t Efficiency_Progression_H6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 55);
+                Double_t Efficiency_Progression_H6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_H6>=0.9999) Efficiency_Progression_H6 = 1.0001;
                 Int_t Int_Efficiency_Progression_H6 = int(Efficiency_Progression_H6*100);
                 ostringstream convert_Progression_H6;
@@ -2645,7 +2675,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H6);
 
                 //Progression_I6
-                Double_t Efficiency_Progression_I6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 58);
+                Double_t Efficiency_Progression_I6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_I6>=0.9999) Efficiency_Progression_I6 = 1.0001;
                 Int_t Int_Efficiency_Progression_I6 = int(Efficiency_Progression_I6*100);
                 ostringstream convert_Progression_I6;
@@ -2656,7 +2686,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I6);
 
                 //Progression_J6
-                Double_t Efficiency_Progression_J6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 61);
+                Double_t Efficiency_Progression_J6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_J6>=0.9999) Efficiency_Progression_J6 = 1.0001;
                 Int_t Int_Efficiency_Progression_J6 = int(Efficiency_Progression_J6*100);
                 ostringstream convert_Progression_J6;
@@ -2667,7 +2697,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J6);
 
                 //Progression_K6
-                Double_t Efficiency_Progression_K6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 64);
+                Double_t Efficiency_Progression_K6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_K6>=0.9999) Efficiency_Progression_K6 = 1.0001;
                 Int_t Int_Efficiency_Progression_K6 = int(Efficiency_Progression_K6*100);
                 ostringstream convert_Progression_K6;
@@ -2678,7 +2708,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K6);
 
                 //Progression_L6
-                Double_t Efficiency_Progression_L6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 67);
+                Double_t Efficiency_Progression_L6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_L6>=0.9999) Efficiency_Progression_L6 = 1.0001;
                 Int_t Int_Efficiency_Progression_L6 = int(Efficiency_Progression_L6*100);
                 ostringstream convert_Progression_L6;
@@ -2689,7 +2719,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L6);
 
                 //Progression_M6
-                Double_t Efficiency_Progression_M6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 70);
+                Double_t Efficiency_Progression_M6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 70, parametrisation, Kfact);
                 if(Efficiency_Progression_M6>=0.9999) Efficiency_Progression_M6 = 1.0001;
                 Int_t Int_Efficiency_Progression_M6 = int(Efficiency_Progression_M6*100);
                 ostringstream convert_Progression_M6;
@@ -2700,7 +2730,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M6);
 
                 //Progression_N6
-                Double_t Efficiency_Progression_N6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 73);
+                Double_t Efficiency_Progression_N6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 73, parametrisation, Kfact);
                 if(Efficiency_Progression_N6>=0.9999) Efficiency_Progression_N6 = 1.0001;
                 Int_t Int_Efficiency_Progression_N6 = int(Efficiency_Progression_N6*100);
                 ostringstream convert_Progression_N6;
@@ -2711,7 +2741,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N6);
 
                 //Progression_O6
-                Double_t Efficiency_Progression_O6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 76);
+                Double_t Efficiency_Progression_O6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 76, parametrisation, Kfact);
                 if(Efficiency_Progression_O6>=0.9999) Efficiency_Progression_O6 = 1.0001;
                 Int_t Int_Efficiency_Progression_O6 = int(Efficiency_Progression_O6*100);
                 ostringstream convert_Progression_O6;
@@ -2722,7 +2752,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O6);
 
                 //Progression_P6
-                Double_t Efficiency_Progression_P6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 78);
+                Double_t Efficiency_Progression_P6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 78, parametrisation, Kfact);
                 if(Efficiency_Progression_P6>=0.9999) Efficiency_Progression_P6 = 1.0001;
                 Int_t Int_Efficiency_Progression_P6 = int(Efficiency_Progression_P6*100);
                 ostringstream convert_Progression_P6;
@@ -2733,7 +2763,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P6);
 
                 //Progression_Q6
-                Double_t Efficiency_Progression_Q6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 81);
+                Double_t Efficiency_Progression_Q6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_Q6>=0.9999) Efficiency_Progression_Q6 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q6 = int(Efficiency_Progression_Q6*100);
                 ostringstream convert_Progression_Q6;
@@ -2744,7 +2774,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q6);
 
                 //Progression_R6
-                Double_t Efficiency_Progression_R6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 84);
+                Double_t Efficiency_Progression_R6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_R6>=0.9999) Efficiency_Progression_R6 = 1.0001;
                 Int_t Int_Efficiency_Progression_R6 = int(Efficiency_Progression_R6*100);
                 ostringstream convert_Progression_R6;
@@ -2755,7 +2785,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R6);
 
                 //Progression_S6
-                Double_t Efficiency_Progression_S6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 87);
+                Double_t Efficiency_Progression_S6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_S6>=0.9999) Efficiency_Progression_S6 = 1.0001;
                 Int_t Int_Efficiency_Progression_S6 = int(Efficiency_Progression_S6*100);
                 ostringstream convert_Progression_S6;
@@ -2766,7 +2796,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S6);
 
                 //Progression_T6
-                Double_t Efficiency_Progression_T6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 90);
+                Double_t Efficiency_Progression_T6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 90, parametrisation, Kfact);
                 if(Efficiency_Progression_T6>=0.9999) Efficiency_Progression_T6 = 1.0001;
                 Int_t Int_Efficiency_Progression_T6 = int(Efficiency_Progression_T6*100);
                 ostringstream convert_Progression_T6;
@@ -2777,7 +2807,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T6);
 
                 //Progression_U6
-                Double_t Efficiency_Progression_U6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 93);
+                Double_t Efficiency_Progression_U6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 93, parametrisation, Kfact);
                 if(Efficiency_Progression_U6>=0.9999) Efficiency_Progression_U6 = 1.0001;
                 Int_t Int_Efficiency_Progression_U6 = int(Efficiency_Progression_U6*100);
                 ostringstream convert_Progression_U6;
@@ -2788,7 +2818,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U6);
 
                 //Progression_V6
-                Double_t Efficiency_Progression_V6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 96);
+                Double_t Efficiency_Progression_V6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 96, parametrisation, Kfact);
                 if(Efficiency_Progression_V6>=0.9999) Efficiency_Progression_V6 = 1.0001;
                 Int_t Int_Efficiency_Progression_V6 = int(Efficiency_Progression_V6*100);
                 ostringstream convert_Progression_V6;
@@ -2799,7 +2829,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V6);
 
                 //Progression_W6
-                Double_t Efficiency_Progression_W6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 98);
+                Double_t Efficiency_Progression_W6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 98, parametrisation, Kfact);
                 if(Efficiency_Progression_W6>=0.9999) Efficiency_Progression_W6 = 1.0001;
                 Int_t Int_Efficiency_Progression_W6 = int(Efficiency_Progression_W6*100);
                 ostringstream convert_Progression_W6;
@@ -2810,7 +2840,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W6);
 
                 //Progression_X6
-                Double_t Efficiency_Progression_X6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 101);
+                Double_t Efficiency_Progression_X6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 37, effMin, 101, parametrisation, Kfact);
                 if(Efficiency_Progression_X6>=0.9999) Efficiency_Progression_X6 = 1.0001;
                 Int_t Int_Efficiency_Progression_X6 = int(Efficiency_Progression_X6*100);
                 ostringstream convert_Progression_X6;
@@ -2821,7 +2851,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X6);
 
                 //Progression_Y6
-                Double_t Efficiency_Progression_Y6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 55);
+                Double_t Efficiency_Progression_Y6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 55, parametrisation, Kfact);
                 if(Efficiency_Progression_Y6>=0.9999) Efficiency_Progression_Y6 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y6 = int(Efficiency_Progression_Y6*100);
                 ostringstream convert_Progression_Y6;
@@ -2832,7 +2862,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y6);
 
                 //Progression_Z6
-                Double_t Efficiency_Progression_Z6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 58);
+                Double_t Efficiency_Progression_Z6 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_Z6>=0.9999) Efficiency_Progression_Z6 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z6 = int(Efficiency_Progression_Z6*100);
                 ostringstream convert_Progression_Z6;
@@ -2843,7 +2873,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z6->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z6);
 
                 //Progression_A7
-                Double_t Efficiency_Progression_A7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 61);
+                Double_t Efficiency_Progression_A7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_A7>=0.9999) Efficiency_Progression_A7 = 1.0001;
                 Int_t Int_Efficiency_Progression_A7 = int(Efficiency_Progression_A7*100);
                 ostringstream convert_Progression_A7;
@@ -2854,7 +2884,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A7);
 
                 //Progression_B7
-                Double_t Efficiency_Progression_B7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 64);
+                Double_t Efficiency_Progression_B7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_B7>=0.9999) Efficiency_Progression_B7 = 1.0001;
                 Int_t Int_Efficiency_Progression_B7 = int(Efficiency_Progression_B7*100);
                 ostringstream convert_Progression_B7;
@@ -2865,7 +2895,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B7);
 
                 //Progression_C7
-                Double_t Efficiency_Progression_C7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 67);
+                Double_t Efficiency_Progression_C7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_C7>=0.9999) Efficiency_Progression_C7 = 1.0001;
                 Int_t Int_Efficiency_Progression_C7 = int(Efficiency_Progression_C7*100);
                 ostringstream convert_Progression_C7;
@@ -2876,7 +2906,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C7);
 
                 //Progression_D7
-                Double_t Efficiency_Progression_D7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 70);
+                Double_t Efficiency_Progression_D7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 70, parametrisation, Kfact);
                 if(Efficiency_Progression_D7>=0.9999) Efficiency_Progression_D7 = 1.0001;
                 Int_t Int_Efficiency_Progression_D7 = int(Efficiency_Progression_D7*100);
                 ostringstream convert_Progression_D7;
@@ -2887,7 +2917,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D7);
 
                 //Progression_E7
-                Double_t Efficiency_Progression_E7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 73);
+                Double_t Efficiency_Progression_E7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 73, parametrisation, Kfact);
                 if(Efficiency_Progression_E7>=0.9999) Efficiency_Progression_E7 = 1.0001;
                 Int_t Int_Efficiency_Progression_E7 = int(Efficiency_Progression_E7*100);
                 ostringstream convert_Progression_E7;
@@ -2898,7 +2928,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E7);
 
                 //Progression_F7
-                Double_t Efficiency_Progression_F7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 76);
+                Double_t Efficiency_Progression_F7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 76, parametrisation, Kfact);
                 if(Efficiency_Progression_F7>=0.9999) Efficiency_Progression_F7 = 1.0001;
                 Int_t Int_Efficiency_Progression_F7 = int(Efficiency_Progression_F7*100);
                 ostringstream convert_Progression_F7;
@@ -2909,7 +2939,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F7);
 
                 //Progression_G7
-                Double_t Efficiency_Progression_G7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 79);
+                Double_t Efficiency_Progression_G7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 79, parametrisation, Kfact);
                 if(Efficiency_Progression_G7>=0.9999) Efficiency_Progression_G7 = 1.0001;
                 Int_t Int_Efficiency_Progression_G7 = int(Efficiency_Progression_G7*100);
                 ostringstream convert_Progression_G7;
@@ -2920,7 +2950,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G7);
 
                 //Progression_H7
-                Double_t Efficiency_Progression_H7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 81);
+                Double_t Efficiency_Progression_H7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 81, parametrisation, Kfact);
                 if(Efficiency_Progression_H7>=0.9999) Efficiency_Progression_H7 = 1.0001;
                 Int_t Int_Efficiency_Progression_H7 = int(Efficiency_Progression_H7*100);
                 ostringstream convert_Progression_H7;
@@ -2931,7 +2961,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H7);
 
                 //Progression_I7
-                Double_t Efficiency_Progression_I7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 84);
+                Double_t Efficiency_Progression_I7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_I7>=0.9999) Efficiency_Progression_I7 = 1.0001;
                 Int_t Int_Efficiency_Progression_I7 = int(Efficiency_Progression_I7*100);
                 ostringstream convert_Progression_I7;
@@ -2942,7 +2972,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I7);
 
                 //Progression_J7
-                Double_t Efficiency_Progression_J7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 87);
+                Double_t Efficiency_Progression_J7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_J7>=0.9999) Efficiency_Progression_J7 = 1.0001;
                 Int_t Int_Efficiency_Progression_J7 = int(Efficiency_Progression_J7*100);
                 ostringstream convert_Progression_J7;
@@ -2953,7 +2983,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J7);
 
                 //Progression_K7
-                Double_t Efficiency_Progression_K7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 90);
+                Double_t Efficiency_Progression_K7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 90, parametrisation, Kfact);
                 if(Efficiency_Progression_K7>=0.9999) Efficiency_Progression_K7 = 1.0001;
                 Int_t Int_Efficiency_Progression_K7 = int(Efficiency_Progression_K7*100);
                 ostringstream convert_Progression_K7;
@@ -2964,7 +2994,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K7);
 
                 //Progression_L7
-                Double_t Efficiency_Progression_L7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 93);
+                Double_t Efficiency_Progression_L7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 93, parametrisation, Kfact);
                 if(Efficiency_Progression_L7>=0.9999) Efficiency_Progression_L7 = 1.0001;
                 Int_t Int_Efficiency_Progression_L7 = int(Efficiency_Progression_L7*100);
                 ostringstream convert_Progression_L7;
@@ -2975,7 +3005,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L7);
 
                 //Progression_M7
-                Double_t Efficiency_Progression_M7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 96);
+                Double_t Efficiency_Progression_M7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 96, parametrisation, Kfact);
                 if(Efficiency_Progression_M7>=0.9999) Efficiency_Progression_M7 = 1.0001;
                 Int_t Int_Efficiency_Progression_M7 = int(Efficiency_Progression_M7*100);
                 ostringstream convert_Progression_M7;
@@ -2986,7 +3016,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M7);
 
                 //Progression_N7
-                Double_t Efficiency_Progression_N7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 99);
+                Double_t Efficiency_Progression_N7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 99, parametrisation, Kfact);
                 if(Efficiency_Progression_N7>=0.9999) Efficiency_Progression_N7 = 1.0001;
                 Int_t Int_Efficiency_Progression_N7 = int(Efficiency_Progression_N7*100);
                 ostringstream convert_Progression_N7;
@@ -2997,7 +3027,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N7);
 
                 //Progression_O7
-                Double_t Efficiency_Progression_O7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 101);
+                Double_t Efficiency_Progression_O7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 101, parametrisation, Kfact);
                 if(Efficiency_Progression_O7>=0.9999) Efficiency_Progression_O7 = 1.0001;
                 Int_t Int_Efficiency_Progression_O7 = int(Efficiency_Progression_O7*100);
                 ostringstream convert_Progression_O7;
@@ -3008,7 +3038,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O7);
 
                 //Progression_P7
-                Double_t Efficiency_Progression_P7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 104);
+                Double_t Efficiency_Progression_P7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 40, effMin, 104, parametrisation, Kfact);
                 if(Efficiency_Progression_P7>=0.9999) Efficiency_Progression_P7 = 1.0001;
                 Int_t Int_Efficiency_Progression_P7 = int(Efficiency_Progression_P7*100);
                 ostringstream convert_Progression_P7;
@@ -3019,7 +3049,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P7);
 
                 //Progression_Q7
-                Double_t Efficiency_Progression_Q7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 58);
+                Double_t Efficiency_Progression_Q7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 58, parametrisation, Kfact);
                 if(Efficiency_Progression_Q7>=0.9999) Efficiency_Progression_Q7 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q7 = int(Efficiency_Progression_Q7*100);
                 ostringstream convert_Progression_Q7;
@@ -3030,7 +3060,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q7);
 
                 //Progression_R7
-                Double_t Efficiency_Progression_R7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 61);
+                Double_t Efficiency_Progression_R7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_R7>=0.9999) Efficiency_Progression_R7 = 1.0001;
                 Int_t Int_Efficiency_Progression_R7 = int(Efficiency_Progression_R7*100);
                 ostringstream convert_Progression_R7;
@@ -3041,7 +3071,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R7);
 
                 //Progression_S7
-                Double_t Efficiency_Progression_S7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 64);
+                Double_t Efficiency_Progression_S7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_S7>=0.9999) Efficiency_Progression_S7 = 1.0001;
                 Int_t Int_Efficiency_Progression_S7 = int(Efficiency_Progression_S7*100);
                 ostringstream convert_Progression_S7;
@@ -3052,7 +3082,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S7);
 
                 //Progression_T7
-                Double_t Efficiency_Progression_T7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 67);
+                Double_t Efficiency_Progression_T7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_T7>=0.9999) Efficiency_Progression_T7 = 1.0001;
                 Int_t Int_Efficiency_Progression_T7 = int(Efficiency_Progression_T7*100);
                 ostringstream convert_Progression_T7;
@@ -3063,7 +3093,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T7);
 
                 //Progression_U7
-                Double_t Efficiency_Progression_U7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 70);
+                Double_t Efficiency_Progression_U7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 70, parametrisation, Kfact);
                 if(Efficiency_Progression_U7>=0.9999) Efficiency_Progression_U7 = 1.0001;
                 Int_t Int_Efficiency_Progression_U7 = int(Efficiency_Progression_U7*100);
                 ostringstream convert_Progression_U7;
@@ -3074,7 +3104,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U7);
 
                 //Progression_V7
-                Double_t Efficiency_Progression_V7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 73);
+                Double_t Efficiency_Progression_V7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 73, parametrisation, Kfact);
                 if(Efficiency_Progression_V7>=0.9999) Efficiency_Progression_V7 = 1.0001;
                 Int_t Int_Efficiency_Progression_V7 = int(Efficiency_Progression_V7*100);
                 ostringstream convert_Progression_V7;
@@ -3085,7 +3115,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V7);
 
                 //Progression_W7
-                Double_t Efficiency_Progression_W7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 76);
+                Double_t Efficiency_Progression_W7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 76, parametrisation, Kfact);
                 if(Efficiency_Progression_W7>=0.9999) Efficiency_Progression_W7 = 1.0001;
                 Int_t Int_Efficiency_Progression_W7 = int(Efficiency_Progression_W7*100);
                 ostringstream convert_Progression_W7;
@@ -3096,7 +3126,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W7);
 
                 //Progression_X7
-                Double_t Efficiency_Progression_X7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 79);
+                Double_t Efficiency_Progression_X7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 79, parametrisation, Kfact);
                 if(Efficiency_Progression_X7>=0.9999) Efficiency_Progression_X7 = 1.0001;
                 Int_t Int_Efficiency_Progression_X7 = int(Efficiency_Progression_X7*100);
                 ostringstream convert_Progression_X7;
@@ -3107,7 +3137,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X7);
 
                 //Progression_Y7
-                Double_t Efficiency_Progression_Y7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 82);
+                Double_t Efficiency_Progression_Y7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 82, parametrisation, Kfact);
                 if(Efficiency_Progression_Y7>=0.9999) Efficiency_Progression_Y7 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y7 = int(Efficiency_Progression_Y7*100);
                 ostringstream convert_Progression_Y7;
@@ -3118,7 +3148,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y7);
 
                 //Progression_Z7
-                Double_t Efficiency_Progression_Z7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 84);
+                Double_t Efficiency_Progression_Z7 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 84, parametrisation, Kfact);
                 if(Efficiency_Progression_Z7>=0.9999) Efficiency_Progression_Z7 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z7 = int(Efficiency_Progression_Z7*100);
                 ostringstream convert_Progression_Z7;
@@ -3129,7 +3159,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Z7->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Z7);
 
                 //Progression_A8
-                Double_t Efficiency_Progression_A8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 87);
+                Double_t Efficiency_Progression_A8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_A8>=0.9999) Efficiency_Progression_A8 = 1.0001;
                 Int_t Int_Efficiency_Progression_A8 = int(Efficiency_Progression_A8*100);
                 ostringstream convert_Progression_A8;
@@ -3140,7 +3170,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_A8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_A8);
 
                 //Progression_B8
-                Double_t Efficiency_Progression_B8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 90);
+                Double_t Efficiency_Progression_B8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 90, parametrisation, Kfact);
                 if(Efficiency_Progression_B8>=0.9999) Efficiency_Progression_B8 = 1.0001;
                 Int_t Int_Efficiency_Progression_B8 = int(Efficiency_Progression_B8*100);
                 ostringstream convert_Progression_B8;
@@ -3151,7 +3181,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_B8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_B8);
 
                 //Progression_C8
-                Double_t Efficiency_Progression_C8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 93);
+                Double_t Efficiency_Progression_C8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 93, parametrisation, Kfact);
                 if(Efficiency_Progression_C8>=0.9999) Efficiency_Progression_C8 = 1.0001;
                 Int_t Int_Efficiency_Progression_C8 = int(Efficiency_Progression_C8*100);
                 ostringstream convert_Progression_C8;
@@ -3162,7 +3192,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_C8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_C8);
 
                 //Progression_D8
-                Double_t Efficiency_Progression_D8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 96);
+                Double_t Efficiency_Progression_D8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 96, parametrisation, Kfact);
                 if(Efficiency_Progression_D8>=0.9999) Efficiency_Progression_D8 = 1.0001;
                 Int_t Int_Efficiency_Progression_D8 = int(Efficiency_Progression_D8*100);
                 ostringstream convert_Progression_D8;
@@ -3173,7 +3203,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_D8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_D8);
 
                 //Progression_E8
-                Double_t Efficiency_Progression_E8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 99);
+                Double_t Efficiency_Progression_E8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 99, parametrisation, Kfact);
                 if(Efficiency_Progression_E8>=0.9999) Efficiency_Progression_E8 = 1.0001;
                 Int_t Int_Efficiency_Progression_E8 = int(Efficiency_Progression_E8*100);
                 ostringstream convert_Progression_E8;
@@ -3184,7 +3214,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_E8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_E8);
 
                 //Progression_F8
-                Double_t Efficiency_Progression_F8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 102);
+                Double_t Efficiency_Progression_F8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 102, parametrisation, Kfact);
                 if(Efficiency_Progression_F8>=0.9999) Efficiency_Progression_F8 = 1.0001;
                 Int_t Int_Efficiency_Progression_F8 = int(Efficiency_Progression_F8*100);
                 ostringstream convert_Progression_F8;
@@ -3195,7 +3225,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_F8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_F8);
 
                 //Progression_G8
-                Double_t Efficiency_Progression_G8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 104);
+                Double_t Efficiency_Progression_G8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 104, parametrisation, Kfact);
                 if(Efficiency_Progression_G8>=0.9999) Efficiency_Progression_G8 = 1.0001;
                 Int_t Int_Efficiency_Progression_G8 = int(Efficiency_Progression_G8*100);
                 ostringstream convert_Progression_G8;
@@ -3206,7 +3236,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_G8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_G8);
 
                 //Progression_H8
-                Double_t Efficiency_Progression_H8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 107);
+                Double_t Efficiency_Progression_H8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 43, effMin, 107, parametrisation, Kfact);
                 if(Efficiency_Progression_H8>=0.9999) Efficiency_Progression_H8 = 1.0001;
                 Int_t Int_Efficiency_Progression_H8 = int(Efficiency_Progression_H8*100);
                 ostringstream convert_Progression_H8;
@@ -3217,7 +3247,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_H8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_H8);
 
                 //Progression_I8
-                Double_t Efficiency_Progression_I8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 61);
+                Double_t Efficiency_Progression_I8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 61, parametrisation, Kfact);
                 if(Efficiency_Progression_I8>=0.9999) Efficiency_Progression_I8 = 1.0001;
                 Int_t Int_Efficiency_Progression_I8 = int(Efficiency_Progression_I8*100);
                 ostringstream convert_Progression_I8;
@@ -3228,7 +3258,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_I8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_I8);
 
                 //Progression_J8
-                Double_t Efficiency_Progression_J8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 64);
+                Double_t Efficiency_Progression_J8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 64, parametrisation, Kfact);
                 if(Efficiency_Progression_J8>=0.9999) Efficiency_Progression_J8 = 1.0001;
                 Int_t Int_Efficiency_Progression_J8 = int(Efficiency_Progression_J8*100);
                 ostringstream convert_Progression_J8;
@@ -3239,7 +3269,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_J8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_J8);
 
                 //Progression_K8
-                Double_t Efficiency_Progression_K8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 67);
+                Double_t Efficiency_Progression_K8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 67, parametrisation, Kfact);
                 if(Efficiency_Progression_K8>=0.9999) Efficiency_Progression_K8 = 1.0001;
                 Int_t Int_Efficiency_Progression_K8 = int(Efficiency_Progression_K8*100);
                 ostringstream convert_Progression_K8;
@@ -3250,7 +3280,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_K8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_K8);
 
                 //Progression_L8
-                Double_t Efficiency_Progression_L8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 70);
+                Double_t Efficiency_Progression_L8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 70, parametrisation, Kfact);
                 if(Efficiency_Progression_L8>=0.9999) Efficiency_Progression_L8 = 1.0001;
                 Int_t Int_Efficiency_Progression_L8 = int(Efficiency_Progression_L8*100);
                 ostringstream convert_Progression_L8;
@@ -3261,7 +3291,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_L8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_L8);
 
                 //Progression_M8
-                Double_t Efficiency_Progression_M8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 73);
+                Double_t Efficiency_Progression_M8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 73, parametrisation, Kfact);
                 if(Efficiency_Progression_M8>=0.9999) Efficiency_Progression_M8 = 1.0001;
                 Int_t Int_Efficiency_Progression_M8 = int(Efficiency_Progression_M8*100);
                 ostringstream convert_Progression_M8;
@@ -3272,7 +3302,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_M8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_M8);
 
                 //Progression_N8
-                Double_t Efficiency_Progression_N8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 76);
+                Double_t Efficiency_Progression_N8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 76, parametrisation, Kfact);
                 if(Efficiency_Progression_N8>=0.9999) Efficiency_Progression_N8 = 1.0001;
                 Int_t Int_Efficiency_Progression_N8 = int(Efficiency_Progression_N8*100);
                 ostringstream convert_Progression_N8;
@@ -3283,7 +3313,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_N8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_N8);
 
                 //Progression_O8
-                Double_t Efficiency_Progression_O8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 79);
+                Double_t Efficiency_Progression_O8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 79, parametrisation, Kfact);
                 if(Efficiency_Progression_O8>=0.9999) Efficiency_Progression_O8 = 1.0001;
                 Int_t Int_Efficiency_Progression_O8 = int(Efficiency_Progression_O8*100);
                 ostringstream convert_Progression_O8;
@@ -3294,7 +3324,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_O8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_O8);
 
                 //Progression_P8
-                Double_t Efficiency_Progression_P8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 82);
+                Double_t Efficiency_Progression_P8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 82, parametrisation, Kfact);
                 if(Efficiency_Progression_P8>=0.9999) Efficiency_Progression_P8 = 1.0001;
                 Int_t Int_Efficiency_Progression_P8 = int(Efficiency_Progression_P8*100);
                 ostringstream convert_Progression_P8;
@@ -3305,7 +3335,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_P8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_P8);
 
                 //Progression_Q8
-                Double_t Efficiency_Progression_Q8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 85);
+                Double_t Efficiency_Progression_Q8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 85, parametrisation, Kfact);
                 if(Efficiency_Progression_Q8>=0.9999) Efficiency_Progression_Q8 = 1.0001;
                 Int_t Int_Efficiency_Progression_Q8 = int(Efficiency_Progression_Q8*100);
                 ostringstream convert_Progression_Q8;
@@ -3316,7 +3346,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Q8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Q8);
 
                 //Progression_R8
-                Double_t Efficiency_Progression_R8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 87);
+                Double_t Efficiency_Progression_R8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 87, parametrisation, Kfact);
                 if(Efficiency_Progression_R8>=0.9999) Efficiency_Progression_R8 = 1.0001;
                 Int_t Int_Efficiency_Progression_R8 = int(Efficiency_Progression_R8*100);
                 ostringstream convert_Progression_R8;
@@ -3327,7 +3357,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_R8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_R8);
 
                 //Progression_S8
-                Double_t Efficiency_Progression_S8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 90);
+                Double_t Efficiency_Progression_S8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 90, parametrisation, Kfact);
                 if(Efficiency_Progression_S8>=0.9999) Efficiency_Progression_S8 = 1.0001;
                 Int_t Int_Efficiency_Progression_S8 = int(Efficiency_Progression_S8*100);
                 ostringstream convert_Progression_S8;
@@ -3338,7 +3368,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_S8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_S8);
 
                 //Progression_T8
-                Double_t Efficiency_Progression_T8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 93);
+                Double_t Efficiency_Progression_T8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 93, parametrisation, Kfact);
                 if(Efficiency_Progression_T8>=0.9999) Efficiency_Progression_T8 = 1.0001;
                 Int_t Int_Efficiency_Progression_T8 = int(Efficiency_Progression_T8*100);
                 ostringstream convert_Progression_T8;
@@ -3349,7 +3379,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_T8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_T8);
 
                 //Progression_U8
-                Double_t Efficiency_Progression_U8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 96);
+                Double_t Efficiency_Progression_U8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 96, parametrisation, Kfact);
                 if(Efficiency_Progression_U8>=0.9999) Efficiency_Progression_U8 = 1.0001;
                 Int_t Int_Efficiency_Progression_U8 = int(Efficiency_Progression_U8*100);
                 ostringstream convert_Progression_U8;
@@ -3360,7 +3390,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_U8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_U8);
 
                 //Progression_V8
-                Double_t Efficiency_Progression_V8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 99);
+                Double_t Efficiency_Progression_V8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 99, parametrisation, Kfact);
                 if(Efficiency_Progression_V8>=0.9999) Efficiency_Progression_V8 = 1.0001;
                 Int_t Int_Efficiency_Progression_V8 = int(Efficiency_Progression_V8*100);
                 ostringstream convert_Progression_V8;
@@ -3371,7 +3401,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_V8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_V8);
 
                 //Progression_W8
-                Double_t Efficiency_Progression_W8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 102);
+                Double_t Efficiency_Progression_W8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 102, parametrisation, Kfact);
                 if(Efficiency_Progression_W8>=0.9999) Efficiency_Progression_W8 = 1.0001;
                 Int_t Int_Efficiency_Progression_W8 = int(Efficiency_Progression_W8*100);
                 ostringstream convert_Progression_W8;
@@ -3382,7 +3412,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_W8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_W8);
 
                 //Progression_X8
-                Double_t Efficiency_Progression_X8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 105);
+                Double_t Efficiency_Progression_X8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 105, parametrisation, Kfact);
                 if(Efficiency_Progression_X8>=0.9999) Efficiency_Progression_X8 = 1.0001;
                 Int_t Int_Efficiency_Progression_X8 = int(Efficiency_Progression_X8*100);
                 ostringstream convert_Progression_X8;
@@ -3393,7 +3423,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_X8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_X8);
 
                 //Progression_Y8
-                Double_t Efficiency_Progression_Y8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 107);
+                Double_t Efficiency_Progression_Y8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 107, parametrisation, Kfact);
                 if(Efficiency_Progression_Y8>=0.9999) Efficiency_Progression_Y8 = 1.0001;
                 Int_t Int_Efficiency_Progression_Y8 = int(Efficiency_Progression_Y8*100);
                 ostringstream convert_Progression_Y8;
@@ -3404,7 +3434,7 @@ void Fill_Isolation_TH3(float effMin, TString tag, float calibThr = 1.7)
                 LUT_Progression_Y8->SetBinContent(i+1,j+1,k+1,IsoCut_Progression_Y8);
 
                 //Progression_Z8
-                Double_t Efficiency_Progression_Z8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 110);
+                Double_t Efficiency_Progression_Z8 = FindEfficiency_Progression((hardcodedIetBins2[j]+hardcodedIetBins2[j+1])/2., 46, effMin, 110, parametrisation, Kfact);
                 if(Efficiency_Progression_Z8>=0.9999) Efficiency_Progression_Z8 = 1.0001;
                 Int_t Int_Efficiency_Progression_Z8 = int(Efficiency_Progression_Z8*100);
                 ostringstream convert_Progression_Z8;

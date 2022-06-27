@@ -23,17 +23,17 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  // rename the folder name t o include the possible differences in calibratio saturation
-  rename("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6" , "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim);
+  // rename the folder name to include the possible differences in calibratio saturation
+  rename("/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13" , "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim);
 
   TFile* fLUTS ;
-  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6.root");
-  else fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6.root");
+  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root");
+  else           fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root");
 
   TH3F* LUT_isMerged0 ;
   TH3F* LUT_isMerged1 ;//calibration constant is a number c(compressedieta, compressediet, hasEM, isMerged)
-  LUT_isMerged0 = (TH3F*) fLUTS->Get ("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
-  LUT_isMerged1 = (TH3F*) fLUTS->Get ("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
+  LUT_isMerged0 = (TH3F*) fLUTS->Get ("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
+  LUT_isMerged1 = (TH3F*) fLUTS->Get ("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
 
   cout << "LUT name: " << LUT_isMerged0->GetName() << endl;
   cout << "LUT name: " << LUT_isMerged1->GetName() << endl;
@@ -61,7 +61,7 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   TString outFile ;
   //if(withLayer1) outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
   //else outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
-  outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs/LUTcalibration_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6_calibThr"+intgr+"p"+decim+".txt";
+  outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs/LUTcalibration_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13_calibThr"+intgr+"p"+decim+".txt";
 
   std::ofstream LUTfile (outFile.Data());
 
@@ -119,43 +119,43 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   for (int ieta = 0; ieta < pow(2, cmprEta); ieta++)
     {
       for (int iEt = 0; iEt < pow(2, cmprEt); iEt++)
-	{
-	  for (int ihasEM = 0; ihasEM < pow(2, cmprhasEM); ihasEM++)
+        {
+          for (int ihasEM = 0; ihasEM < pow(2, cmprhasEM); ihasEM++)
             {
-	      for(int iisMerged = 0 ; iisMerged < 2 ; ++iisMerged)
-		{
-		  int binEt = iEt;
-		  int bineta = ieta;
-		  int binhasEM = ihasEM;
-                
-		  if (binEt >= nEt)   binEt  = nEt -1;   // these are never used -- values that are outside the compression
-		  if (bineta >= neta) bineta = neta -1;
-		  if (binhasEM >= nhasEM) binhasEM = nhasEM -1;
-		  
-		  float thr_f ;
-		  if(iisMerged==0) thr_f = LUT_isMerged0->GetBinContent(bineta+1,binEt+1,binhasEM+1);
-		  else thr_f = LUT_isMerged1->GetBinContent(bineta+1,binEt+1,binhasEM+1);
-		  // if(iisMerged==0) thr_f = LUT_isMerged0->GetBinContent(binEt+1,bineta+1,binhasEM+1);
-		  // else thr_f = LUT_isMerged1->GetBinContent(binEt+1,bineta+1,binhasEM+1);
+              for(int iisMerged = 0 ; iisMerged < 2 ; ++iisMerged)
+                {
+                  int binEt = iEt;
+                  int bineta = ieta;
+                  int binhasEM = ihasEM;
+                            
+                  if (binEt >= nEt) { binEt  = nEt -1; cout << "exceeded nEt!!" << endl; }   // these are never used -- values that are outside the compression
+                  if (bineta >= neta) { bineta = neta -1; cout << "exceeded neta!!" << endl; }
+                  if (binhasEM >= nhasEM) { binhasEM = nhasEM -1; cout << "exceeded nhasEM!!" << endl; }
+                  
+                  float thr_f ;
+                  if(iisMerged==0) thr_f = LUT_isMerged0->GetBinContent(bineta+1,binEt+1,binhasEM+1);
+                  else thr_f = LUT_isMerged1->GetBinContent(bineta+1,binEt+1,binhasEM+1);
+                  // if(iisMerged==0) thr_f = LUT_isMerged0->GetBinContent(binEt+1,bineta+1,binhasEM+1);
+                  // else thr_f = LUT_isMerged1->GetBinContent(binEt+1,bineta+1,binhasEM+1);
 
-		  if(thr_f>calibThr && withLayer1) thr_f=calibThr;
-		  else if(thr_f>2.1 && !withLayer1) thr_f=2.1;
-		  // cout<<"iEt+1 = "<<iEt+1<<", iEta+1 = "<<ieta+1<<", iisMerged+1 = "<<iisMerged+1<<", corr = "<<thr_f<<endl;
+                  if(thr_f>calibThr && withLayer1) { thr_f=calibThr; }
+                  else if(thr_f>2.1 && !withLayer1) { thr_f=2.1; }
+                  // cout<<"iEt+1 = "<<iEt+1<<", iEta+1 = "<<ieta+1<<", iisMerged+1 = "<<iisMerged+1<<", corr = "<<thr_f<<endl;
 
-		  // thr_f = thr_f-0.5;
-		  // if(thr>=pow(2,totOutBits)-1) thr=pow(2,totOutBits)-1;
-		  int thr = int(round(thr_f/4.*1024));
-		  //yint = int(round(y/2.*512))
+                  // thr_f = thr_f-0.5;
+                  // if(thr>=pow(2,totOutBits)-1) thr=pow(2,totOutBits-2)-1;
+                  int thr = int(round(thr_f/4.*1024));
+                  //yint = int(round(y/2.*512))
 
-		  LUTfile << TotalIDX << " " << thr*2;
-		  if (iEt == 0 && ieta == 0 && ihasEM == 0 && iisMerged==0) LUTfile << " # start of calibration LUT -- ieta : iEt : ihasEM : isMerged = " << ieta << " : " << iEt << " : " << ihasEM << " : "<<iisMerged; 
-		  else LUTfile << " # ieta : iEt : ihasEM : iisMerged = " << ieta << " : " << iEt << " : " << ihasEM << " : "<<iisMerged; 
+                  LUTfile << TotalIDX << " " << thr*2;
+                  if (iEt == 0 && ieta == 0 && ihasEM == 0 && iisMerged==0) LUTfile << " # start of calibration LUT -- ieta : iEt : ihasEM : isMerged = " << ieta << " : " << iEt << " : " << ihasEM << " : "<<iisMerged; 
+                  else LUTfile << " # ieta : iEt : ihasEM : iisMerged = " << ieta << " : " << iEt << " : " << ihasEM << " : "<<iisMerged; 
 
-		  LUTfile << endl;
-		  cout << onlyIsoAddr << " ieta : iEt : ihasEM : iisMerged = " << ieta << " : " << iEt << " : " << ihasEM << " : " << iisMerged << " --> calib: " << thr*2 << endl; 
-		  TotalIDX++;
-		  onlyIsoAddr++;
-		}
+                  LUTfile << endl;
+                  cout << onlyIsoAddr << " ieta : iEt : ihasEM : iisMerged = " << ieta << " : " << iEt << " : " << ihasEM << " : " << iisMerged << " --> calib: " << thr*2 << endl; 
+                  TotalIDX++;
+                  onlyIsoAddr++;
+                }
             }
         }
     }

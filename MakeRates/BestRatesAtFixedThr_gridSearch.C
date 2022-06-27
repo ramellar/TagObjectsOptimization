@@ -21,10 +21,10 @@ using namespace std;
 void isLowerRate(std::vector< std::pair<TString, float> > &orderedHz, float newHz, TString name) {
     for (long unsigned int i = 0; i < orderedHz.size(); ++i)
     {
-        //if (newHz >= orderedHz[i].second && newHz >= 13 && newHz <= 20) {
+        if (newHz >= orderedHz[i].second) { //} && newHz >= 13 && newHz <= 20) {
             orderedHz.insert( orderedHz.begin()+i, std::pair(name, newHz) );
             break;
-        //}
+        }
     }
 }
 
@@ -37,7 +37,7 @@ void compare(int run, float calibThr = 1.7) {
     gStyle->SetOptStat(000000);
 
     std::vector<TString> tags = {"effMin0p0", "effMin0p1", "effMin0p2", "effMin0p3", "effMin0p4", "effMin0p5", "effMin0p5", "effMin0p6", "effMin0p7", "effMin0p8", "effMin0p9"};
-    std::vector<TString> opts = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    std::vector<TString> opts = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
 
     std::vector< std::pair<TString, float> > orderedHzAt32 = { std::pair("init", 0) };
     std::vector< std::pair<TString, float> > orderedHzAt33 = { std::pair("init", 0) };
@@ -50,7 +50,7 @@ void compare(int run, float calibThr = 1.7) {
     {
         TString tag = tags[i];
 
-        TFile* f = new TFile("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
+        TFile* f = new TFile("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV7gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
 
         for (long unsigned int j = 0; j < opts.size(); ++j)
         {
@@ -151,7 +151,7 @@ void compare(int run, float calibThr = 1.7) {
     orderedHzAt32.pop_back(); // remove init entry
     orderedHzAt33.pop_back(); // "
 
-    TString Filename32 = "BestRatesAt32Thr_optimizationV6.txt";
+    TString Filename32 = "BestRatesAt32Thr_Run"+run_str+"_optimizationV7.txt";
     ofstream file32;
     file32.open(Filename32, std::ofstream::trunc);
     file32 << "noIso :  kHz=" << Hz_noIso[0][0] << std::endl;
@@ -164,7 +164,7 @@ void compare(int run, float calibThr = 1.7) {
     }
     file32.close();
 
-    TString Filename33 = "BestRatesAt33Thr_optimizationV6.txt";
+    TString Filename33 = "BestRatesAt33Thr_Run"+run_str+"_optimizationV7.txt";
     ofstream file33;
     file33.open(Filename33, std::ofstream::trunc);
     file33 << "noIso :  kHz=" << Hz_noIso[0][1] << std::endl;

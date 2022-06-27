@@ -23,10 +23,10 @@ class GBR2LUTEmulator:
         scram_arch = os.environ["SCRAM_ARCH"]
         ROOT.gSystem.AddDynamicPath("{0}/lib/{1}/".format(cmsswBase, scram_arch))
         ROOT.gSystem.Load("libHiggsAnalysisGBRLikelihood.so") 
-        #print "inputFileName",self.inputFileName
+        print "inputFileName",self.inputFileName
         self.inputFile = ROOT.TFile.Open(self.inputFileName)
-        self.forest = ROOT.MakeNullPointer( "GBRForest" ) 
-        #self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
+        if ("GBRLL" in self.inputFileName): self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
+        else: self.forest = ROOT.MakeNullPointer( "GBRForest" ) 
         self.inputFile.GetObject(self.forestName, self.forest)
         #
         varlist = ROOT.MakeNullPointer( ROOT.vector("string") )

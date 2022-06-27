@@ -1,0 +1,14 @@
+noIso :  FM=57317 - THR=42.51
+Option22 :  FM=66019 - THR=35.51
+Option31_extrap :  FM=65309 - THR=36.51
+
+
+effMin0p8 OptionM6 : FM=66649 - THR=35.51
+effMin0p8 OptionD7 : FM=66312 - THR=35.51
+effMin0p8 OptionE5 : FM=65496 - THR=36.51
+effMin0p7 OptionK4 : FM=65362 - THR=36.51
+effMin0p8 OptionV5 : FM=65244 - THR=36.51
+effMin0p6 OptionS3 : FM=65235 - THR=36.51
+effMin0p8 OptionL6 : FM=65216 - THR=36.51
+effMin0p8 OptionB7 : FM=65206 - THR=36.51
+effMin0p6 OptionV1 : FM=65166 - THR=36.51

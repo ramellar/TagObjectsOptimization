@@ -142,10 +142,10 @@ short int symmShape(short int shape)
       if (N_n_c > N_s_c) return shape;
       if (N_n_c < N_s_c) return reflectShape(shape);
       if (N_n_c == N_s_c)
-	{
-	  if (N_n_dx >= N_s_dx) return shape;
-	  else return reflectShape(shape);
-	}
+  {
+    if (N_n_dx >= N_s_dx) return shape;
+    else return reflectShape(shape);
+  }
     }
 
   cout << "I should not arrive here!!!" << endl;
@@ -166,7 +166,7 @@ short int encodeSymm (short int shape, map<int, int>& remap)
   for (int i = 0; i < 7; i++)
     {
       if (CheckBit(shape, i))
-	SetBit (symm, remap[i], true);
+  SetBit (symm, remap[i], true);
     }
   return symm;
 }
@@ -179,9 +179,9 @@ short int reflect (short int shape)
   for (int i = 0; i < numbits; i++)
     {
       if ((shape >> i) & 1)
-	{
-	  shRev += (1 << (numbits-1-i));
-	}
+  {
+    shRev += (1 << (numbits-1-i));
+  }
     }
   // shRev = sum(1<<(numbits-1-i) for i in range(numbits) if sh1>>i&1)
   return shRev;
@@ -274,12 +274,12 @@ void ApplyCalibration(float calibThr = 1.7)
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2022_01_28.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_28.root";
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2022_06_13.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_06_13.root";
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV6");
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
 
   TFile f_in(InputFileName.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
@@ -448,41 +448,41 @@ void ApplyCalibration(float calibThr = 1.7)
       // else out_L1Tau_PassShapeVeto = true;
 
       for(Int_t ie = 0 ; ie < NbinsIEt ; ++ie)
-	{
-	  if(L1Tau_IEt>=255)
-	    {
-	      out_supercompressedE = NbinsIEt-2;
-	      break;
-	    }
-	  else if(L1Tau_IEt >= hardcodedIetBins[ie] && L1Tau_IEt < hardcodedIetBins[ie+1])
-	    {
-	      out_supercompressedE = ie;
-	      break;
-	    }
-	}
+  {
+    if(L1Tau_IEt>=255)
+      {
+        out_supercompressedE = NbinsIEt-2;
+        break;
+      }
+    else if(L1Tau_IEt >= hardcodedIetBins[ie] && L1Tau_IEt < hardcodedIetBins[ie+1])
+      {
+        out_supercompressedE = ie;
+        break;
+      }
+  }
 
       for(Int_t inTT = 0 ; inTT < NbinsnTT ; ++inTT)
-	{
-	  if(L1Tau_nTT>=255)
-	    {
-	      out_supercompressednTT = NbinsnTT-2;
-	      break;
-	    }
-	  else if(L1Tau_nTT >= hardcodednTTBins[inTT] && L1Tau_nTT < hardcodednTTBins[inTT+1])
-	    {
-	      out_supercompressednTT = inTT;
-	      break;
-	    }
-	}
+  {
+    if(L1Tau_nTT>=255)
+      {
+        out_supercompressednTT = NbinsnTT-2;
+        break;
+      }
+    else if(L1Tau_nTT >= hardcodednTTBins[inTT] && L1Tau_nTT < hardcodednTTBins[inTT+1])
+      {
+        out_supercompressednTT = inTT;
+        break;
+      }
+  }
 
       /*
-	cout<<"L1Tau_IEta = "<<L1Tau_IEta<<endl;
-	cout<<"L1Tau_IEt/2. = "<<L1Tau_IEt/2.<<endl;
-	// cout<<"L1Tau_IEt/2. = "<<L1Tau_IEt/2.<<endl;
-	cout<<"OfflineTau_pt = "<<OfflineTau_pt<<endl;
-	cout<<"Target = "<<out_Target<<endl;
-	cout<<"h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1) = "<<h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1)<<endl;
-	cout<<"-----"<<endl;
+  cout<<"L1Tau_IEta = "<<L1Tau_IEta<<endl;
+  cout<<"L1Tau_IEt/2. = "<<L1Tau_IEt/2.<<endl;
+  // cout<<"L1Tau_IEt/2. = "<<L1Tau_IEt/2.<<endl;
+  cout<<"OfflineTau_pt = "<<OfflineTau_pt<<endl;
+  cout<<"Target = "<<out_Target<<endl;
+  cout<<"h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1) = "<<h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1)<<endl;
+  cout<<"-----"<<endl;
       */
 
       // cout<<"abs(compressedieta) = "<<abs(compressedieta)<<endl;
@@ -493,19 +493,19 @@ void ApplyCalibration(float calibThr = 1.7)
       float calibThr = 1.7;
 
       if(!out_L1Tau_isMerged)
-	{
-	  out_L1Tau_CalibConstant = h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
-	  // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
-	  if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
-	  out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
-	}
+        {
+          out_L1Tau_CalibConstant = h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
+          // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
+          if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
+          out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
+        }
       else
-	{
-	  out_L1Tau_CalibConstant = h_LUT_isMerged1->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
-	  // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
-	  if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
-	  out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
-	}
+        {
+          out_L1Tau_CalibConstant = h_LUT_isMerged1->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
+          // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
+          if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
+          out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
+        }
 
 
       // if(out_L1Tau_CalibPt<20.) cout<<"hello"<<endl;

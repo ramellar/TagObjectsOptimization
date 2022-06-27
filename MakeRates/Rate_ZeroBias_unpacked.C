@@ -28,7 +28,7 @@ void Rate(int run, float calibThr = 1.7)
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"/EphemeralZeroBias_2018D_Run"+run_str+".root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
@@ -163,7 +163,7 @@ void Rate(int run, float calibThr = 1.7)
       rate_Iso_DiTau->SetBinContent(i+1,pt_Iso_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
     }
 
-  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV6_calibThr"+intgr+"p"+decim+"_unpacked.root","RECREATE");
+  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_unpacked.root","RECREATE");
 
   pt_IsoInf_DiTau->Write();
   pt_Iso_DiTau->Write();

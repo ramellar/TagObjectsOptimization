@@ -1,0 +1,2645 @@
+            Threshold_NewLayer1_noIso   = 41.51;
+            Threshold_NewLayer1_noIso_unpacked = 37.51;
+            Threshold_NewLayer1_Iso_unpacked = 30.51;
+            Threshold_NewLayer1_Option1 = 20.51;
+            Threshold_NewLayer1_Option2 = 25.51;
+            Threshold_NewLayer1_Option3 = 26.51;
+            Threshold_NewLayer1_Option4 = 27.51;
+            Threshold_NewLayer1_Option5 = 30.51;
+            Threshold_NewLayer1_Option6 = 34.51;
+            Threshold_NewLayer1_Option7 = 34.51;
+            Threshold_NewLayer1_Option8 = 25.51;
+            Threshold_NewLayer1_Option9 = 35.51;
+            Threshold_NewLayer1_Option10 = 37.51;
+            Threshold_NewLayer1_Option11 = 37.51;
+            Threshold_NewLayer1_Option12 = 41.51;
+            Threshold_NewLayer1_Option13 = 41.51;
+            Threshold_NewLayer1_Option14 = 41.51;
+            Threshold_NewLayer1_Option15 = 31.51;
+            Threshold_NewLayer1_Option16 = 41.51;
+            Threshold_NewLayer1_Option17 = 41.51;
+            Threshold_NewLayer1_Option18 = 40.51;
+            Threshold_NewLayer1_Option19 = 40.51;
+            Threshold_NewLayer1_Option20 = 41.51;
+            Threshold_NewLayer1_Option21 = 33.51;
+            Threshold_NewLayer1_Option22 = 26.51;
+            Threshold_NewLayer1_Option23 = 25.51;
+            Threshold_NewLayer1_Option24 = 25.51;
+            Threshold_NewLayer1_Option25 = 23.51;
+            Threshold_NewLayer1_Option26 = 24.51;
+            Threshold_NewLayer1_Option27 = 27.51;
+            Threshold_NewLayer1_Option28 = 25.51;
+            Threshold_NewLayer1_Option29 = 25.51;
+            Threshold_NewLayer1_Option30 = 25.51;
+            Threshold_NewLayer1_Option31 = 29.51;
+            Threshold_NewLayer1_Option31_extrap = 28.51;
+            if (tag=="effMin0p0" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 39.51;
+                Threshold_NewLayer1_OptionF = 34.51;
+                Threshold_NewLayer1_OptionG = 28.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 21.51;
+                Threshold_NewLayer1_OptionK = 20.51;
+                Threshold_NewLayer1_OptionL = 19.51;
+                Threshold_NewLayer1_OptionM = 18.51;
+                Threshold_NewLayer1_OptionN = 18.51;
+                Threshold_NewLayer1_OptionO = 17.51;
+                Threshold_NewLayer1_OptionP = 17.51;
+                Threshold_NewLayer1_OptionQ = 17.51;
+                Threshold_NewLayer1_OptionR = 15.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 39.51;
+                Threshold_NewLayer1_OptionW = 33.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 16.51;
+                Threshold_NewLayer1_OptionZ = 11.51;
+            }
+            else if (tag=="effMin0p0" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 9.51;
+                Threshold_NewLayer1_OptionB = 9.51;
+                Threshold_NewLayer1_OptionC = 8.51;
+                Threshold_NewLayer1_OptionD = 8.51;
+                Threshold_NewLayer1_OptionE = 7.51;
+                Threshold_NewLayer1_OptionF = 7.51;
+                Threshold_NewLayer1_OptionG = 7.51;
+                Threshold_NewLayer1_OptionH = 7.51;
+                Threshold_NewLayer1_OptionI = 7.51;
+                Threshold_NewLayer1_OptionJ = 7.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 39.51;
+                Threshold_NewLayer1_OptionN = 31.51;
+                Threshold_NewLayer1_OptionO = 11.51;
+                Threshold_NewLayer1_OptionP = 9.51;
+                Threshold_NewLayer1_OptionQ = 8.51;
+                Threshold_NewLayer1_OptionR = 7.51;
+                Threshold_NewLayer1_OptionS = 7.51;
+                Threshold_NewLayer1_OptionT = 7.51;
+                Threshold_NewLayer1_OptionU = 7.51;
+                Threshold_NewLayer1_OptionV = 7.51;
+                Threshold_NewLayer1_OptionW = 7.51;
+                Threshold_NewLayer1_OptionX = 7.51;
+                Threshold_NewLayer1_OptionY = 6.51;
+                Threshold_NewLayer1_OptionZ = 6.51;
+            }
+            else if (tag=="effMin0p0" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 6.51;
+                Threshold_NewLayer1_OptionB = 6.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 21.51;
+                Threshold_NewLayer1_OptionF = 9.51;
+                Threshold_NewLayer1_OptionG = 8.51;
+                Threshold_NewLayer1_OptionH = 7.51;
+                Threshold_NewLayer1_OptionI = 7.51;
+                Threshold_NewLayer1_OptionJ = 7.51;
+                Threshold_NewLayer1_OptionK = 7.51;
+                Threshold_NewLayer1_OptionL = 7.51;
+                Threshold_NewLayer1_OptionM = 7.51;
+                Threshold_NewLayer1_OptionN = 6.51;
+                Threshold_NewLayer1_OptionO = 6.51;
+                Threshold_NewLayer1_OptionP = 6.51;
+                Threshold_NewLayer1_OptionQ = 6.51;
+                Threshold_NewLayer1_OptionR = 6.51;
+                Threshold_NewLayer1_OptionS = 6.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 10.51;
+                Threshold_NewLayer1_OptionW = 8.51;
+                Threshold_NewLayer1_OptionX = 8.51;
+                Threshold_NewLayer1_OptionY = 7.51;
+                Threshold_NewLayer1_OptionZ = 7.51;
+            }
+            else if (tag=="effMin0p0" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 7.51;
+                Threshold_NewLayer1_OptionB = 7.51;
+                Threshold_NewLayer1_OptionC = 6.51;
+                Threshold_NewLayer1_OptionD = 6.51;
+                Threshold_NewLayer1_OptionE = 6.51;
+                Threshold_NewLayer1_OptionF = 6.51;
+                Threshold_NewLayer1_OptionG = 6.51;
+                Threshold_NewLayer1_OptionH = 6.51;
+                Threshold_NewLayer1_OptionI = 6.51;
+                Threshold_NewLayer1_OptionJ = 6.51;
+                Threshold_NewLayer1_OptionK = 6.51;
+                Threshold_NewLayer1_OptionL = 6.51;
+                Threshold_NewLayer1_OptionM = 9.51;
+                Threshold_NewLayer1_OptionN = 8.51;
+                Threshold_NewLayer1_OptionO = 7.51;
+                Threshold_NewLayer1_OptionP = 7.51;
+                Threshold_NewLayer1_OptionQ = 7.51;
+                Threshold_NewLayer1_OptionR = 7.51;
+                Threshold_NewLayer1_OptionS = 7.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 6.51;
+                Threshold_NewLayer1_OptionV = 6.51;
+                Threshold_NewLayer1_OptionW = 6.51;
+                Threshold_NewLayer1_OptionX = 6.51;
+                Threshold_NewLayer1_OptionY = 6.51;
+                Threshold_NewLayer1_OptionZ = 6.51;
+            }
+            else if (tag=="effMin0p0" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 6.51;
+                Threshold_NewLayer1_OptionB = 6.51;
+                Threshold_NewLayer1_OptionC = 6.51;
+                Threshold_NewLayer1_OptionD = 6.51;
+                Threshold_NewLayer1_OptionE = 8.51;
+                Threshold_NewLayer1_OptionF = 7.51;
+                Threshold_NewLayer1_OptionG = 7.51;
+                Threshold_NewLayer1_OptionH = 7.51;
+                Threshold_NewLayer1_OptionI = 7.51;
+                Threshold_NewLayer1_OptionJ = 6.51;
+                Threshold_NewLayer1_OptionK = 6.51;
+                Threshold_NewLayer1_OptionL = 6.51;
+                Threshold_NewLayer1_OptionM = 6.51;
+                Threshold_NewLayer1_OptionN = 6.51;
+                Threshold_NewLayer1_OptionO = 6.51;
+                Threshold_NewLayer1_OptionP = 6.51;
+                Threshold_NewLayer1_OptionQ = 6.51;
+                Threshold_NewLayer1_OptionR = 6.51;
+                Threshold_NewLayer1_OptionS = 6.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 6.51;
+                Threshold_NewLayer1_OptionV = 6.51;
+                Threshold_NewLayer1_OptionW = 7.51;
+                Threshold_NewLayer1_OptionX = 7.51;
+                Threshold_NewLayer1_OptionY = 7.51;
+                Threshold_NewLayer1_OptionZ = 7.51;
+            }
+            else if (tag=="effMin0p0" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 6.51;
+                Threshold_NewLayer1_OptionB = 6.51;
+                Threshold_NewLayer1_OptionC = 6.51;
+                Threshold_NewLayer1_OptionD = 6.51;
+                Threshold_NewLayer1_OptionE = 6.51;
+                Threshold_NewLayer1_OptionF = 6.51;
+                Threshold_NewLayer1_OptionG = 6.51;
+                Threshold_NewLayer1_OptionH = 6.51;
+                Threshold_NewLayer1_OptionI = 6.51;
+                Threshold_NewLayer1_OptionJ = 6.51;
+                Threshold_NewLayer1_OptionK = 6.51;
+                Threshold_NewLayer1_OptionL = 6.51;
+                Threshold_NewLayer1_OptionM = 6.51;
+                Threshold_NewLayer1_OptionN = 6.51;
+                Threshold_NewLayer1_OptionO = 7.51;
+                Threshold_NewLayer1_OptionP = 7.51;
+                Threshold_NewLayer1_OptionQ = 7.51;
+                Threshold_NewLayer1_OptionR = 6.51;
+                Threshold_NewLayer1_OptionS = 6.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 6.51;
+                Threshold_NewLayer1_OptionV = 6.51;
+                Threshold_NewLayer1_OptionW = 6.51;
+                Threshold_NewLayer1_OptionX = 6.51;
+                Threshold_NewLayer1_OptionY = 6.51;
+                Threshold_NewLayer1_OptionZ = 6.51;
+            }
+            else if (tag=="effMin0p0" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 6.51;
+                Threshold_NewLayer1_OptionB = 6.51;
+                Threshold_NewLayer1_OptionC = 6.51;
+                Threshold_NewLayer1_OptionD = 6.51;
+                Threshold_NewLayer1_OptionE = 6.51;
+                Threshold_NewLayer1_OptionF = 6.51;
+                Threshold_NewLayer1_OptionG = 7.51;
+                Threshold_NewLayer1_OptionH = 7.51;
+                Threshold_NewLayer1_OptionI = 6.51;
+                Threshold_NewLayer1_OptionJ = 6.51;
+                Threshold_NewLayer1_OptionK = 6.51;
+                Threshold_NewLayer1_OptionL = 6.51;
+                Threshold_NewLayer1_OptionM = 6.51;
+                Threshold_NewLayer1_OptionN = 6.51;
+                Threshold_NewLayer1_OptionO = 6.51;
+                Threshold_NewLayer1_OptionP = 6.51;
+                Threshold_NewLayer1_OptionQ = 6.51;
+                Threshold_NewLayer1_OptionR = 6.51;
+                Threshold_NewLayer1_OptionS = 6.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 6.51;
+                Threshold_NewLayer1_OptionV = 6.51;
+                Threshold_NewLayer1_OptionW = 6.51;
+                Threshold_NewLayer1_OptionX = 6.51;
+                Threshold_NewLayer1_OptionY = 7.51;
+                Threshold_NewLayer1_OptionZ = 6.51;
+            }
+            else if (tag=="effMin0p0" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 6.51;
+                Threshold_NewLayer1_OptionB = 6.51;
+                Threshold_NewLayer1_OptionC = 6.51;
+                Threshold_NewLayer1_OptionD = 6.51;
+                Threshold_NewLayer1_OptionE = 6.51;
+                Threshold_NewLayer1_OptionF = 6.51;
+                Threshold_NewLayer1_OptionG = 6.51;
+                Threshold_NewLayer1_OptionH = 6.51;
+                Threshold_NewLayer1_OptionI = 6.51;
+                Threshold_NewLayer1_OptionJ = 6.51;
+                Threshold_NewLayer1_OptionK = 6.51;
+                Threshold_NewLayer1_OptionL = 6.51;
+                Threshold_NewLayer1_OptionM = 6.51;
+                Threshold_NewLayer1_OptionN = 6.51;
+                Threshold_NewLayer1_OptionO = 6.51;
+                Threshold_NewLayer1_OptionP = 6.51;
+                Threshold_NewLayer1_OptionQ = 6.51;
+                Threshold_NewLayer1_OptionR = 6.51;
+                Threshold_NewLayer1_OptionS = 6.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 6.51;
+                Threshold_NewLayer1_OptionV = 6.51;
+                Threshold_NewLayer1_OptionW = 6.51;
+                Threshold_NewLayer1_OptionX = 6.51;
+                Threshold_NewLayer1_OptionY = 6.51;
+                Threshold_NewLayer1_OptionZ = 6.51;
+            }
+            else if (tag=="effMin0p0" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 6.51;
+                Threshold_NewLayer1_OptionB = 6.51;
+                Threshold_NewLayer1_OptionC = 6.51;
+                Threshold_NewLayer1_OptionD = 6.51;
+                Threshold_NewLayer1_OptionE = 6.51;
+                Threshold_NewLayer1_OptionF = 6.51;
+                Threshold_NewLayer1_OptionG = 6.51;
+                Threshold_NewLayer1_OptionH = 6.51;
+                Threshold_NewLayer1_OptionI = 6.51;
+                Threshold_NewLayer1_OptionJ = 6.51;
+                Threshold_NewLayer1_OptionK = 6.51;
+                Threshold_NewLayer1_OptionL = 6.51;
+                Threshold_NewLayer1_OptionM = 6.51;
+                Threshold_NewLayer1_OptionN = 6.51;
+                Threshold_NewLayer1_OptionO = 6.51;
+                Threshold_NewLayer1_OptionP = 6.51;
+                Threshold_NewLayer1_OptionQ = 6.51;
+                Threshold_NewLayer1_OptionR = 6.51;
+                Threshold_NewLayer1_OptionS = 6.51;
+                Threshold_NewLayer1_OptionT = 6.51;
+                Threshold_NewLayer1_OptionU = 6.51;
+                Threshold_NewLayer1_OptionV = 6.51;
+                Threshold_NewLayer1_OptionW = 6.51;
+                Threshold_NewLayer1_OptionX = 6.51;
+                Threshold_NewLayer1_OptionY = 6.51;
+                Threshold_NewLayer1_OptionZ = 6.51;
+            }
+            else if (tag=="effMin0p1" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 39.51;
+                Threshold_NewLayer1_OptionF = 34.51;
+                Threshold_NewLayer1_OptionG = 30.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 23.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 21.51;
+                Threshold_NewLayer1_OptionO = 21.51;
+                Threshold_NewLayer1_OptionP = 21.51;
+                Threshold_NewLayer1_OptionQ = 20.51;
+                Threshold_NewLayer1_OptionR = 20.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 39.51;
+                Threshold_NewLayer1_OptionW = 34.51;
+                Threshold_NewLayer1_OptionX = 28.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p1" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 20.51;
+                Threshold_NewLayer1_OptionD = 20.51;
+                Threshold_NewLayer1_OptionE = 20.51;
+                Threshold_NewLayer1_OptionF = 20.51;
+                Threshold_NewLayer1_OptionG = 19.51;
+                Threshold_NewLayer1_OptionH = 19.51;
+                Threshold_NewLayer1_OptionI = 18.51;
+                Threshold_NewLayer1_OptionJ = 18.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 39.51;
+                Threshold_NewLayer1_OptionN = 33.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 23.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 20.51;
+                Threshold_NewLayer1_OptionS = 20.51;
+                Threshold_NewLayer1_OptionT = 20.51;
+                Threshold_NewLayer1_OptionU = 19.51;
+                Threshold_NewLayer1_OptionV = 19.51;
+                Threshold_NewLayer1_OptionW = 19.51;
+                Threshold_NewLayer1_OptionX = 19.51;
+                Threshold_NewLayer1_OptionY = 18.51;
+                Threshold_NewLayer1_OptionZ = 18.51;
+            }
+            else if (tag=="effMin0p1" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 18.51;
+                Threshold_NewLayer1_OptionB = 18.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 31.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 21.51;
+                Threshold_NewLayer1_OptionI = 20.51;
+                Threshold_NewLayer1_OptionJ = 20.51;
+                Threshold_NewLayer1_OptionK = 19.51;
+                Threshold_NewLayer1_OptionL = 19.51;
+                Threshold_NewLayer1_OptionM = 19.51;
+                Threshold_NewLayer1_OptionN = 19.51;
+                Threshold_NewLayer1_OptionO = 18.51;
+                Threshold_NewLayer1_OptionP = 18.51;
+                Threshold_NewLayer1_OptionQ = 18.51;
+                Threshold_NewLayer1_OptionR = 18.51;
+                Threshold_NewLayer1_OptionS = 18.51;
+                Threshold_NewLayer1_OptionT = 18.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 26.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 21.51;
+                Threshold_NewLayer1_OptionY = 20.51;
+                Threshold_NewLayer1_OptionZ = 20.51;
+            }
+            else if (tag=="effMin0p1" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 19.51;
+                Threshold_NewLayer1_OptionB = 19.51;
+                Threshold_NewLayer1_OptionC = 19.51;
+                Threshold_NewLayer1_OptionD = 18.51;
+                Threshold_NewLayer1_OptionE = 18.51;
+                Threshold_NewLayer1_OptionF = 18.51;
+                Threshold_NewLayer1_OptionG = 18.51;
+                Threshold_NewLayer1_OptionH = 18.51;
+                Threshold_NewLayer1_OptionI = 18.51;
+                Threshold_NewLayer1_OptionJ = 18.51;
+                Threshold_NewLayer1_OptionK = 18.51;
+                Threshold_NewLayer1_OptionL = 17.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 22.51;
+                Threshold_NewLayer1_OptionO = 21.51;
+                Threshold_NewLayer1_OptionP = 20.51;
+                Threshold_NewLayer1_OptionQ = 19.51;
+                Threshold_NewLayer1_OptionR = 19.51;
+                Threshold_NewLayer1_OptionS = 19.51;
+                Threshold_NewLayer1_OptionT = 18.51;
+                Threshold_NewLayer1_OptionU = 18.51;
+                Threshold_NewLayer1_OptionV = 18.51;
+                Threshold_NewLayer1_OptionW = 18.51;
+                Threshold_NewLayer1_OptionX = 18.51;
+                Threshold_NewLayer1_OptionY = 18.51;
+                Threshold_NewLayer1_OptionZ = 17.51;
+            }
+            else if (tag=="effMin0p1" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 17.51;
+                Threshold_NewLayer1_OptionB = 17.51;
+                Threshold_NewLayer1_OptionC = 17.51;
+                Threshold_NewLayer1_OptionD = 17.51;
+                Threshold_NewLayer1_OptionE = 21.51;
+                Threshold_NewLayer1_OptionF = 20.51;
+                Threshold_NewLayer1_OptionG = 20.51;
+                Threshold_NewLayer1_OptionH = 19.51;
+                Threshold_NewLayer1_OptionI = 19.51;
+                Threshold_NewLayer1_OptionJ = 18.51;
+                Threshold_NewLayer1_OptionK = 18.51;
+                Threshold_NewLayer1_OptionL = 18.51;
+                Threshold_NewLayer1_OptionM = 18.51;
+                Threshold_NewLayer1_OptionN = 18.51;
+                Threshold_NewLayer1_OptionO = 17.51;
+                Threshold_NewLayer1_OptionP = 17.51;
+                Threshold_NewLayer1_OptionQ = 17.51;
+                Threshold_NewLayer1_OptionR = 17.51;
+                Threshold_NewLayer1_OptionS = 17.51;
+                Threshold_NewLayer1_OptionT = 17.51;
+                Threshold_NewLayer1_OptionU = 17.51;
+                Threshold_NewLayer1_OptionV = 17.51;
+                Threshold_NewLayer1_OptionW = 20.51;
+                Threshold_NewLayer1_OptionX = 19.51;
+                Threshold_NewLayer1_OptionY = 19.51;
+                Threshold_NewLayer1_OptionZ = 19.51;
+            }
+            else if (tag=="effMin0p1" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 18.51;
+                Threshold_NewLayer1_OptionB = 18.51;
+                Threshold_NewLayer1_OptionC = 18.51;
+                Threshold_NewLayer1_OptionD = 18.51;
+                Threshold_NewLayer1_OptionE = 18.51;
+                Threshold_NewLayer1_OptionF = 17.51;
+                Threshold_NewLayer1_OptionG = 17.51;
+                Threshold_NewLayer1_OptionH = 17.51;
+                Threshold_NewLayer1_OptionI = 17.51;
+                Threshold_NewLayer1_OptionJ = 17.51;
+                Threshold_NewLayer1_OptionK = 17.51;
+                Threshold_NewLayer1_OptionL = 17.51;
+                Threshold_NewLayer1_OptionM = 17.51;
+                Threshold_NewLayer1_OptionN = 17.51;
+                Threshold_NewLayer1_OptionO = 19.51;
+                Threshold_NewLayer1_OptionP = 19.51;
+                Threshold_NewLayer1_OptionQ = 19.51;
+                Threshold_NewLayer1_OptionR = 18.51;
+                Threshold_NewLayer1_OptionS = 18.51;
+                Threshold_NewLayer1_OptionT = 18.51;
+                Threshold_NewLayer1_OptionU = 18.51;
+                Threshold_NewLayer1_OptionV = 17.51;
+                Threshold_NewLayer1_OptionW = 17.51;
+                Threshold_NewLayer1_OptionX = 17.51;
+                Threshold_NewLayer1_OptionY = 17.51;
+                Threshold_NewLayer1_OptionZ = 17.51;
+            }
+            else if (tag=="effMin0p1" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 17.51;
+                Threshold_NewLayer1_OptionB = 17.51;
+                Threshold_NewLayer1_OptionC = 17.51;
+                Threshold_NewLayer1_OptionD = 17.51;
+                Threshold_NewLayer1_OptionE = 17.51;
+                Threshold_NewLayer1_OptionF = 17.51;
+                Threshold_NewLayer1_OptionG = 19.51;
+                Threshold_NewLayer1_OptionH = 18.51;
+                Threshold_NewLayer1_OptionI = 18.51;
+                Threshold_NewLayer1_OptionJ = 18.51;
+                Threshold_NewLayer1_OptionK = 18.51;
+                Threshold_NewLayer1_OptionL = 18.51;
+                Threshold_NewLayer1_OptionM = 17.51;
+                Threshold_NewLayer1_OptionN = 17.51;
+                Threshold_NewLayer1_OptionO = 17.51;
+                Threshold_NewLayer1_OptionP = 17.51;
+                Threshold_NewLayer1_OptionQ = 17.51;
+                Threshold_NewLayer1_OptionR = 17.51;
+                Threshold_NewLayer1_OptionS = 17.51;
+                Threshold_NewLayer1_OptionT = 17.51;
+                Threshold_NewLayer1_OptionU = 17.51;
+                Threshold_NewLayer1_OptionV = 17.51;
+                Threshold_NewLayer1_OptionW = 17.51;
+                Threshold_NewLayer1_OptionX = 17.51;
+                Threshold_NewLayer1_OptionY = 18.51;
+                Threshold_NewLayer1_OptionZ = 18.51;
+            }
+            else if (tag=="effMin0p1" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 18.51;
+                Threshold_NewLayer1_OptionB = 18.51;
+                Threshold_NewLayer1_OptionC = 18.51;
+                Threshold_NewLayer1_OptionD = 17.51;
+                Threshold_NewLayer1_OptionE = 17.51;
+                Threshold_NewLayer1_OptionF = 17.51;
+                Threshold_NewLayer1_OptionG = 17.51;
+                Threshold_NewLayer1_OptionH = 17.51;
+                Threshold_NewLayer1_OptionI = 17.51;
+                Threshold_NewLayer1_OptionJ = 17.51;
+                Threshold_NewLayer1_OptionK = 17.51;
+                Threshold_NewLayer1_OptionL = 17.51;
+                Threshold_NewLayer1_OptionM = 17.51;
+                Threshold_NewLayer1_OptionN = 17.51;
+                Threshold_NewLayer1_OptionO = 17.51;
+                Threshold_NewLayer1_OptionP = 17.51;
+                Threshold_NewLayer1_OptionQ = 18.51;
+                Threshold_NewLayer1_OptionR = 18.51;
+                Threshold_NewLayer1_OptionS = 18.51;
+                Threshold_NewLayer1_OptionT = 18.51;
+                Threshold_NewLayer1_OptionU = 17.51;
+                Threshold_NewLayer1_OptionV = 17.51;
+                Threshold_NewLayer1_OptionW = 17.51;
+                Threshold_NewLayer1_OptionX = 17.51;
+                Threshold_NewLayer1_OptionY = 17.51;
+                Threshold_NewLayer1_OptionZ = 17.51;
+            }
+            else if (tag=="effMin0p1" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 17.51;
+                Threshold_NewLayer1_OptionB = 17.51;
+                Threshold_NewLayer1_OptionC = 17.51;
+                Threshold_NewLayer1_OptionD = 17.51;
+                Threshold_NewLayer1_OptionE = 17.51;
+                Threshold_NewLayer1_OptionF = 17.51;
+                Threshold_NewLayer1_OptionG = 17.51;
+                Threshold_NewLayer1_OptionH = 17.51;
+                Threshold_NewLayer1_OptionI = 18.51;
+                Threshold_NewLayer1_OptionJ = 18.51;
+                Threshold_NewLayer1_OptionK = 18.51;
+                Threshold_NewLayer1_OptionL = 17.51;
+                Threshold_NewLayer1_OptionM = 17.51;
+                Threshold_NewLayer1_OptionN = 17.51;
+                Threshold_NewLayer1_OptionO = 17.51;
+                Threshold_NewLayer1_OptionP = 17.51;
+                Threshold_NewLayer1_OptionQ = 17.51;
+                Threshold_NewLayer1_OptionR = 17.51;
+                Threshold_NewLayer1_OptionS = 17.51;
+                Threshold_NewLayer1_OptionT = 17.51;
+                Threshold_NewLayer1_OptionU = 17.51;
+                Threshold_NewLayer1_OptionV = 17.51;
+                Threshold_NewLayer1_OptionW = 17.51;
+                Threshold_NewLayer1_OptionX = 17.51;
+                Threshold_NewLayer1_OptionY = 17.51;
+                Threshold_NewLayer1_OptionZ = 17.51;
+            }
+            else if (tag=="effMin0p2" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 39.51;
+                Threshold_NewLayer1_OptionF = 35.51;
+                Threshold_NewLayer1_OptionG = 31.51;
+                Threshold_NewLayer1_OptionH = 27.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 24.51;
+                Threshold_NewLayer1_OptionM = 24.51;
+                Threshold_NewLayer1_OptionN = 23.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 23.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 39.51;
+                Threshold_NewLayer1_OptionW = 34.51;
+                Threshold_NewLayer1_OptionX = 30.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p2" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 23.51;
+                Threshold_NewLayer1_OptionD = 23.51;
+                Threshold_NewLayer1_OptionE = 22.51;
+                Threshold_NewLayer1_OptionF = 22.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 21.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 39.51;
+                Threshold_NewLayer1_OptionN = 34.51;
+                Threshold_NewLayer1_OptionO = 28.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 23.51;
+                Threshold_NewLayer1_OptionS = 23.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 21.51;
+                Threshold_NewLayer1_OptionZ = 21.51;
+            }
+            else if (tag=="effMin0p2" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 21.51;
+                Threshold_NewLayer1_OptionB = 21.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 32.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 24.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 21.51;
+                Threshold_NewLayer1_OptionO = 21.51;
+                Threshold_NewLayer1_OptionP = 21.51;
+                Threshold_NewLayer1_OptionQ = 21.51;
+                Threshold_NewLayer1_OptionR = 21.51;
+                Threshold_NewLayer1_OptionS = 20.51;
+                Threshold_NewLayer1_OptionT = 20.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 29.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 24.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p2" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 21.51;
+                Threshold_NewLayer1_OptionD = 21.51;
+                Threshold_NewLayer1_OptionE = 21.51;
+                Threshold_NewLayer1_OptionF = 21.51;
+                Threshold_NewLayer1_OptionG = 21.51;
+                Threshold_NewLayer1_OptionH = 20.51;
+                Threshold_NewLayer1_OptionI = 20.51;
+                Threshold_NewLayer1_OptionJ = 20.51;
+                Threshold_NewLayer1_OptionK = 20.51;
+                Threshold_NewLayer1_OptionL = 20.51;
+                Threshold_NewLayer1_OptionM = 26.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 21.51;
+                Threshold_NewLayer1_OptionT = 21.51;
+                Threshold_NewLayer1_OptionU = 21.51;
+                Threshold_NewLayer1_OptionV = 21.51;
+                Threshold_NewLayer1_OptionW = 21.51;
+                Threshold_NewLayer1_OptionX = 21.51;
+                Threshold_NewLayer1_OptionY = 20.51;
+                Threshold_NewLayer1_OptionZ = 20.51;
+            }
+            else if (tag=="effMin0p2" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 20.51;
+                Threshold_NewLayer1_OptionB = 20.51;
+                Threshold_NewLayer1_OptionC = 20.51;
+                Threshold_NewLayer1_OptionD = 20.51;
+                Threshold_NewLayer1_OptionE = 24.51;
+                Threshold_NewLayer1_OptionF = 23.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 21.51;
+                Threshold_NewLayer1_OptionK = 21.51;
+                Threshold_NewLayer1_OptionL = 21.51;
+                Threshold_NewLayer1_OptionM = 21.51;
+                Threshold_NewLayer1_OptionN = 21.51;
+                Threshold_NewLayer1_OptionO = 20.51;
+                Threshold_NewLayer1_OptionP = 20.51;
+                Threshold_NewLayer1_OptionQ = 20.51;
+                Threshold_NewLayer1_OptionR = 20.51;
+                Threshold_NewLayer1_OptionS = 20.51;
+                Threshold_NewLayer1_OptionT = 20.51;
+                Threshold_NewLayer1_OptionU = 20.51;
+                Threshold_NewLayer1_OptionV = 20.51;
+                Threshold_NewLayer1_OptionW = 23.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 22.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p2" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 21.51;
+                Threshold_NewLayer1_OptionB = 21.51;
+                Threshold_NewLayer1_OptionC = 21.51;
+                Threshold_NewLayer1_OptionD = 21.51;
+                Threshold_NewLayer1_OptionE = 20.51;
+                Threshold_NewLayer1_OptionF = 20.51;
+                Threshold_NewLayer1_OptionG = 20.51;
+                Threshold_NewLayer1_OptionH = 20.51;
+                Threshold_NewLayer1_OptionI = 20.51;
+                Threshold_NewLayer1_OptionJ = 20.51;
+                Threshold_NewLayer1_OptionK = 20.51;
+                Threshold_NewLayer1_OptionL = 20.51;
+                Threshold_NewLayer1_OptionM = 20.51;
+                Threshold_NewLayer1_OptionN = 20.51;
+                Threshold_NewLayer1_OptionO = 22.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 21.51;
+                Threshold_NewLayer1_OptionS = 21.51;
+                Threshold_NewLayer1_OptionT = 21.51;
+                Threshold_NewLayer1_OptionU = 21.51;
+                Threshold_NewLayer1_OptionV = 20.51;
+                Threshold_NewLayer1_OptionW = 20.51;
+                Threshold_NewLayer1_OptionX = 20.51;
+                Threshold_NewLayer1_OptionY = 20.51;
+                Threshold_NewLayer1_OptionZ = 20.51;
+            }
+            else if (tag=="effMin0p2" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 20.51;
+                Threshold_NewLayer1_OptionB = 20.51;
+                Threshold_NewLayer1_OptionC = 20.51;
+                Threshold_NewLayer1_OptionD = 20.51;
+                Threshold_NewLayer1_OptionE = 20.51;
+                Threshold_NewLayer1_OptionF = 20.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 21.51;
+                Threshold_NewLayer1_OptionJ = 21.51;
+                Threshold_NewLayer1_OptionK = 21.51;
+                Threshold_NewLayer1_OptionL = 21.51;
+                Threshold_NewLayer1_OptionM = 20.51;
+                Threshold_NewLayer1_OptionN = 20.51;
+                Threshold_NewLayer1_OptionO = 20.51;
+                Threshold_NewLayer1_OptionP = 20.51;
+                Threshold_NewLayer1_OptionQ = 20.51;
+                Threshold_NewLayer1_OptionR = 20.51;
+                Threshold_NewLayer1_OptionS = 20.51;
+                Threshold_NewLayer1_OptionT = 20.51;
+                Threshold_NewLayer1_OptionU = 20.51;
+                Threshold_NewLayer1_OptionV = 20.51;
+                Threshold_NewLayer1_OptionW = 20.51;
+                Threshold_NewLayer1_OptionX = 20.51;
+                Threshold_NewLayer1_OptionY = 21.51;
+                Threshold_NewLayer1_OptionZ = 21.51;
+            }
+            else if (tag=="effMin0p2" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 21.51;
+                Threshold_NewLayer1_OptionB = 21.51;
+                Threshold_NewLayer1_OptionC = 21.51;
+                Threshold_NewLayer1_OptionD = 20.51;
+                Threshold_NewLayer1_OptionE = 20.51;
+                Threshold_NewLayer1_OptionF = 20.51;
+                Threshold_NewLayer1_OptionG = 20.51;
+                Threshold_NewLayer1_OptionH = 20.51;
+                Threshold_NewLayer1_OptionI = 20.51;
+                Threshold_NewLayer1_OptionJ = 20.51;
+                Threshold_NewLayer1_OptionK = 20.51;
+                Threshold_NewLayer1_OptionL = 20.51;
+                Threshold_NewLayer1_OptionM = 20.51;
+                Threshold_NewLayer1_OptionN = 20.51;
+                Threshold_NewLayer1_OptionO = 20.51;
+                Threshold_NewLayer1_OptionP = 20.51;
+                Threshold_NewLayer1_OptionQ = 21.51;
+                Threshold_NewLayer1_OptionR = 21.51;
+                Threshold_NewLayer1_OptionS = 21.51;
+                Threshold_NewLayer1_OptionT = 21.51;
+                Threshold_NewLayer1_OptionU = 20.51;
+                Threshold_NewLayer1_OptionV = 20.51;
+                Threshold_NewLayer1_OptionW = 20.51;
+                Threshold_NewLayer1_OptionX = 20.51;
+                Threshold_NewLayer1_OptionY = 20.51;
+                Threshold_NewLayer1_OptionZ = 20.51;
+            }
+            else if (tag=="effMin0p2" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 20.51;
+                Threshold_NewLayer1_OptionB = 20.51;
+                Threshold_NewLayer1_OptionC = 20.51;
+                Threshold_NewLayer1_OptionD = 20.51;
+                Threshold_NewLayer1_OptionE = 20.51;
+                Threshold_NewLayer1_OptionF = 20.51;
+                Threshold_NewLayer1_OptionG = 20.51;
+                Threshold_NewLayer1_OptionH = 20.51;
+                Threshold_NewLayer1_OptionI = 21.51;
+                Threshold_NewLayer1_OptionJ = 21.51;
+                Threshold_NewLayer1_OptionK = 21.51;
+                Threshold_NewLayer1_OptionL = 20.51;
+                Threshold_NewLayer1_OptionM = 20.51;
+                Threshold_NewLayer1_OptionN = 20.51;
+                Threshold_NewLayer1_OptionO = 20.51;
+                Threshold_NewLayer1_OptionP = 20.51;
+                Threshold_NewLayer1_OptionQ = 20.51;
+                Threshold_NewLayer1_OptionR = 20.51;
+                Threshold_NewLayer1_OptionS = 20.51;
+                Threshold_NewLayer1_OptionT = 20.51;
+                Threshold_NewLayer1_OptionU = 20.51;
+                Threshold_NewLayer1_OptionV = 20.51;
+                Threshold_NewLayer1_OptionW = 20.51;
+                Threshold_NewLayer1_OptionX = 20.51;
+                Threshold_NewLayer1_OptionY = 20.51;
+                Threshold_NewLayer1_OptionZ = 20.51;
+            }
+            else if (tag=="effMin0p3" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 39.51;
+                Threshold_NewLayer1_OptionF = 36.51;
+                Threshold_NewLayer1_OptionG = 32.51;
+                Threshold_NewLayer1_OptionH = 28.51;
+                Threshold_NewLayer1_OptionI = 26.51;
+                Threshold_NewLayer1_OptionJ = 26.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 24.51;
+                Threshold_NewLayer1_OptionP = 24.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 23.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 39.51;
+                Threshold_NewLayer1_OptionW = 35.51;
+                Threshold_NewLayer1_OptionX = 31.51;
+                Threshold_NewLayer1_OptionY = 27.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p3" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 24.51;
+                Threshold_NewLayer1_OptionE = 24.51;
+                Threshold_NewLayer1_OptionF = 24.51;
+                Threshold_NewLayer1_OptionG = 23.51;
+                Threshold_NewLayer1_OptionH = 23.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 23.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 39.51;
+                Threshold_NewLayer1_OptionN = 35.51;
+                Threshold_NewLayer1_OptionO = 31.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 24.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 23.51;
+                Threshold_NewLayer1_OptionW = 23.51;
+                Threshold_NewLayer1_OptionX = 23.51;
+                Threshold_NewLayer1_OptionY = 22.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p3" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 34.51;
+                Threshold_NewLayer1_OptionF = 28.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 24.51;
+                Threshold_NewLayer1_OptionK = 23.51;
+                Threshold_NewLayer1_OptionL = 23.51;
+                Threshold_NewLayer1_OptionM = 23.51;
+                Threshold_NewLayer1_OptionN = 23.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 22.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 32.51;
+                Threshold_NewLayer1_OptionW = 26.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 24.51;
+            }
+            else if (tag=="effMin0p3" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 24.51;
+                Threshold_NewLayer1_OptionB = 23.51;
+                Threshold_NewLayer1_OptionC = 23.51;
+                Threshold_NewLayer1_OptionD = 23.51;
+                Threshold_NewLayer1_OptionE = 23.51;
+                Threshold_NewLayer1_OptionF = 22.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 28.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 23.51;
+                Threshold_NewLayer1_OptionS = 23.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 22.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p3" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 22.51;
+                Threshold_NewLayer1_OptionD = 22.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 24.51;
+                Threshold_NewLayer1_OptionH = 23.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 22.51;
+                Threshold_NewLayer1_OptionO = 22.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 22.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 24.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 23.51;
+            }
+            else if (tag=="effMin0p3" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 22.51;
+                Threshold_NewLayer1_OptionD = 22.51;
+                Threshold_NewLayer1_OptionE = 22.51;
+                Threshold_NewLayer1_OptionF = 22.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 22.51;
+                Threshold_NewLayer1_OptionO = 24.51;
+                Threshold_NewLayer1_OptionP = 23.51;
+                Threshold_NewLayer1_OptionQ = 23.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 22.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 22.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p3" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 22.51;
+                Threshold_NewLayer1_OptionD = 22.51;
+                Threshold_NewLayer1_OptionE = 22.51;
+                Threshold_NewLayer1_OptionF = 22.51;
+                Threshold_NewLayer1_OptionG = 23.51;
+                Threshold_NewLayer1_OptionH = 23.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 22.51;
+                Threshold_NewLayer1_OptionO = 22.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 22.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p3" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 22.51;
+                Threshold_NewLayer1_OptionD = 22.51;
+                Threshold_NewLayer1_OptionE = 22.51;
+                Threshold_NewLayer1_OptionF = 22.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 22.51;
+                Threshold_NewLayer1_OptionO = 22.51;
+                Threshold_NewLayer1_OptionP = 21.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 22.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 22.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p3" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 22.51;
+                Threshold_NewLayer1_OptionB = 22.51;
+                Threshold_NewLayer1_OptionC = 22.51;
+                Threshold_NewLayer1_OptionD = 22.51;
+                Threshold_NewLayer1_OptionE = 22.51;
+                Threshold_NewLayer1_OptionF = 22.51;
+                Threshold_NewLayer1_OptionG = 21.51;
+                Threshold_NewLayer1_OptionH = 21.51;
+                Threshold_NewLayer1_OptionI = 22.51;
+                Threshold_NewLayer1_OptionJ = 22.51;
+                Threshold_NewLayer1_OptionK = 22.51;
+                Threshold_NewLayer1_OptionL = 22.51;
+                Threshold_NewLayer1_OptionM = 22.51;
+                Threshold_NewLayer1_OptionN = 22.51;
+                Threshold_NewLayer1_OptionO = 22.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 22.51;
+                Threshold_NewLayer1_OptionR = 22.51;
+                Threshold_NewLayer1_OptionS = 22.51;
+                Threshold_NewLayer1_OptionT = 22.51;
+                Threshold_NewLayer1_OptionU = 22.51;
+                Threshold_NewLayer1_OptionV = 22.51;
+                Threshold_NewLayer1_OptionW = 22.51;
+                Threshold_NewLayer1_OptionX = 21.51;
+                Threshold_NewLayer1_OptionY = 21.51;
+                Threshold_NewLayer1_OptionZ = 21.51;
+            }
+            else if (tag=="effMin0p4" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 39.51;
+                Threshold_NewLayer1_OptionF = 37.51;
+                Threshold_NewLayer1_OptionG = 33.51;
+                Threshold_NewLayer1_OptionH = 29.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 27.51;
+                Threshold_NewLayer1_OptionK = 26.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 39.51;
+                Threshold_NewLayer1_OptionW = 36.51;
+                Threshold_NewLayer1_OptionX = 33.51;
+                Threshold_NewLayer1_OptionY = 29.51;
+                Threshold_NewLayer1_OptionZ = 27.51;
+            }
+            else if (tag=="effMin0p4" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 26.51;
+                Threshold_NewLayer1_OptionB = 26.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 24.51;
+                Threshold_NewLayer1_OptionJ = 24.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 39.51;
+                Threshold_NewLayer1_OptionN = 35.51;
+                Threshold_NewLayer1_OptionO = 32.51;
+                Threshold_NewLayer1_OptionP = 28.51;
+                Threshold_NewLayer1_OptionQ = 26.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 24.51;
+                Threshold_NewLayer1_OptionZ = 24.51;
+            }
+            else if (tag=="effMin0p4" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 24.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 35.51;
+                Threshold_NewLayer1_OptionF = 31.51;
+                Threshold_NewLayer1_OptionG = 27.51;
+                Threshold_NewLayer1_OptionH = 26.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 24.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 24.51;
+                Threshold_NewLayer1_OptionS = 23.51;
+                Threshold_NewLayer1_OptionT = 23.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 34.51;
+                Threshold_NewLayer1_OptionW = 28.51;
+                Threshold_NewLayer1_OptionX = 26.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p4" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 24.51;
+                Threshold_NewLayer1_OptionF = 24.51;
+                Threshold_NewLayer1_OptionG = 24.51;
+                Threshold_NewLayer1_OptionH = 24.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 23.51;
+                Threshold_NewLayer1_OptionK = 23.51;
+                Threshold_NewLayer1_OptionL = 23.51;
+                Threshold_NewLayer1_OptionM = 32.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 24.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 24.51;
+                Threshold_NewLayer1_OptionW = 24.51;
+                Threshold_NewLayer1_OptionX = 23.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 23.51;
+            }
+            else if (tag=="effMin0p4" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 23.51;
+                Threshold_NewLayer1_OptionB = 23.51;
+                Threshold_NewLayer1_OptionC = 23.51;
+                Threshold_NewLayer1_OptionD = 23.51;
+                Threshold_NewLayer1_OptionE = 26.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 24.51;
+                Threshold_NewLayer1_OptionK = 24.51;
+                Threshold_NewLayer1_OptionL = 24.51;
+                Threshold_NewLayer1_OptionM = 24.51;
+                Threshold_NewLayer1_OptionN = 24.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 23.51;
+                Threshold_NewLayer1_OptionQ = 23.51;
+                Threshold_NewLayer1_OptionR = 23.51;
+                Threshold_NewLayer1_OptionS = 23.51;
+                Threshold_NewLayer1_OptionT = 23.51;
+                Threshold_NewLayer1_OptionU = 23.51;
+                Threshold_NewLayer1_OptionV = 23.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p4" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 24.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 24.51;
+                Threshold_NewLayer1_OptionD = 24.51;
+                Threshold_NewLayer1_OptionE = 23.51;
+                Threshold_NewLayer1_OptionF = 23.51;
+                Threshold_NewLayer1_OptionG = 23.51;
+                Threshold_NewLayer1_OptionH = 23.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 23.51;
+                Threshold_NewLayer1_OptionK = 23.51;
+                Threshold_NewLayer1_OptionL = 23.51;
+                Threshold_NewLayer1_OptionM = 23.51;
+                Threshold_NewLayer1_OptionN = 23.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 24.51;
+                Threshold_NewLayer1_OptionS = 24.51;
+                Threshold_NewLayer1_OptionT = 24.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 23.51;
+                Threshold_NewLayer1_OptionW = 23.51;
+                Threshold_NewLayer1_OptionX = 23.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 23.51;
+            }
+            else if (tag=="effMin0p4" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 23.51;
+                Threshold_NewLayer1_OptionB = 23.51;
+                Threshold_NewLayer1_OptionC = 23.51;
+                Threshold_NewLayer1_OptionD = 23.51;
+                Threshold_NewLayer1_OptionE = 23.51;
+                Threshold_NewLayer1_OptionF = 23.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 24.51;
+                Threshold_NewLayer1_OptionJ = 24.51;
+                Threshold_NewLayer1_OptionK = 24.51;
+                Threshold_NewLayer1_OptionL = 24.51;
+                Threshold_NewLayer1_OptionM = 23.51;
+                Threshold_NewLayer1_OptionN = 23.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 23.51;
+                Threshold_NewLayer1_OptionQ = 23.51;
+                Threshold_NewLayer1_OptionR = 23.51;
+                Threshold_NewLayer1_OptionS = 23.51;
+                Threshold_NewLayer1_OptionT = 23.51;
+                Threshold_NewLayer1_OptionU = 23.51;
+                Threshold_NewLayer1_OptionV = 23.51;
+                Threshold_NewLayer1_OptionW = 23.51;
+                Threshold_NewLayer1_OptionX = 23.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 24.51;
+            }
+            else if (tag=="effMin0p4" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 24.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 24.51;
+                Threshold_NewLayer1_OptionD = 23.51;
+                Threshold_NewLayer1_OptionE = 23.51;
+                Threshold_NewLayer1_OptionF = 23.51;
+                Threshold_NewLayer1_OptionG = 23.51;
+                Threshold_NewLayer1_OptionH = 23.51;
+                Threshold_NewLayer1_OptionI = 23.51;
+                Threshold_NewLayer1_OptionJ = 23.51;
+                Threshold_NewLayer1_OptionK = 23.51;
+                Threshold_NewLayer1_OptionL = 23.51;
+                Threshold_NewLayer1_OptionM = 23.51;
+                Threshold_NewLayer1_OptionN = 23.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 22.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 24.51;
+                Threshold_NewLayer1_OptionS = 24.51;
+                Threshold_NewLayer1_OptionT = 23.51;
+                Threshold_NewLayer1_OptionU = 23.51;
+                Threshold_NewLayer1_OptionV = 23.51;
+                Threshold_NewLayer1_OptionW = 23.51;
+                Threshold_NewLayer1_OptionX = 23.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 23.51;
+            }
+            else if (tag=="effMin0p4" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 23.51;
+                Threshold_NewLayer1_OptionB = 23.51;
+                Threshold_NewLayer1_OptionC = 23.51;
+                Threshold_NewLayer1_OptionD = 23.51;
+                Threshold_NewLayer1_OptionE = 23.51;
+                Threshold_NewLayer1_OptionF = 23.51;
+                Threshold_NewLayer1_OptionG = 22.51;
+                Threshold_NewLayer1_OptionH = 22.51;
+                Threshold_NewLayer1_OptionI = 24.51;
+                Threshold_NewLayer1_OptionJ = 23.51;
+                Threshold_NewLayer1_OptionK = 23.51;
+                Threshold_NewLayer1_OptionL = 23.51;
+                Threshold_NewLayer1_OptionM = 23.51;
+                Threshold_NewLayer1_OptionN = 23.51;
+                Threshold_NewLayer1_OptionO = 23.51;
+                Threshold_NewLayer1_OptionP = 23.51;
+                Threshold_NewLayer1_OptionQ = 23.51;
+                Threshold_NewLayer1_OptionR = 23.51;
+                Threshold_NewLayer1_OptionS = 23.51;
+                Threshold_NewLayer1_OptionT = 23.51;
+                Threshold_NewLayer1_OptionU = 23.51;
+                Threshold_NewLayer1_OptionV = 23.51;
+                Threshold_NewLayer1_OptionW = 23.51;
+                Threshold_NewLayer1_OptionX = 22.51;
+                Threshold_NewLayer1_OptionY = 22.51;
+                Threshold_NewLayer1_OptionZ = 22.51;
+            }
+            else if (tag=="effMin0p5" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 40.51;
+                Threshold_NewLayer1_OptionF = 37.51;
+                Threshold_NewLayer1_OptionG = 34.51;
+                Threshold_NewLayer1_OptionH = 32.51;
+                Threshold_NewLayer1_OptionI = 30.51;
+                Threshold_NewLayer1_OptionJ = 28.51;
+                Threshold_NewLayer1_OptionK = 27.51;
+                Threshold_NewLayer1_OptionL = 26.51;
+                Threshold_NewLayer1_OptionM = 26.51;
+                Threshold_NewLayer1_OptionN = 26.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 39.51;
+                Threshold_NewLayer1_OptionW = 37.51;
+                Threshold_NewLayer1_OptionX = 34.51;
+                Threshold_NewLayer1_OptionY = 31.51;
+                Threshold_NewLayer1_OptionZ = 28.51;
+            }
+            else if (tag=="effMin0p5" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 27.51;
+                Threshold_NewLayer1_OptionB = 27.51;
+                Threshold_NewLayer1_OptionC = 26.51;
+                Threshold_NewLayer1_OptionD = 26.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 39.51;
+                Threshold_NewLayer1_OptionN = 36.51;
+                Threshold_NewLayer1_OptionO = 33.51;
+                Threshold_NewLayer1_OptionP = 29.51;
+                Threshold_NewLayer1_OptionQ = 28.51;
+                Threshold_NewLayer1_OptionR = 27.51;
+                Threshold_NewLayer1_OptionS = 26.51;
+                Threshold_NewLayer1_OptionT = 26.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p5" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 36.51;
+                Threshold_NewLayer1_OptionF = 32.51;
+                Threshold_NewLayer1_OptionG = 28.51;
+                Threshold_NewLayer1_OptionH = 27.51;
+                Threshold_NewLayer1_OptionI = 26.51;
+                Threshold_NewLayer1_OptionJ = 26.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 35.51;
+                Threshold_NewLayer1_OptionW = 31.51;
+                Threshold_NewLayer1_OptionX = 27.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p5" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 34.51;
+                Threshold_NewLayer1_OptionN = 29.51;
+                Threshold_NewLayer1_OptionO = 26.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p5" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 24.51;
+                Threshold_NewLayer1_OptionD = 24.51;
+                Threshold_NewLayer1_OptionE = 27.51;
+                Threshold_NewLayer1_OptionF = 26.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 24.51;
+                Threshold_NewLayer1_OptionS = 24.51;
+                Threshold_NewLayer1_OptionT = 24.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 24.51;
+                Threshold_NewLayer1_OptionW = 26.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p5" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 24.51;
+                Threshold_NewLayer1_OptionH = 24.51;
+                Threshold_NewLayer1_OptionI = 24.51;
+                Threshold_NewLayer1_OptionJ = 24.51;
+                Threshold_NewLayer1_OptionK = 24.51;
+                Threshold_NewLayer1_OptionL = 24.51;
+                Threshold_NewLayer1_OptionM = 24.51;
+                Threshold_NewLayer1_OptionN = 24.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 24.51;
+                Threshold_NewLayer1_OptionX = 24.51;
+                Threshold_NewLayer1_OptionY = 24.51;
+                Threshold_NewLayer1_OptionZ = 24.51;
+            }
+            else if (tag=="effMin0p5" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 24.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 24.51;
+                Threshold_NewLayer1_OptionD = 24.51;
+                Threshold_NewLayer1_OptionE = 24.51;
+                Threshold_NewLayer1_OptionF = 24.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 24.51;
+                Threshold_NewLayer1_OptionO = 24.51;
+                Threshold_NewLayer1_OptionP = 24.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 24.51;
+                Threshold_NewLayer1_OptionS = 24.51;
+                Threshold_NewLayer1_OptionT = 24.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 24.51;
+                Threshold_NewLayer1_OptionW = 24.51;
+                Threshold_NewLayer1_OptionX = 24.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p5" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 24.51;
+                Threshold_NewLayer1_OptionF = 24.51;
+                Threshold_NewLayer1_OptionG = 24.51;
+                Threshold_NewLayer1_OptionH = 24.51;
+                Threshold_NewLayer1_OptionI = 24.51;
+                Threshold_NewLayer1_OptionJ = 24.51;
+                Threshold_NewLayer1_OptionK = 24.51;
+                Threshold_NewLayer1_OptionL = 24.51;
+                Threshold_NewLayer1_OptionM = 24.51;
+                Threshold_NewLayer1_OptionN = 24.51;
+                Threshold_NewLayer1_OptionO = 24.51;
+                Threshold_NewLayer1_OptionP = 24.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 24.51;
+                Threshold_NewLayer1_OptionW = 24.51;
+                Threshold_NewLayer1_OptionX = 24.51;
+                Threshold_NewLayer1_OptionY = 24.51;
+                Threshold_NewLayer1_OptionZ = 24.51;
+            }
+            else if (tag=="effMin0p5" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 24.51;
+                Threshold_NewLayer1_OptionB = 24.51;
+                Threshold_NewLayer1_OptionC = 24.51;
+                Threshold_NewLayer1_OptionD = 24.51;
+                Threshold_NewLayer1_OptionE = 24.51;
+                Threshold_NewLayer1_OptionF = 24.51;
+                Threshold_NewLayer1_OptionG = 24.51;
+                Threshold_NewLayer1_OptionH = 23.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 24.51;
+                Threshold_NewLayer1_OptionM = 24.51;
+                Threshold_NewLayer1_OptionN = 24.51;
+                Threshold_NewLayer1_OptionO = 24.51;
+                Threshold_NewLayer1_OptionP = 24.51;
+                Threshold_NewLayer1_OptionQ = 24.51;
+                Threshold_NewLayer1_OptionR = 24.51;
+                Threshold_NewLayer1_OptionS = 24.51;
+                Threshold_NewLayer1_OptionT = 24.51;
+                Threshold_NewLayer1_OptionU = 24.51;
+                Threshold_NewLayer1_OptionV = 24.51;
+                Threshold_NewLayer1_OptionW = 24.51;
+                Threshold_NewLayer1_OptionX = 23.51;
+                Threshold_NewLayer1_OptionY = 23.51;
+                Threshold_NewLayer1_OptionZ = 23.51;
+            }
+            else if (tag=="effMin0p6" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 40.51;
+                Threshold_NewLayer1_OptionF = 37.51;
+                Threshold_NewLayer1_OptionG = 35.51;
+                Threshold_NewLayer1_OptionH = 33.51;
+                Threshold_NewLayer1_OptionI = 32.51;
+                Threshold_NewLayer1_OptionJ = 30.51;
+                Threshold_NewLayer1_OptionK = 29.51;
+                Threshold_NewLayer1_OptionL = 28.51;
+                Threshold_NewLayer1_OptionM = 27.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 26.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 26.51;
+                Threshold_NewLayer1_OptionR = 26.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 40.51;
+                Threshold_NewLayer1_OptionW = 37.51;
+                Threshold_NewLayer1_OptionX = 35.51;
+                Threshold_NewLayer1_OptionY = 32.51;
+                Threshold_NewLayer1_OptionZ = 31.51;
+            }
+            else if (tag=="effMin0p6" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 29.51;
+                Threshold_NewLayer1_OptionB = 28.51;
+                Threshold_NewLayer1_OptionC = 27.51;
+                Threshold_NewLayer1_OptionD = 27.51;
+                Threshold_NewLayer1_OptionE = 26.51;
+                Threshold_NewLayer1_OptionF = 26.51;
+                Threshold_NewLayer1_OptionG = 26.51;
+                Threshold_NewLayer1_OptionH = 26.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 40.51;
+                Threshold_NewLayer1_OptionN = 37.51;
+                Threshold_NewLayer1_OptionO = 34.51;
+                Threshold_NewLayer1_OptionP = 32.51;
+                Threshold_NewLayer1_OptionQ = 31.51;
+                Threshold_NewLayer1_OptionR = 28.51;
+                Threshold_NewLayer1_OptionS = 28.51;
+                Threshold_NewLayer1_OptionT = 27.51;
+                Threshold_NewLayer1_OptionU = 26.51;
+                Threshold_NewLayer1_OptionV = 26.51;
+                Threshold_NewLayer1_OptionW = 26.51;
+                Threshold_NewLayer1_OptionX = 26.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p6" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 39.51;
+                Threshold_NewLayer1_OptionE = 37.51;
+                Threshold_NewLayer1_OptionF = 34.51;
+                Threshold_NewLayer1_OptionG = 31.51;
+                Threshold_NewLayer1_OptionH = 29.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 27.51;
+                Threshold_NewLayer1_OptionK = 26.51;
+                Threshold_NewLayer1_OptionL = 26.51;
+                Threshold_NewLayer1_OptionM = 26.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 36.51;
+                Threshold_NewLayer1_OptionW = 33.51;
+                Threshold_NewLayer1_OptionX = 29.51;
+                Threshold_NewLayer1_OptionY = 28.51;
+                Threshold_NewLayer1_OptionZ = 27.51;
+            }
+            else if (tag=="effMin0p6" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 26.51;
+                Threshold_NewLayer1_OptionB = 26.51;
+                Threshold_NewLayer1_OptionC = 26.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 35.51;
+                Threshold_NewLayer1_OptionN = 32.51;
+                Threshold_NewLayer1_OptionO = 28.51;
+                Threshold_NewLayer1_OptionP = 27.51;
+                Threshold_NewLayer1_OptionQ = 26.51;
+                Threshold_NewLayer1_OptionR = 26.51;
+                Threshold_NewLayer1_OptionS = 26.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p6" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 31.51;
+                Threshold_NewLayer1_OptionF = 28.51;
+                Threshold_NewLayer1_OptionG = 27.51;
+                Threshold_NewLayer1_OptionH = 26.51;
+                Threshold_NewLayer1_OptionI = 26.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 27.51;
+                Threshold_NewLayer1_OptionX = 27.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p6" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 26.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 26.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p6" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 26.51;
+                Threshold_NewLayer1_OptionH = 26.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p6" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p6" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p7" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 40.51;
+                Threshold_NewLayer1_OptionF = 37.51;
+                Threshold_NewLayer1_OptionG = 36.51;
+                Threshold_NewLayer1_OptionH = 34.51;
+                Threshold_NewLayer1_OptionI = 33.51;
+                Threshold_NewLayer1_OptionJ = 32.51;
+                Threshold_NewLayer1_OptionK = 31.51;
+                Threshold_NewLayer1_OptionL = 29.51;
+                Threshold_NewLayer1_OptionM = 29.51;
+                Threshold_NewLayer1_OptionN = 28.51;
+                Threshold_NewLayer1_OptionO = 28.51;
+                Threshold_NewLayer1_OptionP = 28.51;
+                Threshold_NewLayer1_OptionQ = 27.51;
+                Threshold_NewLayer1_OptionR = 27.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 40.51;
+                Threshold_NewLayer1_OptionW = 37.51;
+                Threshold_NewLayer1_OptionX = 36.51;
+                Threshold_NewLayer1_OptionY = 33.51;
+                Threshold_NewLayer1_OptionZ = 33.51;
+            }
+            else if (tag=="effMin0p7" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 31.51;
+                Threshold_NewLayer1_OptionB = 31.51;
+                Threshold_NewLayer1_OptionC = 29.51;
+                Threshold_NewLayer1_OptionD = 29.51;
+                Threshold_NewLayer1_OptionE = 28.51;
+                Threshold_NewLayer1_OptionF = 28.51;
+                Threshold_NewLayer1_OptionG = 28.51;
+                Threshold_NewLayer1_OptionH = 27.51;
+                Threshold_NewLayer1_OptionI = 27.51;
+                Threshold_NewLayer1_OptionJ = 27.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 40.51;
+                Threshold_NewLayer1_OptionN = 37.51;
+                Threshold_NewLayer1_OptionO = 35.51;
+                Threshold_NewLayer1_OptionP = 33.51;
+                Threshold_NewLayer1_OptionQ = 32.51;
+                Threshold_NewLayer1_OptionR = 31.51;
+                Threshold_NewLayer1_OptionS = 30.51;
+                Threshold_NewLayer1_OptionT = 28.51;
+                Threshold_NewLayer1_OptionU = 28.51;
+                Threshold_NewLayer1_OptionV = 28.51;
+                Threshold_NewLayer1_OptionW = 28.51;
+                Threshold_NewLayer1_OptionX = 27.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p7" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 26.51;
+                Threshold_NewLayer1_OptionB = 26.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 40.51;
+                Threshold_NewLayer1_OptionE = 37.51;
+                Threshold_NewLayer1_OptionF = 35.51;
+                Threshold_NewLayer1_OptionG = 33.51;
+                Threshold_NewLayer1_OptionH = 32.51;
+                Threshold_NewLayer1_OptionI = 30.51;
+                Threshold_NewLayer1_OptionJ = 29.51;
+                Threshold_NewLayer1_OptionK = 28.51;
+                Threshold_NewLayer1_OptionL = 28.51;
+                Threshold_NewLayer1_OptionM = 27.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 27.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 26.51;
+                Threshold_NewLayer1_OptionR = 26.51;
+                Threshold_NewLayer1_OptionS = 26.51;
+                Threshold_NewLayer1_OptionT = 26.51;
+                Threshold_NewLayer1_OptionU = 39.51;
+                Threshold_NewLayer1_OptionV = 37.51;
+                Threshold_NewLayer1_OptionW = 34.51;
+                Threshold_NewLayer1_OptionX = 32.51;
+                Threshold_NewLayer1_OptionY = 31.51;
+                Threshold_NewLayer1_OptionZ = 29.51;
+            }
+            else if (tag=="effMin0p7" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 28.51;
+                Threshold_NewLayer1_OptionB = 27.51;
+                Threshold_NewLayer1_OptionC = 27.51;
+                Threshold_NewLayer1_OptionD = 27.51;
+                Threshold_NewLayer1_OptionE = 27.51;
+                Threshold_NewLayer1_OptionF = 26.51;
+                Threshold_NewLayer1_OptionG = 26.51;
+                Threshold_NewLayer1_OptionH = 26.51;
+                Threshold_NewLayer1_OptionI = 26.51;
+                Threshold_NewLayer1_OptionJ = 26.51;
+                Threshold_NewLayer1_OptionK = 26.51;
+                Threshold_NewLayer1_OptionL = 26.51;
+                Threshold_NewLayer1_OptionM = 36.51;
+                Threshold_NewLayer1_OptionN = 34.51;
+                Threshold_NewLayer1_OptionO = 32.51;
+                Threshold_NewLayer1_OptionP = 30.51;
+                Threshold_NewLayer1_OptionQ = 28.51;
+                Threshold_NewLayer1_OptionR = 28.51;
+                Threshold_NewLayer1_OptionS = 27.51;
+                Threshold_NewLayer1_OptionT = 27.51;
+                Threshold_NewLayer1_OptionU = 26.51;
+                Threshold_NewLayer1_OptionV = 26.51;
+                Threshold_NewLayer1_OptionW = 26.51;
+                Threshold_NewLayer1_OptionX = 26.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p7" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 26.51;
+                Threshold_NewLayer1_OptionB = 26.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 32.51;
+                Threshold_NewLayer1_OptionF = 30.51;
+                Threshold_NewLayer1_OptionG = 28.51;
+                Threshold_NewLayer1_OptionH = 28.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 27.51;
+                Threshold_NewLayer1_OptionK = 26.51;
+                Threshold_NewLayer1_OptionL = 26.51;
+                Threshold_NewLayer1_OptionM = 26.51;
+                Threshold_NewLayer1_OptionN = 26.51;
+                Threshold_NewLayer1_OptionO = 26.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 29.51;
+                Threshold_NewLayer1_OptionX = 28.51;
+                Threshold_NewLayer1_OptionY = 28.51;
+                Threshold_NewLayer1_OptionZ = 27.51;
+            }
+            else if (tag=="effMin0p7" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 26.51;
+                Threshold_NewLayer1_OptionB = 26.51;
+                Threshold_NewLayer1_OptionC = 26.51;
+                Threshold_NewLayer1_OptionD = 26.51;
+                Threshold_NewLayer1_OptionE = 26.51;
+                Threshold_NewLayer1_OptionF = 26.51;
+                Threshold_NewLayer1_OptionG = 26.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 28.51;
+                Threshold_NewLayer1_OptionP = 27.51;
+                Threshold_NewLayer1_OptionQ = 27.51;
+                Threshold_NewLayer1_OptionR = 26.51;
+                Threshold_NewLayer1_OptionS = 26.51;
+                Threshold_NewLayer1_OptionT = 26.51;
+                Threshold_NewLayer1_OptionU = 26.51;
+                Threshold_NewLayer1_OptionV = 26.51;
+                Threshold_NewLayer1_OptionW = 26.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p7" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 27.51;
+                Threshold_NewLayer1_OptionH = 27.51;
+                Threshold_NewLayer1_OptionI = 26.51;
+                Threshold_NewLayer1_OptionJ = 26.51;
+                Threshold_NewLayer1_OptionK = 26.51;
+                Threshold_NewLayer1_OptionL = 26.51;
+                Threshold_NewLayer1_OptionM = 26.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p7" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 26.51;
+                Threshold_NewLayer1_OptionB = 26.51;
+                Threshold_NewLayer1_OptionC = 26.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 25.51;
+                Threshold_NewLayer1_OptionJ = 25.51;
+                Threshold_NewLayer1_OptionK = 25.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 26.51;
+                Threshold_NewLayer1_OptionR = 26.51;
+                Threshold_NewLayer1_OptionS = 26.51;
+                Threshold_NewLayer1_OptionT = 26.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p7" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 25.51;
+                Threshold_NewLayer1_OptionB = 25.51;
+                Threshold_NewLayer1_OptionC = 25.51;
+                Threshold_NewLayer1_OptionD = 25.51;
+                Threshold_NewLayer1_OptionE = 25.51;
+                Threshold_NewLayer1_OptionF = 25.51;
+                Threshold_NewLayer1_OptionG = 25.51;
+                Threshold_NewLayer1_OptionH = 25.51;
+                Threshold_NewLayer1_OptionI = 26.51;
+                Threshold_NewLayer1_OptionJ = 26.51;
+                Threshold_NewLayer1_OptionK = 26.51;
+                Threshold_NewLayer1_OptionL = 25.51;
+                Threshold_NewLayer1_OptionM = 25.51;
+                Threshold_NewLayer1_OptionN = 25.51;
+                Threshold_NewLayer1_OptionO = 25.51;
+                Threshold_NewLayer1_OptionP = 25.51;
+                Threshold_NewLayer1_OptionQ = 25.51;
+                Threshold_NewLayer1_OptionR = 25.51;
+                Threshold_NewLayer1_OptionS = 25.51;
+                Threshold_NewLayer1_OptionT = 25.51;
+                Threshold_NewLayer1_OptionU = 25.51;
+                Threshold_NewLayer1_OptionV = 25.51;
+                Threshold_NewLayer1_OptionW = 25.51;
+                Threshold_NewLayer1_OptionX = 25.51;
+                Threshold_NewLayer1_OptionY = 25.51;
+                Threshold_NewLayer1_OptionZ = 25.51;
+            }
+            else if (tag=="effMin0p8" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 40.51;
+                Threshold_NewLayer1_OptionF = 38.51;
+                Threshold_NewLayer1_OptionG = 37.51;
+                Threshold_NewLayer1_OptionH = 35.51;
+                Threshold_NewLayer1_OptionI = 34.51;
+                Threshold_NewLayer1_OptionJ = 33.51;
+                Threshold_NewLayer1_OptionK = 33.51;
+                Threshold_NewLayer1_OptionL = 32.51;
+                Threshold_NewLayer1_OptionM = 31.51;
+                Threshold_NewLayer1_OptionN = 31.51;
+                Threshold_NewLayer1_OptionO = 30.51;
+                Threshold_NewLayer1_OptionP = 30.51;
+                Threshold_NewLayer1_OptionQ = 29.51;
+                Threshold_NewLayer1_OptionR = 29.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 40.51;
+                Threshold_NewLayer1_OptionW = 38.51;
+                Threshold_NewLayer1_OptionX = 37.51;
+                Threshold_NewLayer1_OptionY = 34.51;
+                Threshold_NewLayer1_OptionZ = 34.51;
+            }
+            else if (tag=="effMin0p8" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 33.51;
+                Threshold_NewLayer1_OptionB = 33.51;
+                Threshold_NewLayer1_OptionC = 31.51;
+                Threshold_NewLayer1_OptionD = 31.51;
+                Threshold_NewLayer1_OptionE = 30.51;
+                Threshold_NewLayer1_OptionF = 30.51;
+                Threshold_NewLayer1_OptionG = 30.51;
+                Threshold_NewLayer1_OptionH = 29.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 28.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 40.51;
+                Threshold_NewLayer1_OptionN = 38.51;
+                Threshold_NewLayer1_OptionO = 36.51;
+                Threshold_NewLayer1_OptionP = 34.51;
+                Threshold_NewLayer1_OptionQ = 34.51;
+                Threshold_NewLayer1_OptionR = 33.51;
+                Threshold_NewLayer1_OptionS = 32.51;
+                Threshold_NewLayer1_OptionT = 31.51;
+                Threshold_NewLayer1_OptionU = 31.51;
+                Threshold_NewLayer1_OptionV = 30.51;
+                Threshold_NewLayer1_OptionW = 30.51;
+                Threshold_NewLayer1_OptionX = 30.51;
+                Threshold_NewLayer1_OptionY = 28.51;
+                Threshold_NewLayer1_OptionZ = 28.51;
+            }
+            else if (tag=="effMin0p8" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 28.51;
+                Threshold_NewLayer1_OptionB = 28.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 40.51;
+                Threshold_NewLayer1_OptionE = 37.51;
+                Threshold_NewLayer1_OptionF = 36.51;
+                Threshold_NewLayer1_OptionG = 34.51;
+                Threshold_NewLayer1_OptionH = 33.51;
+                Threshold_NewLayer1_OptionI = 32.51;
+                Threshold_NewLayer1_OptionJ = 32.51;
+                Threshold_NewLayer1_OptionK = 31.51;
+                Threshold_NewLayer1_OptionL = 30.51;
+                Threshold_NewLayer1_OptionM = 30.51;
+                Threshold_NewLayer1_OptionN = 29.51;
+                Threshold_NewLayer1_OptionO = 29.51;
+                Threshold_NewLayer1_OptionP = 28.51;
+                Threshold_NewLayer1_OptionQ = 28.51;
+                Threshold_NewLayer1_OptionR = 28.51;
+                Threshold_NewLayer1_OptionS = 28.51;
+                Threshold_NewLayer1_OptionT = 28.51;
+                Threshold_NewLayer1_OptionU = 40.51;
+                Threshold_NewLayer1_OptionV = 37.51;
+                Threshold_NewLayer1_OptionW = 36.51;
+                Threshold_NewLayer1_OptionX = 34.51;
+                Threshold_NewLayer1_OptionY = 33.51;
+                Threshold_NewLayer1_OptionZ = 32.51;
+            }
+            else if (tag=="effMin0p8" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 31.51;
+                Threshold_NewLayer1_OptionB = 30.51;
+                Threshold_NewLayer1_OptionC = 30.51;
+                Threshold_NewLayer1_OptionD = 29.51;
+                Threshold_NewLayer1_OptionE = 29.51;
+                Threshold_NewLayer1_OptionF = 29.51;
+                Threshold_NewLayer1_OptionG = 28.51;
+                Threshold_NewLayer1_OptionH = 28.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 28.51;
+                Threshold_NewLayer1_OptionK = 28.51;
+                Threshold_NewLayer1_OptionL = 27.51;
+                Threshold_NewLayer1_OptionM = 37.51;
+                Threshold_NewLayer1_OptionN = 35.51;
+                Threshold_NewLayer1_OptionO = 33.51;
+                Threshold_NewLayer1_OptionP = 33.51;
+                Threshold_NewLayer1_OptionQ = 31.51;
+                Threshold_NewLayer1_OptionR = 31.51;
+                Threshold_NewLayer1_OptionS = 30.51;
+                Threshold_NewLayer1_OptionT = 29.51;
+                Threshold_NewLayer1_OptionU = 29.51;
+                Threshold_NewLayer1_OptionV = 29.51;
+                Threshold_NewLayer1_OptionW = 29.51;
+                Threshold_NewLayer1_OptionX = 28.51;
+                Threshold_NewLayer1_OptionY = 28.51;
+                Threshold_NewLayer1_OptionZ = 27.51;
+            }
+            else if (tag=="effMin0p8" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 27.51;
+                Threshold_NewLayer1_OptionB = 27.51;
+                Threshold_NewLayer1_OptionC = 27.51;
+                Threshold_NewLayer1_OptionD = 27.51;
+                Threshold_NewLayer1_OptionE = 35.51;
+                Threshold_NewLayer1_OptionF = 33.51;
+                Threshold_NewLayer1_OptionG = 32.51;
+                Threshold_NewLayer1_OptionH = 31.51;
+                Threshold_NewLayer1_OptionI = 30.51;
+                Threshold_NewLayer1_OptionJ = 29.51;
+                Threshold_NewLayer1_OptionK = 29.51;
+                Threshold_NewLayer1_OptionL = 29.51;
+                Threshold_NewLayer1_OptionM = 28.51;
+                Threshold_NewLayer1_OptionN = 28.51;
+                Threshold_NewLayer1_OptionO = 28.51;
+                Threshold_NewLayer1_OptionP = 27.51;
+                Threshold_NewLayer1_OptionQ = 27.51;
+                Threshold_NewLayer1_OptionR = 27.51;
+                Threshold_NewLayer1_OptionS = 27.51;
+                Threshold_NewLayer1_OptionT = 27.51;
+                Threshold_NewLayer1_OptionU = 27.51;
+                Threshold_NewLayer1_OptionV = 27.51;
+                Threshold_NewLayer1_OptionW = 32.51;
+                Threshold_NewLayer1_OptionX = 31.51;
+                Threshold_NewLayer1_OptionY = 31.51;
+                Threshold_NewLayer1_OptionZ = 30.51;
+            }
+            else if (tag=="effMin0p8" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 29.51;
+                Threshold_NewLayer1_OptionB = 28.51;
+                Threshold_NewLayer1_OptionC = 28.51;
+                Threshold_NewLayer1_OptionD = 28.51;
+                Threshold_NewLayer1_OptionE = 28.51;
+                Threshold_NewLayer1_OptionF = 27.51;
+                Threshold_NewLayer1_OptionG = 27.51;
+                Threshold_NewLayer1_OptionH = 27.51;
+                Threshold_NewLayer1_OptionI = 27.51;
+                Threshold_NewLayer1_OptionJ = 27.51;
+                Threshold_NewLayer1_OptionK = 27.51;
+                Threshold_NewLayer1_OptionL = 27.51;
+                Threshold_NewLayer1_OptionM = 27.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 31.51;
+                Threshold_NewLayer1_OptionP = 30.51;
+                Threshold_NewLayer1_OptionQ = 29.51;
+                Threshold_NewLayer1_OptionR = 28.51;
+                Threshold_NewLayer1_OptionS = 28.51;
+                Threshold_NewLayer1_OptionT = 28.51;
+                Threshold_NewLayer1_OptionU = 28.51;
+                Threshold_NewLayer1_OptionV = 27.51;
+                Threshold_NewLayer1_OptionW = 27.51;
+                Threshold_NewLayer1_OptionX = 27.51;
+                Threshold_NewLayer1_OptionY = 27.51;
+                Threshold_NewLayer1_OptionZ = 27.51;
+            }
+            else if (tag=="effMin0p8" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 27.51;
+                Threshold_NewLayer1_OptionB = 27.51;
+                Threshold_NewLayer1_OptionC = 27.51;
+                Threshold_NewLayer1_OptionD = 27.51;
+                Threshold_NewLayer1_OptionE = 27.51;
+                Threshold_NewLayer1_OptionF = 27.51;
+                Threshold_NewLayer1_OptionG = 29.51;
+                Threshold_NewLayer1_OptionH = 29.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 28.51;
+                Threshold_NewLayer1_OptionK = 28.51;
+                Threshold_NewLayer1_OptionL = 28.51;
+                Threshold_NewLayer1_OptionM = 27.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 27.51;
+                Threshold_NewLayer1_OptionP = 27.51;
+                Threshold_NewLayer1_OptionQ = 27.51;
+                Threshold_NewLayer1_OptionR = 27.51;
+                Threshold_NewLayer1_OptionS = 27.51;
+                Threshold_NewLayer1_OptionT = 27.51;
+                Threshold_NewLayer1_OptionU = 27.51;
+                Threshold_NewLayer1_OptionV = 27.51;
+                Threshold_NewLayer1_OptionW = 27.51;
+                Threshold_NewLayer1_OptionX = 27.51;
+                Threshold_NewLayer1_OptionY = 29.51;
+                Threshold_NewLayer1_OptionZ = 28.51;
+            }
+            else if (tag=="effMin0p8" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 28.51;
+                Threshold_NewLayer1_OptionB = 28.51;
+                Threshold_NewLayer1_OptionC = 28.51;
+                Threshold_NewLayer1_OptionD = 27.51;
+                Threshold_NewLayer1_OptionE = 27.51;
+                Threshold_NewLayer1_OptionF = 27.51;
+                Threshold_NewLayer1_OptionG = 27.51;
+                Threshold_NewLayer1_OptionH = 27.51;
+                Threshold_NewLayer1_OptionI = 27.51;
+                Threshold_NewLayer1_OptionJ = 27.51;
+                Threshold_NewLayer1_OptionK = 27.51;
+                Threshold_NewLayer1_OptionL = 27.51;
+                Threshold_NewLayer1_OptionM = 27.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 27.51;
+                Threshold_NewLayer1_OptionP = 26.51;
+                Threshold_NewLayer1_OptionQ = 28.51;
+                Threshold_NewLayer1_OptionR = 28.51;
+                Threshold_NewLayer1_OptionS = 28.51;
+                Threshold_NewLayer1_OptionT = 28.51;
+                Threshold_NewLayer1_OptionU = 27.51;
+                Threshold_NewLayer1_OptionV = 27.51;
+                Threshold_NewLayer1_OptionW = 27.51;
+                Threshold_NewLayer1_OptionX = 27.51;
+                Threshold_NewLayer1_OptionY = 27.51;
+                Threshold_NewLayer1_OptionZ = 27.51;
+            }
+            else if (tag=="effMin0p8" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 27.51;
+                Threshold_NewLayer1_OptionB = 27.51;
+                Threshold_NewLayer1_OptionC = 27.51;
+                Threshold_NewLayer1_OptionD = 27.51;
+                Threshold_NewLayer1_OptionE = 27.51;
+                Threshold_NewLayer1_OptionF = 27.51;
+                Threshold_NewLayer1_OptionG = 26.51;
+                Threshold_NewLayer1_OptionH = 26.51;
+                Threshold_NewLayer1_OptionI = 28.51;
+                Threshold_NewLayer1_OptionJ = 28.51;
+                Threshold_NewLayer1_OptionK = 28.51;
+                Threshold_NewLayer1_OptionL = 27.51;
+                Threshold_NewLayer1_OptionM = 27.51;
+                Threshold_NewLayer1_OptionN = 27.51;
+                Threshold_NewLayer1_OptionO = 27.51;
+                Threshold_NewLayer1_OptionP = 27.51;
+                Threshold_NewLayer1_OptionQ = 27.51;
+                Threshold_NewLayer1_OptionR = 27.51;
+                Threshold_NewLayer1_OptionS = 27.51;
+                Threshold_NewLayer1_OptionT = 27.51;
+                Threshold_NewLayer1_OptionU = 27.51;
+                Threshold_NewLayer1_OptionV = 27.51;
+                Threshold_NewLayer1_OptionW = 27.51;
+                Threshold_NewLayer1_OptionX = 26.51;
+                Threshold_NewLayer1_OptionY = 26.51;
+                Threshold_NewLayer1_OptionZ = 26.51;
+            }
+            else if (tag=="effMin0p9" and opt=="0")
+            {
+                Threshold_NewLayer1_OptionA = 41.51;
+                Threshold_NewLayer1_OptionB = 41.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 41.51;
+                Threshold_NewLayer1_OptionE = 40.51;
+                Threshold_NewLayer1_OptionF = 38.51;
+                Threshold_NewLayer1_OptionG = 37.51;
+                Threshold_NewLayer1_OptionH = 36.51;
+                Threshold_NewLayer1_OptionI = 36.51;
+                Threshold_NewLayer1_OptionJ = 35.51;
+                Threshold_NewLayer1_OptionK = 35.51;
+                Threshold_NewLayer1_OptionL = 34.51;
+                Threshold_NewLayer1_OptionM = 33.51;
+                Threshold_NewLayer1_OptionN = 33.51;
+                Threshold_NewLayer1_OptionO = 33.51;
+                Threshold_NewLayer1_OptionP = 33.51;
+                Threshold_NewLayer1_OptionQ = 31.51;
+                Threshold_NewLayer1_OptionR = 31.51;
+                Threshold_NewLayer1_OptionS = 41.51;
+                Threshold_NewLayer1_OptionT = 41.51;
+                Threshold_NewLayer1_OptionU = 41.51;
+                Threshold_NewLayer1_OptionV = 40.51;
+                Threshold_NewLayer1_OptionW = 38.51;
+                Threshold_NewLayer1_OptionX = 37.51;
+                Threshold_NewLayer1_OptionY = 36.51;
+                Threshold_NewLayer1_OptionZ = 36.51;
+            }
+            else if (tag=="effMin0p9" and opt=="1")
+            {
+                Threshold_NewLayer1_OptionA = 35.51;
+                Threshold_NewLayer1_OptionB = 34.51;
+                Threshold_NewLayer1_OptionC = 34.51;
+                Threshold_NewLayer1_OptionD = 33.51;
+                Threshold_NewLayer1_OptionE = 33.51;
+                Threshold_NewLayer1_OptionF = 33.51;
+                Threshold_NewLayer1_OptionG = 33.51;
+                Threshold_NewLayer1_OptionH = 31.51;
+                Threshold_NewLayer1_OptionI = 31.51;
+                Threshold_NewLayer1_OptionJ = 31.51;
+                Threshold_NewLayer1_OptionK = 41.51;
+                Threshold_NewLayer1_OptionL = 41.51;
+                Threshold_NewLayer1_OptionM = 40.51;
+                Threshold_NewLayer1_OptionN = 38.51;
+                Threshold_NewLayer1_OptionO = 37.51;
+                Threshold_NewLayer1_OptionP = 36.51;
+                Threshold_NewLayer1_OptionQ = 35.51;
+                Threshold_NewLayer1_OptionR = 35.51;
+                Threshold_NewLayer1_OptionS = 34.51;
+                Threshold_NewLayer1_OptionT = 33.51;
+                Threshold_NewLayer1_OptionU = 33.51;
+                Threshold_NewLayer1_OptionV = 33.51;
+                Threshold_NewLayer1_OptionW = 32.51;
+                Threshold_NewLayer1_OptionX = 32.51;
+                Threshold_NewLayer1_OptionY = 31.51;
+                Threshold_NewLayer1_OptionZ = 31.51;
+            }
+            else if (tag=="effMin0p9" and opt=="2")
+            {
+                Threshold_NewLayer1_OptionA = 31.51;
+                Threshold_NewLayer1_OptionB = 31.51;
+                Threshold_NewLayer1_OptionC = 41.51;
+                Threshold_NewLayer1_OptionD = 40.51;
+                Threshold_NewLayer1_OptionE = 38.51;
+                Threshold_NewLayer1_OptionF = 37.51;
+                Threshold_NewLayer1_OptionG = 35.51;
+                Threshold_NewLayer1_OptionH = 35.51;
+                Threshold_NewLayer1_OptionI = 34.51;
+                Threshold_NewLayer1_OptionJ = 34.51;
+                Threshold_NewLayer1_OptionK = 33.51;
+                Threshold_NewLayer1_OptionL = 33.51;
+                Threshold_NewLayer1_OptionM = 33.51;
+                Threshold_NewLayer1_OptionN = 32.51;
+                Threshold_NewLayer1_OptionO = 32.51;
+                Threshold_NewLayer1_OptionP = 31.51;
+                Threshold_NewLayer1_OptionQ = 31.51;
+                Threshold_NewLayer1_OptionR = 31.51;
+                Threshold_NewLayer1_OptionS = 31.51;
+                Threshold_NewLayer1_OptionT = 31.51;
+                Threshold_NewLayer1_OptionU = 40.51;
+                Threshold_NewLayer1_OptionV = 38.51;
+                Threshold_NewLayer1_OptionW = 37.51;
+                Threshold_NewLayer1_OptionX = 35.51;
+                Threshold_NewLayer1_OptionY = 35.51;
+                Threshold_NewLayer1_OptionZ = 34.51;
+            }
+            else if (tag=="effMin0p9" and opt=="3")
+            {
+                Threshold_NewLayer1_OptionA = 34.51;
+                Threshold_NewLayer1_OptionB = 33.51;
+                Threshold_NewLayer1_OptionC = 33.51;
+                Threshold_NewLayer1_OptionD = 32.51;
+                Threshold_NewLayer1_OptionE = 32.51;
+                Threshold_NewLayer1_OptionF = 32.51;
+                Threshold_NewLayer1_OptionG = 31.51;
+                Threshold_NewLayer1_OptionH = 31.51;
+                Threshold_NewLayer1_OptionI = 31.51;
+                Threshold_NewLayer1_OptionJ = 31.51;
+                Threshold_NewLayer1_OptionK = 30.51;
+                Threshold_NewLayer1_OptionL = 30.51;
+                Threshold_NewLayer1_OptionM = 38.51;
+                Threshold_NewLayer1_OptionN = 37.51;
+                Threshold_NewLayer1_OptionO = 35.51;
+                Threshold_NewLayer1_OptionP = 35.51;
+                Threshold_NewLayer1_OptionQ = 34.51;
+                Threshold_NewLayer1_OptionR = 34.51;
+                Threshold_NewLayer1_OptionS = 33.51;
+                Threshold_NewLayer1_OptionT = 32.51;
+                Threshold_NewLayer1_OptionU = 32.51;
+                Threshold_NewLayer1_OptionV = 32.51;
+                Threshold_NewLayer1_OptionW = 32.51;
+                Threshold_NewLayer1_OptionX = 31.51;
+                Threshold_NewLayer1_OptionY = 30.51;
+                Threshold_NewLayer1_OptionZ = 30.51;
+            }
+            else if (tag=="effMin0p9" and opt=="4")
+            {
+                Threshold_NewLayer1_OptionA = 30.51;
+                Threshold_NewLayer1_OptionB = 30.51;
+                Threshold_NewLayer1_OptionC = 30.51;
+                Threshold_NewLayer1_OptionD = 30.51;
+                Threshold_NewLayer1_OptionE = 37.51;
+                Threshold_NewLayer1_OptionF = 35.51;
+                Threshold_NewLayer1_OptionG = 34.51;
+                Threshold_NewLayer1_OptionH = 33.51;
+                Threshold_NewLayer1_OptionI = 33.51;
+                Threshold_NewLayer1_OptionJ = 32.51;
+                Threshold_NewLayer1_OptionK = 32.51;
+                Threshold_NewLayer1_OptionL = 32.51;
+                Threshold_NewLayer1_OptionM = 32.51;
+                Threshold_NewLayer1_OptionN = 31.51;
+                Threshold_NewLayer1_OptionO = 30.51;
+                Threshold_NewLayer1_OptionP = 30.51;
+                Threshold_NewLayer1_OptionQ = 30.51;
+                Threshold_NewLayer1_OptionR = 30.51;
+                Threshold_NewLayer1_OptionS = 30.51;
+                Threshold_NewLayer1_OptionT = 30.51;
+                Threshold_NewLayer1_OptionU = 30.51;
+                Threshold_NewLayer1_OptionV = 30.51;
+                Threshold_NewLayer1_OptionW = 34.51;
+                Threshold_NewLayer1_OptionX = 34.51;
+                Threshold_NewLayer1_OptionY = 33.51;
+                Threshold_NewLayer1_OptionZ = 33.51;
+            }
+            else if (tag=="effMin0p9" and opt=="5")
+            {
+                Threshold_NewLayer1_OptionA = 32.51;
+                Threshold_NewLayer1_OptionB = 32.51;
+                Threshold_NewLayer1_OptionC = 31.51;
+                Threshold_NewLayer1_OptionD = 31.51;
+                Threshold_NewLayer1_OptionE = 30.51;
+                Threshold_NewLayer1_OptionF = 30.51;
+                Threshold_NewLayer1_OptionG = 30.51;
+                Threshold_NewLayer1_OptionH = 30.51;
+                Threshold_NewLayer1_OptionI = 30.51;
+                Threshold_NewLayer1_OptionJ = 30.51;
+                Threshold_NewLayer1_OptionK = 30.51;
+                Threshold_NewLayer1_OptionL = 30.51;
+                Threshold_NewLayer1_OptionM = 30.51;
+                Threshold_NewLayer1_OptionN = 29.51;
+                Threshold_NewLayer1_OptionO = 34.51;
+                Threshold_NewLayer1_OptionP = 33.51;
+                Threshold_NewLayer1_OptionQ = 33.51;
+                Threshold_NewLayer1_OptionR = 32.51;
+                Threshold_NewLayer1_OptionS = 31.51;
+                Threshold_NewLayer1_OptionT = 31.51;
+                Threshold_NewLayer1_OptionU = 31.51;
+                Threshold_NewLayer1_OptionV = 30.51;
+                Threshold_NewLayer1_OptionW = 30.51;
+                Threshold_NewLayer1_OptionX = 30.51;
+                Threshold_NewLayer1_OptionY = 30.51;
+                Threshold_NewLayer1_OptionZ = 30.51;
+            }
+            else if (tag=="effMin0p9" and opt=="6")
+            {
+                Threshold_NewLayer1_OptionA = 30.51;
+                Threshold_NewLayer1_OptionB = 30.51;
+                Threshold_NewLayer1_OptionC = 29.51;
+                Threshold_NewLayer1_OptionD = 29.51;
+                Threshold_NewLayer1_OptionE = 29.51;
+                Threshold_NewLayer1_OptionF = 29.51;
+                Threshold_NewLayer1_OptionG = 33.51;
+                Threshold_NewLayer1_OptionH = 32.51;
+                Threshold_NewLayer1_OptionI = 32.51;
+                Threshold_NewLayer1_OptionJ = 31.51;
+                Threshold_NewLayer1_OptionK = 31.51;
+                Threshold_NewLayer1_OptionL = 31.51;
+                Threshold_NewLayer1_OptionM = 30.51;
+                Threshold_NewLayer1_OptionN = 30.51;
+                Threshold_NewLayer1_OptionO = 30.51;
+                Threshold_NewLayer1_OptionP = 30.51;
+                Threshold_NewLayer1_OptionQ = 30.51;
+                Threshold_NewLayer1_OptionR = 29.51;
+                Threshold_NewLayer1_OptionS = 29.51;
+                Threshold_NewLayer1_OptionT = 29.51;
+                Threshold_NewLayer1_OptionU = 29.51;
+                Threshold_NewLayer1_OptionV = 29.51;
+                Threshold_NewLayer1_OptionW = 29.51;
+                Threshold_NewLayer1_OptionX = 29.51;
+                Threshold_NewLayer1_OptionY = 32.51;
+                Threshold_NewLayer1_OptionZ = 31.51;
+            }
+            else if (tag=="effMin0p9" and opt=="7")
+            {
+                Threshold_NewLayer1_OptionA = 31.51;
+                Threshold_NewLayer1_OptionB = 31.51;
+                Threshold_NewLayer1_OptionC = 31.51;
+                Threshold_NewLayer1_OptionD = 30.51;
+                Threshold_NewLayer1_OptionE = 30.51;
+                Threshold_NewLayer1_OptionF = 30.51;
+                Threshold_NewLayer1_OptionG = 29.51;
+                Threshold_NewLayer1_OptionH = 29.51;
+                Threshold_NewLayer1_OptionI = 29.51;
+                Threshold_NewLayer1_OptionJ = 29.51;
+                Threshold_NewLayer1_OptionK = 29.51;
+                Threshold_NewLayer1_OptionL = 29.51;
+                Threshold_NewLayer1_OptionM = 29.51;
+                Threshold_NewLayer1_OptionN = 29.51;
+                Threshold_NewLayer1_OptionO = 29.51;
+                Threshold_NewLayer1_OptionP = 28.51;
+                Threshold_NewLayer1_OptionQ = 31.51;
+                Threshold_NewLayer1_OptionR = 31.51;
+                Threshold_NewLayer1_OptionS = 31.51;
+                Threshold_NewLayer1_OptionT = 30.51;
+                Threshold_NewLayer1_OptionU = 30.51;
+                Threshold_NewLayer1_OptionV = 30.51;
+                Threshold_NewLayer1_OptionW = 29.51;
+                Threshold_NewLayer1_OptionX = 29.51;
+                Threshold_NewLayer1_OptionY = 29.51;
+                Threshold_NewLayer1_OptionZ = 29.51;
+            }
+            else if (tag=="effMin0p9" and opt=="8")
+            {
+                Threshold_NewLayer1_OptionA = 29.51;
+                Threshold_NewLayer1_OptionB = 29.51;
+                Threshold_NewLayer1_OptionC = 29.51;
+                Threshold_NewLayer1_OptionD = 29.51;
+                Threshold_NewLayer1_OptionE = 29.51;
+                Threshold_NewLayer1_OptionF = 29.51;
+                Threshold_NewLayer1_OptionG = 28.51;
+                Threshold_NewLayer1_OptionH = 28.51;
+                Threshold_NewLayer1_OptionI = 30.51;
+                Threshold_NewLayer1_OptionJ = 30.51;
+                Threshold_NewLayer1_OptionK = 30.51;
+                Threshold_NewLayer1_OptionL = 30.51;
+                Threshold_NewLayer1_OptionM = 29.51;
+                Threshold_NewLayer1_OptionN = 29.51;
+                Threshold_NewLayer1_OptionO = 29.51;
+                Threshold_NewLayer1_OptionP = 29.51;
+                Threshold_NewLayer1_OptionQ = 29.51;
+                Threshold_NewLayer1_OptionR = 29.51;
+                Threshold_NewLayer1_OptionS = 29.51;
+                Threshold_NewLayer1_OptionT = 29.51;
+                Threshold_NewLayer1_OptionU = 29.51;
+                Threshold_NewLayer1_OptionV = 29.51;
+                Threshold_NewLayer1_OptionW = 29.51;
+                Threshold_NewLayer1_OptionX = 28.51;
+                Threshold_NewLayer1_OptionY = 28.51;
+                Threshold_NewLayer1_OptionZ = 28.51;
+            }

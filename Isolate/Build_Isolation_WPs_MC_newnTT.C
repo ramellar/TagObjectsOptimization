@@ -38,7 +38,7 @@ void Build_Isolation_WPs(float calibThr = 1.7)
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
   TChain data("outTreeCalibrated");
-  data.Add("/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_01_28.root");
+  data.Add("/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_06_13.root");
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
   TH2F* isoEt_vs_nVtx_barrel = new TH2F("isoEt_vs_nVtx_barrel","isoEt_vs_nVtx_barrel",150,0.,150.,100,0.,100.);
@@ -124,34 +124,34 @@ void Build_Isolation_WPs(float calibThr = 1.7)
   for(UInt_t i = 0 ; i < NbinsIEta-1 ; ++i)
     {
       for(UInt_t j = 0 ; j < NbinsIEt-1 ; ++j)
-	{
-	  for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
-	    {
-	      TString Name_Histo = "Hist_";
+        {
+          for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
+            {
+              TString Name_Histo = "Hist_";
 
-	      stringstream ss_i;
-	      ss_i << i;
-	      TString Appendix_i = TString(ss_i.str());
-	      Name_Histo += Appendix_i;
-	      Name_Histo += "_";
+              stringstream ss_i;
+              ss_i << i;
+              TString Appendix_i = TString(ss_i.str());
+              Name_Histo += Appendix_i;
+              Name_Histo += "_";
 
-	      stringstream ss_j;
-	      ss_j << j;
-	      TString Appendix_j = TString(ss_j.str());
-	      Name_Histo += Appendix_j;
-	      Name_Histo += "_";
+              stringstream ss_j;
+              ss_j << j;
+              TString Appendix_j = TString(ss_j.str());
+              Name_Histo += Appendix_j;
+              Name_Histo += "_";
 
-	      stringstream ss_k;
-	      ss_k << k;
-	      TString Appendix_k = TString(ss_k.str());
-	      Name_Histo += Appendix_k;
+              stringstream ss_k;
+              ss_k << k;
+              TString Appendix_k = TString(ss_k.str());
+              Name_Histo += Appendix_k;
 
-	      TH1F* temp_histo = new TH1F(Name_Histo.Data(),Name_Histo.Data(),100,0.,100.);
-	      Histos_PerBin.insert(make_pair(Name_Histo,temp_histo));
+              TH1F* temp_histo = new TH1F(Name_Histo.Data(),Name_Histo.Data(),100,0.,100.);
+              Histos_PerBin.insert(make_pair(Name_Histo,temp_histo));
 
-	      // cout<<"Name_Histo = "<<Name_Histo<<endl;
-	    }
-	}
+              // cout<<"Name_Histo = "<<Name_Histo<<endl;
+            }
+        }
     }
   
   cout<<"entering loop"<<endl;
@@ -204,7 +204,7 @@ void Build_Isolation_WPs(float calibThr = 1.7)
     }
   
 
-  TFile f_out("LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV6_calibThr"+intgr+"p"+decim+".root","RECREATE");
+  TFile f_out("ROOTs4LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+".root","RECREATE");
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();
@@ -241,34 +241,34 @@ void Build_Isolation_WPs(float calibThr = 1.7)
       std::map<TString,Int_t> temp;
 
       for(UInt_t i = 0 ; i < NbinsIEta-1 ; ++i)
-	{
-	  for(UInt_t j = 0 ; j < NbinsIEt-1 ; ++j)
-	    {
-	      for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
-		{
-		  TString Name_Histo = "Hist_";
-		  
-		  stringstream ss_i;
-		  ss_i << i;
-		  TString Appendix_i = TString(ss_i.str());
-		  Name_Histo += Appendix_i;
-		  Name_Histo += "_";
-		  
-		  stringstream ss_j;
-		  ss_j << j;
-		  TString Appendix_j = TString(ss_j.str());
-		  Name_Histo += Appendix_j;
-		  Name_Histo += "_";
-		  
-		  stringstream ss_k;
-		  ss_k << k;
-		  TString Appendix_k = TString(ss_k.str());
-		  Name_Histo += Appendix_k;
-		  
-		  temp.insert(make_pair(Name_Histo,-1));
-		}
-	    }
-	}
+        {
+          for(UInt_t j = 0 ; j < NbinsIEt-1 ; ++j)
+            {
+              for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
+                {
+                  TString Name_Histo = "Hist_";
+                  
+                  stringstream ss_i;
+                  ss_i << i;
+                  TString Appendix_i = TString(ss_i.str());
+                  Name_Histo += Appendix_i;
+                  Name_Histo += "_";
+                  
+                  stringstream ss_j;
+                  ss_j << j;
+                  TString Appendix_j = TString(ss_j.str());
+                  Name_Histo += Appendix_j;
+                  Name_Histo += "_";
+                  
+                  stringstream ss_k;
+                  ss_k << k;
+                  TString Appendix_k = TString(ss_k.str());
+                  Name_Histo += Appendix_k;
+                  
+                  temp.insert(make_pair(Name_Histo,-1));
+                }
+            }
+        }
       IsoCut_PerEfficiency_PerBin.insert(make_pair(iEff,temp));
       temp.clear();
 
@@ -288,79 +288,79 @@ void Build_Isolation_WPs(float calibThr = 1.7)
   for(UInt_t i = 0 ; i < NbinsIEta-1 ; ++i)
     {
       for(UInt_t j = 0 ; j < NbinsIEt-1 ; ++j)
-	{
-	  for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
-	    {
-	      TString Name_Histo = "Hist_";
+        {
+          for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
+            {
+              TString Name_Histo = "Hist_";
 
-	      stringstream ss_i;
-	      ss_i << i;
-	      TString Appendix_i = TString(ss_i.str());
-	      Name_Histo += Appendix_i;
-	      Name_Histo += "_";
+              stringstream ss_i;
+              ss_i << i;
+              TString Appendix_i = TString(ss_i.str());
+              Name_Histo += Appendix_i;
+              Name_Histo += "_";
 
-	      stringstream ss_j;
-	      ss_j << j;
-	      TString Appendix_j = TString(ss_j.str());
-	      Name_Histo += Appendix_j;
-	      Name_Histo += "_";
+              stringstream ss_j;
+              ss_j << j;
+              TString Appendix_j = TString(ss_j.str());
+              Name_Histo += Appendix_j;
+              Name_Histo += "_";
 
-	      stringstream ss_k;
-	      ss_k << k;
-	      TString Appendix_k = TString(ss_k.str());
-	      Name_Histo += Appendix_k;
+              stringstream ss_k;
+              ss_k << k;
+              TString Appendix_k = TString(ss_k.str());
+              Name_Histo += Appendix_k;
 
 
-	      for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
-		{
-		  Float_t Efficiency = 0.01*iEff;
+              for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
+                {
+                  Float_t Efficiency = 0.01*iEff;
 
-		  for(UInt_t iIso = 0 ; iIso < 100 ; ++iIso)
-		    {
-		      if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=Efficiency)
-			{
-			  if(IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]==-1)
-			    {
-			      //cout<<"Efficiency = "<<Efficiency<<", bin = "<<Name_Histo<<", cut = "<<iIso<<endl;
-			      //if(iEff==97) cout<<"IsoCut = "<<iIso<<endl;
-			      IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]=iIso;
-			      IsoCut_PerBin[iEff]->SetBinContent(i+1,j+1,k+1,iIso);
-			      //cout<<"IsoCut_PerEfficiency_PerBin[iEff][Name_Histo] = "<<IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]<<endl;
-			    }
-			}
-		    }
-		}
+                  for(UInt_t iIso = 0 ; iIso < 100 ; ++iIso)
+                    {
+                      if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=Efficiency)
+                        {
+                          if(IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]==-1)
+                            {
+                              //cout<<"Efficiency = "<<Efficiency<<", bin = "<<Name_Histo<<", cut = "<<iIso<<endl;
+                              //if(iEff==97) cout<<"IsoCut = "<<iIso<<endl;
+                              IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]=iIso;
+                              IsoCut_PerBin[iEff]->SetBinContent(i+1,j+1,k+1,iIso);
+                              //cout<<"IsoCut_PerEfficiency_PerBin[iEff][Name_Histo] = "<<IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]<<endl;
+                            }
+                        }
+                    }
+                }
 
-	      // IsoCut_PerBin_90pc.insert(make_pair(Name_Histo,-1));
-	      // IsoCut_PerBin_80pc.insert(make_pair(Name_Histo,-1));
+              // IsoCut_PerBin_90pc.insert(make_pair(Name_Histo,-1));
+              // IsoCut_PerBin_80pc.insert(make_pair(Name_Histo,-1));
 
-	      // for(UInt_t iIso = 0 ; iIso < 100 ; ++iIso)
-	      // 	{
-	      // 	  // cout<<"testing iIso = "<<iIso<<endl;
-	      // 	  // cout<<"Histos_PerBin[Name_Histo]->Integral(1,iIso+1) = "<<Histos_PerBin[Name_Histo]->Integral(1,iIso+1)<<endl;
-	      // 	  // cout<<"Histos_PerBin[Name_Histo]->Integral(1,100+1) = "<<Histos_PerBin[Name_Histo]->Integral(1,100+1)<<endl;
-	      // 	  if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=0.9)
-	      // 	    {
-	      // 	      if(IsoCut_PerBin_90pc[Name_Histo]==-1) IsoCut_PerBin_90pc[Name_Histo]=Histos_PerBin[Name_Histo]->GetBinLowEdge(iIso+1);
-	      // 	    }
-	      // 	  if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=0.8)
-	      // 	    {
-	      // 	      if(IsoCut_PerBin_80pc[Name_Histo]==-1) IsoCut_PerBin_80pc[Name_Histo]=Histos_PerBin[Name_Histo]->GetBinLowEdge(iIso+1);
-	      // 	    }
-	      // 	}
+              // for(UInt_t iIso = 0 ; iIso < 100 ; ++iIso)
+              //  {
+              //    // cout<<"testing iIso = "<<iIso<<endl;
+              //    // cout<<"Histos_PerBin[Name_Histo]->Integral(1,iIso+1) = "<<Histos_PerBin[Name_Histo]->Integral(1,iIso+1)<<endl;
+              //    // cout<<"Histos_PerBin[Name_Histo]->Integral(1,100+1) = "<<Histos_PerBin[Name_Histo]->Integral(1,100+1)<<endl;
+              //    if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=0.9)
+              //      {
+              //        if(IsoCut_PerBin_90pc[Name_Histo]==-1) IsoCut_PerBin_90pc[Name_Histo]=Histos_PerBin[Name_Histo]->GetBinLowEdge(iIso+1);
+              //      }
+              //    if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=0.8)
+              //      {
+              //        if(IsoCut_PerBin_80pc[Name_Histo]==-1) IsoCut_PerBin_80pc[Name_Histo]=Histos_PerBin[Name_Histo]->GetBinLowEdge(iIso+1);
+              //      }
+              //  }
 
-	      // cout<<"50% iso cut for "<<Name_Histo<<" is = "<<IsoCut_PerBin_90pc[Name_Histo]<<endl;
+              // cout<<"50% iso cut for "<<Name_Histo<<" is = "<<IsoCut_PerBin_90pc[Name_Histo]<<endl;
 
-	      //if(Histos_PerBin[Name_Histo]->GetEntries()<20)
-	      if(Histos_PerBin[Name_Histo]->GetEntries()<40)
-		{
-		  NumberOfHistosWithLowStats++;
-		  cout<<"Histo "<<Name_Histo<<" has low stat.: "<<Histos_PerBin[Name_Histo]->GetEntries()<<endl;
-		}
+              //if(Histos_PerBin[Name_Histo]->GetEntries()<20)
+              if(Histos_PerBin[Name_Histo]->GetEntries()<40)
+                {
+                  NumberOfHistosWithLowStats++;
+                  cout<<"Histo "<<Name_Histo<<" has low stat.: "<<Histos_PerBin[Name_Histo]->GetEntries()<<endl;
+                }
 
-	      Histos_PerBin[Name_Histo]->Write();
-	    }
-	}
+              Histos_PerBin[Name_Histo]->Write();
+            }
+        }
 
     }
 
@@ -451,17 +451,17 @@ void Build_Isolation_WPs(float calibThr = 1.7)
       Name_Histo += Appendix_k;
 
       for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
-	{    
-	  if(L1Tau_Iso<=IsoCut_PerEfficiency_PerBin[iEff][Name_Histo])
-	    {
-	      eta_pass_efficiency[iEff]->Fill(L1Tau_IEta);
-	      pt_pass_efficiency[iEff]->Fill(L1Tau_IEt);
-	      nTT_pass_efficiency[iEff]->Fill(L1Tau_nTT);
-	    }
-	  //cout<<"L1Tau_Iso = "<<L1Tau_Iso<<", cut from map = "<<IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]<<", cut from histo = "<<IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)<<endl;
-	  if(L1Tau_Iso<=IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)) pt_pass_efficiency_TH3[iEff]->Fill(L1Tau_IEt);
-	  // if(L1Tau_Iso<=IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)) pt_pass_efficiency_TH3[iEff]->Fill(L1Tau_IEt);
-	}
+        {    
+          if(L1Tau_Iso<=IsoCut_PerEfficiency_PerBin[iEff][Name_Histo])
+            {
+              eta_pass_efficiency[iEff]->Fill(L1Tau_IEta);
+              pt_pass_efficiency[iEff]->Fill(L1Tau_IEt);
+              nTT_pass_efficiency[iEff]->Fill(L1Tau_nTT);
+            }
+          //cout<<"L1Tau_Iso = "<<L1Tau_Iso<<", cut from map = "<<IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]<<", cut from histo = "<<IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)<<endl;
+          if(L1Tau_Iso<=IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)) pt_pass_efficiency_TH3[iEff]->Fill(L1Tau_IEt);
+          // if(L1Tau_Iso<=IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)) pt_pass_efficiency_TH3[iEff]->Fill(L1Tau_IEt);
+        }
 
       // cout<<"IsoCut_PerEfficiency_PerBin[90][Name_Histo] = "<<IsoCut_PerEfficiency_PerBin[90][Name_Histo]<<endl;
 

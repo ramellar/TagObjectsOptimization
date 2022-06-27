@@ -8,8 +8,8 @@ compressedEFile = "./CompressionLUTs/tauCompressELUT_5bit_v8.txt"
 compressedShapeFile = "./CompressionLUTs/egCompressShapesLUT_calibr_4bit_v4.txt"
 compressednTTFile = "./CompressionLUTs/tauCompressnTTLUT_5bit_v8.txt"
 
-inputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/Run3_MC_VBFHToTauTau_M125_MATCHED_2022_01_28.root"
-outputFileName = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2022_01_28.root"
+inputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MATCHED_2022_06_13.root"
+outputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2022_06_13.root"
 
 
 treeName = "outTreeForCalibration"
