@@ -93,7 +93,7 @@ void compare() {
 
     leg->Draw("same");
 
-    TString PDFs = "PDFs/";
+    TString PDFs = "PDFs/Run3_900GeV/";
     c.SaveAs(PDFs+CanvasNamePdf.Data());
 
     f->Close();

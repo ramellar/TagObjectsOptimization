@@ -21,14 +21,15 @@
 
 using namespace std;
 
-void Rate(int run, float calibThr = 1.7)
+void Rate(int run, bool doScaleToLumi, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs.root";
+  // TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/ZeroBias1_Run2022B_Run"+run_str+"_RAW/ZeroBias1_Run2022B_Run"+run_str+"_RAW.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
@@ -74,8 +75,12 @@ void Rate(int run, float calibThr = 1.7)
       inTree->GetEntry(i);
       if(i%10000==0) cout<<"Entry #"<<i<<endl; 
       // SET RUN INFO
-      if (run == 323755) { if(in_lumi<44 || in_lumi>544) continue; } // Run323755
-      if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; } // Run323775 --> very smal number of lumisections!!
+      if (run == 323755) { if(in_lumi<44 || in_lumi>544) continue; }
+      if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; }
+
+      if (run == 355414) { if(in_lumi<0) continue; }
+      if (run == 355417) { if(in_lumi>40) continue; }
+      if (run == 355418) { if((in_lumi>38 && in_lumi<60) || in_lumi>98) continue; }
 
       Float_t weight = 1.;
 
@@ -96,61 +101,73 @@ void Rate(int run, float calibThr = 1.7)
 
       //Replace by l1tPt
       for(UInt_t iL1Tau = 0 ; iL1Tau < in_l1tPt->size() ; ++iL1Tau)
-	{
-	  if(fabs(in_l1tEta->at(iL1Tau))>2.1315) continue;
+        {
+          if(fabs(in_l1tEta->at(iL1Tau))>2.1315) continue;
 
-	  //DiTau trigger
-	  if(in_l1tPt->at(iL1Tau)>=pt_Taus_IsoInf.at(0))
-	    {
-	      Index_Taus_IsoInf.at(1)=Index_Taus_IsoInf.at(0);
-	      pt_Taus_IsoInf.at(1)=pt_Taus_IsoInf.at(0);
-	      Index_Taus_IsoInf.at(0)=iL1Tau;
-	      pt_Taus_IsoInf.at(0)=in_l1tPt->at(iL1Tau);
-	    }
-	  else if(in_l1tPt->at(iL1Tau)>=pt_Taus_IsoInf.at(1))
-	    {
-	      Index_Taus_IsoInf.at(1)=iL1Tau;
-	      pt_Taus_IsoInf.at(1)=in_l1tPt->at(iL1Tau);
-	    }
+          //DiTau trigger
+          if(in_l1tPt->at(iL1Tau)>=pt_Taus_IsoInf.at(0))
+            {
+              Index_Taus_IsoInf.at(1)=Index_Taus_IsoInf.at(0);
+              pt_Taus_IsoInf.at(1)=pt_Taus_IsoInf.at(0);
+              Index_Taus_IsoInf.at(0)=iL1Tau;
+              pt_Taus_IsoInf.at(0)=in_l1tPt->at(iL1Tau);
+            }
+          else if(in_l1tPt->at(iL1Tau)>=pt_Taus_IsoInf.at(1))
+            {
+              Index_Taus_IsoInf.at(1)=iL1Tau;
+              pt_Taus_IsoInf.at(1)=in_l1tPt->at(iL1Tau);
+            }
 
-	  if(in_l1tPt->at(iL1Tau)>=pt_Taus_Iso.at(0) && in_l1tIso->at(iL1Tau)>0)
-	    {
-	      Index_Taus_Iso.at(1)=Index_Taus_Iso.at(0);
-	      pt_Taus_Iso.at(1)=pt_Taus_Iso.at(0);
-	      Index_Taus_Iso.at(0)=iL1Tau;
-	      pt_Taus_Iso.at(0)=in_l1tPt->at(iL1Tau);
-	    }
-	  else if(in_l1tPt->at(iL1Tau)>=pt_Taus_Iso.at(1) && in_l1tIso->at(iL1Tau)>0)
-	    {
-	      Index_Taus_Iso.at(1)=iL1Tau;
-	      pt_Taus_Iso.at(1)=in_l1tPt->at(iL1Tau);
-	    }
+          if(in_l1tPt->at(iL1Tau)>=pt_Taus_Iso.at(0) && in_l1tIso->at(iL1Tau)>0)
+            {
+              Index_Taus_Iso.at(1)=Index_Taus_Iso.at(0);
+              pt_Taus_Iso.at(1)=pt_Taus_Iso.at(0);
+              Index_Taus_Iso.at(0)=iL1Tau;
+              pt_Taus_Iso.at(0)=in_l1tPt->at(iL1Tau);
+            }
+          else if(in_l1tPt->at(iL1Tau)>=pt_Taus_Iso.at(1) && in_l1tIso->at(iL1Tau)>0)
+            {
+              Index_Taus_Iso.at(1)=iL1Tau;
+              pt_Taus_Iso.at(1)=in_l1tPt->at(iL1Tau);
+            }
 
-	}
+        }
 
       if(Index_Taus_IsoInf.at(0)>=0 && Index_Taus_IsoInf.at(1)>=0)
-	{
-	  pt_IsoInf_DiTau->Fill(pt_Taus_IsoInf.at(0),pt_Taus_IsoInf.at(1),weight);
-	}
+  {
+    pt_IsoInf_DiTau->Fill(pt_Taus_IsoInf.at(0),pt_Taus_IsoInf.at(1),weight);
+  }
 
       if(Index_Taus_Iso.at(0)>=0 && Index_Taus_Iso.at(1)>=0)
-	{
-	  pt_Iso_DiTau->Fill(pt_Taus_Iso.at(0),pt_Taus_Iso.at(1),weight);
-	}
+  {
+    pt_Iso_DiTau->Fill(pt_Taus_Iso.at(0),pt_Taus_Iso.at(1),weight);
+  }
     } //new
 
   // SET RUN INFO
-  float nb = 2554.; // Run323755 and Run323775
+  float nb = 0.;
+  if (run == 323755 or run == 323775) { nb = 2554.; }
+  if (run == 355414 or run == 355417 or run == 355418) { nb = 62.; }
+  if (nb == 0.)
+  {
+    std::cout << "ERROR: something went wrong with the run selection and the nb initialization" << std::endl;
+    return;
+  }
   float thisLumiRun = 0.;
-  if (run == 323755) thisLumiRun = 1.6225E34; // Run323755
-  if (run == 323775) thisLumiRun = 1.736E34; // Run323775 --> very smal number of lumisections!!
+  if (run == 323755) thisLumiRun = 1.6225E34;
+  if (run == 323775) thisLumiRun = 1.736E34;
+  if (run == 355414) thisLumiRun = 0.265E33;
+  if (run == 355417) thisLumiRun = 0.256E33;
+  if (run == 355418) thisLumiRun = 0.249E33;
   if (thisLumiRun == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
     return;
   }
+
   float scaleToLumi = 2.00E34;
-  float scale = 0.001*(nb*11245.6)*scaleToLumi/thisLumiRun;
+  float scale = 0.001 * nb * 11245.6;
+  if (doScaleToLumi) scale = scale * scaleToLumi/thisLumiRun;
 
   cout<<"Denominator = "<<Denominator<<endl;
 
@@ -163,7 +180,9 @@ void Rate(int run, float calibThr = 1.7)
       rate_Iso_DiTau->SetBinContent(i+1,pt_Iso_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
     }
 
-  TFile f("histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_unpacked.root","RECREATE");
+  TString scaledToLumi = "";
+  if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
+  TFile f("histos/histos_rate_ZeroBias1_Run2022B_Run"+run_str+"_optimizationV11gs_effMin0p9_G3_calibThr1p7_V11_unpacked"+scaledToLumi+".root","RECREATE");
 
   pt_IsoInf_DiTau->Write();
   pt_Iso_DiTau->Write();

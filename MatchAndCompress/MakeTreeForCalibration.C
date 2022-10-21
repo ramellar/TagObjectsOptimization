@@ -26,10 +26,14 @@ using namespace std;
 void MakeTreeForCalibration()
 
 {
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MERGED_2022_06_13.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MATCHED_2022_06_13.root";
+  // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MERGED_2022_06_13.root";
+  // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MATCHED_2022_06_13.root";
+  // TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
 
-  TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MERGED.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MATCHED.root";
+  TChain data("Ntuplizer_TagAndProbe");
+
   data.Add(InputFileName.Data());
 
   Int_t           RunNumber = 0;

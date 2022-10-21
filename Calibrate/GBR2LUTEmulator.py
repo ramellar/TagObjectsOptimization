@@ -25,8 +25,8 @@ class GBR2LUTEmulator:
         ROOT.gSystem.Load("libHiggsAnalysisGBRLikelihood.so") 
         print "inputFileName",self.inputFileName
         self.inputFile = ROOT.TFile.Open(self.inputFileName)
-        if ("GBRLL" in self.inputFileName): self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
-        else: self.forest = ROOT.MakeNullPointer( "GBRForest" ) 
+        self.forest = ROOT.MakeNullPointer( "GBRForest" ) 
+        #self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
         self.inputFile.GetObject(self.forestName, self.forest)
         #
         varlist = ROOT.MakeNullPointer( ROOT.vector("string") )
