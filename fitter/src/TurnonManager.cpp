@@ -93,7 +93,7 @@ bool TurnonManager::readConfig(const std::string& config)
         string selection     = m_params.GetValue(sSelection    .str().c_str(), "");
         string weightVar     = m_params.GetValue(sWeightVar    .str().c_str(), "");
         string binning       = m_params.GetValue(sBinning      .str().c_str(), "8 10 12 14 16 18 19 20 21 22 24 26 30 35 40 45 50 60 70 100");
-	cout<<"binning in TurnonManager = "<<binning<<endl;
+        cout << "binning in TurnonManager = " << binning << endl;
         string fitRange      = m_params.GetValue(sFitRange     .str().c_str(), "0. 100.");
         string cbMax         = m_params.GetValue(sCBMax        .str().c_str(), "1. 0.9 1.");
         string cbAlpha       = m_params.GetValue(sCBAlpha      .str().c_str(), "3. 0.01 50.");
@@ -105,8 +105,7 @@ bool TurnonManager::readConfig(const std::string& config)
         string cbWidth       = m_params.GetValue(sCBWidth      .str().c_str(), "10. 1. 50.");
 
         vector<double> bins           = Utilities::stringToVector<double>(binning);
-	cout<<"bins in TurnonManager = "<<endl;
-	for(UInt_t iBin = 0 ; iBin < bins.size() ; ++iBin) cout<<bins[iBin]<<endl;
+        cout << "binning in TurnonManager = "; for(UInt_t iBin = 0 ; iBin < bins.size() ; ++iBin) cout << bins[iBin] << " "; cout << endl;
         vector<double> fitRangeValues = Utilities::stringToVector<double>(fitRange);
         vector<double> cbMaxValues    = Utilities::stringToVector<double>(cbMax);
         vector<double> cbAlphaValues  = Utilities::stringToVector<double>(cbAlpha);
@@ -119,8 +118,6 @@ bool TurnonManager::readConfig(const std::string& config)
         vector<string> selectionVarsList;
         Utilities::tokenize(selectionVars, selectionVarsList); 
 
-
-
         m_turnonFits.push_back(new TurnonFit(name));
         m_turnonFits.back()->setFileName(file);
         m_turnonFits.back()->setTreeName(tree);
@@ -132,15 +129,14 @@ bool TurnonManager::readConfig(const std::string& config)
         m_turnonFits.back()->setSelection(selection);
         m_turnonFits.back()->setWeightVar(weightVar);
         m_turnonFits.back()->setBinning(bins);
-        m_turnonFits.back()->setCrystalBall(cbMaxValues[0],   cbMaxValues[1],   cbMaxValues[2],
-                           cbAlphaValues[0], cbAlphaValues[1], cbAlphaValues[2],
-                           cbNValues[0],     cbNValues[1],     cbNValues[2],
-                           cbMeanValues[0],   cbMeanValues[1],  cbMeanValues[2],
-                           cbSigmaValues[0], cbSigmaValues[1], cbSigmaValues[2],
-			   cbMturnValues[0],cbMturnValues[1], cbMturnValues[2],
-			   cbPValues[0], cbPValues[1], cbPValues[2],
-			   cbWidthValues[0], cbWidthValues[1], cbWidthValues[2]
-                           );
+        m_turnonFits.back()->setCrystalBall(cbMaxValues[0],    cbMaxValues[1],    cbMaxValues[2],
+                                            cbAlphaValues[0],  cbAlphaValues[1],  cbAlphaValues[2],
+                                            cbNValues[0],      cbNValues[1],      cbNValues[2],
+                                            cbMeanValues[0],   cbMeanValues[1],   cbMeanValues[2],
+                                            cbSigmaValues[0],  cbSigmaValues[1],  cbSigmaValues[2],
+                                            cbMturnValues[0],  cbMturnValues[1],  cbMturnValues[2],
+                                            cbPValues[0],      cbPValues[1],      cbPValues[2],
+                                            cbWidthValues[0],  cbWidthValues[1],  cbWidthValues[2]);
     }
 
     return true;

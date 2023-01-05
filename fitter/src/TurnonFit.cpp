@@ -38,7 +38,7 @@ using namespace RooFit;
 /*****************************************************************/
 TurnonFit::TurnonFit(const std::string& name):m_name(name),
     m_xVar    ("xVar",     "p_{T}",    20.,    0.,     150.),
-    m_max     ("max",      "max",      1.0,    0.9,    1.),
+    m_max     ("max",      "max",      0.95,   0.9,    1.),
     m_alpha   ("alpha",    "#alpha",   3.,     0.01,   50.),
     m_n       ("n",        "n",        10.,    1.001,  50.),
     m_mean    ("mean",     "mean",     20.,    0.,     50.),
@@ -79,14 +79,14 @@ TurnonFit::~TurnonFit()
 
 
 /*****************************************************************/
-void TurnonFit::setCrystalBall(double max, double max0, double max1,
-        double alpha, double alpha0, double alpha1,
-        double n, double n0, double n1,
-        double mean, double mean0, double mean1, 
-        double sigma, double sigma0, double sigma1,
-	double mturn, double mturn0, double mturn1,
-	double p, double p0, double p1,
-	double width, double width0, double width1)
+void TurnonFit::setCrystalBall(double max,    double max0,    double max1,
+                               double alpha,  double alpha0,  double alpha1,
+                               double n,      double n0,      double n1,
+                               double mean,   double mean0,   double mean1, 
+                               double sigma,  double sigma0,  double sigma1,
+                               double mturn,  double mturn0,  double mturn1,
+                               double p,      double p0,      double p1,
+                               double width,  double width0,  double width1)
 /*****************************************************************/
 {
     m_max.setVal(max);
@@ -108,7 +108,7 @@ void TurnonFit::setCrystalBall(double max, double max0, double max1,
 
     stringstream cbName;
     cbName << "cb_" << m_name;
-    m_function = new FuncCB(cbName.str().c_str(), cbName.str().c_str(), m_xVar, m_mean, m_sigma, m_alpha, m_n, m_max,m_mturn,m_p,m_width) ;
+    m_function = new FuncCB(cbName.str().c_str(), cbName.str().c_str(), m_xVar, m_mean, m_sigma, m_alpha, m_n, m_max, m_mturn, m_p, m_width) ;
 }
 
 
@@ -136,7 +136,7 @@ void TurnonFit::fit()
     //m_selection = "tauPt>250";
     if(m_selection=="")
     {
-        if (m_weightVar=="")dataSet = new RooDataSet("data", "data", argSet, Import(*tree));
+        if (m_weightVar=="") { dataSet = new RooDataSet("data", "data", argSet, Import(*tree)); }
         else
         {
             weightVars.push_back(RooRealVar(m_weightVar.c_str(), m_weightVar.c_str(), 0.));
@@ -151,7 +151,7 @@ void TurnonFit::fit()
             selectionVars.push_back( RooRealVar(m_selectionVars[i].c_str(), m_selectionVars[i].c_str(), 0.) );
             argSet.add(selectionVars.back());
         }
-        if (m_weightVar=="") dataSet = new RooDataSet("data", "data", argSet, Import(*tree), Cut(m_selection.c_str()));
+        if (m_weightVar=="") { dataSet = new RooDataSet("data", "data", argSet, Import(*tree), Cut(m_selection.c_str())); }
         else
         {
             weightVars.push_back(RooRealVar(m_weightVar.c_str(), m_weightVar.c_str(), 0.));
@@ -166,8 +166,8 @@ void TurnonFit::fit()
 
     // Create binned turn-on
     int nbins = m_binning.size()-1;
-    for(UInt_t iBin = 0 ; iBin < m_binning.size() ; ++iBin) cout<<m_binning[iBin]<<endl;
-    cout<<"binning = "<<m_binning[0]<<endl;
+    // for(UInt_t iBin = 0 ; iBin < m_binning.size() ; ++iBin) cout << m_binning[iBin] << endl;
+    // cout << "binning = " << m_binning[0] << endl;
     RooBinning binning = RooBinning(nbins, &m_binning[0], "binning");
     gROOT->cd(); // change current directory. Otherwise, m_plot is associated to "file", and file->Close() destroys m_plot
     m_plot = m_xVar.frame(Bins(18000),Title("")) ;
@@ -176,17 +176,20 @@ void TurnonFit::fit()
     m_plot->SetName(plotName.str().c_str());
     dataSet->plotOn(m_plot, DataError(RooAbsData::Poisson), Binning(binning), Efficiency(cut), MarkerColor(kBlack), LineColor(kBlack), MarkerStyle(20));
 
+    std::cout << "ahoy!" << std::endl;
+
     // fit functional form to unbinned dataset
-    //if(!m_noFit) m_fitResult = eff.fitTo(*dataSet,ConditionalObservables(m_xVar),Minos(kTRUE),Warnings(kFALSE),NumCPU(m_nCPU),Save(kTRUE),Verbose(kFALSE));
     if(!m_noFit)
     {
-        if (m_weightVar=="") m_fitResult = eff.fitTo(*dataSet,ConditionalObservables(m_xVar),Minos(kFALSE),Warnings(kFALSE),NumCPU(m_nCPU),Save(kTRUE),Verbose(kFALSE),SumW2Error(kTRUE));
-        // if (m_weightVar=="") m_fitResult = eff.fitTo(*dataSet,ConditionalObservables(m_xVar),Minos(kFALSE),Warnings(kFALSE),NumCPU(m_nCPU),Save(kTRUE),Verbose(kFALSE));
-        else                 m_fitResult = eff.fitTo(*dataSet,ConditionalObservables(m_xVar),Minos(kFALSE),Warnings(kFALSE),NumCPU(m_nCPU),Save(kTRUE),Verbose(kFALSE),SumW2Error(kTRUE));
+        // if (m_weightVar=="") m_fitResult = eff.fitTo(*dataSet,ConditionalObservables(m_xVar),Minos(kFALSE),Warnings(kFALSE),NumCPU(m_nCPU),Save(kTRUE),Verbose(kFALSE),SumW2Error(kTRUE));
+        if (m_weightVar=="") m_fitResult = eff.fitTo(*dataSet, ConditionalObservables(m_xVar), Minos(kFALSE), Warnings(kFALSE), NumCPU(m_nCPU), Save(kTRUE), Verbose(kTRUE));
+        else                 m_fitResult = eff.fitTo(*dataSet, ConditionalObservables(m_xVar), Minos(kFALSE), Warnings(kFALSE), NumCPU(m_nCPU), Save(kTRUE), Verbose(kTRUE), SumW2Error(kTRUE));
         stringstream resultName;
         resultName << "fitResult_" << m_name;
         m_fitResult->SetName(resultName.str().c_str());
     }
+
+    std::cout << "ahoy!" << std::endl;
 
     // m_function->plotOn(m_plot,VisualizeError(*m_fitResult,1),FillColor(kOrange),LineColor(kRed),LineWidth(2));
     m_function->plotOn(m_plot,LineColor(kRed),LineWidth(2));
@@ -201,7 +204,7 @@ void TurnonFit::fit()
     {
         double x,y;
         m_histo->GetPoint(ipt,x,y);
-	cout<<"x = "<<x<<", y = "<<y<<", error = "<<m_histo->GetErrorYlow(ipt)<<endl;
+        cout<<"x = "<<x<<", y = "<<y<<", error = "<<m_histo->GetErrorYlow(ipt)<<endl;
         if (y > 1)
         {
             m_histo->SetPoint(ipt,x,1.);
@@ -260,21 +263,21 @@ void TurnonFit::printParameters()
 {
     cout<<"\n\n";
     cout<<"Turnon "<<m_name<<" parameters:\n";
-    cout<<"  File     : "<<m_fileName<<"\n";
-    cout<<"  Tree     : "<<m_treeName<<"\n";
-    cout<<"  XVar     : "<<m_xVar.GetName()<<"\n";
-    cout<<"  Cut      : "<<m_cut<<"\n";
-    cout<<"  Selection: "<<m_selection<<"\n";
-    cout<<"  WeightVar: "<<m_weightVar<<"\n";
-    cout<<"  CB       :\n";
-    cout<<"    Max  : "<<m_max.getVal()  <<" ["<<m_max.getMin()  <<", "<<m_max.getMax()<<"]\n";
-    cout<<"    Alpha: "<<m_alpha.getVal()<<" ["<<m_alpha.getMin()<<", "<<m_alpha.getMax()<<"]\n";
-    cout<<"    n    : "<<m_n.getVal()    <<" ["<<m_n.getMin()    <<", "<<m_n.getMax()<<"]\n";
-    cout<<"    mean : "<<m_mean.getVal() <<" ["<<m_mean.getMin() <<", "<<m_mean.getMax()<<"]\n";
-    cout<<"    sigma: "<<m_sigma.getVal()<<" ["<<m_sigma.getMin()<<", "<<m_sigma.getMax()<<"]\n";
-    cout<<"    mturn: "<<m_mturn.getVal()<<" ["<<m_mturn.getMin()<<", "<<m_mturn.getMax()<<"]\n";
-    cout<<"        p: "<<m_p.getVal()<<" ["<<m_p.getMin()<<", "<<m_p.getMax()<<"]\n";
-    cout<<"   mwidth: "<<m_width.getVal()<<" ["<<m_width.getMin()<<", "<<m_width.getMax()<<"]\n";
+    cout<<"  File      : "<<m_fileName<<"\n";
+    cout<<"  Tree      : "<<m_treeName<<"\n";
+    cout<<"  XVar      : "<<m_xVar.GetName()<<"\n";
+    cout<<"  Cut       : "<<m_cut<<"\n";
+    cout<<"  Selection : "<<m_selection<<"\n";
+    cout<<"  WeightVar : "<<m_weightVar<<"\n";
+    cout<<"  CB        :\n";
+    cout<<"    Max     : " << m_max.getVal()   << " ["<<m_max.getMin()   << ", " << m_max.getMax()   << "]\n";
+    cout<<"    Alpha   : " << m_alpha.getVal() << " ["<<m_alpha.getMin() << ", " << m_alpha.getMax() << "]\n";
+    cout<<"    n       : " << m_n.getVal()     << " ["<<m_n.getMin()     << ", " << m_n.getMax()     << "]\n";
+    cout<<"    mean    : " << m_mean.getVal()  << " ["<<m_mean.getMin()  << ", " << m_mean.getMax()  << "]\n";
+    cout<<"    sigma   : " << m_sigma.getVal() << " ["<<m_sigma.getMin() << ", " << m_sigma.getMax() << "]\n";
+    cout<<"    mturn   : " << m_mturn.getVal() << " ["<<m_mturn.getMin() << ", " << m_mturn.getMax() << "]\n";
+    cout<<"    p       : " << m_p.getVal()     << " ["<<m_p.getMin()     << ", " << m_p.getMax()     << "]\n";
+    cout<<"    mwidth  : " << m_width.getVal() << " ["<<m_width.getMin() << ", " << m_width.getMax() << "]\n";
     cout<<"\n\n";
 }
 
