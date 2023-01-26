@@ -107,57 +107,63 @@ void Rate(TString era, bool doScaleToLumi)
 
       if(i%20000==0) cout<<"Entry #"<<i<<endl; 
       // SET RUN INFO
-      if (in_RunNumber == 357438)
+      if (in_RunNumber == 323755)
+        {
+          if(in_lumi<44 || in_lumi>544) continue;
+          nb = 2554;
+          thisLumiRun = 1.6225E34;
+        }
+      /*if (in_RunNumber == 357438)
         { 
           if(in_lumi<135 || in_lumi>229) continue;
           nb = 2400;
           thisLumiRun = 1.64E34;
-        }
-      if (in_RunNumber == 357440)
+        }*/
+      else if (in_RunNumber == 357440)
         { 
-          if(in_lumi<1 || in_lumi>293) continue;
+          if(in_lumi<0 || in_lumi>293) continue;
           nb = 2400;
           thisLumiRun = 1.47E34;
         }
-      if (in_RunNumber == 357442)
+      /*if (in_RunNumber == 357442)
         { 
-          if(in_lumi<1 || in_lumi>922) continue;
+          if(in_lumi<0 || in_lumi>922) continue;
           nb = 2400;
           if(in_lumi>0 && in_lumi<=382) thisLumiRun = 1.17E34;
           if(in_lumi>382 && in_lumi<=922) thisLumiRun = 0.99E34;
-        }
-      if (in_RunNumber == 357802)
-        { 
-          if(in_lumi<95 || in_lumi>205) continue;
-          nb = 2448;
-          thisLumiRun = 1.57E34;
-        }
-      if (in_RunNumber == 357696)
+        }*/
+      else if (in_RunNumber == 357696)
         { 
           if(in_lumi<173 || in_lumi>403) continue;
           nb = 2400;
           thisLumiRun = 1.67E34;
         }
-      if (in_RunNumber == 357700)
+      /*if (in_RunNumber == 357700)
         { 
-          if(in_lumi<1 || in_lumi>545) continue;
+          if(in_lumi<0 || in_lumi>545) continue;
           nb = 2400;
           if(in_lumi>0 && in_lumi<=357) thisLumiRun = 1.31E34;
           if(in_lumi>357 && in_lumi<=545) thisLumiRun = 1.17E34;
-        }
-      if (in_RunNumber == 360075)
+        }*/
+      else if (in_RunNumber == 357802)
         { 
-          if(in_lumi<74 || (in_lumi>429 && in_lumi<462) || in_lumi>808) continue;
-          // if(in_lumi<76 || in_lumi>487) continue;
-          // thisLumiRun = 1.84E34;
+          if(in_lumi<95 || in_lumi>205) continue;
+          nb = 2448;
+          thisLumiRun = 1.57E34;
+        }
+      else if (in_RunNumber == 360075)
+        { 
+          // if(in_lumi<74 || (in_lumi>429 && in_lumi<462) || in_lumi>808) continue;
+          if(in_lumi<76 || in_lumi>487) continue;
+          thisLumiRun = 1.84E34;
           nb = 2448;
           if(in_lumi>73 && in_lumi<=429) thisLumiRun = 1.84E34;
-          if(in_lumi>461 && in_lumi<=681) thisLumiRun = 1.71E34;
-          if(in_lumi>681 && in_lumi<=808) thisLumiRun = 1.55E34;
+          // if(in_lumi>461 && in_lumi<=681) thisLumiRun = 1.71E34;
+          // if(in_lumi>681 && in_lumi<=808) thisLumiRun = 1.55E34;
         }
-      if (in_RunNumber == 360090)
+      /*if (in_RunNumber == 360090)
         {
-          if(in_lumi<1 || in_lumi>752) continue;
+          if(in_lumi<0 || in_lumi>752) continue;
           nb = 2448;
           if(in_lumi>0 && in_lumi<=408) thisLumiRun = 1.17E34;
           if(in_lumi>408 && in_lumi<752) thisLumiRun = 1.02E34;
@@ -167,22 +173,56 @@ void Rate(TString era, bool doScaleToLumi)
           if(in_lumi<125 || in_lumi>248) continue;
           nb = 2450;
           thisLumiRun = 1.71E34;
-        }
-      if (in_RunNumber == 360459)
+        }*/
+      else if (in_RunNumber == 360459)
         { 
-          if(in_lumi<1 || in_lumi>1163) continue;
-          // if(in_lumi<1 || in_lumi>516) continue;
+          // if(in_lumi<0 || in_lumi>1163) continue;
+          if(in_lumi<0 || in_lumi>516) continue;
           nb = 2450;
           if(in_lumi>0 && in_lumi<=516) thisLumiRun = 1.69E34;
-          if(in_lumi>516 && in_lumi<=808) thisLumiRun = 1.49E34;
-          if(in_lumi>808 && in_lumi<=1163) thisLumiRun = 1.29E34;
+          // if(in_lumi>516 && in_lumi<=808) thisLumiRun = 1.49E34;
+          // if(in_lumi>808 && in_lumi<=1163) thisLumiRun = 1.29E34;
         }
-      if (in_RunNumber == 360460)
+      /*if (in_RunNumber == 360460)
         { 
-          if(in_lumi<1 || in_lumi>1000) continue;
+          if(in_lumi<0 || in_lumi>1000) continue;
           nb = 2450;
           if(in_lumi>0 && in_lumi<=561) thisLumiRun = 1.01E34;
           if(in_lumi>561 && in_lumi<=1000) thisLumiRun = 0.84E34;
+        }*/
+      else if (in_RunNumber == 360927)
+        { 
+          if(in_lumi<99 || in_lumi>719) continue;
+          nb = 2450;
+          thisLumiRun = 1.85E34;
+        }
+      else if (in_RunNumber == 361197)
+        { 
+          if(in_lumi<10 || in_lumi>389) continue;
+          nb = 2450;
+          thisLumiRun = 1.85E34;
+        }
+      else if (in_RunNumber == 361303)
+        { 
+          if(in_lumi<136 || in_lumi>621) continue;
+          nb = 2450;
+          thisLumiRun = 1.83E34;
+        }
+      else if (in_RunNumber == 361443)
+        { 
+          if(in_lumi<73 || in_lumi>932) continue;
+          nb = 2450;
+          thisLumiRun = 1.85E34;
+        }
+      else if (in_RunNumber == 361512)
+        { 
+          if(in_lumi<105 || in_lumi>843) continue;
+          nb = 2450;
+          thisLumiRun = 1.87E34;
+        }
+      else
+        {
+          continue;
         }
       if (thisLumiRun == 0. || nb == 0)
         {

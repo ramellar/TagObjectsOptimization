@@ -25,9 +25,10 @@
 
 using namespace std;
 
-void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalball")
+void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
+    if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
 
     TString InputFileName = file;
     TFile f(InputFileName.Data(),"READ");
@@ -35,15 +36,19 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
     Int_t   in_RunNumber =  0;
     Float_t tauPt = 0;
     Float_t tauEta = 0;
+    Float_t tauPhi = 0;
     Float_t l1tTauPt = 0;
     Float_t l1tTauEta = 0;
+    Float_t l1tTauPhi = 0;
     Int_t   l1tTauIso = 0;
     Int_t   nvtx = 0;
     inTree->SetBranchAddress("RunNumber", &in_RunNumber);
     inTree->SetBranchAddress("tauPt",     &tauPt);
     inTree->SetBranchAddress("tauEta",    &tauEta);
+    inTree->SetBranchAddress("tauPhi",    &tauPhi);
     inTree->SetBranchAddress("l1tPt",     &l1tTauPt);
     inTree->SetBranchAddress("l1tEta",    &l1tTauEta);
+    inTree->SetBranchAddress("l1tPhi",    &l1tTauPhi);
     inTree->SetBranchAddress("l1tIso",    &l1tTauIso);
     inTree->SetBranchAddress("Nvtx",      &nvtx);
 
@@ -174,6 +179,15 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
         }
     }
 
+    // ETA AND PHI RESPONSES
+    TH1F* eta_resp_barrel = new TH1F("eta_resp_barrel","eta_resp_barrel",200,-1,1);
+    TH1F* eta_resp_endcap = new TH1F("eta_resp_endcap","eta_resp_endcap",200,-1,1);
+    TH1F* eta_resp_inclusive = new TH1F("eta_resp_inclusive","eta_resp_inclusive",200,-1,1);
+
+    TH1F* phi_resp_barrel = new TH1F("phi_resp_barrel","phi_resp_barrel",200,-1,1);
+    TH1F* phi_resp_endcap = new TH1F("phi_resp_endcap","phi_resp_endcap",200,-1,1);
+    TH1F* phi_resp_inclusive = new TH1F("phi_resp_inclusive","phi_resp_inclusive",200,-1,1);
+
     // ADDITIONAL USEFULL PLOTS
     TH1F* Nvtx = new TH1F("Nvtx","Nvtx",70,0,70);
     TH1F* R2_Nvtx = new TH1F("R2_Nvtx","R2_Nvtx",70,0,70);
@@ -187,6 +201,8 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
 
         if(l1tTauPt<0.) { continue; }
 
+        if(l1tTauPt>128.) { continue; } // skip saturated objects
+
         // if(l1tTauPt/tauPt<0.6)
         // { 
         //     pt->Fill(tauPt);
@@ -197,10 +213,25 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
 
         Nvtx->Fill(nvtx);
 
-        pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
-
-        if(abs(tauEta) < 1.305) { pt_barrel_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
-        else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { pt_endcap_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
+        // fill inclusive distributions skipping low energy taus
+        if(tauPt<30)
+        {
+            pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
+            eta_resp_inclusive->Fill(l1tTauEta - tauEta);
+            phi_resp_inclusive->Fill(l1tTauPhi - tauPhi);
+            if(abs(tauEta) < 1.305)
+            {
+                pt_barrel_resp_ptInclusive->Fill(l1tTauPt/tauPt);
+                eta_resp_barrel->Fill(l1tTauEta - tauEta);
+                phi_resp_barrel->Fill(l1tTauPhi - tauPhi);
+            }
+            else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479)
+            {
+                pt_endcap_resp_ptInclusive->Fill(l1tTauPt/tauPt);
+                eta_resp_endcap->Fill(l1tTauEta - tauEta);
+                phi_resp_endcap->Fill(l1tTauPhi - tauPhi);
+            }
+        }
 
         for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
         {
@@ -262,10 +293,13 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
 
         R2_Nvtx->Fill(nvtx);
 
-        R2_pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
-
-        if(abs(tauEta) < 1.305) { R2_pt_barrel_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
-        else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { R2_pt_endcap_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
+        // fill pT inclusive distributions skipping low energy taus
+        if(tauPt<30)
+        {
+            R2_pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
+            if(abs(tauEta) < 1.305) { R2_pt_barrel_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
+            else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { R2_pt_endcap_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
+        }
 
         for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
         {
@@ -306,6 +340,12 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
     pt_response_ptInclusive->Scale(1.0/pt_response_ptInclusive->Integral());
     pt_barrel_resp_ptInclusive->Scale(1.0/pt_barrel_resp_ptInclusive->Integral());
     pt_endcap_resp_ptInclusive->Scale(1.0/pt_endcap_resp_ptInclusive->Integral());
+    eta_resp_barrel->Scale(1.0/eta_resp_barrel->Integral());
+    eta_resp_endcap->Scale(1.0/eta_resp_endcap->Integral());
+    eta_resp_inclusive->Scale(1.0/eta_resp_inclusive->Integral());
+    phi_resp_barrel->Scale(1.0/phi_resp_barrel->Integral());
+    phi_resp_endcap->Scale(1.0/phi_resp_endcap->Integral());
+    phi_resp_inclusive->Scale(1.0/phi_resp_inclusive->Integral());
     R2_pt_response_ptInclusive->Scale(1.0/R2_pt_response_ptInclusive->Integral());
     R2_pt_barrel_resp_ptInclusive->Scale(1.0/R2_pt_barrel_resp_ptInclusive->Integral());
     R2_pt_endcap_resp_ptInclusive->Scale(1.0/R2_pt_endcap_resp_ptInclusive->Integral());
@@ -564,6 +604,12 @@ void MakeResolutions(TString file, int run_nmbr, TString fit_option = "crystalba
     pt_response_ptInclusive->Write();
     pt_barrel_resp_ptInclusive->Write();
     pt_endcap_resp_ptInclusive->Write();
+    eta_resp_barrel->Write();
+    eta_resp_endcap->Write();
+    eta_resp_inclusive->Write();
+    phi_resp_barrel->Write();
+    phi_resp_endcap->Write();
+    phi_resp_inclusive->Write();
     PTvsETA_resolution->Write();
     PTvsETA_scale->Write();
     R2_pt_scale_fctPt->Write();

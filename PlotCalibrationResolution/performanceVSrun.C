@@ -27,11 +27,16 @@ using namespace std;
 
 void performanceVSrun()
 {
-    std::vector<int> runs = {357079, 357080, 357081, 357101, 357102, 357104, 357106, 357112, 357268, 357271, 357328, 357329, 357330, 357331, 357332, 357333, 357401, 357406, 357438, 357440, 357441, 357442, 357447, 357472, 357478, 357479, 357482, 357538, 357542, 357550, 357610, 357611, 357612, 357613, 357688, 357696, 357697, 357698, 357699, 357700, 357720, 357732};
+    std::vector<int> runs = {356426, 356428, 356433, 356434, 356435, 356446, 356523, 356531, 356563, 356568, 356569, 356570, 356576, 356578, 356580, 356582, 356614, 356615, 356619, 356811, 356812, 356813, 356814, 356815, 356824, 356908, 356919, 356937, 356946, 356947, 356948, 356949, 356951, 356954, 356955, 356956, 356968, 356969, 356970, 356998, 356999, 357000, 357001, 357079, 357080, 357081, 357101, 357102, 357104, 357106, 357112, 357268, 357271, 357328, 357329, 357330, 357331, 357332, 357333, 357401, 357406, 357438, 357440, 357441, 357442, 357447, 357472, 357478, 357479, 357482, 357538, 357542, 357550, 357610, 357611, 357612, 357613, 357688, 357696, 357697, 357698, 357699, 357700, 357720, 357732, 357734, 357735, 357754, 357756, 357757, 357758, 357759, 357766, 357777, 357778, 357779, 357781, 357802, 357803, 357804, 357805, 357806, 357807, 357808, 357809, 357812, 357813, 357814, 357815, 357898, 357899, 357900, 359569, 359571, 359575, 359595, 359597, 359602, 359609, 359612, 359661, 359685, 359686, 359691, 359693, 359694, 359699, 359718, 359750, 359751, 359762, 359764, 359776, 359806, 359808, 359809, 359810, 359812, 359814, 359870, 359871, 359887, 359899, 359903, 359998, 360017, 360019, 360075, 360090, 360116, 360125, 360126, 360127, 360128, 360130, 360131, 360141, 360224, 360225, 360389, 360390, 360391, 360392, 360393, 360400, 360413, 360428, 360429, 360430, 360432, 360433, 360434, 360435, 360437, 360438, 360439, 360440, 360441, 360442, 360444, 360458, 360459, 360460, 360486, 360490, 360491};
 
-    std::vector<int> rumpuphistory = {357077, 357390, 357609, 357681}; // 357785}
-    std::vector<TString> nbunches= {"2160", "2400", "1922", "2400"}; //2448}
+    std::vector<int> nbunches_history = {356424, 356484, 356715, 357035, 357391, 357610, 357681, 357762, /*359246, 359336,*/ 359563, 359589, 359631, 359691, 359890, 359985, 360389}; //, 356703, 360789, 360814, 360880}
+    std::vector<TString> nbunches= {"1214", "1538", "1922", "2160", "2400", "1922", "2400", "2448", "48", /*"144", "2740",*/ "578", "1154", "2448", "302", "2448", "2450", "302"}; //, "2450", "302", "2450"}
 
+    std::vector<int> various_history = {356633, 356778, 357900, 359100, 360389};
+    std::vector<TString> various = {"New L1/L2 LUTs", "HCAL PFA1'", "LHC stop", "EE+ H2O leak", "HB LUTs update"};
+
+    std::vector<int> era_history = {356426, 357538, 359500, 360335};
+    std::vector<TString> era = {"Era C", "Era D", "Era E", "Era F"};
 
     int lowerBound = runs[0]-100;
     int upperBound = runs[runs.size()-1]+100;
@@ -92,7 +97,7 @@ void performanceVSrun()
 
     // use dummy histogram to define style
     inclusive_resolVSrun->GetXaxis()->SetMaxDigits(7);
-    inclusive_resolVSrun->GetXaxis()->SetRangeUser(runs[0]-25, runs[runs.size()-1]+25);
+    inclusive_resolVSrun->GetXaxis()->SetRangeUser(runs[0]-200, runs[runs.size()-1]+50);
     inclusive_resolVSrun->GetYaxis()->SetRangeUser(0.12, 0.45);
     inclusive_resolVSrun->GetXaxis()->SetTitle("Run Number");
     inclusive_resolVSrun->GetYaxis()->SetTitle("Resolution");
@@ -117,15 +122,15 @@ void performanceVSrun()
     endcap_resolVSrun->SetMarkerColor(2);
 
     inclusive_resolVSrun->Draw("LPE1");
-    barrel_resolVSrun->Draw("same LPE1");
-    endcap_resolVSrun->Draw("same LPE1");
+    // barrel_resolVSrun->Draw("same LPE1");
+    // endcap_resolVSrun->Draw("same LPE1");
 
-    TLegend legend(0.22,0.75,0.45,0.88);
+    TLegend legend(0.45,0.8,0.68,0.88);
     legend.SetBorderSize(0);
     legend.AddEntry(inclusive_resolVSrun, "Inclusive |#eta^{Offline #tau}|<2.1", "LPE1");
     legend.AddEntry(barrel_resolVSrun, "Barrel |#eta^{Offline #tau}|<1.305", "LPE1");
     legend.AddEntry(endcap_resolVSrun, "Endcap 1.479<|#eta^{Offline #tau}|<2.1", "LPE1");
-    legend.Draw("same");
+    // legend.Draw("same");
 
     TPaveText* texl1 = new TPaveText(0.05,0.87,0.2,0.99,"NDC");
     texl1->AddText("CMS Internal");
@@ -141,19 +146,51 @@ void performanceVSrun()
     texl2->SetBorderSize(0);
     texl2->Draw("same");
 
-    for (long unsigned int j = 0; j < rumpuphistory.size(); ++j)
+    for (long unsigned int j = 0; j < nbunches_history.size(); ++j)
     {
-        TPaveText* texl3 = new TPaveText(rumpuphistory[j]+1,0.41,rumpuphistory[j]+50,0.44);
-        texl3->AddText("#splitline{Nb="+nbunches[j]+"}{#rightarrow}");
+        TText* texl3 = new TText(nbunches_history[j]+35,0.41, "Nb="+nbunches[j]);
         texl3->SetTextAlign(11);
-        texl3->SetTextSize(0.03);
-        texl3->SetTextColor(8);
-        texl3->SetFillColor(10);
+        texl3->SetTextSize(0.02);
+        texl3->SetTextColor(14);
+        // texl3->SetFillColor(10);
+        texl3->SetTextAngle(90);
         texl3->Draw("same");
 
-        TLine* line = new TLine(rumpuphistory[j], 0.12, rumpuphistory[j], 0.45);
-        line->SetLineColor(8);
-        line->SetLineWidth(2);
+        TLine* line = new TLine(nbunches_history[j]-0.5, 0.12, nbunches_history[j]-0.5, 0.45);
+        line->SetLineColor(14);
+        line->SetLineWidth(1);
+        line->Draw("same");
+    }
+
+    for (long unsigned int j = 0; j < various_history.size(); ++j)
+    {
+        TText* texl3 = new TText(various_history[j]+35,0.13, various[j]);
+        texl3->SetTextAlign(11);
+        texl3->SetTextSize(0.02);
+        texl3->SetTextColor(1);
+        // texl3->SetFillColor(10);
+        texl3->SetTextAngle(90);
+        texl3->Draw("same");
+
+        TLine* line = new TLine(various_history[j]-0.5, 0.12, various_history[j]-0.5, 0.45);
+        line->SetLineColor(1);
+        line->SetLineWidth(1);
+        line->Draw("same");
+    }
+
+    for (long unsigned int j = 0; j < era_history.size(); ++j)
+    {
+        TText* texl3 = new TText(era_history[j]+35,0.13, era[j]);
+        texl3->SetTextAlign(11);
+        texl3->SetTextSize(0.02);
+        texl3->SetTextColor(2);
+        // texl3->SetFillColor(10);
+        texl3->SetTextAngle(90);
+        texl3->Draw("same");
+
+        TLine* line = new TLine(era_history[j]-0.5, 0.12, era_history[j]-0.5, 0.45);
+        line->SetLineColor(2);
+        line->SetLineWidth(1);
         line->Draw("same");
     }
 
@@ -169,7 +206,7 @@ void performanceVSrun()
     // use dummy histogram to define style
     inclusive_scaleVSrun->GetXaxis()->SetMaxDigits(7);
     inclusive_scaleVSrun->GetXaxis()->CenterLabels();
-    inclusive_scaleVSrun->GetXaxis()->SetRangeUser(runs[0]-25, runs[runs.size()-1]+25);
+    inclusive_scaleVSrun->GetXaxis()->SetRangeUser(runs[0]-200, runs[runs.size()-1]+50);
     inclusive_scaleVSrun->GetYaxis()->SetRangeUser(0.7, 1.2);
     inclusive_scaleVSrun->GetXaxis()->SetTitle("Run Number");
     inclusive_scaleVSrun->GetYaxis()->SetTitle("Scale");
@@ -194,26 +231,58 @@ void performanceVSrun()
     endcap_scaleVSrun->SetMarkerColor(2);
 
     inclusive_scaleVSrun->Draw("LPE1");
-    barrel_scaleVSrun->Draw("same LPE1");
-    endcap_scaleVSrun->Draw("same LPE1");
+    // barrel_scaleVSrun->Draw("same LPE1");
+    // endcap_scaleVSrun->Draw("same LPE1");
     
-    legend.Draw("same");
+    // legend.Draw("same");
     texl1->Draw("same");
     texl2->Draw("same");
 
-    for (long unsigned int j = 0; j < rumpuphistory.size(); ++j)
+    for (long unsigned int j = 0; j < nbunches_history.size(); ++j)
     {
-        TPaveText* texl3 = new TPaveText(rumpuphistory[j]+1,1.151,rumpuphistory[j]+50,1.198);
-        texl3->AddText("#splitline{Nb="+nbunches[j]+"}{#rightarrow}");
+        TText* texl3 = new TText(nbunches_history[j]+35,1.13, "Nb="+nbunches[j]);
         texl3->SetTextAlign(11);
-        texl3->SetTextSize(0.03);
-        texl3->SetTextColor(8);
-        texl3->SetFillColor(10);
+        texl3->SetTextSize(0.02);
+        texl3->SetTextColor(14);
+        // texl3->SetFillColor(10);
+        texl3->SetTextAngle(90);
         texl3->Draw("same");
 
-        TLine* line = new TLine(rumpuphistory[j], 0.7, rumpuphistory[j], 1.2);
-        line->SetLineColor(8);
-        line->SetLineWidth(2);
+        TLine* line = new TLine(nbunches_history[j]-0.5, 0.7, nbunches_history[j]-0.5, 1.2);
+        line->SetLineColor(14);
+        line->SetLineWidth(1);
+        line->Draw("same");
+    }
+
+    for (long unsigned int j = 0; j < various_history.size(); ++j)
+    {
+        TText* texl3 = new TText(various_history[j]+35,0.73, various[j]);
+        texl3->SetTextAlign(11);
+        texl3->SetTextSize(0.02);
+        texl3->SetTextColor(1);
+        // texl3->SetFillColor(10);
+        texl3->SetTextAngle(90);
+        texl3->Draw("same");
+
+        TLine* line = new TLine(various_history[j]-0.5, 0.7, various_history[j]-0.5, 1.2);
+        line->SetLineColor(1);
+        line->SetLineWidth(1);
+        line->Draw("same");
+    }
+
+    for (long unsigned int j = 0; j < era_history.size(); ++j)
+    {
+        TText* texl3 = new TText(era_history[j]+35,0.73, era[j]);
+        texl3->SetTextAlign(11);
+        texl3->SetTextSize(0.02);
+        texl3->SetTextColor(2);
+        // texl3->SetFillColor(10);
+        texl3->SetTextAngle(90);
+        texl3->Draw("same");
+
+        TLine* line = new TLine(era_history[j]-0.5, 0.7, era_history[j]-0.5, 1.2);
+        line->SetLineColor(2);
+        line->SetLineWidth(1);
         line->Draw("same");
     }
 

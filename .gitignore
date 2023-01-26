@@ -3,6 +3,7 @@
 *.so
 *.pcm
 *.pdf
+*.png
 *.zip
 fit.exe
 *~

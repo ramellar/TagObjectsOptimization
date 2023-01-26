@@ -24,9 +24,10 @@
 
 using namespace std;
 
-void MakeEfficiencies(TString file, int run_nmbr)
+void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 {
   TString run_nmbr_str = to_string(run_nmbr);
+  if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
 
   TFile f(file,"READ");
   TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
@@ -55,11 +56,11 @@ void MakeEfficiencies(TString file, int run_nmbr)
   inTree->SetBranchAddress("l1tIso",&in_l1tIso);
   inTree->SetBranchAddress("Nvtx",&Nvtx);
 
-  Double_t binningPt[22] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,210,350,500,700,1000,2000};
-  TH1F* pt = new TH1F("pt","pt",21,binningPt);
-  TH1F* barrel_pt = new TH1F("barrel_pt","barrel_pt",21,binningPt);
-  TH1F* endcap_pt = new TH1F("endcap_pt","endcap_pt",21,binningPt);
-  TH1F* dummy = new TH1F("dummy","dummy",21,binningPt);
+  Double_t binningPt[23] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,150,210,350,500,700,1000,2000};
+  TH1F* pt = new TH1F("pt","pt",22,binningPt);
+  TH1F* barrel_pt = new TH1F("barrel_pt","barrel_pt",22,binningPt);
+  TH1F* endcap_pt = new TH1F("endcap_pt","endcap_pt",22,binningPt);
+  TH1F* dummy = new TH1F("dummy","dummy",22,binningPt);
 
   Double_t binningEta[29] = {-2.100, -1.950, -1.800, -1.650, -1.479, -1.305, -1.200, -1.050, -0.9000, -0.7500, -0.6000, -0.4500, -0.3000, -0.1500, 0., 0.1500, 0.3000, 0.4500, 0.6000, 0.7500, 0.9000, 1.050, 1.200,  1.305, 1.479, 1.650, 1.800, 1.950, 2.100};
   TH1F* eta  = new TH1F("eta" ,"eta" ,28, binningEta);
@@ -69,7 +70,7 @@ void MakeEfficiencies(TString file, int run_nmbr)
   TH1F* barrel_nvtx  = new TH1F("barrel_nvtx" ,"barrel_nvtx" ,10, binningNvtx);
   TH1F* endcap_nvtx  = new TH1F("endcap_nvtx" ,"endcap_nvtx" ,10, binningNvtx);
 
-  std::vector<double> thrs = {24.51, 25.51, 26.51, 27.51, 28.51, 29.51, 30.51, 31.51, 32.51, 33.51, 34.51, 35.51, 36.51, 37.51, 38.51, 39.51, 40.51, 41.51, 42.51, 43.51, 44.51, 45.51};
+  std::vector<int> thrs = {24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45};
   std::vector<TH1F*> ptProgressionFixedThr_noIso = {};
   std::vector<TH1F*> ptProgressionFixedThr_Iso = {};
   std::vector<TH1F*> barrel_ptProgressionFixedThr_noIso = {};
@@ -86,9 +87,9 @@ void MakeEfficiencies(TString file, int run_nmbr)
   std::vector<TH1F*> endcap_nvtxProgressionFixedThr_Iso = {};
 
   // ALL THE SAME PLOTS FOR RUN2
-  TH1F* R2_pt = new TH1F("R2_pt","R2_pt",21,binningPt);
-  TH1F* R2_barrel_pt = new TH1F("R2_barrel_pt","R2_barrel_pt",21,binningPt);
-  TH1F* R2_endcap_pt = new TH1F("R2_endcap_pt","R2_endcap_pt",21,binningPt);
+  TH1F* R2_pt = new TH1F("R2_pt","R2_pt",22,binningPt);
+  TH1F* R2_barrel_pt = new TH1F("R2_barrel_pt","R2_barrel_pt",22,binningPt);
+  TH1F* R2_endcap_pt = new TH1F("R2_endcap_pt","R2_endcap_pt",22,binningPt);
   TH1F* R2_eta  = new TH1F("R2_eta" ,"R2_eta" ,28, binningEta);
   TH1F* R2_nvtx  = new TH1F("R2_nvtx" ,"R2_nvtx" ,10, binningNvtx);
   TH1F* R2_barrel_nvtx  = new TH1F("R2_barrel_nvtx" ,"R2_barrel_nvtx" ,10, binningNvtx);
@@ -111,16 +112,16 @@ void MakeEfficiencies(TString file, int run_nmbr)
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     TString thr;
-    thr.Form("%.2f", thrs[i]);
+    thr.Form("%i", thrs[i]);
 
-    ptProgressionFixedThr_noIso.push_back(new TH1F("ptProgressionAt"+thr+"_noIso","ptProgressionAt"+thr+"_noIso",21,binningPt));
-    ptProgressionFixedThr_Iso.push_back(new TH1F("ptProgressionAt"+thr+"_Iso","ptProgressionAt"+thr+"_Iso",21,binningPt));
+    ptProgressionFixedThr_noIso.push_back(new TH1F("ptProgressionAt"+thr+"_noIso","ptProgressionAt"+thr+"_noIso",22,binningPt));
+    ptProgressionFixedThr_Iso.push_back(new TH1F("ptProgressionAt"+thr+"_Iso","ptProgressionAt"+thr+"_Iso",22,binningPt));
 
-    barrel_ptProgressionFixedThr_noIso.push_back(new TH1F("barrel_ptProgressionAt"+thr+"_noIso","barrel_ptProgressionAt"+thr+"_noIso",21,binningPt));
-    barrel_ptProgressionFixedThr_Iso.push_back(new TH1F("barrel_ptProgressionAt"+thr+"_Iso","barrel_ptProgressionAt"+thr+"_Iso",21,binningPt));
+    barrel_ptProgressionFixedThr_noIso.push_back(new TH1F("barrel_ptProgressionAt"+thr+"_noIso","barrel_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    barrel_ptProgressionFixedThr_Iso.push_back(new TH1F("barrel_ptProgressionAt"+thr+"_Iso","barrel_ptProgressionAt"+thr+"_Iso",22,binningPt));
 
-    endcap_ptProgressionFixedThr_noIso.push_back(new TH1F("endcap_ptProgressionAt"+thr+"_noIso","endcap_ptProgressionAt"+thr+"_noIso",21,binningPt));
-    endcap_ptProgressionFixedThr_Iso.push_back(new TH1F("endcap_ptProgressionAt"+thr+"_Iso","endcap_ptProgressionAt"+thr+"_Iso",21,binningPt));
+    endcap_ptProgressionFixedThr_noIso.push_back(new TH1F("endcap_ptProgressionAt"+thr+"_noIso","endcap_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    endcap_ptProgressionFixedThr_Iso.push_back(new TH1F("endcap_ptProgressionAt"+thr+"_Iso","endcap_ptProgressionAt"+thr+"_Iso",22,binningPt));
 
     etaProgressionFixedThr_noIso.push_back(new TH1F("etaprogressionAt"+thr+"_noIso","etaProgressionAt"+thr+"_noIso",28,binningEta));
     etaProgressionFixedThr_Iso.push_back(new TH1F("etaprogressionAt"+thr+"_Iso","etaProgressionAt"+thr+"_Iso",28,binningEta));
@@ -134,14 +135,14 @@ void MakeEfficiencies(TString file, int run_nmbr)
     endcap_nvtxProgressionFixedThr_noIso.push_back(new TH1F("endcap_nvtxProgressionAt"+thr+"_noIso","endcap_nvtxProgressionAt"+thr+"_noIso",10,binningNvtx));
     endcap_nvtxProgressionFixedThr_Iso.push_back(new TH1F("endcap_nvtxProgressionAt"+thr+"_Iso","endcap_nvtxProgressionAt"+thr+"_Iso",10,binningNvtx));
 
-    R2_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_ptProgressionAt"+thr+"_noIso","R2_ptProgressionAt"+thr+"_noIso",21,binningPt));
-    R2_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_ptProgressionAt"+thr+"_Iso","R2_ptProgressionAt"+thr+"_Iso",21,binningPt));
+    R2_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_ptProgressionAt"+thr+"_noIso","R2_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    R2_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_ptProgressionAt"+thr+"_Iso","R2_ptProgressionAt"+thr+"_Iso",22,binningPt));
 
-    R2_barrel_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_barrel_ptProgressionAt"+thr+"_noIso","R2_barrel_ptProgressionAt"+thr+"_noIso",21,binningPt));
-    R2_barrel_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_barrel_ptProgressionAt"+thr+"_Iso","R2_barrel_ptProgressionAt"+thr+"_Iso",21,binningPt));
+    R2_barrel_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_barrel_ptProgressionAt"+thr+"_noIso","R2_barrel_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    R2_barrel_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_barrel_ptProgressionAt"+thr+"_Iso","R2_barrel_ptProgressionAt"+thr+"_Iso",22,binningPt));
 
-    R2_endcap_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_endcap_ptProgressionAt"+thr+"_noIso","R2_endcap_ptProgressionAt"+thr+"_noIso",21,binningPt));
-    R2_endcap_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_endcap_ptProgressionAt"+thr+"_Iso","R2_endcap_ptProgressionAt"+thr+"_Iso",21,binningPt));
+    R2_endcap_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_endcap_ptProgressionAt"+thr+"_noIso","R2_endcap_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    R2_endcap_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_endcap_ptProgressionAt"+thr+"_Iso","R2_endcap_ptProgressionAt"+thr+"_Iso",22,binningPt));
 
     R2_etaProgressionFixedThr_noIso.push_back(new TH1F("R2_etaprogressionAt"+thr+"_noIso","R2_etaProgressionAt"+thr+"_noIso",28,binningEta));
     R2_etaProgressionFixedThr_Iso.push_back(new TH1F("R2_etaprogressionAt"+thr+"_Iso","R2_etaProgressionAt"+thr+"_Iso",28,binningEta));
@@ -1141,6 +1142,9 @@ void MakeEfficiencies(TString file, int run_nmbr)
   }
 
 
+
+
+
   // TURNONS NO-ISO PROGRESSION
   TCanvas canvas("c","c",800,800);
   // canvas.SetLeftMargin(0.15);
@@ -1280,5 +1284,52 @@ void MakeEfficiencies(TString file, int run_nmbr)
   legendX_.Draw("same");
 
   canvas1_.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsForCri_Iso_2.pdf");
+
+
+
+
+
+  
+  TCanvas canvas2_("c2_","c2_",800,800);
+  // canvas.SetLeftMargin(0.15);
+  canvas2_.SetGrid();
+  // canvas.SetLogy();
+
+  turnOnsFixedThr_Iso[6]->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
+  turnOnsFixedThr_Iso[6]->SetTitle("");
+  turnOnsFixedThr_Iso[6]->GetXaxis()->SetTitleOffset(1.3);
+  turnOnsFixedThr_Iso[6]->GetYaxis()->SetTitle("Efficiency");
+  turnOnsFixedThr_Iso[6]->GetYaxis()->SetTitleOffset(1.3);
+  turnOnsFixedThr_Iso[6]->SetTitle("");
+  turnOnsFixedThr_Iso[6]->GetXaxis()->SetRangeUser(20.,100.);
+  turnOnsFixedThr_Iso[6]->GetYaxis()->SetRangeUser(0.,1.05);
+
+  turnOnsFixedThr_Iso[6]->SetLineWidth(2);
+  turnOnsFixedThr_Iso[6]->SetLineColor(2);
+  turnOnsFixedThr_Iso[6]->SetMarkerStyle(8);
+  turnOnsFixedThr_Iso[6]->SetMarkerColor(2);
+  
+  R2_turnOnsFixedThr_Iso[9]->SetLineWidth(2);
+  R2_turnOnsFixedThr_Iso[9]->SetLineColor(46);
+  R2_turnOnsFixedThr_Iso[9]->SetMarkerStyle(8);
+  R2_turnOnsFixedThr_Iso[9]->SetMarkerColor(46);
+
+  turnOnsFixedThr_Iso[6]->Draw();
+  R2_turnOnsFixedThr_Iso[9]->Draw("same");
+
+  texl1->Draw("same");
+  texl2->Draw("same");
+  
+  TLegend legend_(0.55,0.15,0.88,0.28);
+  legend_.SetBorderSize(0);
+  legend_.AddEntry(turnOnsFixedThr_Iso[6],"Run-3, p_{T}^{L1 #tau} > 29 GeV","LPE");
+  legend_.AddEntry(R2_turnOnsFixedThr_Iso[9],"Run-2, p_{T}^{L1 #tau} > 32 GeV","LPE");
+  legend_.Draw("same");
+
+  canvas2_.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/aaaa_plot.pdf");
+
+
+
+
 
 }
