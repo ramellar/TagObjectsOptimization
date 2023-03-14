@@ -16,8 +16,8 @@ plt.style.use(mplhep.style.CMS)
 def line(x, A):
     return A * x
 
-def parabola(x, A, B):
-    return A * x + B * x * x
+def parabola(x, A, B, C):
+    return A * x + B * x * x + C
 
 #######################################################################
 ######################### SCRIPT BODY #################################
@@ -25,7 +25,6 @@ def parabola(x, A, B):
 
 if __name__ == "__main__" :
     parser = OptionParser()
-    parser.add_option("--obj",   dest="obj",             default="tau")
     parser.add_option("--file",  dest="file",            default=None)
     (options, args) = parser.parse_args()
     print(options)
@@ -90,24 +89,26 @@ if __name__ == "__main__" :
 
     fig, ax = plt.subplots(figsize=(10,10))
     ax.errorbar(x, y_L1SingleEG36er2p5_rate_vs_pu, yerr=y_err_L1SingleEG36er2p5_rate_vs_pu, ls='None', label='L1SingleEG36er2p5', lw=2, marker='o', color=cmap(0))
-    p0 = [1.,1.]
-    param_bounds = ([[0.,0.],[10.,10.]])
+    p0 = [1.,1.,0.]
+    param_bounds = ([[0.,0.,-2.],[10.,10.,2.]])
     popt, pcov = curve_fit(parabola, x, y_L1SingleEG36er2p5_rate_vs_pu, p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, parabola(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
     
     ax.errorbar(x[:-4], y_L1SingleIsoEG30er2p5_rate_vs_pu[:-4], yerr=y_err_L1SingleIsoEG30er2p5_rate_vs_pu[:-4], ls='None', label='L1SingleIsoEG30er2p5', lw=2, marker='s', color=cmap(1))
-    p0 = [1.,1.]
-    param_bounds = ([[0.,0.],[10.,10.]])
+    p0 = [1.,1.,0.]
+    param_bounds = ([[0.,0.,-2.],[10.,10.,2.]])
     popt, pcov = curve_fit(parabola, x[:-4], y_L1SingleIsoEG30er2p5_rate_vs_pu[:-4], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, parabola(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
     
     leg = plt.legend(loc='upper left', fontsize=22)
     leg._legend_box.align = "left"
-    plt.ylim(0,22)
-    plt.xlim(0,60)
+    plt.ylim(5,22)
+    plt.xlim(28,60)
     plt.xlabel(r'Pileup')
     plt.ylabel(r'Rate[kHz]')
     plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+            xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'657 pb$^{-1}$ (13.6 TeV)')
     plt.savefig('various/eg_rate_vs_PU.pdf')
     plt.close()
@@ -115,24 +116,26 @@ if __name__ == "__main__" :
 
     fig, ax = plt.subplots(figsize=(10,10))
     ax.errorbar(x, y_L1DoubleIsoTau34er2p1_rate_vs_pu, yerr=y_err_L1DoubleIsoTau34er2p1_rate_vs_pu, ls='None', label='L1DoubleIsoTau34er2p1', lw=2, marker='o', color=cmap(0))
-    p0 = [1.,-1.]
-    param_bounds = ([[0.,-10.],[10.,0.]])
+    p0 = [1.,-1.,0.]
+    param_bounds = ([[0.,-10.,-2.],[10.,0.,2.]])
     popt, pcov = curve_fit(parabola, x, y_L1DoubleIsoTau34er2p1_rate_vs_pu, p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, parabola(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
 
     ax.errorbar(x, y_L1DoubleIsoTau36er2p1_rate_vs_pu, yerr=y_err_L1DoubleIsoTau36er2p1_rate_vs_pu, ls='None', label='L1DoubleIsoTau36er2p1', lw=2, marker='s', color=cmap(1))
-    p0 = [1.,-1.]
-    param_bounds = ([[0.,-10.],[10.,0.]])
+    p0 = [1.,-1.,0.]
+    param_bounds = ([[0.,-10.,-2.],[10.,0.,2.]])
     popt, pcov = curve_fit(parabola, x, y_L1DoubleIsoTau36er2p1_rate_vs_pu, p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, parabola(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
 
     leg = plt.legend(loc='upper left', fontsize=22)
     leg._legend_box.align = "left"
-    plt.ylim(0,14)
-    plt.xlim(0,60)
+    plt.ylim(3,14)
+    plt.xlim(28,60)
     plt.xlabel(r'Pileup')
     plt.ylabel(r'Rate[kHz]')
     plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+            xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'657 pb$^{-1}$ (13.6 TeV)')
     plt.savefig('various/tau_rate_vs_PU.pdf')
     plt.close()

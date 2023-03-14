@@ -23,16 +23,14 @@
 using namespace std;
 
 
-void MakeTreeForCalibration()
+void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
 
 {
-  // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MERGED_2022_06_13.root";
-  // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_MATCHED_2022_06_13.root";
-  // TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
+  TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
 
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MERGED.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MATCHED.root";
-  TChain data("Ntuplizer_TagAndProbe");
+  // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MERGED.root";
+  // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MATCHED.root";
+  // TChain data("Ntuplizer_TagAndProbe");
 
   data.Add(InputFileName.Data());
 
@@ -206,73 +204,73 @@ void MakeTreeForCalibration()
       out_isMatched = false;
       
       for(UInt_t iL1Tau = 0 ; iL1Tau < l1tEmuPt->size() ; ++iL1Tau)
-      	{
-      	  if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
-      	  // if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
-      	  if(fabs(l1tEmuEta->at(iL1Tau))>2.1) continue;
+        {
+          if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
+          // if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
+          if(fabs(l1tEmuEta->at(iL1Tau))>2.1) continue;
 
-      	  TLorentzVector L1Tau;
-	  // L1Tau.SetPtEtaPhiM(l1tPt->at(iL1Tau),l1tEta->at(iL1Tau),l1tPhi->at(iL1Tau),0.);
-      	  L1Tau.SetPtEtaPhiM(l1tEmuPt->at(iL1Tau),l1tEmuEta->at(iL1Tau),l1tEmuPhi->at(iL1Tau),0.);
+          TLorentzVector L1Tau;
+    // L1Tau.SetPtEtaPhiM(l1tPt->at(iL1Tau),l1tEta->at(iL1Tau),l1tPhi->at(iL1Tau),0.);
+          L1Tau.SetPtEtaPhiM(l1tEmuPt->at(iL1Tau),l1tEmuEta->at(iL1Tau),l1tEmuPhi->at(iL1Tau),0.);
 
-      	  // cout<<"l1tEmuRawEt.at(iL1Tau)/2. = "<<l1tEmuRawEt->at(iL1Tau)/2.<<endl;
-      	  // cout<<"l1tEmuEta.at(iL1Tau) = "<<l1tEmuEta->at(iL1Tau)<<endl;
-      	  // cout<<"l1tEmuPhi.at(iL1Tau) = "<<l1tEmuPhi->at(iL1Tau)<<endl;
+          // cout<<"l1tEmuRawEt.at(iL1Tau)/2. = "<<l1tEmuRawEt->at(iL1Tau)/2.<<endl;
+          // cout<<"l1tEmuEta.at(iL1Tau) = "<<l1tEmuEta->at(iL1Tau)<<endl;
+          // cout<<"l1tEmuPhi.at(iL1Tau) = "<<l1tEmuPhi->at(iL1Tau)<<endl;
 
-      	  TLorentzVector OfflineTau;
-      	  OfflineTau.SetPtEtaPhiM(tauPt,tauEta,tauPhi,0.);
+          TLorentzVector OfflineTau;
+          OfflineTau.SetPtEtaPhiM(tauPt,tauEta,tauPhi,0.);
 
-      	  //matching with offline
-      	  if(L1Tau.DeltaR(OfflineTau)<0.5 && L1Tau.Pt()>highestL1TauPt)
-      	    {
-	      highestL1TauPt = L1Tau.Pt();
-	      out_isMatched = true;
-	      iMatchedL1Tau = iL1Tau;	      
-      	    }
-      	}
+          //matching with offline
+          if(L1Tau.DeltaR(OfflineTau)<0.5 && L1Tau.Pt()>highestL1TauPt)
+            {
+              highestL1TauPt = L1Tau.Pt();
+              out_isMatched = true;
+              iMatchedL1Tau = iL1Tau;
+            }
+        }
 
       if(out_isMatched)
-	{
-	  out_indexevents = EventNumber;
-	  out_runNumber = RunNumber;
-	  out_lumi = lumi;
-	  out_tauPt = tauPt;
-	  out_tauEta = tauEta;
-	  out_tauPhi = tauPhi;
-	  out_tauCharge = tauCharge;
-	  out_tauDecayMode = tauDecayMode;
+      {
+        out_indexevents = EventNumber;
+        out_runNumber = RunNumber;
+        out_lumi = lumi;
+        out_tauPt = tauPt;
+        out_tauEta = tauEta;
+        out_tauPhi = tauPhi;
+        out_tauCharge = tauCharge;
+        out_tauDecayMode = tauDecayMode;
 
-	  out_l1tQual = l1tEmuQual->at(iMatchedL1Tau);
-	  out_l1tPt = l1tEmuPt->at(iMatchedL1Tau);
-	  out_l1tEta = l1tEmuEta->at(iMatchedL1Tau);
-	  out_l1tPhi = l1tEmuPhi->at(iMatchedL1Tau);
-	  // out_l1tIso = l1tEmuIso->at(iMatchedL1Tau);
-	  out_l1tEmuIso = l1tEmuIso->at(iMatchedL1Tau);
-	  // out_l1tQual = l1tQual->at(iMatchedL1Tau);
-	  // out_l1tPt = l1tPt->at(iMatchedL1Tau);
-	  // out_l1tEta = l1tEta->at(iMatchedL1Tau);
-	  // out_l1tPhi = l1tPhi->at(iMatchedL1Tau);
-	  // out_l1tIso = l1tIso->at(iMatchedL1Tau);
+        out_l1tQual = l1tEmuQual->at(iMatchedL1Tau);
+        out_l1tPt = l1tEmuPt->at(iMatchedL1Tau);
+        out_l1tEta = l1tEmuEta->at(iMatchedL1Tau);
+        out_l1tPhi = l1tEmuPhi->at(iMatchedL1Tau);
+        // out_l1tIso = l1tEmuIso->at(iMatchedL1Tau);
+        out_l1tEmuIso = l1tEmuIso->at(iMatchedL1Tau);
+        // out_l1tQual = l1tQual->at(iMatchedL1Tau);
+        // out_l1tPt = l1tPt->at(iMatchedL1Tau);
+        // out_l1tEta = l1tEta->at(iMatchedL1Tau);
+        // out_l1tPhi = l1tPhi->at(iMatchedL1Tau);
+        // out_l1tIso = l1tIso->at(iMatchedL1Tau);
 
-	  out_l1tEmuQual = l1tEmuQual->at(iMatchedL1Tau);
-	  out_l1tEmuPt = l1tEmuPt->at(iMatchedL1Tau);
-	  out_l1tEmuEta = l1tEmuEta->at(iMatchedL1Tau);
-	  out_l1tEmuPhi = l1tEmuPhi->at(iMatchedL1Tau);
-	  // out_l1tEmuIso = l1tEmuIso->at(iMatchedL1Tau);
-	  out_l1tEmuNTT = l1tEmuNTT->at(iMatchedL1Tau);
-	  out_l1tEmuHasEM = l1tEmuHasEM->at(iMatchedL1Tau);
-	  out_l1tEmuIsMerged = l1tEmuIsMerged->at(iMatchedL1Tau);
-	  out_l1tEmuTowerIEta = l1tEmuTowerIEta->at(iMatchedL1Tau);
-	  out_l1tEmuTowerIPhi = l1tEmuTowerIPhi->at(iMatchedL1Tau);
-	  out_l1tEmuRawEt = l1tEmuRawEt->at(iMatchedL1Tau);
-	  out_l1tEmuIsoEt = l1tEmuIsoEt->at(iMatchedL1Tau);
+        out_l1tEmuQual = l1tEmuQual->at(iMatchedL1Tau);
+        out_l1tEmuPt = l1tEmuPt->at(iMatchedL1Tau);
+        out_l1tEmuEta = l1tEmuEta->at(iMatchedL1Tau);
+        out_l1tEmuPhi = l1tEmuPhi->at(iMatchedL1Tau);
+        // out_l1tEmuIso = l1tEmuIso->at(iMatchedL1Tau);
+        out_l1tEmuNTT = l1tEmuNTT->at(iMatchedL1Tau);
+        out_l1tEmuHasEM = l1tEmuHasEM->at(iMatchedL1Tau);
+        out_l1tEmuIsMerged = l1tEmuIsMerged->at(iMatchedL1Tau);
+        out_l1tEmuTowerIEta = l1tEmuTowerIEta->at(iMatchedL1Tau);
+        out_l1tEmuTowerIPhi = l1tEmuTowerIPhi->at(iMatchedL1Tau);
+        out_l1tEmuRawEt = l1tEmuRawEt->at(iMatchedL1Tau);
+        out_l1tEmuIsoEt = l1tEmuIsoEt->at(iMatchedL1Tau);
 
-	  //out_Target = tauPt/(l1tPt->at(iMatchedL1Tau));
-	  out_Target = tauPt/(l1tEmuRawEt->at(iMatchedL1Tau)/2.);
+        //out_Target = tauPt/(l1tPt->at(iMatchedL1Tau));
+        out_Target = tauPt/(l1tEmuRawEt->at(iMatchedL1Tau)/2.);
 
-	  outTree.Fill();
+        outTree.Fill();
 
-	}
+      }
     }
 
 

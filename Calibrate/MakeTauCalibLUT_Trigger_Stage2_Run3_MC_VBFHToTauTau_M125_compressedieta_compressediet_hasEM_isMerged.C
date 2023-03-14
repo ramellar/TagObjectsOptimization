@@ -24,16 +24,16 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
   // rename the folder name to include the possible differences in calibratio saturation
-  rename("/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13" , "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim);
+  rename("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0" , "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim);
 
   TFile* fLUTS ;
-  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root");
-  else           fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root");
+  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0.root");
+  else           fLUTS = new TFile ("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0.root");
 
   TH3F* LUT_isMerged0 ;
   TH3F* LUT_isMerged1 ;//calibration constant is a number c(compressedieta, compressediet, hasEM, isMerged)
-  LUT_isMerged0 = (TH3F*) fLUTS->Get ("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
-  LUT_isMerged1 = (TH3F*) fLUTS->Get ("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
+  LUT_isMerged0 = (TH3F*) fLUTS->Get ("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0");
+  LUT_isMerged1 = (TH3F*) fLUTS->Get ("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0");
 
   cout << "LUT name: " << LUT_isMerged0->GetName() << endl;
   cout << "LUT name: " << LUT_isMerged1->GetName() << endl;

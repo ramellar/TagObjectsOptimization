@@ -417,6 +417,8 @@ if __name__ == "__main__" :
         leg = plt.legend(loc = 'lower right', fontsize=20, title=r'$|\eta^{\tau, offline}|<2.1$')
         leg._legend_box.align = "left"
         plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
+        for xtick in ax.xaxis.get_major_ticks():
+            xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
 
     elif options.obj =='eg':
@@ -431,6 +433,8 @@ if __name__ == "__main__" :
         leg = plt.legend(loc = 'lower right', fontsize=20, title=r'$|\eta^{e, offline}|<2.5$')
         leg._legend_box.align = "left"
         plt.xlabel(r'$E_{T}^{e, offline}\ [GeV]$')
+        for xtick in ax.xaxis.get_major_ticks():
+            xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
         
     plt.ylim(0.000, 1.05)

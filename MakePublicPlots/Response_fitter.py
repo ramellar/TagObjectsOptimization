@@ -232,7 +232,7 @@ if __name__ == "__main__" :
 
     # PLOT PT SCALE
     if options.obj == 'tau':
-        x_lim = (0.,3.5)
+        x_lim = (0.,2.)
         x_label = r'$E_{T}^{\tau, L1}/p_{T}^{\tau, offline}$'
         barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
@@ -242,7 +242,7 @@ if __name__ == "__main__" :
         if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
 
     elif options.obj == 'eg':
-        x_lim = (0.7,1.8)
+        x_lim = (0.7,1.3)
         x_label = r'$E_{T}^{e/\gamma, L1}/E_{T}^{e, offline}$'
         barrel_label = r'$Barrel\ |\eta^{e, offline}|<1.440$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
@@ -267,8 +267,8 @@ if __name__ == "__main__" :
     ax.errorbar(x_scale_endcap, y_scale_endcap, xerr=x_err_scale_endcap, yerr=y_err_scale_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0., -200.,  0. ],
-                  [  10.,   1. ,    10.,   25.,    10.,  200.,  1. ])
+    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
+                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
     popt, pcov = curve_fit(vectDoubleCB, x_scale_endcap[2:], y_scale_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
 
@@ -276,19 +276,21 @@ if __name__ == "__main__" :
         ax.errorbar(x_scale_inclusive, y_scale_inclusive, xerr=x_err_scale_inclusive, yerr=y_err_scale_inclusive, ls='None', label=inclusive_label, lw=2, marker='^', color=cmap(2))
         ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
         p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-        param_bounds=([ -10.,   0. ,     0.,    0.,     0., -200.,  0. ],
-                      [  10.,   1. ,    10.,   50.,    10.,  200.,  1. ])
+        param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
+                      [  10.,   1. ,    10.,   50.,    10.,   50.,  1. ])
         popt, pcov = curve_fit(vectDoubleCB, x_scale_inclusive[2:], y_scale_inclusive[2:], p0, maxfev=5000, bounds=param_bounds)
         ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(2))
 
-    leg = plt.legend(loc = 'upper right', fontsize=20, title=legend_title)
+    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
     leg._legend_box.align = "left"
-    plt.ylim(0., max(max(y_scale_barrel), max(y_scale_endcap)) * 1.2)
+    plt.ylim(0., max(max(y_scale_barrel), max(y_scale_endcap)) * 1.4)
     plt.xlim(x_lim)
     # plt.yscale('log')
     plt.xlabel(x_label)
     plt.ylabel(r'a.u.')
     plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name)
     plt.close()
@@ -326,8 +328,10 @@ if __name__ == "__main__" :
     plt.xlim(x_lim)
     # plt.yscale('log')
     plt.xlabel(x_label)
-    plt.ylabel(r'Resolution')
+    plt.ylabel(r'Energy resolution')
     plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name)
     plt.close()
@@ -335,7 +339,7 @@ if __name__ == "__main__" :
 
     # PLOT ETA RESPONSE
     if options.obj == 'tau':
-        x_lim = (-0.2,0.5)
+        x_lim = (-0.15,0.15)
         x_label = r'$\eta^{\tau, L1}-\eta^{\tau, offline}$'
         barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
@@ -344,7 +348,7 @@ if __name__ == "__main__" :
         plot_name = 'responses/tau_eta_response_'+options.tag+'.pdf'
         if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
     elif options.obj == 'eg':
-        x_lim = (-0.2,0.5)
+        x_lim = (-0.15,0.15)
         x_label = r'$\eta^{e/\gamma, L1}-\eta^{e, offline}$'
         barrel_label = r'$Barrel\ |\eta^{e, offline}|<1.440$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
@@ -366,8 +370,8 @@ if __name__ == "__main__" :
     ax.errorbar(x_etaResp_endcap, y_etaResp_endcap, xerr=x_err_etaResp_endcap, yerr=y_err_etaResp_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   0.,  0.05,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,  0.  ,     0.,    0.,     0., -200.,  0. ],
-                  [  10.,  0.5 ,    10.,   25.,    10.,  200.,  1. ])
+    param_bounds=([ -10.,  0.  ,     0.,    0.,     0.,    0.,  0. ],
+                  [  10.,  0.5 ,    10.,   25.,    10.,   25.,  1. ])
     popt, pcov = curve_fit(vectDoubleCB, x_etaResp_endcap[2:], y_etaResp_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
 
@@ -375,19 +379,21 @@ if __name__ == "__main__" :
         ax.errorbar(x_etaResp_inclusive, y_etaResp_inclusive, xerr=x_err_etaResp_inclusive, yerr=y_err_etaResp_inclusive, ls='None', label=inclusive_label, lw=2, marker='^', color=cmap(2))
         ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
         p0 =          [   0.,  0.05,     1.,    1.,     1.,    1.,  0.1]
-        param_bounds=([ -10.,  0.  ,     0.,    0.,     0., -200.,  0. ],
-                      [  10.,  0.5 ,    10.,   50.,    10.,  200.,  1. ])
+        param_bounds=([ -10.,  0.  ,     0.,    0.,     0.,    0.,  0. ],
+                      [  10.,  0.5 ,    10.,   50.,    10.,   50.,  1. ])
         popt, pcov = curve_fit(vectDoubleCB, x_etaResp_inclusive[2:], y_etaResp_inclusive[2:], p0, maxfev=5000, bounds=param_bounds)
         ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(2))
 
-    leg = plt.legend(loc = 'upper right', fontsize=20, title=legend_title)
+    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
     leg._legend_box.align = "left"
-    plt.ylim(0., max(max(y_etaResp_barrel), max(y_etaResp_endcap)) * 1.2)
+    plt.ylim(0., max(max(y_etaResp_barrel), max(y_etaResp_endcap)) * 1.4)
     plt.xlim(x_lim)
     # plt.yscale('log')
     plt.xlabel(x_label)
     plt.ylabel(r'a.u.')
     plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name)
     plt.close()
@@ -395,7 +401,7 @@ if __name__ == "__main__" :
 
     # PLOT PHI RESPONSE
     if options.obj == 'tau':
-        x_lim = (-0.3,0.7)
+        x_lim = (-0.25,0.25)
         x_label = r'$\phi^{\tau, L1}-\phi^{\tau, offline}$'
         barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
@@ -404,7 +410,7 @@ if __name__ == "__main__" :
         plot_name = 'responses/tau_phi_response_'+options.tag+'.pdf'
         if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
     elif options.obj == 'eg':
-        x_lim = (-0.2,0.5)
+        x_lim = (-0.15,0.15)
         x_label = r'$\phi^{e/\gamma, L1}-\phi^{e, offline}$'
         barrel_label = r'$Barrel\ |\eta^{e, offline}|<1.440$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
@@ -426,8 +432,8 @@ if __name__ == "__main__" :
     ax.errorbar(x_phiResp_endcap, y_phiResp_endcap, xerr=x_err_phiResp_endcap, yerr=y_err_phiResp_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   0.,  0.05,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,  0.  ,     0.,    0.,     0., -200.,  0. ],
-                  [  10.,  0.5 ,    10.,   25.,    10.,  200.,  1. ])
+    param_bounds=([ -10.,  0.  ,     0.,    0.,     0.,    0.,  0. ],
+                  [  10.,  0.5 ,    10.,   25.,    10.,   25.,  1. ])
     popt, pcov = curve_fit(vectDoubleCB, x_phiResp_endcap[2:], y_phiResp_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
 
@@ -435,19 +441,21 @@ if __name__ == "__main__" :
         ax.errorbar(x_phiResp_inclusive, y_phiResp_inclusive, xerr=x_err_phiResp_inclusive, yerr=y_err_phiResp_inclusive, ls='None', label=inclusive_label, lw=2, marker='^', color=cmap(2))
         ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
         p0 =          [   0.,  0.05,     1.,    1.,     1.,    1.,  0.1]
-        param_bounds=([ -10.,  0.  ,     0.,    0.,     0., -200.,  0. ],
-                      [  10.,  0.5 ,    10.,   50.,    10.,  200.,  1. ])
+        param_bounds=([ -10.,  0.  ,     0.,    0.,     0.,    0.,  0. ],
+                      [  10.,  0.5 ,    10.,   50.,    10.,   50.,  1. ])
         popt, pcov = curve_fit(vectDoubleCB, x_phiResp_inclusive[2:], y_phiResp_inclusive[2:], p0, maxfev=5000, bounds=param_bounds)
         ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(2))
 
-    leg = plt.legend(loc = 'upper right', fontsize=20, title=legend_title)
+    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
     leg._legend_box.align = "left"
-    plt.ylim(0., max(max(y_phiResp_barrel), max(y_phiResp_endcap)) * 1.2)
+    plt.ylim(0., max(max(y_phiResp_barrel), max(y_phiResp_endcap)) * 1.4)
     plt.xlim(x_lim)
     # plt.yscale('log')
     plt.xlabel(x_label)
     plt.ylabel(r'a.u.')
     plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name)
     plt.close()

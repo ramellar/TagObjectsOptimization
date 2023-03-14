@@ -44,10 +44,8 @@ TF1 fitResponseHisto(TString option, TH1F* hist2fit, float min_range, float max_
 }
 
 
-void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOption="crystalball", Bool_t nTTRange = kFALSE)
+void plotResolutions(TString date, TString version, TString newL1Calib="", float calibThr = 1.7, TString fitOption="crystalball", Bool_t nTTRange = kFALSE)
 {
-    TString version = to_string(vers);
-
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
@@ -113,7 +111,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
     TH2F* PTvsETA_resolution = new TH2F("PTvsETA_resolution","PTvsETA_resolution",lenPtBins-1, ptBins,lenEtaBins-1, etaBins);
     TH2F* PTvsETA_scale = new TH2F("PTvsETA_events","PTvsETA_events",lenPtBins-1, ptBins,lenEtaBins-1, etaBins);
 
-    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/"+date+"_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_"+date+".root";
+    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED"+newL1Calib+"_"+date+".root";
     TFile f(InputFileName.Data(),"READ");
     TTree* inTree = (TTree*)f.Get("outTreeCalibrated");
 
@@ -323,7 +321,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
     texl->Draw("same");
     leg1->Draw("same");
 
-    c1.SaveAs("plots/optimizationV"+version+"/split/response_ptInclusive_optimizationV"+version+"_calibThr"+intgr+"p"+decim+".pdf");
+    c1.SaveAs("PDFs_2023/"+date+"_optimizationV"+version+"/split/response_ptInclusive_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+".pdf");
     
 
     for (Int_t i = 0; i < lenPtBins-1; ++i)
@@ -360,7 +358,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
         texl->Draw("same");
         leg->Draw("same");
         
-        c.SaveAs(Form("plots/optimizationV"+version+"/split/response_ptBin%.0fto%.0f_optimizationV"+version+"_calibThr"+intgr+"p"+decim+".pdf",ptBins[i], ptBins[i+1]));
+        c.SaveAs(Form("PDFs_2023/"+date+"_optimizationV"+version+"/split/response_ptBin%.0fto%.0f_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+".pdf",ptBins[i], ptBins[i+1]));
     }
 
     //##########
@@ -393,7 +391,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
         texl->Draw("same");
         leg->Draw("same");
         
-        c.SaveAs(Form("plots/optimizationV"+version+"/split/response_etaBin%.1fto%.1f_optimizationV"+version+"_calibThr"+intgr+"p"+decim+".pdf", etaBins[i], etaBins[i+1]));
+        c.SaveAs(Form("PDFs_2023/"+date+"_optimizationV"+version+"/split/response_etaBin%.1fto%.1f_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+".pdf", etaBins[i], etaBins[i+1]));
     }
 
     //##########
@@ -428,7 +426,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
     leg2->Draw("same");
     texl->Draw("same");
 
-    c2.SaveAs("plots/optimizationV"+version+"/pt_resolution_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"_fctPt.pdf");
+    c2.SaveAs("PDFs_2023/"+date+"_optimizationV"+version+"/pt_resolution_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+"_fctPt.pdf");
 
     //##########
     // plot resolution in eta bins
@@ -449,7 +447,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
     pt_resol_fctEta->Draw("E0");
     texl->Draw("same");
 
-    c3.SaveAs("plots/optimizationV"+version+"/pt_resolution_optimizationV"+version+"_calibThr"+intgr+"p"+decim+"_fctEta.pdf");
+    c3.SaveAs("PDFs_2023/"+date+"_optimizationV"+version+"/pt_resolution_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+"_fctEta.pdf");
 
     //##########
     // plot response in pt vs. eta
@@ -467,7 +465,7 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
     PTvsETA_resolution->Draw("colz");
     texl->Draw("same");
 
-    c4.SaveAs("plots/optimizationV"+version+"/PTvsETA_resolution_optimizationV"+version+"_calibThr"+intgr+"p"+decim+".pdf");
+    c4.SaveAs("PDFs_2023/"+date+"_optimizationV"+version+"/PTvsETA_resolution_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+".pdf");
 
     //##########
     // plot scale in pt vs. eta
@@ -485,5 +483,5 @@ void plotResolutions(TString date, int vers, float calibThr = 1.7, TString fitOp
     PTvsETA_scale->Draw("colz");
     texl->Draw("same");
 
-    c5.SaveAs("plots/optimizationV"+version+"/ptVSeta_scale_optimizationV"+version+"_calibThr"+intgr+"p"+decim+".pdf");
+    c5.SaveAs("PDFs_2023/"+date+"_optimizationV"+version+"/ptVSeta_scale_optimizationV"+version+newL1Calib+"_calibThr"+intgr+"p"+decim+".pdf");
 }

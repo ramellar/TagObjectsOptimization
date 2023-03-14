@@ -23,24 +23,33 @@
 using namespace std;
 
 const Int_t NbinsIEta = 4+1;
-const Int_t NbinsIEt = 17+1;
-// const Int_t NbinsIEt = 16+1;
-//const Int_t NbinsnTT = 11+1;//Acceptable LUT Thomas
-const Int_t NbinsnTT = 15+1;
 
-const Int_t NbinsIEt2 = 32+1;
-const Int_t NbinsnTT2 = 32+1;
+const Int_t supercompressedNbinsIEt = 17+1;
+const Int_t supercompressedNbinsnTT = 15+1;
+
+const Int_t compressedNbinsIEt = 32+1;
+const Int_t compressedNbinsnTT = 32+1;
 
 const Int_t hardcodedIetaBins[NbinsIEta] = {0, 6, 12, 18, 33};
-const Int_t hardcodedIetBins[NbinsIEt]    = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
-// const Int_t hardcodedIetBins[NbinsIEt]    = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 120, 157, 255};
-const Int_t hardcodedIetBins2[NbinsIEt2]  = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
-const Double_t hardcodedIetBins2double[NbinsIEt2]  = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+const Float_t hardcodedIetaBinsFloat[NbinsIEta] = {0, 6, 12, 18, 33};
+const Double_t hardcodedIetaBinsDouble[NbinsIEta] = {0, 6, 12, 18, 33};
 
-//const Int_t hardcodednTTBins[NbinsnTT] =   {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 76, 255};
-const Int_t hardcodednTTBins[NbinsnTT] = {0,26,31,36,41,46,51,56,61,66,71,76,81,91,106,255 };
-//const Int_t hardcodednTTBins[NbinsnTT] = {0,26,31,36,41,46,51,56,61,66,71,76,81,86,91,96,101,106,111,131,151,171,201,255 };
-const Int_t hardcodednTTBins2[NbinsnTT2] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+const Int_t hardcodedSupercompressedIetBins[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+const Float_t hardcodedSupercompressedIetBinsFloat[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+const Double_t hardcodedSupercompressedIetBinsDouble[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+
+const Int_t hardcodedSupercompressednTTBins[supercompressedNbinsnTT] = {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 91, 106, 255 };
+const Float_t hardcodedSupercompressednTTBinsFloat[supercompressedNbinsnTT] = {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 91, 106, 255 };
+const Double_t hardcodedSupercompressednTTBinsDouble[supercompressedNbinsnTT] = {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 91, 106, 255 };
+
+const Int_t hardcodedCompressedIetBins[compressedNbinsIEt]  = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+const Float_t hardcodedCompressedIetBinsFloat[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+const Double_t hardcodedCompressedIetBinsDouble[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+
+const Int_t hardcodedCompressednTTBins[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+const Float_t hardcodedCompressednTTBinsFloat[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+const Double_t hardcodedCompressednTTBinsDouble[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+
 
 bool CheckBit (short int number, int bitpos)
 {
@@ -201,45 +210,45 @@ short int getSymmShape (short int shape, map<int, int>& remap)
 
 Int_t FindBinIEt(Int_t IEt)
 {
-  for(UInt_t i = 0 ; i < NbinsIEt2-1 ; ++i)
+  for(UInt_t i = 0 ; i < compressedNbinsIEt-1 ; ++i)
     {
-      if(IEt>=157) return NbinsIEt2-2;
-      if(IEt>= hardcodedIetBins2[i] && IEt < hardcodedIetBins2[i+1]) return i;
+      if(IEt>=157) return compressedNbinsIEt-2;
+      if(IEt>= hardcodedCompressedIetBins[i] && IEt < hardcodedCompressedIetBins[i+1]) return i;
     }
   return -1;
 }
 
 Int_t FindBinnTT(Int_t nTT)
 {
-  for(UInt_t i = 0 ; i < NbinsnTT2-1 ; ++i)
+  for(UInt_t i = 0 ; i < compressedNbinsnTT-1 ; ++i)
     {
-      if(nTT>=161) return NbinsnTT2-2;
-      if(nTT>= hardcodednTTBins2[i] && nTT < hardcodednTTBins2[i+1]) return i;
+      if(nTT>=161) return compressedNbinsnTT-2;
+      if(nTT>= hardcodedCompressednTTBins[i] && nTT < hardcodedCompressednTTBins[i+1]) return i;
     }
   return -1;
 }
 
 Int_t FindBinCorrespondenceIEt(Int_t IEt_fine)
 {
-  for(UInt_t i = 0 ; i < NbinsIEt-1 ; ++i)
+  for(UInt_t i = 0 ; i < supercompressedNbinsIEt-1 ; ++i)
     {
-      if(IEt_fine>=157) return NbinsIEt-2;
-      // if(IEt_fine>=120) return NbinsIEt-2;
-      if(IEt_fine>= hardcodedIetBins[i] && IEt_fine < hardcodedIetBins[i+1]) return i;
+      if(IEt_fine>=157) return supercompressedNbinsIEt-2;
+      // if(IEt_fine>=120) return supercompressedNbinsIEt-2;
+      if(IEt_fine>= hardcodedSupercompressedIetBins[i] && IEt_fine < hardcodedSupercompressedIetBins[i+1]) return i;
     }
   return -1;
 }
 
 Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
 {
-  for(UInt_t i = 0 ; i < NbinsnTT-1 ; ++i)
+  for(UInt_t i = 0 ; i < supercompressedNbinsnTT-1 ; ++i)
     {
-      if(nTT_fine>=161) return NbinsnTT-2;
-      // if(nTT_fine>=201) return NbinsnTT-2;
-      //if(nTT_fine>=76) return NbinsnTT-2;
-      // if(nTT_fine>=106) return NbinsnTT-2;
-      // if(nTT_fine>=56) return NbinsnTT-2;
-      if(nTT_fine>= hardcodednTTBins[i] && nTT_fine < hardcodednTTBins[i+1]) return i;
+      if(nTT_fine>=161) return supercompressedNbinsnTT-2;
+      // if(nTT_fine>=201) return supercompressedNbinsnTT-2;
+      //if(nTT_fine>=76) return supercompressedNbinsnTT-2;
+      // if(nTT_fine>=106) return supercompressedNbinsnTT-2;
+      // if(nTT_fine>=56) return supercompressedNbinsnTT-2;
+      if(nTT_fine>= hardcodedSupercompressednTTBins[i] && nTT_fine < hardcodedSupercompressednTTBins[i+1]) return i;
     }
   return -1;
 }
@@ -255,10 +264,10 @@ void ApplyCalibration(float calibThr = 1.7)
   // TH1F* shapes_1D = (TH1F*) f_shapes.Get("hShapes_gt30_merg");
   // shapes_1D->Clear();
   //
-  // TH2F* shapes_vs_pt = new TH2F("shapes_vs_pt","shapes_vs_pt",128,0,128,NbinsIEt2-1,hardcodedIetBins2double);
+  // TH2F* shapes_vs_pt = new TH2F("shapes_vs_pt","shapes_vs_pt",128,0,128,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   // shapes_vs_pt->Clear();  
 
-  TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,NbinsIEt2-1,hardcodedIetBins2double);
+  TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   // TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0.,100.,200,0.,200.);
   isolation_vs_pt->Clear();
 
@@ -269,17 +278,17 @@ void ApplyCalibration(float calibThr = 1.7)
   // const UInt_t nShapes = 129;
   // const Double_t shapesBins[nShapes] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128};
   //
-  // TH3F* shapes_vs_isolation_vs_pt = new TH3F("shapes_vs_isolation_vs_pt","shapes_vs_isolation_vs_pt",nShapes-1,shapesBins,nIsolation-1,isolationBins,NbinsIEt2-1,hardcodedIetBins2double);
+  // TH3F* shapes_vs_isolation_vs_pt = new TH3F("shapes_vs_isolation_vs_pt","shapes_vs_isolation_vs_pt",nShapes-1,shapesBins,nIsolation-1,isolationBins,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   // shapes_vs_isolation_vs_pt->Clear();
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_COMPRESSED_2022_06_13.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_06_13.root";
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_COMPRESSED_2023_03_04.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root";
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0");
 
   TFile f_in(InputFileName.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
@@ -432,6 +441,7 @@ void ApplyCalibration(float calibThr = 1.7)
       out_L1Tau_isMerged = L1Tau_isMerged;
       out_compressedshape = compressedshape;
 
+      // SHAPE COMMENT OUT
       // out_L1Tau_PassShapeVeto = true;
       // if (out_L1Tau_IEt > 20 && out_L1Tau_IEt < 30)
       //   {
@@ -447,48 +457,33 @@ void ApplyCalibration(float calibThr = 1.7)
       //   }
       // else out_L1Tau_PassShapeVeto = true;
 
-      for(Int_t ie = 0 ; ie < NbinsIEt ; ++ie)
-  {
-    if(L1Tau_IEt>=255)
+      for(Int_t ie = 0 ; ie < supercompressedNbinsIEt ; ++ie)
       {
-        out_supercompressedE = NbinsIEt-2;
-        break;
+        if(L1Tau_IEt>=255)
+          {
+            out_supercompressedE = supercompressedNbinsIEt-2;
+            break;
+          }
+        else if(L1Tau_IEt >= hardcodedSupercompressedIetBins[ie] && L1Tau_IEt < hardcodedSupercompressedIetBins[ie+1])
+          {
+            out_supercompressedE = ie;
+            break;
+          }
       }
-    else if(L1Tau_IEt >= hardcodedIetBins[ie] && L1Tau_IEt < hardcodedIetBins[ie+1])
-      {
-        out_supercompressedE = ie;
-        break;
-      }
-  }
 
-      for(Int_t inTT = 0 ; inTT < NbinsnTT ; ++inTT)
-  {
-    if(L1Tau_nTT>=255)
+      for(Int_t inTT = 0 ; inTT < supercompressedNbinsnTT ; ++inTT)
       {
-        out_supercompressednTT = NbinsnTT-2;
-        break;
+        if(L1Tau_nTT>=255)
+          {
+            out_supercompressednTT = supercompressedNbinsnTT-2;
+            break;
+          }
+        else if(L1Tau_nTT >= hardcodedSupercompressednTTBins[inTT] && L1Tau_nTT < hardcodedSupercompressednTTBins[inTT+1])
+          {
+            out_supercompressednTT = inTT;
+            break;
+          }
       }
-    else if(L1Tau_nTT >= hardcodednTTBins[inTT] && L1Tau_nTT < hardcodednTTBins[inTT+1])
-      {
-        out_supercompressednTT = inTT;
-        break;
-      }
-  }
-
-      /*
-  cout<<"L1Tau_IEta = "<<L1Tau_IEta<<endl;
-  cout<<"L1Tau_IEt/2. = "<<L1Tau_IEt/2.<<endl;
-  // cout<<"L1Tau_IEt/2. = "<<L1Tau_IEt/2.<<endl;
-  cout<<"OfflineTau_pt = "<<OfflineTau_pt<<endl;
-  cout<<"Target = "<<out_Target<<endl;
-  cout<<"h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1) = "<<h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1)<<endl;
-  cout<<"-----"<<endl;
-      */
-
-      // cout<<"abs(compressedieta) = "<<abs(compressedieta)<<endl;
-      // cout<<"compressedE = "<<compressedE<<endl;
-      // cout<<"L1Tau_hasEM = "<<L1Tau_hasEM<<endl;
-      // cout<<"h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1) = "<<h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1)<<endl;
 
       float calibThr = 1.7;
 
@@ -508,14 +503,11 @@ void ApplyCalibration(float calibThr = 1.7)
         }
 
 
-      // if(out_L1Tau_CalibPt<20.) cout<<"hello"<<endl;
-
       out_L1Tau_Qual = L1Tau_Qual;
-      short int symmShape = getSymmShape (L1Tau_Qual, remap);
-
-      //cout<<(L1Tau_Qual&=127)<<endl;
       
-      out_L1Tau_PassShapeVeto = true;
+      // SHAPE COMMENT OUT
+      // short int symmShape = getSymmShape (L1Tau_Qual, remap);
+      // out_L1Tau_PassShapeVeto = true;
 
       // SHAPE COMMENT OUT
       // shapes_vs_pt->Fill(symmShape,out_L1Tau_IEt);
@@ -526,19 +518,20 @@ void ApplyCalibration(float calibThr = 1.7)
       // // isolation_vs_pt->Fill(L1Tau_Iso,out_L1Tau_IEt/2.);
       // if(out_L1Tau_IEt/2.>=30.) shapes_1D->Fill(symmShape);
 
-      if (out_L1Tau_CalibPt >= 20 && out_L1Tau_CalibPt < 30)
-        {
-          out_L1Tau_PassShapeVeto = (find(veto_set_20.begin(), veto_set_20.end(), symmShape) == veto_set_20.end() ? true : false);
-        }
-      else if (out_L1Tau_CalibPt >= 30 && out_L1Tau_CalibPt < 40)
-        {
-          out_L1Tau_PassShapeVeto = (find(veto_set_30.begin(), veto_set_30.end(), symmShape) == veto_set_30.end() ? true : false);
-        }
-      else if (out_L1Tau_CalibPt >= 40 && out_L1Tau_CalibPt < 50)
-        {
-          out_L1Tau_PassShapeVeto = (find(veto_set_40.begin(), veto_set_40.end(), symmShape) == veto_set_40.end() ? true : false);
-        }
-      else out_L1Tau_PassShapeVeto = true;      
+      // SHAPE COMMENT OUT
+      // if (out_L1Tau_CalibPt >= 20 && out_L1Tau_CalibPt < 30)
+      //   {
+      //     out_L1Tau_PassShapeVeto = (find(veto_set_20.begin(), veto_set_20.end(), symmShape) == veto_set_20.end() ? true : false);
+      //   }
+      // else if (out_L1Tau_CalibPt >= 30 && out_L1Tau_CalibPt < 40)
+      //   {
+      //     out_L1Tau_PassShapeVeto = (find(veto_set_30.begin(), veto_set_30.end(), symmShape) == veto_set_30.end() ? true : false);
+      //   }
+      // else if (out_L1Tau_CalibPt >= 40 && out_L1Tau_CalibPt < 50)
+      //   {
+      //     out_L1Tau_PassShapeVeto = (find(veto_set_40.begin(), veto_set_40.end(), symmShape) == veto_set_40.end() ? true : false);
+      //   }
+      // else out_L1Tau_PassShapeVeto = true;      
 
       outTree.Fill();
 

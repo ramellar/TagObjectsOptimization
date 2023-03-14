@@ -19,26 +19,41 @@
 #include <TBranchElement.h>
 #include <TGraphAsymmErrors.h>
 #include <fstream>
-
-const Int_t NbinsIEta = 4+1;
-const Int_t NbinsIEt = 17+1;
-// const Int_t NbinsIEt = 16+1;
-//const Int_t NbinsnTT = 11+1;//Acceptable LUT Thomas
-const Int_t NbinsnTT = 15+1; //new nTT CMP
-//const Int_t NbinsnTT = 23+1; //new nTT CMP
-
-const Int_t NbinsIEt2 = 32+1;
-const Int_t NbinsnTT2 = 32+1;
+#include "../Calibrate/ApplyCalibration_newnTT.C"
 
 using namespace std;
 
-void Build_Isolation_WPs(float calibThr = 1.7)
+
+// THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
+
+void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
+  UInt_t tmpIEt;
+  UInt_t tmpnTT;
+  if (compression == "compressed")
+  {
+    tmpIEt = compressedNbinsIEt;
+    tmpnTT = compressedNbinsnTT;
+  }
+  else if (compression == "supercompressed")
+  {
+    tmpIEt = supercompressedNbinsIEt;
+    tmpnTT = supercompressedNbinsnTT;
+  }
+  else
+  {
+    std::cout << "Wrong compression request: compressed or supercompressed?" << std::endl;
+    std::cout << "EXITING!" << std::endl;
+    return;
+  }
+  const UInt_t NbinsIEt = tmpIEt;
+  const UInt_t NbinsnTT = tmpnTT;
+
   TChain data("outTreeCalibrated");
-  data.Add("/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/Run3_MC_VBFHToTauTau_M125_CALIBRATED_2022_06_13.root");
+  data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root");
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
   TH2F* isoEt_vs_nVtx_barrel = new TH2F("isoEt_vs_nVtx_barrel","isoEt_vs_nVtx_barrel",150,0.,150.,100,0.,100.);
@@ -204,7 +219,7 @@ void Build_Isolation_WPs(float calibThr = 1.7)
     }
   
 
-  TFile f_out("ROOTs4LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+".root","RECREATE");
+  TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+".root","RECREATE");
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();
@@ -517,6 +532,23 @@ void Build_Isolation_WPs(float calibThr = 1.7)
   for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
     {
       IsoCut_PerBin[iEff]->Write();
+
+      // for each bin in eta/e project icoCut on nTT and make a fit of it
+      // this approach makes the isoCut strictly increasing and less dependent on statistic fluctuations
+      for(UInt_t i = 0 ; i < NbinsIEta-1 ; ++i)
+      {
+        for(UInt_t j = 0 ; j < NbinsIEt-1 ; ++j)
+          {
+            TString projName = "pz_"+to_string(iEff)+"_eta"+to_string(i)+"_e"+to_string(j);
+            TH1D* projection = IsoCut_PerBin[iEff]->ProjectionZ(projName, i+1, i+1, j+1, j+1, "e");
+            projection->Write();
+
+            TString fitName = "fit_pz_"+to_string(iEff)+"_eta"+to_string(i)+"_e"+to_string(j);
+            TF1* projection_fit = new TF1(fitName,"[0]+[1]*x",0,NbinsnTT-1);
+            projection->Fit(projection_fit);
+            projection_fit->Write();
+          }
+      }
     }
 
   pt->Write();

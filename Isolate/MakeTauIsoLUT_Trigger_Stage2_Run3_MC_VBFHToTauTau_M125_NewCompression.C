@@ -16,14 +16,15 @@
 #include <sstream>
 #include <TBranchElement.h>
 #include <fstream>
+#include "../Calibrate/ApplyCalibration_newnTT.C"
 
 void MakeTauIsoLUT_Options(string option, bool includeCompression, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-  TFile* fLUTS = new TFile ("ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV8_calibThr"+intgr+"p"+decim+".root","READ");
-  TString outFile = "LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV8_calibThr"+intgr+"p"+decim+"_"+option+".txt";
+  TFile* fLUTS = new TFile ("ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+"_linear.root","READ");
+  TString outFile = "LUTs/LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+"_"+option+".txt";
   cout<<"OUTFILE = "<<outFile<<endl;
 
   // TH3F* LUTS[100];
@@ -41,29 +42,13 @@ void MakeTauIsoLUT_Options(string option, bool includeCompression, float calibTh
 
   cout << "Max LUT CuT: " << LUT->GetMaximum() << endl;
 
-  //float hardcodedIetaBins[]    = {0, 5, 9, 17, 28};
-  //float hardcodedIetBins[]     = {0, 20, 28, 37, 42, 52, 63, 73};
-  //float hardcodednTTBins[]     = {0, 15, 17, 20, 25, 32, 40, 60};
-
-  // float hardcodedIetaBins[5]  = {0, 5, 9, 17, 28};
-  // float hardcodedIetBins [17] = {0, 18, 20, 22, 28, 32, 37, 42, 52, 63, 73, 81, 87, 91, 111, 151, 256};
-  // float hardcodednTTBins [8]  = {0, 15, 17, 20, 25, 32, 40, 60};
-
-  // const Float_t hardcodedIetaBins[] = {0, 6, 12, 18, 33};
-  // const Float_t hardcodedIetBins[]  = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
-  // const Float_t hardcodednTTBins[] = {0, 9, 11, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 37, 39, 41, 43, 46, 49, 53, 60, 255};
-
-  const Float_t hardcodedIetaBins[] = {0, 6, 12, 18, 33};
-  const Float_t hardcodedIetBins[]  = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
-  const Float_t hardcodednTTBins[] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
-
   //cout<<"here"<<endl;
 
-  int neta = sizeof(hardcodedIetaBins) / sizeof(int) -1 ;
-  int nEt  = sizeof(hardcodedIetBins) / sizeof(int)-1;
-  int nnTT = sizeof(hardcodednTTBins) / sizeof(int)-1;
+  int neta = sizeof(hardcodedIetaBinsFloat) / sizeof(int) -1 ;
+  int nEt  = sizeof(hardcodedCompressedIetBinsFloat) / sizeof(int)-1;
+  int nnTT = sizeof(hardcodedCompressednTTBinsFloat) / sizeof(int)-1;
 
-  TH3F* binning = new TH3F ("binning", "binning", neta, hardcodedIetaBins, nEt, hardcodedIetBins, nnTT, hardcodednTTBins);
+  TH3F* binning = new TH3F ("binning", "binning", neta, hardcodedIetaBinsFloat, nEt, hardcodedCompressedIetBinsFloat, nnTT, hardcodedCompressednTTBinsFloat);
 
   float maxeta = binning->GetXaxis()->GetBinLowEdge(LUT->GetNbinsX()+1);
   float maxEt  = binning->GetYaxis()->GetBinLowEdge(LUT->GetNbinsY()+1);
