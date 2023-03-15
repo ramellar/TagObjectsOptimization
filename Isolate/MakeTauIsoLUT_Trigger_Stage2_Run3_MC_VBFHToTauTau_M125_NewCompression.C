@@ -18,7 +18,7 @@
 #include <fstream>
 #include "../Calibrate/ApplyCalibration_newnTT.C"
 
-void MakeTauIsoLUT_Options(string option, bool includeCompression, float calibThr = 1.7)
+void MakeTauIsoLUT_Options(string option, bool includeCompression = false, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));

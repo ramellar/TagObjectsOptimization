@@ -61,7 +61,7 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   TString outFile ;
   //if(withLayer1) outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
   //else outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
-  outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs/LUTcalibration_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13_calibThr"+intgr+"p"+decim+".txt";
+  outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs_2023/LUTcalibration_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0_calibThr"+intgr+"p"+decim+".txt";
 
   std::ofstream LUTfile (outFile.Data());
 
@@ -78,7 +78,7 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   ///// print header
   ////////////////////////////////////////////////////////////////////////////
   //# comments...
-  //#<header> V1 12 7 </header>
+  //#<header> V0 12 7 </header>
   // eta compr bits: 2
   // Et compr bits:  3
   // hasEM compr bits: 3
@@ -109,7 +109,7 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   // LUTfile << "# Index is (et<<4)+(eta<<2)+(hasEM<<1)+isMerged"<<endl;
   LUTfile << "# anything after # is ignored with the exception of the header"<<endl;
   LUTfile << "# the header is first valid line starting with #<header> versionStr(unused but may be in future) </header>"<<endl;
-  LUTfile << "#<header> V13.0 " << totInBits << " " << totOutBits << " </header>"<<endl;
+  LUTfile << "#<header> V03.0 " << totInBits << " " << totOutBits << " </header>"<<endl;
 
   ////////////////////////////////////////////////////////////////////////////
   //// print isolation LUT ///////////////////////////////////////////////////

@@ -33,15 +33,21 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
 
   UInt_t tmpIEt;
   UInt_t tmpnTT;
+  UInt_t tmpFitMin;
+  UInt_t tmpFitMax;
   if (compression == "compressed")
   {
     tmpIEt = compressedNbinsIEt;
     tmpnTT = compressedNbinsnTT;
+    tmpFitMin = 6;
+    tmpFitMax = 25;
   }
   else if (compression == "supercompressed")
   {
     tmpIEt = supercompressedNbinsIEt;
     tmpnTT = supercompressedNbinsnTT;
+    tmpFitMin = 3;
+    tmpFitMax = 14;
   }
   else
   {
@@ -51,6 +57,8 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
   }
   const UInt_t NbinsIEt = tmpIEt;
   const UInt_t NbinsnTT = tmpnTT;
+  const UInt_t FitMin = tmpFitMin;
+  const UInt_t FitMax = tmpFitMax;
 
   TChain data("outTreeCalibrated");
   data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root");
@@ -100,7 +108,8 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
   iso_vs_compressednTT_endcaps_profile->Fit(iso_vs_compressednTT_endcaps_fit);
 
   int   L1Tau_IEt      = -99;
-  int   L1Tau_compressed_IEt      = -99;
+  int   compressedE      = -99;
+  int   compressednTT      = -99;
   int   L1Tau_IEta     = -99;
   int   L1Tau_compressed_IEta     = -99;
   int   L1Tau_hasEM    = -99;
@@ -116,7 +125,8 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
   int supercompressednTT = -99;
 
   data.SetBranchAddress("L1Tau_IEt", &L1Tau_IEt);
-  data.SetBranchAddress("compressedE", &L1Tau_compressed_IEt);
+  data.SetBranchAddress("compressedE", &compressedE);
+  data.SetBranchAddress("compressednTT", &compressednTT);
   data.SetBranchAddress("supercompressedE", &supercompressedE);
   data.SetBranchAddress("supercompressednTT", &supercompressednTT);
   data.SetBranchAddress("L1Tau_IEta", &L1Tau_IEta);
@@ -180,10 +190,6 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
       data.GetEntry(i);
       if(!OfflineTau_isMatched) continue;
 
-     // cout<<"supercompressedE = "<<supercompressedE<<endl;
-     // cout<<"L1Tau_compressed_IEta = "<<L1Tau_compressed_IEta<<endl;
-     // cout<<"L1Tau_nTT = "<<L1Tau_nTT<<endl;
-
       hprof_IEt->Fill(L1Tau_IEt,L1Tau_Iso,1);
       hprof_IEta->Fill(L1Tau_IEta,L1Tau_Iso,1);
       hprof_nTT->Fill(L1Tau_nTT,L1Tau_Iso,1);
@@ -191,8 +197,16 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
       std::vector<Int_t> binForIsolation ;
       binForIsolation.clear();
       binForIsolation.push_back(L1Tau_compressed_IEta);
-      binForIsolation.push_back(supercompressedE);
-      binForIsolation.push_back(supercompressednTT);
+      if (compression == "compressed")
+      {  
+        binForIsolation.push_back(compressedE);
+        binForIsolation.push_back(compressednTT);
+      }
+      if (compression == "supercompressed")
+      {  
+        binForIsolation.push_back(supercompressedE);
+        binForIsolation.push_back(supercompressednTT);
+      }
       
       TString Name_Histo = "Hist_";
 
@@ -436,15 +450,19 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
       data.GetEntry(i);
       if(!OfflineTau_isMatched) continue;
 
-      //cout<<"L1_IEta = "<<L1_IEta<<endl;
-      // if(i>10) continue;
-
       std::vector<Int_t> binForIsolation ;
       binForIsolation.clear();
       binForIsolation.push_back(L1Tau_compressed_IEta);
-      binForIsolation.push_back(supercompressedE);
-      binForIsolation.push_back(supercompressednTT);
-      //cout<<"nTT = "<<L1_nTT<<", bin = "<<binForIsolation.at(2)<<endl;
+      if (compression == "compressed")
+      {  
+        binForIsolation.push_back(compressedE);
+        binForIsolation.push_back(compressednTT);
+      }
+      if (compression == "supercompressed")
+      {  
+        binForIsolation.push_back(supercompressedE);
+        binForIsolation.push_back(supercompressednTT);
+      }
 
       TString Name_Histo = "Hist_";
 
@@ -544,7 +562,7 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
             projection->Write();
 
             TString fitName = "fit_pz_"+to_string(iEff)+"_eta"+to_string(i)+"_e"+to_string(j);
-            TF1* projection_fit = new TF1(fitName,"[0]+[1]*x",0,NbinsnTT-1);
+            TF1* projection_fit = new TF1(fitName,"[0]+[1]*x", FitMin, FitMax);
             projection->Fit(projection_fit);
             projection_fit->Write();
           }
