@@ -75,10 +75,10 @@ void Fill_Isolation_TH3(float effMin, TString tag, TString parametrisation = "li
     TString Kdecim = to_string(Kfact).substr(2, to_string(Kfact).find("."));
 
     std::map<TString,TH3F*> histosIsolation;
-    TFile f_Isolation("ROOTs4LUTs/LUTisolation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+".root","READ");
+    TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+".root","READ");
     TString TFileName = "";
-    if(parametrisation=="linear") TFileName = "ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+".root";
-    else                          TFileName = "ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+".root";
+    if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0gs_calibThr"+intgr+"p"+decim+"_linear_"+tag+".root";
+    else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+"_"+tag+".root";
     TFile LUTs_Options(TFileName,"RECREATE");
 
     for(UInt_t i = 0 ; i < 101 ; ++i)
