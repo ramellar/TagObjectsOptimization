@@ -80,8 +80,8 @@ void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, flo
   std::map<TString,TH3F*> histosIsolation;
   
   TString fIsoName = "";
-  if(parametrisation=="linear") fIsoName = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+"_linear.root";
-  else                          fIsoName = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/LUTrelaxation_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_optimizationV13_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+  if(parametrisation=="linear") fIsoName = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+"_linear_old.root";
+  else                          fIsoName = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
   TFile f_Isolation(fIsoName, "READ");
 
   for(UInt_t i = 0 ; i < 101 ; ++i)
@@ -120,7 +120,7 @@ void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, flo
   // cout << histosIsolation["LUT_WP50"]->GetBinContent(1,1,1) << endl;
   // return;
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias_2018D_Run"+run_str+"_reEmuTPs_CALIBRATED.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p2_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias0__Run2022G_Run"+run_str+"__CALIBRATED.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
@@ -353,6 +353,8 @@ void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, flo
       // SET RUN INFO
       if (run == 323755) { if(in_lumi<44 || in_lumi>544) continue; } // Run323755
       if (run == 323775) { if(in_lumi<53 || in_lumi>171 || in_lumi==82 || in_lumi==83) continue; } // Run323775 --> very smal numer of lumisections!!
+      if (run == 362616) { if(in_lumi<0) continue; }
+      if (run == 362617) { if(in_lumi<0) continue; }
 
 
       // if(PU_per_LS.find(in_lumi)==PU_per_LS.end()) continue;
@@ -2055,13 +2057,15 @@ void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, flo
   float thisLumiRun = 0.;
   if (run == 323755) thisLumiRun = 1.6225E34; // Run323755
   if (run == 323775) thisLumiRun = 1.736E34; // Run323775 --> very smal numer of lumisections!!
+  if (run == 362616) { nb = 2450; thisLumiRun = 2.05E34; }
+  if (run == 362617) { nb = 2450; thisLumiRun = 2.50E34; }
   if (thisLumiRun == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
     return;
   }
   float scaleToLumi = 2.00E34;
-  float scale = 0.001*(nb*11245.6)*scaleToLumi/thisLumiRun;
+  float scale = 0.001*(nb*11245.6);//*scaleToLumi/thisLumiRun;
 
   // float nb = 2064;
   // float thisLumiRun = 12118.9E30;
@@ -2423,8 +2427,8 @@ void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, flo
   //   }
   
   TString TFileName = "";  
-  if(parametrisation=="linear") TFileName = "histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_linear.root";
-  else                          TFileName = "histos/histos_rate_ZeroBias_Run"+run_str+"_optimizationV13_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+  if(parametrisation=="linear") TFileName = "histos_2023/histos_rate_ZeroBias_Run"+run_str+"_optimizationV0p2_calibThr"+intgr+"p"+decim+"_linear_old.root";
+  else                          TFileName = "histos_2023/histos_rate_ZeroBias_Run"+run_str+"_optimizationV0p2_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
   TFile f(TFileName,"RECREATE");
 
   Iso_MinBias->Write();

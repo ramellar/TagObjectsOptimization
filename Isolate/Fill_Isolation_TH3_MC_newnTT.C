@@ -90,14 +90,14 @@ void Fill_Isolation_TH3(TString compression, int fit_granularity = 1, TString pa
   const UInt_t NbinsIEt = tmpIEt;
   const UInt_t NbinsnTT = tmpnTT;
 
-  TFile IsoEt_vs_compressednTT_fits("ROOTs4LUTs/ROOTs4LUTs_2023/IsoEt_vs_compressednTT_fits_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+".root", "READ");
+  // TFile IsoEt_vs_compressednTT_fits("ROOTs4LUTs/ROOTs4LUTs_2023/IsoEt_vs_compressednTT_fits_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+".root", "READ");
 
   std::map<TString,TH3F*> histosIsolation;
   std::map<TString,TF1*> fitsIsolation;
-  TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+".root","READ");
+  TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+".root","READ");
   TString TFileName = "";
-  if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+"_linear.root";
-  else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+  if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+"_linear_old.root";
+  else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
   TFile LUTs_Options(TFileName,"RECREATE");
 
   for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
@@ -176,31 +176,31 @@ void Fill_Isolation_TH3(TString compression, int fit_granularity = 1, TString pa
   // TH3F* LUT_WP80 = new TH3F("LUT_WP80","LUT_WP80",NbinsIEta-1,0,NbinsIEta-1,NbinsIEt-1,0,NbinsIEt-1,NbinsnTT-1,0,NbinsnTT-1);
   // TH3F* LUT_WP90 = new TH3F("LUT_WP90","LUT_WP90",NbinsIEta-1,0,NbinsIEta-1,NbinsIEt-1,0,NbinsIEt-1,NbinsnTT-1,0,NbinsnTT-1);
 
-  Float_t IsoEt_vs_nTT_inter = 0;
-  Float_t IsoEt_vs_nTT_slope = 0;
+  // Float_t IsoEt_vs_nTT_inter = 0;
+  // Float_t IsoEt_vs_nTT_slope = 0;
 
   Float_t par1_barrel = 1.1;
   Float_t par1_endcaps = 1.0;
 
   for(Int_t i = 0 ; i < NbinsIEta-1 ; ++i)
     {
-      if (fit_granularity == 1)
-      {
-        TString fitName = "iso_vs_compressednTT_fit_eta"+to_string(i);
-        TF1* fit = (TF1*)IsoEt_vs_compressednTT_fits.Get(fitName);
-        IsoEt_vs_nTT_inter = fit->GetParameter(0);
-        IsoEt_vs_nTT_slope = fit->GetParameter(1);
-      }
+      // if (fit_granularity == 1)
+      // {
+      //   TString fitName = "iso_vs_compressednTT_fit_eta"+to_string(i);
+      //   TF1* fit = (TF1*)IsoEt_vs_compressednTT_fits.Get(fitName);
+      //   IsoEt_vs_nTT_inter = fit->GetParameter(0);
+      //   IsoEt_vs_nTT_slope = fit->GetParameter(1);
+      // }
 
       for(UInt_t j = 0 ; j < NbinsIEt-1 ; ++j)
         {
-          if (fit_granularity == 2)
-          {
-            TString fitName = "iso_vs_compressednTT_fit_eta"+to_string(i)+"_e"+to_string(j);
-            TF1* fit = (TF1*)IsoEt_vs_compressednTT_fits.Get(fitName);
-            IsoEt_vs_nTT_inter = fit->GetParameter(0);
-            IsoEt_vs_nTT_slope = fit->GetParameter(1);
-          }
+          // if (fit_granularity == 2)
+          // {
+          //   TString fitName = "iso_vs_compressednTT_fit_eta"+to_string(i)+"_e"+to_string(j);
+          //   TF1* fit = (TF1*)IsoEt_vs_compressednTT_fits.Get(fitName);
+          //   IsoEt_vs_nTT_inter = fit->GetParameter(0);
+          //   IsoEt_vs_nTT_slope = fit->GetParameter(1);
+          // }
 
           for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
             {

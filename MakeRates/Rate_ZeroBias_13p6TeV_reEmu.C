@@ -28,7 +28,7 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022"+tag+"_Run"+run_str+"_RAW_reEmuTPs/ZeroBias_Run2022"+tag+"_Run"+run_str+"_RAW_reEmuTPs.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_reEmulated/EphemeralZeroBias0__Run2022G_Run362617__RAW__Tau2023_opt1/EphemeralZeroBias0__Run2022G_Run362617__RAW__Tau2023_opt1.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
@@ -54,8 +54,8 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
   TH1F* pt_IsoInf = new TH1F("pt_IsoInf","pt_IsoInf",240,0.,240.);
   TH1F* pt_Iso = new TH1F("pt_Iso","pt_Iso",240,0.,240.);
 
-  TH2F* pt_IsoInf_DiTau = new TH2F("pt_IsoInf_DiTau","pt_IsoInf_DiTau",240,0.,240.,240,0.,240.);
-  TH2F* pt_Iso_DiTau = new TH2F("pt_Iso_DiTau","pt_Iso_DiTau",240,0.,240.,240,0.,240.);
+  TH2F* DiTauPtPassDistribution_noIso = new TH2F("DiTauPtPassDistribution_noIso","DiTauPtPassDistribution_noIso",240,0.,240.,240,0.,240.);
+  TH2F* DiTauPtPassDistribution_Iso = new TH2F("DiTauPtPassDistribution_Iso","DiTauPtPassDistribution_Iso",240,0.,240.,240,0.,240.);
 
   Int_t Denominator = 0;
 
@@ -77,6 +77,8 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
       if (run == 356375) { if(in_lumi>1001) continue; }
       if (run == 356378) { if(in_lumi<-1) continue; }
       if (run == 356381) { if(in_lumi<35) continue; }
+      if (run == 362616) { if(in_lumi<0) continue; }
+      if (run == 362617) { if(in_lumi<0) continue; }
 
       Float_t weight = 1.;
 
@@ -130,14 +132,14 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
         }
 
       if(Index_Taus_IsoInf.at(0)>=0 && Index_Taus_IsoInf.at(1)>=0)
-  {
-    pt_IsoInf_DiTau->Fill(pt_Taus_IsoInf.at(0),pt_Taus_IsoInf.at(1),weight);
-  }
+        {
+          DiTauPtPassDistribution_noIso->Fill(pt_Taus_IsoInf.at(0),pt_Taus_IsoInf.at(1),weight);
+        }
 
-      if(Index_Taus_Iso.at(0)>=0 && Index_Taus_Iso.at(1)>=0)
-  {
-    pt_Iso_DiTau->Fill(pt_Taus_Iso.at(0),pt_Taus_Iso.at(1),weight);
-  }
+            if(Index_Taus_Iso.at(0)>=0 && Index_Taus_Iso.at(1)>=0)
+        {
+          DiTauPtPassDistribution_Iso->Fill(pt_Taus_Iso.at(0),pt_Taus_Iso.at(1),weight);
+        }
     } //new
 
   // SET RUN INFO
@@ -146,6 +148,7 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
   if (run == 355769) { nb = 302.; }
   if (run == 355865 or run == 355872 or run == 355913) { nb = 590.; }
   if (run == 356375 or run == 356378 or run == 356381) { nb = 974.; }
+  if (run == 362616 or run == 362617) { nb = 2450; }
   if (nb == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the nb initialization" << std::endl;
@@ -162,6 +165,8 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
   if (run == 356375) thisLumiRun = 5.700E33;
   if (run == 356378) thisLumiRun = 6.350E33;
   if (run == 356381) thisLumiRun = 5.000E33;
+  if (run == 362616) thisLumiRun = 2.05E34;
+  if (run == 362617) thisLumiRun = 2.50E34;
   if (thisLumiRun == 0. and doScaleToLumi)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
@@ -174,24 +179,28 @@ void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
 
   cout<<"Denominator = "<<Denominator<<endl;
 
-  TH1F* rate_noCut_DiTau = new TH1F("rate_noCut_DiTau","rate_noCut_DiTau",240,0.,240.);
-  TH1F* rate_Iso_DiTau = new TH1F("rate_Iso_DiTau","rate_Iso_DiTau",240,0.,240.);
+  TH1F* DiTauRate_noIso = new TH1F("DiTauRate_noIso","DiTauRate_noIso",240,0.,240.);
+  TH1F* DiTauRate_Iso = new TH1F("DiTauRate_Iso","DiTauRate_Iso",240,0.,240.);
 
   for(UInt_t i = 0 ; i < 241 ; ++i)
     {
-      rate_noCut_DiTau->SetBinContent(i+1,pt_IsoInf_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
-      rate_Iso_DiTau->SetBinContent(i+1,pt_Iso_DiTau->Integral(i+1,241,i+1,241)/Denominator*scale);
+      DiTauRate_noIso->SetBinContent(i+1,DiTauPtPassDistribution_noIso->Integral(i+1,241,i+1,241)/Denominator*scale);
+      DiTauRate_Iso->SetBinContent(i+1,DiTauPtPassDistribution_Iso->Integral(i+1,241,i+1,241)/Denominator*scale);
     }
+
+  std::cout << "DoubleIsoTau32 = " << DiTauRate_Iso->GetBinContent(33) << " kHz" << std::endl;
+  std::cout << "DoubleIsoTau34 = " << DiTauRate_Iso->GetBinContent(35) << " kHz" << std::endl;
+  std::cout << "DoubleIsoTau36 = " << DiTauRate_Iso->GetBinContent(37) << " kHz" << std::endl;
 
   TString scaledToLumi = "";
   if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-  TFile f("histos/histos_rate_ZeroBias_Run2022"+tag+"_Run"+run_str+"_reEmuTPs"+scaledToLumi+".root","RECREATE");
+  TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_reEmulated_Tau2023_opt1"+scaledToLumi+".root","RECREATE");
 
-  pt_IsoInf_DiTau->Write();
-  pt_Iso_DiTau->Write();
+  DiTauPtPassDistribution_noIso->Write();
+  DiTauPtPassDistribution_Iso->Write();
 
-  rate_noCut_DiTau->Write();
-  rate_Iso_DiTau->Write();
+  DiTauRate_noIso->Write();
+  DiTauRate_Iso->Write();
 
   return;
 }
