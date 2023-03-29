@@ -249,22 +249,16 @@ vectCBtimesPOLYlowConvPOLYhigh = np.vectorize(CBtimesPOLYlowConvPOLYhigh)
 
 if __name__ == "__main__" :
     parser = OptionParser()
-    parser.add_option("--obj",         dest="obj",                                        default="tau")
+    parser.add_option("--inFile",      dest="inFile",                                     default=None)
     parser.add_option("--tag",         dest="tag",                                        default=None)
-    parser.add_option("--sels",        dest="sels",        type=str, action='append',     default=None, help='selection wanted: e.g. 30(for thr>30), 30Iso(for thr>30v & isolation), 36OR30Iso(fir thr>36 OR thr>30 & isolation)')
+    parser.add_option("--relaxation",  dest="relaxation",                                 default=None)
+    parser.add_option("--sel",         dest="sel",         type=str,                      default=None, help='selection wanted: e.g. 30(for thr>30), 30Iso(for thr>30v & isolation)')
     parser.add_option("--logx",        dest="logx",                  action='store_true', default=False)
     parser.add_option("--smallFitErr", dest="smallFitErr",           action='store_true', default=False)
     (options, args) = parser.parse_args()
     print(options)
 
-    if options.obj == "tau":
-        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/efficiencies_of_Run'+options.tag+'.root')
-    elif options.obj == "eg":
-        inFile = ROOT.TFile('./EG/BtoG/HistogramFile_'+options.tag+'_Eff.root')
-    else:
-        print('** ERROR : only supported objects are tau and eg')
-        print('** EXITING')
-        exit()
+    inFile = ROOT.TFile(options.inFile)
     
     # create plot where to print everything
     plt.rcParams['legend.title_fontsize'] = 'small'
@@ -275,214 +269,213 @@ if __name__ == "__main__" :
 
     markers = ['o', 's', '^', 'D']
 
-    for sel in options.sels:
+    thr_string = options.sel[:2]
+    iso_string = options.sel[2:]
+    thr = int(thr_string)
 
-        if not 'OR' in sel:
-            thr_string = sel[:2]
-            iso_string = sel[2:]
-            thr = int(thr_string)
+    ## from file 1 - noIso
 
-            if options.obj == "tau":
-                if iso_string:
-                    eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
-                    label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation' % (thr)
-                else:
-                    eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
-                    label = r'$E_{T}^{\tau, L1} > %i$ GeV' % (thr)
-            
-            elif options.obj == "eg":
-                if iso_string:
-                    eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_TightIsoEG'+thr_string+'_by_pT_all')
-                    label = r'$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation' % (thr)
-                else:
-                    eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr_string+'_by_pT_all')
-                    label = r'$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr)
+    eff_TGraph = inFile.Get('TurnOn_unpacked_noIso')
+    label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2022 Unpacked' % (thr)
 
-            marker=markers[imap]
+    marker=markers[imap]
 
-        else:
-            # inFileOR = ROOT.TFile('./EG/HistogramFile_Eff_'+options.tag+'_newPath.root')
+    x = []
+    y = []
+    x_err = []
+    y_errU = []
+    y_errD = []
+    y_errFit = []
 
-            if sel.count('OR') > 2:
-                print('** WARNING : maximum one OR supported ofr the moment')
-                print('** EXITING')
-                exit()
+    for ibin in range(eff_TGraph.GetN()):
+        # if eff_TGraph.GetPointX(ibin) < thr: continue
 
-            thr1_string = sel.split('OR')[0][:2]
-            iso1_string = sel.split('OR')[0][2:]
-            thr1 = int(thr1_string)
-
-            thr2_string = sel.split('OR')[1][:2]
-            iso2_string = sel.split('OR')[1][2:]
-            thr2 = int(thr2_string)
-
-            thr = min(thr1, thr2)
-
-            if options.obj == "tau":
-                print('** WARNING :no ORs availabe for taus')
-                print('** EXITING')
-                exit()
-            elif options.obj == "eg":
-                if iso1_string:
-                    if iso2_string:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_TightIsoEG'+thr1_string+'_OR_TightIsoEG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation' % (thr1, thr2)
-                    else:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_TightIsoEG'+thr1_string+'_OR_EG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr1, thr2)
-                else:
-                    if iso2_string:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr1_string+'_OR_TightIsoEG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation' % (thr1, thr2)
-                    else:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr1_string+'_OR_EG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV OR\n$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr1, thr2)
-
-            marker=7
-
-        x = []
-        y = []
-        x_err = []
-        y_errU = []
-        y_errD = []
-        y_errFit = []
-
-        for ibin in range(eff_TGraph.GetN()):
-            if options.obj == 'eg' and thr > 25 and eff_TGraph.GetPointX(ibin) < 5: continue
-            # if eff_TGraph.GetPointX(ibin) < thr: continue
-
-            x.append(eff_TGraph.GetPointX(ibin))
-            y.append(eff_TGraph.GetPointY(ibin))
-            x_err.append(eff_TGraph.GetErrorX(ibin))
-            
-            errU = eff_TGraph.GetErrorYhigh(ibin)
-            errD = eff_TGraph.GetErrorYlow(ibin)
-            y_errU.append(errU)
-            y_errD.append(errD)
-
-            # store two possibilities for fitting error: make the fit with the largest or the smallest error
-            if errU > errD:
-                y_errS = errD
-                y_errL = errU
-            else:
-                y_errS = errU
-                y_errL = errD
-            if options.smallFitErr: y_errFit.append(y_errS)
-            else:                   y_errFit.append(y_errL)
+        x.append(eff_TGraph.GetPointX(ibin))
+        y.append(eff_TGraph.GetPointY(ibin))
+        x_err.append(eff_TGraph.GetErrorX(ibin))
         
-        ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color=cmap(imap), zorder=zorder)
-        zorder = zorder + 1
+        errU = eff_TGraph.GetErrorYhigh(ibin)
+        errD = eff_TGraph.GetErrorYlow(ibin)
+        y_errU.append(errU)
+        y_errD.append(errD)
 
-        if options.obj == 'tau':
-            ##vectCBconvATAN
-            #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-            p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   10.]
-            param_bounds=([thr-10.,    1.,   0.1,   1.,     0.9 ,    0., 0.2,    1.],
-                          [thr+10.,   10.,  10. , 200.,     1.  ,  110., 1. ,  100.])
-            popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
-
-            ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
-
-        elif options.obj =='eg':
-            if thr > 25:
-                ##vectCBtimesPOLYlow
-                ##            [xturn,    p, slope, square, cube, inflation, scale, integral,  ct        mean, sigma, alpha,    n, norm]
-                p0 =          [20.,   0.05, 0.005,     0.,   0.,       15.,   1E5,      0.8,  3.,    thr    ,    3.,   3. , 100., 0.95]
-                param_bounds=([5. ,   0.  , 0.   ,    -2.,  -3.,       5. ,   1E3,      0.6,  1.,    thr-10.,    1.,   0.1,   1., 0.9 ],
-                              [35.,   0.1 , 0.02 ,     2.,   3.,       25.,   1E7,      1. , 10.,    thr+10.,   10.,  10. , 200., 1.  ])
-                popt, pcov = curve_fit(vectCBtimesPOLYlow, x, y, p0, maxfev=5000, bounds=param_bounds)
-
-                ax.plot(plot_x, vectCBtimesPOLYlow(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
-            else:
-                ##vectATANconvApproxATAN
-                p0 = [0.3,0.5,15.,30.,0.5,10.]
-                param_bounds=([0., 0.,  5., 25., 0.2,   1.],
-                              [1. ,1., 25., 40., 1. , 100.])
-                popt, pcov = curve_fit(vectATANconvApproxATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
-
-                ax.plot(plot_x, vectATANconvApproxATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
-            
-        imap+=1
-        zorder = zorder + 1
-
-   
-    if options.obj == 'tau':
-        if options.logx:
-            plt.xlim(10., 500.)
-            plt.xscale('log')
-            ax.xaxis.set_major_locator(FixedLocator([10, 100, 500]))
-            ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$100$', r'$500$']))
+        # store two possibilities for fitting error: make the fit with the largest or the smallest error
+        if errU > errD:
+            y_errS = errD
+            y_errL = errU
         else:
-            plt.xlim(0., 150.)
-        leg = plt.legend(loc = 'lower right', fontsize=20, title=r'$|\eta^{\tau, offline}|<2.1$')
-        leg._legend_box.align = "left"
-        plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
-        for xtick in ax.xaxis.get_major_ticks():
-            xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+            y_errS = errU
+            y_errL = errD
+        if options.smallFitErr: y_errFit.append(y_errS)
+        else:                   y_errFit.append(y_errL)
+    
+    ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color='black', zorder=zorder)
+    zorder = zorder + 1
 
-    elif options.obj =='eg':
-        if options.logx:
-            plt.xlim(9., 1000.)
-            plt.xscale('log')
-            ax.xaxis.set_major_locator(FixedLocator([10, 100, 1000]))
-            ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$10^2$', r'$10^3$']))
+    ##vectCBconvATAN
+    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   10.]
+    param_bounds=([thr-10.,    1.,   0.1,   1.,     0.9 ,    0., 0.2,    1.],
+                  [thr+10.,   10.,  10. , 200.,     1.  ,  110., 1. ,  100.])
+    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+
+    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color='black', zorder=zorder)
+
+    zorder = zorder + 1
+
+
+    ## from file 1
+
+    eff_TGraph = inFile.Get('TurnOn_unpacked_Iso')
+    label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - 2022 Unpacked' % (thr)
+
+    marker=markers[imap]
+
+    x = []
+    y = []
+    x_err = []
+    y_errU = []
+    y_errD = []
+    y_errFit = []
+
+    for ibin in range(eff_TGraph.GetN()):
+        # if eff_TGraph.GetPointX(ibin) < thr: continue
+
+        x.append(eff_TGraph.GetPointX(ibin))
+        y.append(eff_TGraph.GetPointY(ibin))
+        x_err.append(eff_TGraph.GetErrorX(ibin))
+        
+        errU = eff_TGraph.GetErrorYhigh(ibin)
+        errD = eff_TGraph.GetErrorYlow(ibin)
+        y_errU.append(errU)
+        y_errD.append(errD)
+
+        # store two possibilities for fitting error: make the fit with the largest or the smallest error
+        if errU > errD:
+            y_errS = errD
+            y_errL = errU
         else:
-            # plt.xlim(5., 100.)
-            plt.xlim(0., 70.)
-        leg = plt.legend(loc = 'lower right', fontsize=20, title=r'$|\eta^{e, offline}|<2.5$')
-        leg._legend_box.align = "left"
-        plt.xlabel(r'$E_{T}^{e, offline}\ [GeV]$')
-        for xtick in ax.xaxis.get_major_ticks():
-            xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+            y_errS = errU
+            y_errL = errD
+        if options.smallFitErr: y_errFit.append(y_errS)
+        else:                   y_errFit.append(y_errL)
+    
+    ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color=cmap(imap), zorder=zorder)
+    zorder = zorder + 1
+
+    ##vectCBconvATAN
+    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   10.]
+    param_bounds=([thr-10.,    1.,   0.1,   1.,     0.9 ,    0., 0.2,    1.],
+                  [thr+10.,   10.,  10. , 200.,     1.  ,  110., 1. ,  100.])
+    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+
+    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
+        
+    imap+=1
+    zorder = zorder + 1
+
+
+    ## from file 2
+
+    if iso_string:
+        eff_TGraph = inFile.Get('TurnOn_progression'+options.relaxation)
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - 2023 Re-Emulated' % (thr)
+    else:
+        eff_TGraph = inFile.Get('TurnOn_noIso')
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2023 Re-Emulated' % (thr)
+
+    marker=markers[imap]
+
+    x = []
+    y = []
+    x_err = []
+    y_errU = []
+    y_errD = []
+    y_errFit = []
+
+    for ibin in range(eff_TGraph.GetN()):
+        # if eff_TGraph.GetPointX(ibin) < thr: continue
+
+        x.append(eff_TGraph.GetPointX(ibin))
+        y.append(eff_TGraph.GetPointY(ibin))
+        x_err.append(eff_TGraph.GetErrorX(ibin))
+        
+        errU = eff_TGraph.GetErrorYhigh(ibin)
+        errD = eff_TGraph.GetErrorYlow(ibin)
+        y_errU.append(errU)
+        y_errD.append(errD)
+
+        # store two possibilities for fitting error: make the fit with the largest or the smallest error
+        if errU > errD:
+            y_errS = errD
+            y_errL = errU
+        else:
+            y_errS = errU
+            y_errL = errD
+        if options.smallFitErr: y_errFit.append(y_errS)
+        else:                   y_errFit.append(y_errL)
+    
+    ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color=cmap(imap), zorder=zorder)
+    zorder = zorder + 1
+
+    ##vectCBconvATAN
+    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   10.]
+    param_bounds=([thr-10.,    1.,   0.1,   1.,     0.9 ,    0., 0.2,    1.],
+                  [thr+10.,   10.,  10. , 200.,     1.  ,  110., 1. ,  100.])
+    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+
+    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
+        
+    imap+=1
+    zorder = zorder + 1
+
+
+    if options.logx:
+        plt.xlim(10., 500.)
+        plt.xscale('log')
+        ax.xaxis.set_major_locator(FixedLocator([10, 100, 500]))
+        ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$100$', r'$500$']))
+    else:
+        plt.xlim(15., 150.)
+    leg = plt.legend(loc = 'lower right', fontsize=20, title=r'$|\eta^{\tau, offline}|<2.1$')
+    leg._legend_box.align = "left"
+    plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
+    mplhep.cms.label('Simulation', data=True, rlabel=r'124X MC (13.6 TeV)')
         
     plt.ylim(0.000, 1.05)
     plt.ylabel(r'Efficiency')
     plt.grid()
-    plot_name = 'turnons/'+options.obj+'_turnons_Run'+options.tag+'_'
-    for sel in options.sels:
-        plot_name += str(sel)+'_'
+    plot_name = 'turnons/turnons_Run'+options.tag+'_'+str(options.sel)+'_'
     if options.logx: plot_name += 'log_'
-    plot_name = plot_name[:-1] + '.pdf'
-    plt.savefig(plot_name)
+    plot_name = plot_name[:-1]
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
 
 
-    if options.obj == 'tau':
-        plt.figure(figsize=(10,10))
-        plt.plot(plot_x, vectCB(plot_x, *popt[:5]), '-', label='CB', lw=2, color=cmap(2))
-        plt.plot(plot_x, vectApproxATAN(plot_x, *popt[5:]), '-', label='ApproxATAN', lw=2, color=cmap(1))
-        plt.plot(plot_x, vectCBconvATAN(plot_x, *popt), '--', label='CBconvATAN', lw=2, color=cmap(0))
-        leg = plt.legend(loc = 'lower right', fontsize=20, title='Convolution decomposition')
-        leg._legend_box.align = "left"
-        plt.ylim(0.000, 1.05)
-        plt.xlim(0., 110.)
-        # plt.yscale('log')
-        plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
-        plt.ylabel(r'Efficiency')
-        plt.grid()
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'')
-        plt.savefig('turnons/tau_convolution_decomposition_example.pdf')
-        plt.close()
 
-    # no real convolution used for the eg so no need for the decomposition
-    # elif options.obj == 'eg':
-    #     plt.figure(figsize=(10,10))
-    #     plt.plot(plot_x, vectCB(plot_x, *popt[:5]), '-', label='CB', lw=2, color=cmap(0), alpha=0.5)
-    #     plt.plot(plot_x, vectPOLY(plot_x, *popt[5:]), '-', label='POLY', lw=2, color=cmap(1), alpha=0.5)
-    #     plt.plot(plot_x, vectCBconvPOLY(plot_x, *popt), '-', label='CBconvPOLY', lw=2, color=cmap(2), alpha=0.5)
-    #     plt.legend(loc = 'lower right', fontsize=20)
-    #     plt.ylim(0.000, 1.05)
-    #     plt.xlim(0., 110.)
-    #     # plt.yscale('log')
-    #     plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
-    #     plt.ylabel(r'Efficiency')
-    #     plt.grid()
-    #     mplhep.cms.label('Preliminary', data=True, rlabel=r'')
-    #     plt.savefig('test.pdf')
-    #     plt.close()
 
+
+    plt.figure(figsize=(10,10))
+    plt.plot(plot_x, vectCB(plot_x, *popt[:5]), '-', label='CB', lw=2, color=cmap(2))
+    plt.plot(plot_x, vectApproxATAN(plot_x, *popt[5:]), '-', label='ApproxATAN', lw=2, color=cmap(1))
+    plt.plot(plot_x, vectCBconvATAN(plot_x, *popt), '--', label='CBconvATAN', lw=2, color=cmap(0))
+    leg = plt.legend(loc = 'lower right', fontsize=20, title='Convolution decomposition')
+    leg._legend_box.align = "left"
+    plt.ylim(0.000, 1.05)
+    plt.xlim(0., 110.)
+    # plt.yscale('log')
+    plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
+    plt.ylabel(r'Efficiency')
+    plt.grid()
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'')
+    plt.savefig('turnons/tau_convolution_decomposition_example.pdf')
+    plt.savefig('turnons/tau_convolution_decomposition_example.png')
+    plt.close()
 
 
 

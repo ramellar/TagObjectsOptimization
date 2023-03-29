@@ -238,8 +238,8 @@ if __name__ == "__main__" :
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
         inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
         legend_title = r'$p_{T}^{\tau, offline}>30\ GeV$'
-        plot_name = 'responses/tau_pt_scale_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/tau_pt_scale_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
 
     elif options.obj == 'eg':
         x_lim = (0.7,1.3)
@@ -248,8 +248,8 @@ if __name__ == "__main__" :
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
         inclusive_label = r'$Inclusive\ |\eta^{e, offline}|<2.5$'
         legend_title = r'$E_{T}^{e, offline}>$'+cut+r'$\ GeV$'
-        plot_name = 'responses/eg_pt_scale_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/eg_pt_scale_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
 
     plt.rcParams['legend.title_fontsize'] = 'small'
     cmap = matplotlib.cm.get_cmap('Set1')
@@ -292,7 +292,8 @@ if __name__ == "__main__" :
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name)
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
 
 
@@ -304,8 +305,8 @@ if __name__ == "__main__" :
         barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
         inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
-        plot_name = 'responses/tau_pt_resolution_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/tau_pt_resolution_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     elif options.obj == 'eg':
         x_lim = (5.,100.)
         y_lim = (min(min(y_ptResol_barrel), min(y_ptResol_endcap)) * 0.5, max(max(y_ptResol_barrel), max(y_ptResol_endcap)) * 1.1)
@@ -313,8 +314,8 @@ if __name__ == "__main__" :
         barrel_label = r'$Barrel\ |\eta^{e, offline}|<1.440$'
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
         inclusive_label = r'$Inclusive\ |\eta^{e, offline}|<2.5$'
-        plot_name = 'responses/eg_pt_resolution_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/eg_pt_resolution_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
 
     fig, ax = plt.subplots(figsize=(10,10))
     
@@ -333,7 +334,8 @@ if __name__ == "__main__" :
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name)
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
 
 
@@ -345,8 +347,8 @@ if __name__ == "__main__" :
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
         inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
         legend_title = r'$p_{T}^{\tau, offline}>30\ GeV$'
-        plot_name = 'responses/tau_eta_response_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/tau_eta_response_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     elif options.obj == 'eg':
         x_lim = (-0.15,0.15)
         x_label = r'$\eta^{e/\gamma, L1}-\eta^{e, offline}$'
@@ -354,8 +356,8 @@ if __name__ == "__main__" :
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
         inclusive_label = r'$Inclusive\ |\eta^{e, offline}|<2.5$'
         legend_title = r'$E_{T}^{e, offline}>$'+cut+r'$\ GeV$'
-        plot_name = 'responses/eg_eta_response_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/eg_eta_response_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
 
     fig, ax = plt.subplots(figsize=(10,10))
     
@@ -395,7 +397,8 @@ if __name__ == "__main__" :
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name)
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
 
 
@@ -407,8 +410,8 @@ if __name__ == "__main__" :
         endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
         inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
         legend_title = r'$p_{T}^{\tau, offline}>30\ GeV$'
-        plot_name = 'responses/tau_phi_response_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/tau_phi_response_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     elif options.obj == 'eg':
         x_lim = (-0.15,0.15)
         x_label = r'$\phi^{e/\gamma, L1}-\phi^{e, offline}$'
@@ -416,8 +419,8 @@ if __name__ == "__main__" :
         endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
         inclusive_label = r'$Inclusive\ |\eta^{e, offline}|<2.5$'
         legend_title = r'$E_{T}^{e, offline}>$'+cut+r'$\ GeV$'
-        plot_name = 'responses/eg_phi_response_'+options.tag+'.pdf'
-        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+        plot_name = 'responses/eg_phi_response_'+options.tag
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
 
     fig, ax = plt.subplots(figsize=(10,10))
     
@@ -457,7 +460,8 @@ if __name__ == "__main__" :
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name)
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
     
 

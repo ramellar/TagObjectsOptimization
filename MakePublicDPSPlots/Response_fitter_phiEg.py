@@ -131,8 +131,8 @@ if __name__ == "__main__" :
     endcap_label = r'$Endcaps\ 1.479<|\eta^{e, offline}|<2.5$'
     inclusive_label = r'$Inclusive\ |\eta^{e, offline}|<2.5$'
     legend_title = r'$E_{T}^{e, offline}>32\ GeV$'
-    plot_name = 'responses/eg_phi_response_'+options.tag+'.pdf'
-    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive.pdf'
+    plot_name = 'responses/eg_phi_response_'+options.tag
+    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
 
     plt.rcParams['legend.title_fontsize'] = 'small'
     cmap = matplotlib.cm.get_cmap('Set1')
@@ -177,7 +177,8 @@ if __name__ == "__main__" :
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name)
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
     
 

@@ -91,6 +91,7 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/tau_eff_vs_nvtx_'+options.tag+'.pdf')
+        plt.savefig('various/tau_eff_vs_nvtx_'+options.tag+'.png')
         plt.close()
 
 
@@ -144,6 +145,7 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/tau_eff_vs_eta_'+options.tag+'.pdf')
+        plt.savefig('various/tau_eff_vs_eta_'+options.tag+'.png')
         plt.close()
 
 
@@ -189,6 +191,7 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/eg_eff_vs_nvtx_'+options.tag+'.pdf')
+        plt.savefig('various/eg_eff_vs_nvtx_'+options.tag+'.png')
         plt.close()
 
         ## VERSUS ETA
@@ -232,4 +235,5 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/eg_eff_vs_eta_'+options.tag+'.pdf')
+        plt.savefig('various/eg_eff_vs_eta_'+options.tag+'.png')
         plt.close()

@@ -111,6 +111,7 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'657 pb$^{-1}$ (13.6 TeV)')
     plt.savefig('various/eg_rate_vs_PU.pdf')
+    plt.savefig('various/eg_rate_vs_PU.png')
     plt.close()
 
 
@@ -138,5 +139,6 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'657 pb$^{-1}$ (13.6 TeV)')
     plt.savefig('various/tau_rate_vs_PU.pdf')
+    plt.savefig('various/tau_rate_vs_PU.png')
     plt.close()
 

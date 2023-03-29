@@ -26,7 +26,7 @@ if __name__ == "__main__" :
     print(options)
 
     if options.obj == "tau":
-        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos/histos_rate_EphemeralZeroBias0_'+options.tag+'_unpacked.root')
+        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2022/histos_rate_EphemeralZeroBias0_'+options.tag+'_unpacked.root')
     elif options.obj == "eg":
         inFile = ROOT.TFile('./EG/HistogramFile_Rate_'+options.tag+'.root')
     else:
@@ -77,6 +77,7 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'107 pb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/tau_rate_'+options.tag+'.pdf')
+        plt.savefig('various/tau_rate_'+options.tag+'.png')
         plt.close()
 
     elif options.obj == "eg":
@@ -122,4 +123,5 @@ if __name__ == "__main__" :
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'94.4 pb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/eg_rate_'+options.tag+'.pdf')
+        plt.savefig('various/eg_rate_'+options.tag+'.png')
         plt.close()
