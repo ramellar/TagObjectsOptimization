@@ -22,15 +22,13 @@
 
 using namespace std;
 
+// input is a MERGED root file and output is a MATCHED root file
 
 void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
 
 {
   // TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
   TChain data("Ntuplizer_TagAndProbe");
-
-  // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MERGED.root";
-  // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MATCHED.root";
 
   data.Add(InputFileName.Data());
 
