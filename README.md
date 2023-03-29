@@ -30,9 +30,6 @@ cd HiggsAnalysis
 git clone git@github.com:bendavid/GBRLikelihood.git
 # modify the first line of `HiggsAnalysis/GBRLikelihood/BuildFile.xml` to have `-std=c++17`
 
-cd ..
-git clone https://github.com/davignon/TauTagAndProbe # package for the production of the starting NTuples
-
 git cms-checkdeps -A -a
 
 scram b -j 10
@@ -40,49 +37,10 @@ scram b -j 10
 git clone https://github.com/jonamotta/TauObjectsOptimization # package for the full optimization
 ```
 
-L1T emulation relevant GlobalTags in `CMSSW_11_0_2` are:
-* for run2 data reprocessing `110X_dataRun2_v12`
-* for run2 mc `110X_mcRun2_asymptotic_v6`
-* for run3 mc `110X_mcRun3_2021_realistic_v6(9)`
-
 ## Tool utilization
-To do the optimization two things are needed:
-* L1 objects (sometimes re-emulated) that are extracted from the RAW tier (in principle, non-re-emulated L1 objects can also be extracted from MiniAOD, but for consistency we never do that)
-* Offline objects that are extracted from the AOD or MiniAOD tier
-
-The optimization is run in several sequential steps:
-* Production of the L1 objects (from RAW) and offline objects (from MiniAOD)
-* Merge of the two inputs, match of the L1 objects to the offline ones, compression of the variables
-* Calculation of the calibration, pruduction of its LUTs, and its application
-* Calculation of the isolation, pruduction of its LUTs, and its application
-* Prodution of turnon curves
-* Evaluation of the L1 rate
 
 ### Production of the input objects
-To produce the input NTuples to the optimization the `TauTagAndProbe` package is used. The useful scripts for this are mainly in the `test` subfolder.
-
-Jobs on RAW are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_X.py`
-Before launching this you need to fix
-* the Global Tag
-* the configuration of the L1Calorimeter (`process.load("L1Trigger.L1TCalorimeter.caloStage2Params_20XX_vX_X_XXX_cfi")`)
-
-
-Jobs on MiniAOD are submitted using `submitOnTier3.py` which in turn launches `test_noTagAndProbe.py`
-Before launching this you need to fix
-* the Global Tag
-
-For Monte Carlo (MC), we implemented a truth matching rather than a Tag & Probe technique which would dramatically and artificially decrease the available statistics.
-
-After having produced the input object `hadd` all the files.
-
-
-Jobs on ZeroBias are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_ZeroBias.py`
-Before launching this you need to fix
-* the `isMC` flag
-* the input folder and file list
-The datasets that have to be used are among the ones listed here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TriggerStudiesChangesInDataTaking2018
-
-After having produced the input object `hadd` all the files.
+To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages.
 
 ### Merging, matching, and compression
 Enter `MergeTrees` and run `make clean ; make`.
@@ -90,7 +48,7 @@ Enter `MergeTrees` and run `make clean ; make`.
 To merge the files first create/modify the needed `.config` file inside the `MergeTrees/run` directory. There the `MINIAOD` file has to be specified as primary and the `RAW` one as secondary (always use absolute paths). Check that the files really contain the TTrees that the executable will look for. 
 Then jus run:
 ```bash
-./merge.exe run/<whatevername>.config 
+./merge.exe run_<year>/<optimization_version>/<config>.config 
 ```
 
 After that we need to match the reco taus to the L1 taus. To do so edit the `MakeTreeForCalibration.C` file (inside the `MatchAndCompress` folder) with the correct in and out files, then just run:
@@ -100,9 +58,9 @@ root -l
 MakeTreeForCalibration()
 ```
 
-After the matching the compression needs to be performed. To do so edit the `produceTreeWithCompressedIetaEShape_NewFormat.py` file (inside the `MatchAndCompress` folder) with the correct in and out files, then just run:
+After the matching the compression needs to be performed. To do so edit the `produceTreeWithCompressedVars.py` file (inside the `MatchAndCompress` folder) with the correct in and out files, then just run:
 ```bash
-python produceTreeWithCompressedIetaEShape_NewFormat.py
+python produceTreeWithCompressedVars.py
 ```
 
 ### Calibration
@@ -110,63 +68,67 @@ Enter `Calibrate/RegressionTraining` and run `make clean ; make`.
 
 To do the calibration first create/modify the needed `.config` file inside the `Calibrate/RegressionTraining/run` directory, then just run:
 ```bash
-./regression.exe run/<whatevername>.config
+./regression.exe run_<year>/<config>.config
 ```
 
-Now that the regression has been trained, adapt to your needs the `makeTH4_<whateverag>.py` file  and run:
+Now that the regression has been trained, adapt to your needs the `makeTH4_LUT.py` file  and run:
 ```bash
-python makeTH4_<whateverag>.py
+python makeTH4_LUT.py
 ```
 
-Now that the TH4 histos have been created, adapt to your needs the `MakeTauCalibLUT_<whatevertag>.C` file and run:
-```bash
-root -l
-.L MakeTauCalibLUT_<whatevertag>.C+
-MakeTauCalibLUT() # insert needed arguments
-```
-
-Now that the LUTs have been created, we can apply the calibration to teh L1 objects. Adapt to your needs `ApplyCalibration_newnTT.C`
+Now that the TH4 LUTs have been created, we can apply the calibration to teh L1 objects. Adapt to your needs `ApplyCalibration.C` and `ApplyCalibrationZeroBias.C`
 ```bash
 root -l
-.L ApplyCalibration_newnTT.C+
+.L ApplyCalibration.C+
 ApplyCalibration() # insert needed arguments
 ```
 
-### Isolation
-Now that the calibration has been done the isolation needs to be compute and applyed.
-To do so go to the `Isolate` folder.
+and
 
-To compute the isolation, adapt to your needs the `Build_Isolation_WPs_MC_newnTT.C` file and run:
 ```bash
 root -l
-.L Build_Isolation_WPs_MC_newnTT.C+
-Build_Isolation_WPs() # insert needed arguments
-```
-
-Then the relaxation of the isolation needs to be performed. To do so, adapt to your needs `Fill_Isolation_TH3_MC_newnTT.C` and run:
-```bash
-root -l
-.L Fill_Isolation_TH3_MC_newnTT.C+
-Fill_Isolation_TH3() # insert needed arguments
-```
-or
-```bash
-root -l
-.L Fill_Isolation_TH3_MC_newnTT_gridSearch.C+
-Fill_Isolation_TH3() # insert needed arguments
-```
-to start a a grid search over the possible relaxation schemes that give rise to different turnON shapes.
-
-### Calibration of ZeroBias
-Enter `Calibrate/`, adapt to your needs `ApplyCalibrationZeroBias_nTT.C` and run:
-```bash
-root -l
-.L ApplyCalibrationZeroBias_nTT.C+
+.L ApplyCalibrationZeroBias.C+
 ApplyCalibrationZeroBias() # insert needed arguments
 ```
 
+After the TH4 histos LUTs have been created we can make the LUTs that then go online; adapt to your needs the `MakeTauCalibLUT.C` file and run:
+```bash
+root -l
+.L MakeTauCalibLUT.C+
+MakeTauCalibLUT() # insert needed arguments
+```
+
+### Isolation
+Now that the calibration has been done the isolation needs to be compute and applied.
+To do so go to the `Isolate` folder.
+
+To compute the isolation, adapt to your needs the `Build_Isolation_WPs.C` file and run:
+```bash
+root -l
+.L Build_Isolation_WPs.C+
+Build_Isolation_WPs() # insert needed arguments
+```
+This one has the possibility of building the WPs based on `compressed` or `supercompressed` variables. Due to statistics limits, it is always better to run in `compressed` mode.
+
+Then the relaxation of the isolation needs to be performed. To do so, adapt to your needs `Fill_RelaxedIsolation.C` and run:
+```bash
+root -l
+.L Fill_RelaxedIsolation.C+
+Fill_RelaxedIsolation_TH3() # insert needed arguments
+```
+or adapt to your needs `Fill_RelaxedIsolation_gridsearch_nTTextrap.C` and run:
+```bash
+root -l
+.L Fill_RelaxedIsolation_gridsearch_nTTextrap.C+
+Fill_RelaxedIsolation_TH3() # insert needed arguments
+```
+to start a a grid search over the possible relaxation schemes that give rise to different turnON shapes.
+In here, the IsoEt cuts are constructed either by reading the bin's contents or making the IsoEt vs. nTT fit, the option regulating this is `byBin`.
+
 ### Rates
-To produce rates go to the `MakeRates` folder, adapt to your needs `Rate_ZeroBias_Run323755_unpacked.C` and `Rate_ZeroBias_Run323755_newnTT.C` and run:
+To produce rates go to the `MakeRates` folder.
+
+If you are running the 'old' version of the code, adapt to your needs `Rate_ZeroBias_unpacked.C` and `Rate_ZeroBias.C` and run:
 ```bash
 root -l
 .L Rate_ZeroBias_unpacked.C+
@@ -175,30 +137,39 @@ Rate() # insert needed arguments
 and 
 ```bash
 root -l
-.L Rate_ZeroBias_newnTT.C+
+.L Rate_ZeroBias.C+
 Rate() # insert needed arguments
 ```
-or 
+
+Else, if you are running the gridsearch, adapt to your needs `Rate_ZeroBias_unpacked.C` and `Rate_ZeroBias_gridSearch.C` and run:
+```bash
+root -l
+.L Rate_ZeroBias_unpacked.C+
+Rate() # insert needed arguments
+```
+and
 ```bash
 root -l
 .L Rate_ZeroBias_newnTT_gridSearch.C+
 Rate() # insert needed arguments
 ```
-if you are doing the grid search over the possible relaxation parametrizations.
 
-Having computed the rates, they can be plotted going to the `PlotRates` folder, adapting to your needs `CompareRates_newnTT_withunpacked.C`, and running:
+## Thresholds
+Having computed the rates, the next step is to compute either the thresholds at fixed rates or the rates at fixed thresholds, by going to the `PlotRates` folder.
+
+If you are running the 'old' version of the code, adapt to your needs `CompareRates_ZeroBias_withUnpacked.C`, and run:
 ```bash
 root -l 
-.L CompareRates_newnTT_withunpacked.C
+.L CompareRates_ZeroBias_withUnpacked.C
 compare() # insert needed arguments
 ```
-or
+
+Else, if you are running the gridsearch, adapt to your needs `CompareRates_ZeroBias_gridSearch_withUnpacked.C`, and run:
 ```bash
 root -l 
-.L CompareRates_gridSearch_newnTT_withunpacked.C
+.L CompareRates_ZeroBias_gridSearch_withUnpacked.C
 compare() # insert needed arguments
 ```
-if you are doing the grid search over the possible relaxation parametrizations.
 
 In case you want to evaluate the rate you would get from a specific relaxation skim at a fixed threshold you can use:
 ```bash
