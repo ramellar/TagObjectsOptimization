@@ -243,7 +243,7 @@ Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
 {
   for(UInt_t i = 0 ; i < supercompressedNbinsnTT-1 ; ++i)
     {
-      if(nTT_fine>=161) return supercompressedNbinsnTT-2;
+      // if(nTT_fine>=161) return supercompressedNbinsnTT-2;
       // if(nTT_fine>=201) return supercompressedNbinsnTT-2;
       //if(nTT_fine>=76) return supercompressedNbinsnTT-2;
       // if(nTT_fine>=106) return supercompressedNbinsnTT-2;
@@ -283,12 +283,12 @@ void ApplyCalibration(float calibThr = 1.7)
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_COMPRESSED_2023_03_04.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root";
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr"+intgr+"p"+decim+"/Tau_MC_COMPRESSED_2023_03_04.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root";
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0");
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1");
 
   TFile f_in(InputFileName.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");

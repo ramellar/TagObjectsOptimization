@@ -23,24 +23,26 @@
 
 using namespace std;
 
-void ApplyCalibrationZeroBias(TString tag, float calibThr = 1.7)
+void ApplyCalibrationZeroBias(float calibThr = 1.7)
 // void ApplyCalibrationZeroBias(TString InputFileName = "Ntuple_ZeroBias_With2017Layer1_ShapeVeto_20_02_17.root")
 {
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022C_"+tag+"_RAW_reEmuTPs/ZeroBias_Run2022C_"+tag+"_RAW_reEmuTPs.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022C_"+tag+"_RAW_reEmuTPs/ZeroBias_Run2022C_"+tag+"_RAW_reEmuTPs_CALIBRATED.root";
+  // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run362616__RAW/EphemeralZeroBias0__Run2022G_Run362616__RAW.root";
+  // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr1p7/EphemeralZeroBias0__Run2022G_Run362616__CALIBRATED.root";
+  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run362617__RAW/EphemeralZeroBias0__Run2022G_Run362617__RAW.root";
+  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr1p7/EphemeralZeroBias0__Run2022G_Run362617__CALIBRATED.root";
 
-  TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,NbinsIEt2-1,hardcodedIetBins2double);
+  TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   isolation_vs_pt->Clear();
 
   const UInt_t nIsolation = 101;
   const Double_t isolationBins[nIsolation] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections/corrections_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_VBFHToTauTau_M125_compressedieta_compressediet_hasEM_isMerged_optimizationV13"); 
+  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1"); 
  
   TH1F* histo_shape = new TH1F("histo_shape","histo_shape",256,0,256);
   TH1F* histo_symmShape = new TH1F("histo_symmShape","histo_symmShape",256,0,256);
@@ -235,56 +237,56 @@ void ApplyCalibrationZeroBias(TString tag, float calibThr = 1.7)
                 }
             }
 
-          for(Int_t ie = 0 ; ie < NbinsIEt2 ; ++ie)
+          for(Int_t ie = 0 ; ie < compressedNbinsIEt ; ++ie)
             {
               if(l1tEmuRawEt->at(iL1Tau)>=255)
                 {
-                  out_compressedE->push_back(NbinsIEt2-2);
+                  out_compressedE->push_back(compressedNbinsIEt-2);
                   break;
                 }
-              else if(l1tEmuRawEt->at(iL1Tau)>= hardcodedIetBins2[ie] && l1tEmuRawEt->at(iL1Tau) < hardcodedIetBins2[ie+1])
+              else if(l1tEmuRawEt->at(iL1Tau)>= hardcodedCompressedIetBins[ie] && l1tEmuRawEt->at(iL1Tau) < hardcodedCompressedIetBins[ie+1])
                 {
                   out_compressedE->push_back(ie);
                   break;
                 }
             }
 
-          for(Int_t ie = 0 ; ie < NbinsIEt ; ++ie)
+          for(Int_t ie = 0 ; ie < supercompressedNbinsIEt ; ++ie)
             {
               if(l1tEmuRawEt->at(iL1Tau)>=255)
                 {
-                  out_supercompressedE->push_back(NbinsIEt-2);
+                  out_supercompressedE->push_back(supercompressedNbinsIEt-2);
                   break;
                 }
-              else if(l1tEmuRawEt->at(iL1Tau)>= hardcodedIetBins[ie] && l1tEmuRawEt->at(iL1Tau) < hardcodedIetBins[ie+1])
+              else if(l1tEmuRawEt->at(iL1Tau)>= hardcodedSupercompressedIetBins[ie] && l1tEmuRawEt->at(iL1Tau) < hardcodedSupercompressedIetBins[ie+1])
                 {
                   out_supercompressedE->push_back(ie);
                   break;
                 }
             }
           
-          for(Int_t inTT = 0 ; inTT < NbinsnTT2 ; ++inTT)
+          for(Int_t inTT = 0 ; inTT < compressedNbinsnTT ; ++inTT)
             {
               if(l1tEmuNTT->at(iL1Tau)>=255)
                 {
-                  out_compressednTT->push_back(NbinsnTT-2);
+                  out_compressednTT->push_back(compressedNbinsnTT-2);
                   break;
                 }
-              else if(l1tEmuNTT->at(iL1Tau)>= hardcodednTTBins2[inTT] && l1tEmuNTT->at(iL1Tau) < hardcodednTTBins2[inTT+1])
+              else if(l1tEmuNTT->at(iL1Tau)>= hardcodedCompressednTTBins[inTT] && l1tEmuNTT->at(iL1Tau) < hardcodedCompressednTTBins[inTT+1])
                 {
                   out_compressednTT->push_back(inTT);
                   break;
                 }
             }
           
-          for(Int_t inTT = 0 ; inTT < NbinsnTT ; ++inTT)
+          for(Int_t inTT = 0 ; inTT < supercompressedNbinsnTT ; ++inTT)
             {
               if(l1tEmuNTT->at(iL1Tau)>=255)
                 {
-                  out_supercompressednTT->push_back(NbinsnTT-2);
+                  out_supercompressednTT->push_back(supercompressedNbinsnTT-2);
                   break;
                 }
-              else if(l1tEmuNTT->at(iL1Tau)>= hardcodednTTBins[inTT] && l1tEmuNTT->at(iL1Tau) < hardcodednTTBins[inTT+1])
+              else if(l1tEmuNTT->at(iL1Tau)>= hardcodedSupercompressednTTBins[inTT] && l1tEmuNTT->at(iL1Tau) < hardcodedSupercompressednTTBins[inTT+1])
                 {
                   out_supercompressednTT->push_back(inTT);
                   break;
