@@ -32,7 +32,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     TString InputFileName = file;
     TFile f(InputFileName.Data(),"READ");
-    TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
+    TTree* inTree = (TTree*)f.Get("outTreeForCalibration");
     Int_t   in_RunNumber =  0;
     Float_t tauPt = 0;
     Float_t tauEta = 0;
@@ -43,14 +43,14 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     Int_t   l1tTauIso = 0;
     Int_t   nvtx = 0;
     inTree->SetBranchAddress("RunNumber", &in_RunNumber);
-    inTree->SetBranchAddress("tauPt",     &tauPt);
-    inTree->SetBranchAddress("tauEta",    &tauEta);
-    inTree->SetBranchAddress("tauPhi",    &tauPhi);
-    inTree->SetBranchAddress("l1tPt",     &l1tTauPt);
-    inTree->SetBranchAddress("l1tEta",    &l1tTauEta);
-    inTree->SetBranchAddress("l1tPhi",    &l1tTauPhi);
-    inTree->SetBranchAddress("l1tIso",    &l1tTauIso);
-    inTree->SetBranchAddress("Nvtx",      &nvtx);
+    inTree->SetBranchAddress("OfflineTau_pt",&tauPt);
+    inTree->SetBranchAddress("OfflineTau_eta",&tauEta);
+    inTree->SetBranchAddress("OfflineTau_phi",&tauPhi);
+    inTree->SetBranchAddress("L1Tau_pt",&l1tTauPt);
+    inTree->SetBranchAddress("L1Tau_eta",&l1tTauEta);
+    inTree->SetBranchAddress("L1Tau_phi",&l1tTauPhi);
+    inTree->SetBranchAddress("L1Tau_IsoFlag",&l1tTauIso);
+    inTree->SetBranchAddress("Nvtx",&nvtx);
 
     TH1F* pt = new TH1F("pt","pt",50,0,100);
     TH1F* eta = new TH1F("eta","eta",12,-2.1,2.1);
@@ -398,7 +398,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2023/resolutions_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_2023/resolutions_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();

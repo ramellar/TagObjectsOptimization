@@ -71,10 +71,17 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TH1F* pt_barrel_resp_ptInclusive = new TH1F("pt_barrel_resp_ptInclusive","pt_barrel_resp_ptInclusive",60,0,3);
     TH1F* pt_endcap_resp_ptInclusive = new TH1F("pt_endcap_resp_ptInclusive","pt_endcap_resp_ptInclusive",60,0,3);
 
+    TH1F* R2_pt_response_ptInclusive = new TH1F("R2_pt_response_ptInclusive","R2_pt_response_ptInclusive",60,0,3);
+    TH1F* R2_pt_barrel_resp_ptInclusive = new TH1F("R2_pt_barrel_resp_ptInclusive","R2_pt_barrel_resp_ptInclusive",60,0,3);
+    TH1F* R2_pt_endcap_resp_ptInclusive = new TH1F("R2_pt_endcap_resp_ptInclusive","R2_pt_endcap_resp_ptInclusive",60,0,3);
+
     // PT RESPONSE - PT BINS HISTOGRAMS
     std::vector<TH1F*> response_ptBins = {};
     std::vector<TH1F*> barrel_response_ptBins = {};
     std::vector<TH1F*> endcap_response_ptBins = {};
+    std::vector<TH1F*> R2_response_ptBins = {};
+    std::vector<TH1F*> R2_barrel_response_ptBins = {};
+    std::vector<TH1F*> R2_endcap_response_ptBins = {};
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         TString lowP;
@@ -84,12 +91,18 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         response_ptBins.push_back(new TH1F("pt_resp_ptBin"+lowP+"to"+highP,"pt_resp_ptBin"+lowP+"to"+highP,60,0,3));
         barrel_response_ptBins.push_back(new TH1F("pt_barrel_resp_ptBin"+lowP+"to"+highP,"pt_barrel_resp_ptBin"+lowP+"to"+highP,60,0,3));
         endcap_response_ptBins.push_back(new TH1F("pt_endcap_resp_ptBin"+lowP+"to"+highP,"pt_endcap_resp_ptBin"+lowP+"to"+highP,60,0,3));
+        R2_response_ptBins.push_back(new TH1F("R2_pt_resp_ptBin"+lowP+"to"+highP,"R2_pt_resp_ptBin"+lowP+"to"+highP,60,0,3));
+        R2_barrel_response_ptBins.push_back(new TH1F("R2_pt_barrel_resp_ptBin"+lowP+"to"+highP,"R2_pt_barrel_resp_ptBin"+lowP+"to"+highP,60,0,3));
+        R2_endcap_response_ptBins.push_back(new TH1F("R2_pt_endcap_resp_ptBin"+lowP+"to"+highP,"R2_pt_endcap_resp_ptBin"+lowP+"to"+highP,60,0,3));
     }
 
     // FIT PT RESPONSE - PT BINS HISTOGRAMS
     std::vector<TF1*> fit_response_ptBins = {};
     std::vector<TF1*> fit_barrel_response_ptBins = {};
     std::vector<TF1*> fit_endcap_response_ptBins = {};
+    std::vector<TF1*> R2_fit_response_ptBins = {};
+    std::vector<TF1*> R2_fit_barrel_response_ptBins = {};
+    std::vector<TF1*> R2_fit_endcap_response_ptBins = {};
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         TString lowP;
@@ -99,6 +112,9 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         fit_response_ptBins.push_back(new TF1("fit_pt_resp_ptBin"+lowP+"to"+highP, fit_option, 0, 3));
         fit_barrel_response_ptBins.push_back(new TF1("fit_pt_barrel_resp_ptBin"+lowP+"to"+highP, fit_option, 0, 3));
         fit_endcap_response_ptBins.push_back(new TF1("fit_pt_endcap_resp_ptBin"+lowP+"to"+highP, fit_option, 0, 3));
+        R2_fit_response_ptBins.push_back(new TF1("R2_fit_pt_resp_ptBin"+lowP+"to"+highP, fit_option, 0, 3));
+        R2_fit_barrel_response_ptBins.push_back(new TF1("R2_fit_pt_barrel_resp_ptBin"+lowP+"to"+highP, fit_option, 0, 3));
+        R2_fit_endcap_response_ptBins.push_back(new TF1("R2_fit_pt_endcap_resp_ptBin"+lowP+"to"+highP, fit_option, 0, 3));
     }
 
 
@@ -106,6 +122,9 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     std::vector<TH1F*> absEta_response_ptBins = {};
     std::vector<TH1F*> minusEta_response_ptBins = {};
     std::vector<TH1F*> plusEta_response_ptBins = {};
+    std::vector<TH1F*> R2_absEta_response_ptBins = {};
+    std::vector<TH1F*> R2_minusEta_response_ptBins = {};
+    std::vector<TH1F*> R2_plusEta_response_ptBins = {};
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
     {
         TString lowE;
@@ -115,12 +134,18 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         absEta_response_ptBins.push_back(new TH1F("pt_resp_AbsEtaBin"+lowE+"to"+highE,"pt_resp_AbsEtaBin"+lowE+"to"+highE,60,0,3));
         minusEta_response_ptBins.push_back(new TH1F("pt_resp_MinusEtaBin"+lowE+"to"+highE,"pt_resp_MinusEtaBin"+lowE+"to"+highE,60,0,3));
         plusEta_response_ptBins.push_back(new TH1F("pt_resp_PlusEtaBin"+lowE+"to"+highE,"pt_resp_PlusEtaBin"+lowE+"to"+highE,60,0,3));
+        R2_absEta_response_ptBins.push_back(new TH1F("R2_pt_resp_AbsEtaBin"+lowE+"to"+highE,"R2_pt_resp_AbsEtaBin"+lowE+"to"+highE,60,0,3));
+        R2_minusEta_response_ptBins.push_back(new TH1F("R2_pt_resp_MinusEtaBin"+lowE+"to"+highE,"R2_pt_resp_MinusEtaBin"+lowE+"to"+highE,60,0,3));
+        R2_plusEta_response_ptBins.push_back(new TH1F("R2_pt_resp_PlusEtaBin"+lowE+"to"+highE,"R2_pt_resp_PlusEtaBin"+lowE+"to"+highE,60,0,3));
     }
 
     // FIT PT RESPONSE -  ETA BINS HISTIGRAMS
     std::vector<TF1*> fit_absEta_response_ptBins = {};
     std::vector<TF1*> fit_minusEta_response_ptBins = {};
     std::vector<TF1*> fit_plusEta_response_ptBins = {};
+    std::vector<TF1*> R2_fit_absEta_response_ptBins = {};
+    std::vector<TF1*> R2_fit_minusEta_response_ptBins = {};
+    std::vector<TF1*> R2_fit_plusEta_response_ptBins = {};
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
     {
         TString lowE;
@@ -130,9 +155,13 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         fit_absEta_response_ptBins.push_back(new TF1("fit_pt_resp_AbsEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
         fit_minusEta_response_ptBins.push_back(new TF1("fit_pt_resp_MinusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
         fit_plusEta_response_ptBins.push_back(new TF1("fit_pt_resp_PlusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
+        R2_fit_absEta_response_ptBins.push_back(new TF1("R2_fit_pt_resp_AbsEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
+        R2_fit_minusEta_response_ptBins.push_back(new TF1("R2_fit_pt_resp_MinusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
+        R2_fit_plusEta_response_ptBins.push_back(new TF1("R2_fit_pt_resp_PlusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
     }
 
     std::vector<TH1F*> pt_resp_PtEtaBin = {};
+    std::vector<TH1F*> R2_pt_resp_PtEtaBin = {};
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         for(long unsigned int j = 0; j < etaBins.size()-1; ++j)
@@ -146,6 +175,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
             TString highE;
             highE.Form("%.3f", etaBins[j+1]);
             pt_resp_PtEtaBin.push_back(new TH1F("pt_resp_PtBin"+lowP+"to"+highP+"_EtaBin"+lowE+"to"+highE,"pt_resp_PtBin"+lowP+"to"+highP+"_EtaBin"+lowE+"to"+highE,60,0,3));
+            R2_pt_resp_PtEtaBin.push_back(new TH1F("R2_pt_resp_PtBin"+lowP+"to"+highP+"_EtaBin"+lowE+"to"+highE,"R2_pt_resp_PtBin"+lowP+"to"+highP+"_EtaBin"+lowE+"to"+highE,60,0,3));
         }
     }
 
@@ -160,6 +190,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     // ADDITIONAL USEFULL PLOTS
     TH1F* Nvtx = new TH1F("Nvtx","Nvtx",70,0,70);
+    TH1F* R2_Nvtx = new TH1F("R2_Nvtx","R2_Nvtx",70,0,70);
 
     for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
     {
@@ -236,6 +267,75 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         }
     }
 
+
+    TFile R2_f("/data_CMS/cms/motta/Run3preparation/SingleMuon__Run2018D-PromptReco-v2__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue/SingleMuon__Run2018D-PromptReco-v2__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue.root","READ");
+    TTree* R2_inTree = (TTree*)R2_f.Get("Ntuplizer/TagAndProbe");
+    in_RunNumber =  0;
+    tauPt = 0;
+    tauEta = 0;
+    l1tTauPt = 0;
+    l1tTauEta = 0;
+    l1tTauIso = 0;
+    nvtx = 0;
+    R2_inTree->SetBranchAddress("RunNumber", &in_RunNumber);
+    R2_inTree->SetBranchAddress("tauPt",     &tauPt);
+    R2_inTree->SetBranchAddress("tauEta",    &tauEta);
+    R2_inTree->SetBranchAddress("l1tPt",     &l1tTauPt);
+    R2_inTree->SetBranchAddress("l1tEta",    &l1tTauEta);
+    R2_inTree->SetBranchAddress("l1tIso",    &l1tTauIso);
+    R2_inTree->SetBranchAddress("Nvtx",      &nvtx);
+
+    for(UInt_t i = 0 ; i < R2_inTree->GetEntries() ; ++i)
+    {
+        R2_inTree->GetEntry(i);
+
+        if(l1tTauPt<0.) { continue; }
+
+        R2_Nvtx->Fill(nvtx);
+
+        // fill pT inclusive distributions skipping low energy taus
+        if(tauPt<30)
+        {
+            R2_pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
+            if(abs(tauEta) < 1.305) { R2_pt_barrel_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
+            else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { R2_pt_endcap_resp_ptInclusive->Fill(l1tTauPt/tauPt); }
+        }
+
+        for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
+        {
+            if(tauPt > ptBins[i] and tauPt <= ptBins[i+1])
+            {
+                R2_response_ptBins[i]->Fill(l1tTauPt/tauPt);
+                
+                if (abs(tauEta) < 1.305) { R2_barrel_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+                else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { R2_endcap_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+            }
+        }
+
+        for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
+        {
+            if(abs(tauEta) > etaBins[i] and abs(tauEta) < etaBins[i+1]) { R2_absEta_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+
+            if(tauEta > etaBins[i] and tauEta < etaBins[i+1]) { R2_plusEta_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+            else if (tauEta < -etaBins[i] and tauEta > -etaBins[i+1]) { R2_minusEta_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+        }
+        
+        int k = 0;
+        for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
+        {
+            for(long unsigned int j = 0; j < etaBins.size()-1; ++j)
+            {
+                if (abs(tauEta) > etaBins[j] and abs(tauEta) < etaBins[j+1] and tauPt > ptBins[i] and tauPt < ptBins[i+1])
+                {
+                    R2_pt_resp_PtEtaBin[k]->Fill(l1tTauPt/tauPt);
+                }
+
+                k += 1;
+            }
+        }
+    }
+
+
     // scale everything to unity
     pt_response_ptInclusive->Scale(1.0/pt_response_ptInclusive->Integral());
     pt_barrel_resp_ptInclusive->Scale(1.0/pt_barrel_resp_ptInclusive->Integral());
@@ -246,12 +346,18 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     phi_resp_barrel->Scale(1.0/phi_resp_barrel->Integral());
     phi_resp_endcap->Scale(1.0/phi_resp_endcap->Integral());
     phi_resp_inclusive->Scale(1.0/phi_resp_inclusive->Integral());
+    R2_pt_response_ptInclusive->Scale(1.0/R2_pt_response_ptInclusive->Integral());
+    R2_pt_barrel_resp_ptInclusive->Scale(1.0/R2_pt_barrel_resp_ptInclusive->Integral());
+    R2_pt_endcap_resp_ptInclusive->Scale(1.0/R2_pt_endcap_resp_ptInclusive->Integral());
 
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         response_ptBins[i]->Scale(1.0/response_ptBins[i]->Integral());
         barrel_response_ptBins[i]->Scale(1.0/barrel_response_ptBins[i]->Integral());
         endcap_response_ptBins[i]->Scale(1.0/endcap_response_ptBins[i]->Integral());
+        R2_response_ptBins[i]->Scale(1.0/R2_response_ptBins[i]->Integral());
+        R2_barrel_response_ptBins[i]->Scale(1.0/R2_barrel_response_ptBins[i]->Integral());
+        R2_endcap_response_ptBins[i]->Scale(1.0/R2_endcap_response_ptBins[i]->Integral());
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -259,6 +365,9 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         minusEta_response_ptBins[i]->Scale(1.0/minusEta_response_ptBins[i]->Integral());
         plusEta_response_ptBins[i]->Scale(1.0/plusEta_response_ptBins[i]->Integral());
         absEta_response_ptBins[i]->Scale(1.0/absEta_response_ptBins[i]->Integral());
+        R2_minusEta_response_ptBins[i]->Scale(1.0/R2_minusEta_response_ptBins[i]->Integral());
+        R2_plusEta_response_ptBins[i]->Scale(1.0/R2_plusEta_response_ptBins[i]->Integral());
+        R2_absEta_response_ptBins[i]->Scale(1.0/R2_absEta_response_ptBins[i]->Integral());
     }
 
     // perform fits
@@ -269,17 +378,26 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
             fit_response_ptBins[i]->SetParameters(response_ptBins[i]->GetBinContent(20), 1, response_ptBins[i]->GetRMS());
             fit_barrel_response_ptBins[i]->SetParameters(barrel_response_ptBins[i]->GetBinContent(20), 1, barrel_response_ptBins[i]->GetRMS());
             fit_endcap_response_ptBins[i]->SetParameters(endcap_response_ptBins[i]->GetBinContent(20), 1, endcap_response_ptBins[i]->GetRMS());
+            R2_fit_response_ptBins[i]->SetParameters(R2_response_ptBins[i]->GetBinContent(20), 1, R2_response_ptBins[i]->GetRMS());
+            R2_fit_barrel_response_ptBins[i]->SetParameters(R2_barrel_response_ptBins[i]->GetBinContent(20), 1, R2_barrel_response_ptBins[i]->GetRMS());
+            R2_fit_endcap_response_ptBins[i]->SetParameters(R2_endcap_response_ptBins[i]->GetBinContent(20), 1, R2_endcap_response_ptBins[i]->GetRMS());
         }
         if (fit_option=="crystalball")
         { 
             fit_response_ptBins[i]->SetParameters(response_ptBins[i]->GetBinContent(20), 1, response_ptBins[i]->GetRMS(), 1, 1);
             fit_barrel_response_ptBins[i]->SetParameters(barrel_response_ptBins[i]->GetBinContent(20), 1, barrel_response_ptBins[i]->GetRMS(), 1, 1);
             fit_endcap_response_ptBins[i]->SetParameters(endcap_response_ptBins[i]->GetBinContent(20), 1, endcap_response_ptBins[i]->GetRMS(), 1, 1);
+            R2_fit_response_ptBins[i]->SetParameters(R2_response_ptBins[i]->GetBinContent(20), 1, R2_response_ptBins[i]->GetRMS(), 1, 1);
+            R2_fit_barrel_response_ptBins[i]->SetParameters(R2_barrel_response_ptBins[i]->GetBinContent(20), 1, R2_barrel_response_ptBins[i]->GetRMS(), 1, 1);
+            R2_fit_endcap_response_ptBins[i]->SetParameters(R2_endcap_response_ptBins[i]->GetBinContent(20), 1, R2_endcap_response_ptBins[i]->GetRMS(), 1, 1);
         }
 
         response_ptBins[i]->Fit(fit_response_ptBins[i]);
         barrel_response_ptBins[i]->Fit(fit_barrel_response_ptBins[i]);
         endcap_response_ptBins[i]->Fit(fit_endcap_response_ptBins[i]);
+        R2_response_ptBins[i]->Fit(R2_fit_response_ptBins[i]);
+        R2_barrel_response_ptBins[i]->Fit(R2_fit_barrel_response_ptBins[i]);
+        R2_endcap_response_ptBins[i]->Fit(R2_fit_endcap_response_ptBins[i]);
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -289,17 +407,26 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
             fit_minusEta_response_ptBins[i]->SetParameters(minusEta_response_ptBins[i]->GetBinContent(20), 1, minusEta_response_ptBins[i]->GetRMS());
             fit_plusEta_response_ptBins[i]->SetParameters(plusEta_response_ptBins[i]->GetBinContent(20), 1, plusEta_response_ptBins[i]->GetRMS());
             fit_absEta_response_ptBins[i]->SetParameters(absEta_response_ptBins[i]->GetBinContent(20), 1, absEta_response_ptBins[i]->GetRMS());
+            R2_fit_minusEta_response_ptBins[i]->SetParameters(R2_minusEta_response_ptBins[i]->GetBinContent(20), 1, R2_minusEta_response_ptBins[i]->GetRMS());
+            R2_fit_plusEta_response_ptBins[i]->SetParameters(R2_plusEta_response_ptBins[i]->GetBinContent(20), 1, R2_plusEta_response_ptBins[i]->GetRMS());
+            R2_fit_absEta_response_ptBins[i]->SetParameters(R2_absEta_response_ptBins[i]->GetBinContent(20), 1, R2_absEta_response_ptBins[i]->GetRMS());
         }
         if (fit_option=="crystalball")
         { 
             fit_minusEta_response_ptBins[i]->SetParameters(minusEta_response_ptBins[i]->GetBinContent(20), 1, minusEta_response_ptBins[i]->GetRMS(), 1, 1);
             fit_plusEta_response_ptBins[i]->SetParameters(plusEta_response_ptBins[i]->GetBinContent(20), 1, plusEta_response_ptBins[i]->GetRMS(), 1, 1);
             fit_absEta_response_ptBins[i]->SetParameters(absEta_response_ptBins[i]->GetBinContent(20), 1, absEta_response_ptBins[i]->GetRMS(), 1, 1);
+            R2_fit_minusEta_response_ptBins[i]->SetParameters(R2_minusEta_response_ptBins[i]->GetBinContent(20), 1, R2_minusEta_response_ptBins[i]->GetRMS(), 1, 1);
+            R2_fit_plusEta_response_ptBins[i]->SetParameters(R2_plusEta_response_ptBins[i]->GetBinContent(20), 1, R2_plusEta_response_ptBins[i]->GetRMS(), 1, 1);
+            R2_fit_absEta_response_ptBins[i]->SetParameters(R2_absEta_response_ptBins[i]->GetBinContent(20), 1, R2_absEta_response_ptBins[i]->GetRMS(), 1, 1);
         }
 
         minusEta_response_ptBins[i]->Fit(fit_minusEta_response_ptBins[i]);
         plusEta_response_ptBins[i]->Fit(fit_plusEta_response_ptBins[i]);
         absEta_response_ptBins[i]->Fit(fit_absEta_response_ptBins[i]);
+        R2_minusEta_response_ptBins[i]->Fit(R2_fit_minusEta_response_ptBins[i]);
+        R2_plusEta_response_ptBins[i]->Fit(R2_fit_plusEta_response_ptBins[i]);
+        R2_absEta_response_ptBins[i]->Fit(R2_fit_absEta_response_ptBins[i]);
     }
 
     // make resolution plots
@@ -312,6 +439,16 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TH1F* pt_scale_fctEta = new TH1F("pt_scale_fctEta","pt_scale_fctEta",signedEtaBins.size()-1, signedEtaBins_t);
     TH2F* PTvsETA_resolution = new TH2F("PTvsETA_resolution","PTvsETA_resolution",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
     TH2F* PTvsETA_scale = new TH2F("PTvsETA_events","PTvsETA_events",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
+
+    TH1F* R2_pt_resol_fctPt = new TH1F("R2_pt_resol_fctPt","R2_pt_resol_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_pt_resol_barrel_fctPt = new TH1F("R2_pt_resol_barrel_fctPt","R2_pt_resol_barrel_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_pt_resol_endcap_fctPt = new TH1F("R2_pt_resol_endcap_fctPt","R2_pt_resol_endcap_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_pt_resol_fctAbsEta = new TH1F("R2_pt_resol_fctAbsEta","R2_pt_resol_fctAbsEta",etaBins.size()-1, etaBins_t);
+    TH1F* R2_pt_resol_fctEta = new TH1F("R2_pt_resol_fctEta","R2_pt_resol_fctEta",signedEtaBins.size()-1, signedEtaBins_t);
+    TH1F* R2_pt_scale_fctPt = new TH1F("R2_pt_scale_fctPt","R2_pt_scale_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_pt_scale_fctEta = new TH1F("R2_pt_scale_fctEta","R2_pt_scale_fctEta",signedEtaBins.size()-1, signedEtaBins_t);
+    TH2F* R2_PTvsETA_resolution = new TH2F("R2_PTvsETA_resolution","R2_PTvsETA_resolution",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
+    TH2F* R2_PTvsETA_scale = new TH2F("R2_PTvsETA_events","R2_PTvsETA_events",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
 
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
@@ -326,6 +463,18 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
         if (endcap_response_ptBins[i]->GetMean() != 0.0) { pt_resol_endcap_fctPt->SetBinContent(i+1, endcap_response_ptBins[i]->GetRMS()/endcap_response_ptBins[i]->GetMean()); }
         if (endcap_response_ptBins[i]->GetMean() != 0.0) { pt_resol_endcap_fctPt->SetBinError(i+1, endcap_response_ptBins[i]->GetRMSError()/endcap_response_ptBins[i]->GetMean()); }
+
+        R2_pt_scale_fctPt->SetBinContent(i+1, R2_response_ptBins[i]->GetMean());
+        R2_pt_scale_fctPt->SetBinError(i+1, R2_response_ptBins[i]->GetMeanError());
+
+        if (R2_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_fctPt->SetBinContent(i+1, R2_response_ptBins[i]->GetRMS()/R2_response_ptBins[i]->GetMean()); }
+        if (R2_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_fctPt->SetBinError(i+1, R2_response_ptBins[i]->GetRMSError()/R2_response_ptBins[i]->GetMean()); }
+
+        if (R2_barrel_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_barrel_fctPt->SetBinContent(i+1, R2_barrel_response_ptBins[i]->GetRMS()/R2_barrel_response_ptBins[i]->GetMean()); }
+        if (R2_barrel_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_barrel_fctPt->SetBinError(i+1, R2_barrel_response_ptBins[i]->GetRMSError()/R2_barrel_response_ptBins[i]->GetMean()); }
+
+        if (R2_endcap_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_endcap_fctPt->SetBinContent(i+1, R2_endcap_response_ptBins[i]->GetRMS()/R2_endcap_response_ptBins[i]->GetMean()); }
+        if (R2_endcap_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_endcap_fctPt->SetBinError(i+1, R2_endcap_response_ptBins[i]->GetRMSError()/R2_endcap_response_ptBins[i]->GetMean()); }
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -339,6 +488,16 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinError(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMSError()/minusEta_response_ptBins[i]->GetMean()); }
         if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMS()/plusEta_response_ptBins[i]->GetMean()); }
         if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinError(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMSError()/plusEta_response_ptBins[i]->GetMean()); }
+
+        R2_pt_scale_fctEta->SetBinContent(etaBins.size()-1-i, R2_minusEta_response_ptBins[i]->GetMean());
+        R2_pt_scale_fctEta->SetBinError(etaBins.size()-1-i, R2_minusEta_response_ptBins[i]->GetMeanError());
+        R2_pt_scale_fctEta->SetBinContent(i+etaBins.size(), R2_plusEta_response_ptBins[i]->GetMean());
+        R2_pt_scale_fctEta->SetBinError(i+etaBins.size(), R2_plusEta_response_ptBins[i]->GetMeanError());
+
+        if (R2_minusEta_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_fctEta->SetBinContent(etaBins.size()-1-i, R2_minusEta_response_ptBins[i]->GetRMS()/R2_minusEta_response_ptBins[i]->GetMean()); }
+        if (R2_minusEta_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_fctEta->SetBinError(etaBins.size()-1-i, R2_minusEta_response_ptBins[i]->GetRMSError()/R2_minusEta_response_ptBins[i]->GetMean()); }
+        if (R2_plusEta_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_fctEta->SetBinContent(i+etaBins.size(), R2_plusEta_response_ptBins[i]->GetRMS()/R2_plusEta_response_ptBins[i]->GetMean()); }
+        if (R2_plusEta_response_ptBins[i]->GetMean() != 0.0) { R2_pt_resol_fctEta->SetBinError(i+etaBins.size(), R2_plusEta_response_ptBins[i]->GetRMSError()/R2_plusEta_response_ptBins[i]->GetMean()); }
     }
 
     int k = 0;
@@ -353,6 +512,12 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
                 
                 PTvsETA_scale->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetMean());
                 PTvsETA_scale->SetBinError(i,j,pt_resp_PtEtaBin[k]->GetMeanError());
+
+                if (R2_pt_resp_PtEtaBin[k]->GetMean() != 0.0) { R2_PTvsETA_resolution->SetBinContent(i,j,R2_pt_resp_PtEtaBin[k]->GetRMS()/R2_pt_resp_PtEtaBin[k]->GetMean()); }
+                if (R2_pt_resp_PtEtaBin[k]->GetMean() != 0.0) { R2_PTvsETA_resolution->SetBinError(i,j,R2_pt_resp_PtEtaBin[k]->GetRMSError()/R2_pt_resp_PtEtaBin[k]->GetMean()); }
+                
+                R2_PTvsETA_scale->SetBinContent(i,j,R2_pt_resp_PtEtaBin[k]->GetMean());
+                R2_PTvsETA_scale->SetBinError(i,j,R2_pt_resp_PtEtaBin[k]->GetMeanError());
             }
 
             k += 1;
@@ -368,6 +533,14 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TH1F* fit_pt_scale_fctPt = new TH1F("fit_pt_scale_fctPt","fit_pt_scale_fctPt",ptBins.size()-1, ptBins_t);
     TH1F* fit_pt_scale_fctEta = new TH1F("fit_pt_scale_fctEta","fit_pt_scale_fctEta",signedEtaBins.size()-1, signedEtaBins_t);
 
+    TH1F* R2_fit_pt_resol_fctPt = new TH1F("R2_fit_pt_resol_fctPt","R2_fit_pt_resol_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_fit_pt_resol_barrel_fctPt = new TH1F("R2_fit_pt_resol_barrel_fctPt","R2_fit_pt_resol_barrel_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_fit_pt_resol_endcap_fctPt = new TH1F("R2_fit_pt_resol_endcap_fctPt","R2_fit_pt_resol_endcap_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_fit_pt_resol_fctAbsEta = new TH1F("R2_fit_pt_resol_fctAbsEta","R2_fit_pt_resol_fctAbsEta",etaBins.size()-1, etaBins_t);
+    TH1F* R2_fit_pt_resol_fctEta = new TH1F("R2_fit_pt_resol_fctEta","R2_fit_pt_resol_fctEta",signedEtaBins.size()-1, signedEtaBins_t);
+    TH1F* R2_fit_pt_scale_fctPt = new TH1F("R2_fit_pt_scale_fctPt","R2_fit_pt_scale_fctPt",ptBins.size()-1, ptBins_t);
+    TH1F* R2_fit_pt_scale_fctEta = new TH1F("R2_fit_pt_scale_fctEta","R2_fit_pt_scale_fctEta",signedEtaBins.size()-1, signedEtaBins_t);
+
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         fit_pt_scale_fctPt->SetBinContent(i+1, fit_response_ptBins[i]->GetParameter("Mean"));
@@ -381,6 +554,18 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
         fit_pt_resol_endcap_fctPt->SetBinContent(i+1, fit_endcap_response_ptBins[i]->GetParameter("Sigma")/fit_endcap_response_ptBins[i]->GetParameter("Mean"));
         fit_pt_resol_endcap_fctPt->SetBinError(i+1, fit_endcap_response_ptBins[i]->GetParError(3)/fit_endcap_response_ptBins[i]->GetParameter("Mean"));
+
+        R2_fit_pt_scale_fctPt->SetBinContent(i+1, fit_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_scale_fctPt->SetBinError(i+1, fit_response_ptBins[i]->GetParError(2));
+
+        R2_fit_pt_resol_fctPt->SetBinContent(i+1, R2_fit_response_ptBins[i]->GetParameter("Sigma")/R2_fit_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_resol_fctPt->SetBinError(i+1, R2_fit_response_ptBins[i]->GetParError(3)/R2_fit_response_ptBins[i]->GetParameter("Mean"));
+
+        R2_fit_pt_resol_barrel_fctPt->SetBinContent(i+1, R2_fit_barrel_response_ptBins[i]->GetParameter("Sigma")/R2_fit_barrel_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_resol_barrel_fctPt->SetBinError(i+1, R2_fit_barrel_response_ptBins[i]->GetParError(3)/R2_fit_barrel_response_ptBins[i]->GetParameter("Mean"));
+
+        R2_fit_pt_resol_endcap_fctPt->SetBinContent(i+1, R2_fit_endcap_response_ptBins[i]->GetParameter("Sigma")/R2_fit_endcap_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_resol_endcap_fctPt->SetBinError(i+1, R2_fit_endcap_response_ptBins[i]->GetParError(3)/R2_fit_endcap_response_ptBins[i]->GetParameter("Mean"));
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -394,11 +579,21 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         fit_pt_resol_fctEta->SetBinError(etaBins.size()-1-i, fit_minusEta_response_ptBins[i]->GetParError(3)/fit_minusEta_response_ptBins[i]->GetParameter("Mean"));
         fit_pt_resol_fctEta->SetBinContent(i+etaBins.size(), fit_plusEta_response_ptBins[i]->GetParameter("Sigma")/fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
         fit_pt_resol_fctEta->SetBinError(i+etaBins.size(), fit_plusEta_response_ptBins[i]->GetParError(3)/fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
+
+        R2_fit_pt_scale_fctEta->SetBinContent(etaBins.size()-1-i, R2_fit_minusEta_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_scale_fctEta->SetBinError(etaBins.size()-1-i, R2_fit_minusEta_response_ptBins[i]->GetParError(2));
+        R2_fit_pt_scale_fctEta->SetBinContent(i+etaBins.size(), R2_fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_scale_fctEta->SetBinError(i+etaBins.size(), R2_fit_plusEta_response_ptBins[i]->GetParError(2));
+
+        R2_fit_pt_resol_fctEta->SetBinContent(etaBins.size()-1-i, R2_fit_minusEta_response_ptBins[i]->GetParameter("Sigma")/R2_fit_minusEta_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_resol_fctEta->SetBinError(etaBins.size()-1-i, R2_fit_minusEta_response_ptBins[i]->GetParError(3)/R2_fit_minusEta_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_resol_fctEta->SetBinContent(i+etaBins.size(), R2_fit_plusEta_response_ptBins[i]->GetParameter("Sigma")/R2_fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
+        R2_fit_pt_resol_fctEta->SetBinError(i+etaBins.size(), R2_fit_plusEta_response_ptBins[i]->GetParError(3)/R2_fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
     }
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2023/resolutions_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/resolutions_of_Run"+run_nmbr_str+".root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();
@@ -417,19 +612,38 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     phi_resp_inclusive->Write();
     PTvsETA_resolution->Write();
     PTvsETA_scale->Write();
+    R2_pt_scale_fctPt->Write();
+    R2_pt_scale_fctEta->Write();
+    R2_pt_resol_fctPt->Write();
+    R2_pt_resol_barrel_fctPt->Write();
+    R2_pt_resol_endcap_fctPt->Write();
+    R2_pt_resol_fctAbsEta->Write();
+    R2_pt_resol_fctEta->Write();
+    R2_pt_response_ptInclusive->Write();
+    R2_pt_barrel_resp_ptInclusive->Write();
+    R2_pt_endcap_resp_ptInclusive->Write();
+    R2_PTvsETA_resolution->Write();
+    R2_PTvsETA_scale->Write();
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         response_ptBins[i]->Write();
         barrel_response_ptBins[i]->Write();
         endcap_response_ptBins[i]->Write();
+        R2_response_ptBins[i]->Write();
+        R2_barrel_response_ptBins[i]->Write();
+        R2_endcap_response_ptBins[i]->Write();
     }
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
     {
         absEta_response_ptBins[i]->Write();
         minusEta_response_ptBins[i]->Write();
         plusEta_response_ptBins[i]->Write();
+        R2_absEta_response_ptBins[i]->Write();
+        R2_minusEta_response_ptBins[i]->Write();
+        R2_plusEta_response_ptBins[i]->Write();
     }
     Nvtx->Write();
+    R2_Nvtx->Write();
     fileout->Close();
 
     // ----------------------------------------------------------------------------
@@ -508,7 +722,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         legend.AddEntry(endcap_response_ptBins[i],"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
         legend.Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowP+"pt"+highP+".pdf");
+        canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowP+"pt"+highP+".pdf");
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -570,7 +784,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         texl2->SetBorderSize(0);
         texl2->Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
+        canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
     }
 
     // ##############
@@ -626,7 +840,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl2->SetBorderSize(0);
     texl2->Draw("same");
 
-    canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins.pdf");
+    canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins.pdf");
 
     // ##############
 
@@ -668,7 +882,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvasA.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_fromFit.pdf");
+    canvasA.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_fromFit.pdf");
 
     // ##############
 
@@ -718,7 +932,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins.pdf");
+    canvas1.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins.pdf");
 
     // ##############
 
@@ -756,7 +970,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvasB.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_fromFit.pdf");
+    canvasB.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_fromFit.pdf");
 
     // ##############
 
@@ -806,7 +1020,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas2.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins.pdf");
+    canvas2.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins.pdf");
 
     // ##############
 
@@ -842,7 +1056,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas3.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins.pdf");
+    canvas3.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins.pdf");
 
     // ##############
 
@@ -891,7 +1105,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas4.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive.pdf");
+    canvas4.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive.pdf");
 
     // ##############
 
@@ -918,7 +1132,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas5.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptVSeta.pdf");
+    canvas5.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptVSeta.pdf");
 
     // ##############
 
@@ -945,26 +1159,26 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas6.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptVSeta.pdf");
+    canvas6.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptVSeta.pdf");
 
 
     // TCanvas canvas7("c","c",800,800);
     // canvas7.SetLeftMargin(0.15);
     // canvas7.SetGrid();
     // pt->Draw();
-    // canvas7.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/pt.pdf");
+    // canvas7.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/pt.pdf");
 
     // TCanvas canvas8("c","c",800,800);
     // canvas8.SetLeftMargin(0.15);
     // canvas8.SetGrid();
     // eta->Draw();
-    // canvas8.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/eta.pdf");
+    // canvas8.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/eta.pdf");
 
     // TCanvas canvas9("c","c",800,800);
     // canvas9.SetLeftMargin(0.15);
     // canvas9.SetGrid();
     // l1tpt->Draw();
-    // canvas9.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/l1tpt.pdf");
+    // canvas9.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/l1tpt.pdf");
 
     // ----------------------------------------------------------------------------
     // plot performance VS Run2
@@ -1002,13 +1216,23 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         barrel_response_ptBins[i]->SetLineColor(1);
         barrel_response_ptBins[i]->SetMarkerStyle(8);
         barrel_response_ptBins[i]->SetMarkerColor(1);
-        
+
+        R2_barrel_response_ptBins[i]->SetLineWidth(2);
+        R2_barrel_response_ptBins[i]->SetLineColor(2);
+        R2_barrel_response_ptBins[i]->SetMarkerStyle(8);
+        R2_barrel_response_ptBins[i]->SetMarkerColor(2);
+
         barrel_response_ptBins[i]->Draw("same");
+        R2_barrel_response_ptBins[i]->Draw("same");
 
         fit_barrel_response_ptBins[i]->SetLineWidth(2);
         fit_barrel_response_ptBins[i]->SetLineColor(1);
 
+        R2_fit_barrel_response_ptBins[i]->SetLineWidth(2);
+        R2_fit_barrel_response_ptBins[i]->SetLineColor(2);
+
         fit_barrel_response_ptBins[i]->Draw("same");
+        R2_fit_barrel_response_ptBins[i]->Draw("same");
 
         TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
         texl1->AddText("CMS Internal");
@@ -1029,9 +1253,10 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         legend.SetBorderSize(0);
         legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
         legend.AddEntry(barrel_response_ptBins[i],"Run-3 (2022)","LPE");
+        legend.AddEntry(R2_barrel_response_ptBins[i],"Run-2 (2018)","LPE");
         legend.Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
+        canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
     }
 
 
@@ -1067,12 +1292,22 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         endcap_response_ptBins[i]->SetMarkerStyle(8);
         endcap_response_ptBins[i]->SetMarkerColor(1);
 
+        R2_endcap_response_ptBins[i]->SetLineWidth(2);
+        R2_endcap_response_ptBins[i]->SetLineColor(2);
+        R2_endcap_response_ptBins[i]->SetMarkerStyle(8);
+        R2_endcap_response_ptBins[i]->SetMarkerColor(2);
+
         endcap_response_ptBins[i]->Draw("same");
+        R2_endcap_response_ptBins[i]->Draw("same");
 
         fit_endcap_response_ptBins[i]->SetLineWidth(2);
         fit_endcap_response_ptBins[i]->SetLineColor(1);
 
+        R2_fit_endcap_response_ptBins[i]->SetLineWidth(2);
+        R2_fit_endcap_response_ptBins[i]->SetLineColor(2);
+
         fit_endcap_response_ptBins[i]->Draw("same");
+        R2_fit_endcap_response_ptBins[i]->Draw("same");
 
         texl1->Draw("same");
         texl2->Draw("same");
@@ -1081,9 +1316,10 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         legend.SetBorderSize(0);
         legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
         legend.AddEntry(endcap_response_ptBins[i],"Run-3 (2022)","LPE");
+        legend.AddEntry(R2_endcap_response_ptBins[i],"Run-2 (2018)","LPE");
         legend.Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
+        canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -1125,10 +1361,23 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
         fit_absEta_response_ptBins[i]->Draw("same");
 
+        R2_absEta_response_ptBins[i]->SetLineWidth(2);
+        R2_absEta_response_ptBins[i]->SetLineColor(2);
+        R2_absEta_response_ptBins[i]->SetMarkerStyle(8);
+        R2_absEta_response_ptBins[i]->SetMarkerColor(2);
+
+        R2_absEta_response_ptBins[i]->Draw("same");
+
+        R2_fit_absEta_response_ptBins[i]->SetLineWidth(2);
+        R2_fit_absEta_response_ptBins[i]->SetLineColor(2);
+
+        R2_fit_absEta_response_ptBins[i]->Draw("same");
+
         TLegend legend(0.55,0.75,0.88,0.88);
         legend.SetBorderSize(0);
         legend.SetHeader(lowE+"<|#eta^{Offline #tau}|<"+highE);
         legend.AddEntry(absEta_response_ptBins[i],"Run-3 (2022)","LPE");
+        legend.AddEntry(R2_absEta_response_ptBins[i],"Run-2 (2018)","LPE");
         legend.Draw("same");
 
         TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
@@ -1146,7 +1395,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         texl2->SetBorderSize(0);
         texl2->Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
+        canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
     }
 
 
@@ -1173,13 +1422,20 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     pt_resol_endcap_fctPt->SetMarkerStyle(8);
     pt_resol_endcap_fctPt->SetMarkerColor(1);
 
+    R2_pt_resol_endcap_fctPt->SetLineWidth(2);
+    R2_pt_resol_endcap_fctPt->SetLineColor(2);
+    R2_pt_resol_endcap_fctPt->SetMarkerStyle(8);
+    R2_pt_resol_endcap_fctPt->SetMarkerColor(2);
+
     // fit_pt_resol_barrel_fctPt->Draw("LPE");
     pt_resol_endcap_fctPt->Draw("LPE");
+    R2_pt_resol_endcap_fctPt->Draw("same LPE");
 
     TLegend legendZ(0.55,0.75,0.88,0.88);
     legendZ.SetBorderSize(0);
     legendZ.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
     legendZ.AddEntry(pt_resol_endcap_fctPt,"Run-3 (2022)","LPE");
+    legendZ.AddEntry(R2_pt_resol_endcap_fctPt,"Run-2 (2018)","LPE");
     legendZ.Draw("same");
 
     TPaveText* texl1Z = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
@@ -1197,7 +1453,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl2Z->SetBorderSize(0);
     texl2Z->Draw("same");
 
-    canvasZ.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_resolution_ptBins_vsRun2.pdf");
+    canvasZ.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_resolution_ptBins_vsRun2.pdf");
 
     // ##############
 
@@ -1222,19 +1478,26 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     pt_resol_barrel_fctPt->SetMarkerStyle(8);
     pt_resol_barrel_fctPt->SetMarkerColor(1);
 
+    R2_pt_resol_barrel_fctPt->SetLineWidth(2);
+    R2_pt_resol_barrel_fctPt->SetLineColor(2);
+    R2_pt_resol_barrel_fctPt->SetMarkerStyle(8);
+    R2_pt_resol_barrel_fctPt->SetMarkerColor(2);
+
     // fit_pt_resol_barrel_fctPt->Draw("LPE");
     pt_resol_barrel_fctPt->Draw("LPE");
+    R2_pt_resol_barrel_fctPt->Draw("same LPE");
 
     TLegend legendY(0.55,0.75,0.88,0.88);
     legendY.SetBorderSize(0);
     legendY.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
     legendY.AddEntry(pt_resol_barrel_fctPt,"Run-3 (2022)","LPE");
+    legendY.AddEntry(R2_pt_resol_barrel_fctPt,"Run-2 (2018)","LPE");
     legendY.Draw("same");
 
     texl1Z->Draw("same");
     texl2Z->Draw("same");
 
-    canvasY.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_resolution_ptBins_vsRun2.pdf");
+    canvasY.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_resolution_ptBins_vsRun2.pdf");
 
     // ##############
 
@@ -1259,18 +1522,25 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     pt_resol_fctPt->SetMarkerStyle(8);
     pt_resol_fctPt->SetMarkerColor(1);
 
+    R2_pt_resol_fctPt->SetLineWidth(2);
+    R2_pt_resol_fctPt->SetLineColor(2);
+    R2_pt_resol_fctPt->SetMarkerStyle(8);
+    R2_pt_resol_fctPt->SetMarkerColor(2);
+
     // fit_pt_resol_barrel_fctPt->Draw("LPE");
     pt_resol_fctPt->Draw("LPE");
+    R2_pt_resol_fctPt->Draw("same LPE");
 
     TLegend legendYX(0.55,0.75,0.88,0.88);
     legendYX.SetBorderSize(0);
     legendYX.AddEntry(pt_resol_fctPt,"Run-3 (2022)","LPE");
+    legendYX.AddEntry(R2_pt_resol_fctPt,"Run-2 (2018)","LPE");
     legendYX.Draw("same");
 
     texl1Z->Draw("same");
     texl2Z->Draw("same");
 
-    canvasYX.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_vsRun2.pdf");
+    canvasYX.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_vsRun2.pdf");
 
     // ##############
 
@@ -1297,6 +1567,13 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     pt_resol_fctEta->Draw("LPE");
 
+    R2_pt_resol_fctEta->SetLineWidth(2);
+    R2_pt_resol_fctEta->SetLineColor(2);
+    R2_pt_resol_fctEta->SetMarkerStyle(8);
+    R2_pt_resol_fctEta->SetMarkerColor(2);
+
+    R2_pt_resol_fctEta->Draw("same LPE");
+
     b1.Draw("same");
     b2.Draw("same");
     b3.Draw("same");
@@ -1305,12 +1582,13 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TLegend legendB(0.55,0.75,0.88,0.88);
     legendB.SetBorderSize(0);
     legendB.AddEntry(pt_resol_fctEta,"Run-3 (2022)","LPE");
+    legendB.AddEntry(R2_pt_resol_fctEta,"Run-2 (2018)","LPE");
     legendB.Draw("same");
 
     texl1Z->Draw("same");
     texl2Z->Draw("same");
 
-    canvas1Y.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_vsRun2.pdf");
+    canvas1Y.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_vsRun2.pdf");
 
     // ##############
 
@@ -1337,6 +1615,13 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     pt_scale_fctEta->Draw("LPE");
 
+    R2_pt_scale_fctEta->SetLineWidth(2);
+    R2_pt_scale_fctEta->SetLineColor(2);
+    R2_pt_scale_fctEta->SetMarkerStyle(8);
+    R2_pt_scale_fctEta->SetMarkerColor(2);
+
+    R2_pt_scale_fctEta->Draw("same LPE");
+
     b5.Draw("same");
     b6.Draw("same");
     b7.Draw("same");
@@ -1346,7 +1631,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl2->Draw("same");
     legendB.Draw("same");
 
-    canvas2W.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins_vsRun2.pdf");
+    canvas2W.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins_vsRun2.pdf");
 
     // ##############
 
@@ -1374,11 +1659,18 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     pt_scale_fctPt->Draw("LPE");
 
+    R2_pt_scale_fctPt->SetLineWidth(2);
+    R2_pt_scale_fctPt->SetLineColor(2);
+    R2_pt_scale_fctPt->SetMarkerStyle(8);
+    R2_pt_scale_fctPt->SetMarkerColor(2);
+
+    R2_pt_scale_fctPt->Draw("same LPE");
+
     texl1Z->Draw("same");
     texl2Z->Draw("same");
     legendB.Draw("same");
 
-    canvas3V.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins_vsRun2.pdf");
+    canvas3V.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins_vsRun2.pdf");
 
     // ##############
 
@@ -1396,24 +1688,31 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     pt_response_ptInclusive->SetTitle("");
     pt_response_ptInclusive->SetStats(0);
 
-    pt_response_ptInclusive->GetYaxis()->SetRangeUser(0., pt_response_ptInclusive->GetMaximum()*1.3 );
+    pt_response_ptInclusive->GetYaxis()->SetRangeUser(0., max(pt_response_ptInclusive->GetMaximum(),R2_pt_response_ptInclusive->GetMaximum())*1.3 );
 
     pt_response_ptInclusive->SetLineWidth(2);
     pt_response_ptInclusive->SetLineColor(1);
     pt_response_ptInclusive->SetMarkerStyle(8);
     pt_response_ptInclusive->SetMarkerColor(1);
 
+    R2_pt_response_ptInclusive->SetLineWidth(2);
+    R2_pt_response_ptInclusive->SetLineColor(2);
+    R2_pt_response_ptInclusive->SetMarkerStyle(8);
+    R2_pt_response_ptInclusive->SetMarkerColor(2);
+
     pt_response_ptInclusive->Draw();
+    R2_pt_response_ptInclusive->Draw("same");
 
     TLegend legend4U(0.55,0.75,0.88,0.88);
     legend4U.SetBorderSize(0);
     legend4U.AddEntry(pt_response_ptInclusive,"Run-3 (2022)","LPE");
+    legend4U.AddEntry(R2_pt_response_ptInclusive,"Run-2 (2018)","LPE");
     legend4U.Draw("same");
 
     texl1Z->Draw("same");
     texl2Z->Draw("same");
 
-    canvas4U.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive_vsRun2.pdf");
+    canvas4U.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive_vsRun2.pdf");
 
 
     // ##############
@@ -1432,25 +1731,32 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     pt_barrel_resp_ptInclusive->SetTitle("");
     pt_barrel_resp_ptInclusive->SetStats(0);
 
-    pt_barrel_resp_ptInclusive->GetYaxis()->SetRangeUser(0., pt_barrel_resp_ptInclusive->GetMaximum()*1.3 );
+    pt_barrel_resp_ptInclusive->GetYaxis()->SetRangeUser(0., max(pt_barrel_resp_ptInclusive->GetMaximum(),R2_pt_barrel_resp_ptInclusive->GetMaximum())*1.3 );
 
     pt_barrel_resp_ptInclusive->SetLineWidth(2);
     pt_barrel_resp_ptInclusive->SetLineColor(1);
     pt_barrel_resp_ptInclusive->SetMarkerStyle(8);
     pt_barrel_resp_ptInclusive->SetMarkerColor(1);
 
+    R2_pt_barrel_resp_ptInclusive->SetLineWidth(2);
+    R2_pt_barrel_resp_ptInclusive->SetLineColor(2);
+    R2_pt_barrel_resp_ptInclusive->SetMarkerStyle(8);
+    R2_pt_barrel_resp_ptInclusive->SetMarkerColor(2);
+
     pt_response_ptInclusive->Draw();
+    R2_pt_barrel_resp_ptInclusive->Draw("same");
 
     TLegend legend5T(0.55,0.75,0.88,0.88);
     legend5T.SetBorderSize(0);
     legend5T.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
     legend5T.AddEntry(pt_barrel_resp_ptInclusive,"Run-3 (2022)","LPE");
+    legend5T.AddEntry(R2_pt_barrel_resp_ptInclusive,"Run-2 (2018)","LPE");
     legend5T.Draw("same");
 
     texl1Z->Draw("same");
     texl2Z->Draw("same");
 
-    canvas5T.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_inclusive_vsRun2.pdf");
+    canvas5T.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_inclusive_vsRun2.pdf");
 
     // ##############
 
@@ -1467,25 +1773,32 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     pt_endcap_resp_ptInclusive->SetTitle("");
     pt_endcap_resp_ptInclusive->SetStats(0);
 
-    pt_endcap_resp_ptInclusive->GetYaxis()->SetRangeUser(0., pt_endcap_resp_ptInclusive->GetMaximum()*1.3 );
+    pt_endcap_resp_ptInclusive->GetYaxis()->SetRangeUser(0., max(pt_endcap_resp_ptInclusive->GetMaximum(),R2_pt_endcap_resp_ptInclusive->GetMaximum())*1.3 );
 
     pt_endcap_resp_ptInclusive->SetLineWidth(2);
     pt_endcap_resp_ptInclusive->SetLineColor(1);
     pt_endcap_resp_ptInclusive->SetMarkerStyle(8);
     pt_endcap_resp_ptInclusive->SetMarkerColor(1);
 
+    R2_pt_endcap_resp_ptInclusive->SetLineWidth(2);
+    R2_pt_endcap_resp_ptInclusive->SetLineColor(2);
+    R2_pt_endcap_resp_ptInclusive->SetMarkerStyle(8);
+    R2_pt_endcap_resp_ptInclusive->SetMarkerColor(2);
+
     pt_response_ptInclusive->Draw();
+    R2_pt_endcap_resp_ptInclusive->Draw("same");
 
     TLegend legend5S(0.55,0.75,0.88,0.88);
     legend5S.SetBorderSize(0);
     legend5S.SetHeader("Endcap 1.479<|#eta^{Offline #tau}|<2.1");
     legend5S.AddEntry(pt_endcap_resp_ptInclusive,"Run-3 (2022)","LPE");
+    legend5S.AddEntry(R2_pt_endcap_resp_ptInclusive,"Run-2 (2018)","LPE");
     legend5S.Draw("same");
 
     texl1Z->Draw("same");
     texl2Z->Draw("same");
 
-    canvas5S.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_inclusive_vsRun2.pdf");
+    canvas5S.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_inclusive_vsRun2.pdf");
 
     
 

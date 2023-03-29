@@ -86,6 +86,29 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   std::vector<TH1F*> endcap_nvtxProgressionFixedThr_noIso = {};
   std::vector<TH1F*> endcap_nvtxProgressionFixedThr_Iso = {};
 
+  // ALL THE SAME PLOTS FOR RUN2
+  TH1F* R2_pt = new TH1F("R2_pt","R2_pt",22,binningPt);
+  TH1F* R2_barrel_pt = new TH1F("R2_barrel_pt","R2_barrel_pt",22,binningPt);
+  TH1F* R2_endcap_pt = new TH1F("R2_endcap_pt","R2_endcap_pt",22,binningPt);
+  TH1F* R2_eta  = new TH1F("R2_eta" ,"R2_eta" ,28, binningEta);
+  TH1F* R2_nvtx  = new TH1F("R2_nvtx" ,"R2_nvtx" ,10, binningNvtx);
+  TH1F* R2_barrel_nvtx  = new TH1F("R2_barrel_nvtx" ,"R2_barrel_nvtx" ,10, binningNvtx);
+  TH1F* R2_endcap_nvtx  = new TH1F("R2_endcap_nvtx" ,"R2_endcap_nvtx" ,10, binningNvtx);
+  std::vector<TH1F*> R2_ptProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_ptProgressionFixedThr_Iso = {};
+  std::vector<TH1F*> R2_barrel_ptProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_barrel_ptProgressionFixedThr_Iso = {};
+  std::vector<TH1F*> R2_endcap_ptProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_endcap_ptProgressionFixedThr_Iso = {};
+  std::vector<TH1F*> R2_etaProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_etaProgressionFixedThr_Iso = {};
+  std::vector<TH1F*> R2_nvtxProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_nvtxProgressionFixedThr_Iso = {};
+  std::vector<TH1F*> R2_barrel_nvtxProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_barrel_nvtxProgressionFixedThr_Iso = {};
+  std::vector<TH1F*> R2_endcap_nvtxProgressionFixedThr_noIso = {};
+  std::vector<TH1F*> R2_endcap_nvtxProgressionFixedThr_Iso = {};
+
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     TString thr;
@@ -111,6 +134,27 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
     endcap_nvtxProgressionFixedThr_noIso.push_back(new TH1F("endcap_nvtxProgressionAt"+thr+"_noIso","endcap_nvtxProgressionAt"+thr+"_noIso",10,binningNvtx));
     endcap_nvtxProgressionFixedThr_Iso.push_back(new TH1F("endcap_nvtxProgressionAt"+thr+"_Iso","endcap_nvtxProgressionAt"+thr+"_Iso",10,binningNvtx));
+
+    R2_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_ptProgressionAt"+thr+"_noIso","R2_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    R2_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_ptProgressionAt"+thr+"_Iso","R2_ptProgressionAt"+thr+"_Iso",22,binningPt));
+
+    R2_barrel_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_barrel_ptProgressionAt"+thr+"_noIso","R2_barrel_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    R2_barrel_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_barrel_ptProgressionAt"+thr+"_Iso","R2_barrel_ptProgressionAt"+thr+"_Iso",22,binningPt));
+
+    R2_endcap_ptProgressionFixedThr_noIso.push_back(new TH1F("R2_endcap_ptProgressionAt"+thr+"_noIso","R2_endcap_ptProgressionAt"+thr+"_noIso",22,binningPt));
+    R2_endcap_ptProgressionFixedThr_Iso.push_back(new TH1F("R2_endcap_ptProgressionAt"+thr+"_Iso","R2_endcap_ptProgressionAt"+thr+"_Iso",22,binningPt));
+
+    R2_etaProgressionFixedThr_noIso.push_back(new TH1F("R2_etaprogressionAt"+thr+"_noIso","R2_etaProgressionAt"+thr+"_noIso",28,binningEta));
+    R2_etaProgressionFixedThr_Iso.push_back(new TH1F("R2_etaprogressionAt"+thr+"_Iso","R2_etaProgressionAt"+thr+"_Iso",28,binningEta));
+
+    R2_nvtxProgressionFixedThr_noIso.push_back(new TH1F("R2_nvtxProgressionAt"+thr+"_noIso","R2_nvtxProgressionAt"+thr+"_noIso",10,binningNvtx));
+    R2_nvtxProgressionFixedThr_Iso.push_back(new TH1F("R2_nvtxProgressionAt"+thr+"_Iso","R2_nvtxProgressionAt"+thr+"_Iso",10,binningNvtx));
+
+    R2_barrel_nvtxProgressionFixedThr_noIso.push_back(new TH1F("R2_barrel_nvtxProgressionAt"+thr+"_noIso","R2_barrel_nvtxProgressionAt"+thr+"_noIso",10,binningNvtx));
+    R2_barrel_nvtxProgressionFixedThr_Iso.push_back(new TH1F("R2_barrel_nvtxProgressionAt"+thr+"_Iso","R2_barrel_nvtxProgressionAt"+thr+"_Iso",10,binningNvtx));
+
+    R2_endcap_nvtxProgressionFixedThr_noIso.push_back(new TH1F("R2_endcap_nvtxProgressionAt"+thr+"_noIso","R2_endcap_nvtxProgressionAt"+thr+"_noIso",10,binningNvtx));
+    R2_endcap_nvtxProgressionFixedThr_Iso.push_back(new TH1F("R2_endcap_nvtxProgressionAt"+thr+"_Iso","R2_endcap_nvtxProgressionAt"+thr+"_Iso",10,binningNvtx));
   }
   
   for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
@@ -169,6 +213,87 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     }
   }
 
+  TFile R2_f("/data_CMS/cms/motta/Run3preparation/SingleMuon__Run2018D-PromptReco-v2__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue/SingleMuon__Run2018D-PromptReco-v2__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue.root","READ");
+  TTree* R2_inTree = (TTree*)R2_f.Get("Ntuplizer/TagAndProbe");
+  in_EventNumber =  0;
+  in_RunNumber =  0;
+  in_lumi =  0;
+  in_offlineTauPt = 0;
+  in_offlineTauEta = 0;
+  in_offlineTauPhi = 0;
+  in_l1tPt =  0;
+  in_l1tEta =  0;
+  in_l1tPhi =  0;
+  in_l1tQual =  0;
+  in_l1tIso = 0;
+  Nvtx = 0;
+  R2_inTree->SetBranchAddress("EventNumber", &in_EventNumber);
+  R2_inTree->SetBranchAddress("RunNumber", &in_RunNumber);
+  R2_inTree->SetBranchAddress("lumi", &in_lumi);
+  R2_inTree->SetBranchAddress("tauPt",&in_offlineTauPt);
+  R2_inTree->SetBranchAddress("tauEta",&in_offlineTauEta);
+  R2_inTree->SetBranchAddress("tauPhi",&in_offlineTauPhi);
+  R2_inTree->SetBranchAddress("l1tPt",&in_l1tPt);
+  R2_inTree->SetBranchAddress("l1tEta",&in_l1tEta);
+  R2_inTree->SetBranchAddress("l1tPhi",&in_l1tPhi);
+  R2_inTree->SetBranchAddress("l1tQual",&in_l1tQual);
+  R2_inTree->SetBranchAddress("l1tIso",&in_l1tIso);
+  R2_inTree->SetBranchAddress("Nvtx",&Nvtx);
+
+  for(UInt_t i = 0 ; i < R2_inTree->GetEntries() ; ++i)
+  {
+    R2_inTree->GetEntry(i);
+
+    if (i%10000==0) std::cout << i << std::endl;
+
+    if (in_l1tPt<0.) { continue; }
+
+    if (in_offlineTauEta>2.1) { continue; }
+
+    R2_pt->Fill(in_offlineTauPt);
+    if (in_offlineTauEta<1.305) { R2_barrel_pt->Fill(in_offlineTauPt); }
+    if (in_offlineTauEta>1.479) { R2_endcap_pt->Fill(in_offlineTauPt); }
+    if (in_offlineTauPt>40.)
+    {
+      R2_eta->Fill(in_offlineTauEta);
+      R2_nvtx->Fill(Nvtx);
+      if (in_offlineTauEta<1.305){ R2_barrel_nvtx->Fill(Nvtx); }
+      if (in_offlineTauEta>1.479){ R2_endcap_nvtx->Fill(Nvtx); }
+    }
+
+    for (long unsigned int j = 0; j < thrs.size(); j++)
+    {
+      double thr = thrs[j];
+
+      if(in_l1tPt>=thr)
+      { 
+        R2_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt);
+        if (in_offlineTauEta<1.305) { R2_barrel_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt); }
+        if (in_offlineTauEta>1.479) { R2_endcap_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt); }
+        if (in_offlineTauPt>40.)
+        {
+          R2_etaProgressionFixedThr_noIso[j]->Fill(in_offlineTauEta);
+          R2_nvtxProgressionFixedThr_noIso[j]->Fill(Nvtx);
+          if (in_offlineTauEta<1.305){ R2_barrel_nvtxProgressionFixedThr_noIso[j]->Fill(Nvtx); }
+          if (in_offlineTauEta>1.479){ R2_endcap_nvtxProgressionFixedThr_noIso[j]->Fill(Nvtx); }
+        }
+      }
+      if(in_l1tPt>=thr && in_l1tIso>0)
+      { 
+        R2_ptProgressionFixedThr_Iso[j]->Fill(in_offlineTauPt);
+        if (in_offlineTauEta<1.305) { R2_barrel_ptProgressionFixedThr_Iso[j]->Fill(in_offlineTauPt); }
+        if (in_offlineTauEta>1.479) { R2_endcap_ptProgressionFixedThr_Iso[j]->Fill(in_offlineTauPt); }
+        if (in_offlineTauPt>40.)
+        {
+          R2_etaProgressionFixedThr_Iso[j]->Fill(in_offlineTauEta);
+          R2_nvtxProgressionFixedThr_Iso[j]->Fill(Nvtx);
+          if (in_offlineTauEta<1.305){ R2_barrel_nvtxProgressionFixedThr_Iso[j]->Fill(Nvtx); }
+          if (in_offlineTauEta>1.479){ R2_endcap_nvtxProgressionFixedThr_Iso[j]->Fill(Nvtx); }
+        }
+      }
+    }
+  }
+
   std::vector<TGraphAsymmErrors*> turnOnsFixedThr_noIso = {};
   std::vector<TGraphAsymmErrors*> turnOnsFixedThr_Iso = {};
   std::vector<TGraphAsymmErrors*> barrel_turnOnsFixedThr_noIso = {};
@@ -183,6 +308,21 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   std::vector<TGraphAsymmErrors*> barrel_nvtxEffFixedThr_Iso = {};
   std::vector<TGraphAsymmErrors*> endcap_nvtxEffFixedThr_noIso = {};
   std::vector<TGraphAsymmErrors*> endcap_nvtxEffFixedThr_Iso = {};
+
+  std::vector<TGraphAsymmErrors*> R2_turnOnsFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_turnOnsFixedThr_Iso = {};
+  std::vector<TGraphAsymmErrors*> R2_barrel_turnOnsFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_barrel_turnOnsFixedThr_Iso = {};
+  std::vector<TGraphAsymmErrors*> R2_endcap_turnOnsFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_endcap_turnOnsFixedThr_Iso = {};
+  std::vector<TGraphAsymmErrors*> R2_etaEffFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_etaEffFixedThr_Iso = {};
+  std::vector<TGraphAsymmErrors*> R2_nvtxEffFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_nvtxEffFixedThr_Iso = {};
+  std::vector<TGraphAsymmErrors*> R2_barrel_nvtxEffFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_barrel_nvtxEffFixedThr_Iso = {};
+  std::vector<TGraphAsymmErrors*> R2_endcap_nvtxEffFixedThr_noIso = {};
+  std::vector<TGraphAsymmErrors*> R2_endcap_nvtxEffFixedThr_Iso = {};
 
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
@@ -206,11 +346,32 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
     endcap_nvtxEffFixedThr_noIso.push_back(new TGraphAsymmErrors(endcap_nvtxProgressionFixedThr_noIso[i], endcap_nvtx, "cp"));
     endcap_nvtxEffFixedThr_Iso.push_back(new TGraphAsymmErrors(endcap_nvtxProgressionFixedThr_Iso[i], endcap_nvtx, "cp"));
+
+    R2_turnOnsFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_ptProgressionFixedThr_noIso[i], R2_pt, "cp"));
+    R2_turnOnsFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_ptProgressionFixedThr_Iso[i], R2_pt, "cp"));
+
+    R2_barrel_turnOnsFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_barrel_ptProgressionFixedThr_noIso[i], R2_barrel_pt, "cp"));
+    R2_barrel_turnOnsFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_barrel_ptProgressionFixedThr_Iso[i], R2_barrel_pt, "cp"));
+
+    R2_endcap_turnOnsFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_endcap_ptProgressionFixedThr_noIso[i], R2_endcap_pt, "cp"));
+    R2_endcap_turnOnsFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_endcap_ptProgressionFixedThr_Iso[i], R2_endcap_pt, "cp"));
+
+    R2_etaEffFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_etaProgressionFixedThr_noIso[i], R2_eta, "cp"));
+    R2_etaEffFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_etaProgressionFixedThr_Iso[i], R2_eta, "cp"));
+
+    R2_nvtxEffFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_nvtxProgressionFixedThr_noIso[i], R2_nvtx, "cp"));
+    R2_nvtxEffFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_nvtxProgressionFixedThr_Iso[i], R2_nvtx, "cp"));
+
+    R2_barrel_nvtxEffFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_barrel_nvtxProgressionFixedThr_noIso[i], R2_barrel_nvtx, "cp"));
+    R2_barrel_nvtxEffFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_barrel_nvtxProgressionFixedThr_Iso[i], R2_barrel_nvtx, "cp"));
+
+    R2_endcap_nvtxEffFixedThr_noIso.push_back(new TGraphAsymmErrors(R2_endcap_nvtxProgressionFixedThr_noIso[i], R2_endcap_nvtx, "cp"));
+    R2_endcap_nvtxEffFixedThr_Iso.push_back(new TGraphAsymmErrors(R2_endcap_nvtxProgressionFixedThr_Iso[i], R2_endcap_nvtx, "cp"));
   }
 
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
-  TFile* fileout = new TFile("ROOTs/ROOTs_2023/efficiencies_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+  TFile* fileout = new TFile("ROOTs/efficiencies_of_Run"+run_nmbr_str+".root","RECREATE");
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     pt->Write();
@@ -253,6 +414,47 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     endcap_nvtxProgressionFixedThr_Iso[i]->Write();
     endcap_nvtxEffFixedThr_noIso[i]->Write();
     endcap_nvtxEffFixedThr_Iso[i]->Write();
+
+    R2_pt->Write();
+    R2_barrel_pt->Write();
+    R2_endcap_pt->Write();
+    R2_eta->Write();
+    R2_nvtx->Write();
+
+    R2_ptProgressionFixedThr_noIso[i]->Write();
+    R2_ptProgressionFixedThr_Iso[i]->Write();
+    R2_turnOnsFixedThr_noIso[i]->Write();
+    R2_turnOnsFixedThr_Iso[i]->Write();
+
+    R2_barrel_ptProgressionFixedThr_noIso[i]->Write();
+    R2_barrel_ptProgressionFixedThr_Iso[i]->Write();
+    R2_barrel_turnOnsFixedThr_noIso[i]->Write();
+    R2_barrel_turnOnsFixedThr_Iso[i]->Write();
+    
+    R2_endcap_ptProgressionFixedThr_noIso[i]->Write();
+    R2_endcap_ptProgressionFixedThr_Iso[i]->Write();
+    R2_endcap_turnOnsFixedThr_noIso[i]->Write();
+    R2_endcap_turnOnsFixedThr_Iso[i]->Write();
+    
+    R2_etaProgressionFixedThr_noIso[i]->Write();
+    R2_etaProgressionFixedThr_Iso[i]->Write();
+    R2_etaEffFixedThr_noIso[i]->Write();
+    R2_etaEffFixedThr_Iso[i]->Write();
+
+    R2_nvtxProgressionFixedThr_noIso[i]->Write();
+    R2_nvtxProgressionFixedThr_Iso[i]->Write();
+    R2_nvtxEffFixedThr_noIso[i]->Write();
+    R2_nvtxEffFixedThr_Iso[i]->Write();
+
+    R2_barrel_nvtxProgressionFixedThr_noIso[i]->Write();
+    R2_barrel_nvtxProgressionFixedThr_Iso[i]->Write();
+    R2_barrel_nvtxEffFixedThr_noIso[i]->Write();
+    R2_barrel_nvtxEffFixedThr_Iso[i]->Write();
+
+    R2_endcap_nvtxProgressionFixedThr_noIso[i]->Write();
+    R2_endcap_nvtxProgressionFixedThr_Iso[i]->Write();
+    R2_endcap_nvtxEffFixedThr_noIso[i]->Write();
+    R2_endcap_nvtxEffFixedThr_Iso[i]->Write();
   }
 
   // ----------------------------------------------------------------------------
@@ -315,7 +517,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     legend.AddEntry(turnOnsFixedThr_Iso[i],"Run-3 Iso","LPE");
     legend.Draw("same");
 
-    canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsAt"+thr+".pdf");
+    canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsAt"+thr+".pdf");
 
 
     // BARREL ONLY TURNONS
@@ -350,7 +552,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     texl2->Draw("same");
     legend.Draw("same");
 
-    canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_turnOnsAt"+thr+".pdf");
+    canvas1.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_turnOnsAt"+thr+".pdf");
 
 
     // ENDCAP ONLY TURNONS
@@ -385,7 +587,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     texl2->Draw("same");
     legend.Draw("same");
 
-    canvas2.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_turnOnsAt"+thr+".pdf");
+    canvas2.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_turnOnsAt"+thr+".pdf");
 
 
     // ETA EFFICIENCY
@@ -426,7 +628,69 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     legendB.AddEntry(turnOnsFixedThr_Iso[i],"Run-3 Iso","LPE");
     legendB.Draw("same");
 
-    canvas3.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/etaEffAt"+thr+".pdf");
+    canvas3.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/etaEffAt"+thr+".pdf");
+
+
+    TCanvas canvas4("c4","c4",800,800);
+    // canvas.SetLeftMargin(0.15);
+    canvas4.SetGrid();
+    // canvas.SetLogy();
+
+    R2_etaEffFixedThr_noIso[i]->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+    R2_etaEffFixedThr_noIso[i]->SetTitle("");
+    R2_etaEffFixedThr_noIso[i]->GetXaxis()->SetTitleOffset(1.3);
+    R2_etaEffFixedThr_noIso[i]->GetYaxis()->SetTitle("Efficiency");
+    R2_etaEffFixedThr_noIso[i]->GetYaxis()->SetTitleOffset(1.3);
+    R2_etaEffFixedThr_noIso[i]->SetTitle("");
+    // R2_etaEffFixedThr_noIso[i]->GetXaxis()->SetRangeUser(20.,500.);
+    R2_etaEffFixedThr_noIso[i]->GetYaxis()->SetRangeUser(0., 1.05);
+
+    R2_etaEffFixedThr_noIso[i]->SetLineWidth(2);
+    R2_etaEffFixedThr_noIso[i]->SetLineColor(13);
+    R2_etaEffFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_etaEffFixedThr_noIso[i]->SetMarkerColor(13); 
+
+    R2_etaEffFixedThr_Iso[i]->SetLineWidth(2);
+    R2_etaEffFixedThr_Iso[i]->SetLineColor(46);
+    R2_etaEffFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_etaEffFixedThr_Iso[i]->SetMarkerColor(46);
+
+    R2_etaEffFixedThr_noIso[i]->Draw();
+    R2_etaEffFixedThr_Iso[i]->Draw("same");
+    
+    legend.AddEntry(R2_etaEffFixedThr_noIso[i],"Run-2 No-Iso","LPE");
+    legend.AddEntry(R2_etaEffFixedThr_Iso[i],"Run-2 Iso","LPE");
+
+    texl1->Draw("same");
+
+    TPaveText* texlA = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+    texlA->AddText("Runs 2018 (13 TeV)");
+    texlA->SetTextSize(0.03);
+    texlA->SetFillStyle(0);
+    texlA->SetBorderSize(0);
+    texlA->Draw("same");
+
+    TLegend legendA(0.55,0.15,0.88,0.28);
+    legendA.SetBorderSize(0);
+    legendA.SetHeader("p_{T}^{L1 #tau} > "+thr+" GeV ; p_{T}^{Offline #tau} > 40 GeV");
+    legendA.AddEntry(R2_etaEffFixedThr_noIso[i],"Run-2 No-Iso","LPE");
+    legendA.AddEntry(R2_etaEffFixedThr_Iso[i],"Run-2 Iso","LPE");
+    legendA.Draw("same");
+
+    canvas4.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/etaEffAt"+thr+"_Run2.pdf");
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // NVTX EFFICIENCY
@@ -461,8 +725,41 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     texl2->Draw("same");
     legendB.Draw("same");
 
-    canvas5.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/nvtxEffAt"+thr+".pdf");
+    canvas5.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/nvtxEffAt"+thr+".pdf");
 
+
+    TCanvas canvas6("c6","c6",800,800);
+    // canvas.SetLeftMargin(0.15);
+    canvas6.SetGrid();
+    // canvas.SetLogy();
+
+    R2_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetTitle("Number of vertices");
+    R2_nvtxEffFixedThr_noIso[i]->SetTitle("");
+    R2_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetTitleOffset(1.3);
+    R2_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetTitle("Efficiency");
+    R2_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetTitleOffset(1.3);
+    R2_nvtxEffFixedThr_noIso[i]->SetTitle("");
+    R2_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetRangeUser(0.,60.);
+    R2_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetRangeUser(0., 1.05);
+
+    R2_nvtxEffFixedThr_noIso[i]->SetLineWidth(2);
+    R2_nvtxEffFixedThr_noIso[i]->SetLineColor(13);
+    R2_nvtxEffFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_nvtxEffFixedThr_noIso[i]->SetMarkerColor(13); 
+
+    R2_nvtxEffFixedThr_Iso[i]->SetLineWidth(2);
+    R2_nvtxEffFixedThr_Iso[i]->SetLineColor(46);
+    R2_nvtxEffFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_nvtxEffFixedThr_Iso[i]->SetMarkerColor(46);
+
+    R2_nvtxEffFixedThr_noIso[i]->Draw();
+    R2_nvtxEffFixedThr_Iso[i]->Draw("same");
+
+    texl1->Draw("same");
+    texlA->Draw("same");
+    legendA.Draw("same");
+
+    canvas6.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/nvtxEffAt"+thr+"_Run2.pdf");
 
     TCanvas canvas7("c7","c7",800,800);
     // canvas.SetLeftMargin(0.15);
@@ -495,8 +792,41 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     texl2->Draw("same");
     legendB.Draw("same");
 
-    canvas7.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_nvtxEffAt"+thr+".pdf");
+    canvas7.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_nvtxEffAt"+thr+".pdf");
 
+
+    TCanvas canvas8("c8","c8",800,800);
+    // canvas.SetLeftMargin(0.15);
+    canvas8.SetGrid();
+    // canvas.SetLogy();
+
+    R2_barrel_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetTitle("Number of vertices");
+    R2_barrel_nvtxEffFixedThr_noIso[i]->SetTitle("");
+    R2_barrel_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetTitleOffset(1.3);
+    R2_barrel_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetTitle("Efficiency");
+    R2_barrel_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetTitleOffset(1.3);
+    R2_barrel_nvtxEffFixedThr_noIso[i]->SetTitle("");
+    R2_barrel_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetRangeUser(0.,60.);
+    R2_barrel_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetRangeUser(0., 1.05);
+
+    R2_barrel_nvtxEffFixedThr_noIso[i]->SetLineWidth(2);
+    R2_barrel_nvtxEffFixedThr_noIso[i]->SetLineColor(13);
+    R2_barrel_nvtxEffFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_barrel_nvtxEffFixedThr_noIso[i]->SetMarkerColor(13); 
+
+    R2_barrel_nvtxEffFixedThr_Iso[i]->SetLineWidth(2);
+    R2_barrel_nvtxEffFixedThr_Iso[i]->SetLineColor(46);
+    R2_barrel_nvtxEffFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_barrel_nvtxEffFixedThr_Iso[i]->SetMarkerColor(46);
+
+    R2_barrel_nvtxEffFixedThr_noIso[i]->Draw();
+    R2_barrel_nvtxEffFixedThr_Iso[i]->Draw("same");
+
+    texl1->Draw("same");
+    texlA->Draw("same");
+    legendA.Draw("same");
+
+    canvas8.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_nvtxEffAt"+thr+"_Run2.pdf");
 
     TCanvas canvas9("c9","c9",800,800);
     // canvas.SetLeftMargin(0.15);
@@ -529,10 +859,80 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     texl2->Draw("same");
     legendB.Draw("same");
 
-    canvas9.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_nvtxEffAt"+thr+".pdf");
+    canvas9.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_nvtxEffAt"+thr+".pdf");
+
+
+    TCanvas canvas10("c10","c10",800,800);
+    // canvas.SetLeftMargin(0.15);
+    canvas10.SetGrid();
+    // canvas.SetLogy();
+
+    R2_endcap_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetTitle("Number of vertices");
+    R2_endcap_nvtxEffFixedThr_noIso[i]->SetTitle("");
+    R2_endcap_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetTitleOffset(1.3);
+    R2_endcap_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetTitle("Efficiency");
+    R2_endcap_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetTitleOffset(1.3);
+    R2_endcap_nvtxEffFixedThr_noIso[i]->SetTitle("");
+    R2_endcap_nvtxEffFixedThr_noIso[i]->GetXaxis()->SetRangeUser(0.,60.);
+    R2_endcap_nvtxEffFixedThr_noIso[i]->GetYaxis()->SetRangeUser(0., 1.05);
+
+    R2_endcap_nvtxEffFixedThr_noIso[i]->SetLineWidth(2);
+    R2_endcap_nvtxEffFixedThr_noIso[i]->SetLineColor(13);
+    R2_endcap_nvtxEffFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_endcap_nvtxEffFixedThr_noIso[i]->SetMarkerColor(13); 
+
+    R2_endcap_nvtxEffFixedThr_Iso[i]->SetLineWidth(2);
+    R2_endcap_nvtxEffFixedThr_Iso[i]->SetLineColor(46);
+    R2_endcap_nvtxEffFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_endcap_nvtxEffFixedThr_Iso[i]->SetMarkerColor(46);
+
+    R2_endcap_nvtxEffFixedThr_noIso[i]->Draw();
+    R2_endcap_nvtxEffFixedThr_Iso[i]->Draw("same");
+
+    texl1->Draw("same");
+    texlA->Draw("same");
+    legendA.Draw("same");
+
+    canvas10.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_nvtxEffAt"+thr+"_Run2.pdf");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
-
-
 
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
@@ -564,8 +964,20 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     turnOnsFixedThr_Iso[i]->SetMarkerStyle(8);
     turnOnsFixedThr_Iso[i]->SetMarkerColor(2);
 
+    R2_turnOnsFixedThr_noIso[i]->SetLineWidth(2);
+    R2_turnOnsFixedThr_noIso[i]->SetLineColor(13);
+    R2_turnOnsFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_turnOnsFixedThr_noIso[i]->SetMarkerColor(13);
+
+    R2_turnOnsFixedThr_Iso[i]->SetLineWidth(2);
+    R2_turnOnsFixedThr_Iso[i]->SetLineColor(46);
+    R2_turnOnsFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_turnOnsFixedThr_Iso[i]->SetMarkerColor(46);
+
     turnOnsFixedThr_noIso[i]->Draw();
     turnOnsFixedThr_Iso[i]->Draw("same");
+    R2_turnOnsFixedThr_noIso[i]->Draw("same");
+    R2_turnOnsFixedThr_Iso[i]->Draw("same");
 
     TPaveText* texl1 = new TPaveText(0.15,0.87,0.2,0.99,"NDC");
     texl1->AddText("CMS Internal");
@@ -587,9 +999,11 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     legend.SetHeader("p_{T}^{L1 #tau} > "+thr+" GeV");
     legend.AddEntry(turnOnsFixedThr_noIso[i],"Run-3 No-Iso","LPE");
     legend.AddEntry(turnOnsFixedThr_Iso[i],"Run-3 Iso","LPE");
+    legend.AddEntry(R2_turnOnsFixedThr_noIso[i],"Run-2 No-Iso","LPE");
+    legend.AddEntry(R2_turnOnsFixedThr_Iso[i],"Run-2 Iso","LPE");
     legend.Draw("same");
 
-    canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_turnOnsAt"+thr+".pdf");
+    canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_turnOnsAt"+thr+".pdf");
 
 
     // TURNONS
@@ -630,7 +1044,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     legend_.AddEntry(turnOnsFixedThr_Iso[i],"Run-3 Iso","LPE");
     legend_.Draw("same");
 
-    canvas_.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_turnOnsAt"+thr+"_Run3Only.pdf");
+    canvas_.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_turnOnsAt"+thr+"_Run3Only.pdf");
 
 
     // BARREL ONLY TURNONS
@@ -658,14 +1072,26 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     barrel_turnOnsFixedThr_Iso[i]->SetMarkerStyle(8);
     barrel_turnOnsFixedThr_Iso[i]->SetMarkerColor(2);
 
+    R2_barrel_turnOnsFixedThr_noIso[i]->SetLineWidth(2);
+    R2_barrel_turnOnsFixedThr_noIso[i]->SetLineColor(13);
+    R2_barrel_turnOnsFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_barrel_turnOnsFixedThr_noIso[i]->SetMarkerColor(13);
+
+    R2_barrel_turnOnsFixedThr_Iso[i]->SetLineWidth(2);
+    R2_barrel_turnOnsFixedThr_Iso[i]->SetLineColor(46);
+    R2_barrel_turnOnsFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_barrel_turnOnsFixedThr_Iso[i]->SetMarkerColor(46);
+
     barrel_turnOnsFixedThr_noIso[i]->Draw();
     barrel_turnOnsFixedThr_Iso[i]->Draw("same");
+    R2_barrel_turnOnsFixedThr_noIso[i]->Draw("same");
+    R2_barrel_turnOnsFixedThr_Iso[i]->Draw("same");
 
     texl1->Draw("same");
     texl2->Draw("same");
     legend.Draw("same");
 
-    canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_barrel_turnOnsAt"+thr+".pdf");
+    canvas1.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_barrel_turnOnsAt"+thr+".pdf");
 
 
     // ENDCAP ONLY TURNONS
@@ -693,14 +1119,26 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     endcap_turnOnsFixedThr_Iso[i]->SetMarkerStyle(8);
     endcap_turnOnsFixedThr_Iso[i]->SetMarkerColor(2);
 
+    R2_endcap_turnOnsFixedThr_noIso[i]->SetLineWidth(2);
+    R2_endcap_turnOnsFixedThr_noIso[i]->SetLineColor(13);
+    R2_endcap_turnOnsFixedThr_noIso[i]->SetMarkerStyle(8);
+    R2_endcap_turnOnsFixedThr_noIso[i]->SetMarkerColor(13);
+
+    R2_endcap_turnOnsFixedThr_Iso[i]->SetLineWidth(2);
+    R2_endcap_turnOnsFixedThr_Iso[i]->SetLineColor(46);
+    R2_endcap_turnOnsFixedThr_Iso[i]->SetMarkerStyle(8);
+    R2_endcap_turnOnsFixedThr_Iso[i]->SetMarkerColor(46);
+
     endcap_turnOnsFixedThr_noIso[i]->Draw();
     endcap_turnOnsFixedThr_Iso[i]->Draw("same");
+    R2_endcap_turnOnsFixedThr_noIso[i]->Draw("same");
+    R2_endcap_turnOnsFixedThr_Iso[i]->Draw("same");
 
     texl1->Draw("same");
     texl2->Draw("same");
     legend.Draw("same");
 
-    canvas2.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_endcap_turnOnsAt"+thr+".pdf");
+    canvas2.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/zoomed_endcap_turnOnsAt"+thr+".pdf");
   }
 
 
@@ -760,7 +1198,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
   legend.Draw("same");
 
-  canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsProgression_noIso.pdf");
+  canvas.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsProgression_noIso.pdf");
 
 
   // TURNONS ISO PROGRESSION
@@ -793,7 +1231,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   texl2->Draw("same");
   legendX.Draw("same");
 
-  canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsProgression_Iso.pdf");
+  canvas1.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsProgression_Iso.pdf");
 
 
 
@@ -845,10 +1283,13 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   texl2->Draw("same");
   legendX_.Draw("same");
 
-  canvas1_.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsForCri_Iso_2.pdf");
+  canvas1_.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/turnOnsForCri_Iso_2.pdf");
 
 
 
+
+
+  
   TCanvas canvas2_("c2_","c2_",800,800);
   // canvas.SetLeftMargin(0.15);
   canvas2_.SetGrid();
@@ -867,8 +1308,14 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   turnOnsFixedThr_Iso[6]->SetLineColor(2);
   turnOnsFixedThr_Iso[6]->SetMarkerStyle(8);
   turnOnsFixedThr_Iso[6]->SetMarkerColor(2);
+  
+  R2_turnOnsFixedThr_Iso[9]->SetLineWidth(2);
+  R2_turnOnsFixedThr_Iso[9]->SetLineColor(46);
+  R2_turnOnsFixedThr_Iso[9]->SetMarkerStyle(8);
+  R2_turnOnsFixedThr_Iso[9]->SetMarkerColor(46);
 
   turnOnsFixedThr_Iso[6]->Draw();
+  R2_turnOnsFixedThr_Iso[9]->Draw("same");
 
   texl1->Draw("same");
   texl2->Draw("same");
@@ -876,9 +1323,13 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   TLegend legend_(0.55,0.15,0.88,0.28);
   legend_.SetBorderSize(0);
   legend_.AddEntry(turnOnsFixedThr_Iso[6],"Run-3, p_{T}^{L1 #tau} > 29 GeV","LPE");
+  legend_.AddEntry(R2_turnOnsFixedThr_Iso[9],"Run-2, p_{T}^{L1 #tau} > 32 GeV","LPE");
   legend_.Draw("same");
 
-  canvas2_.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/aaaa_plot.pdf");
+  canvas2_.SaveAs("PDFs/Run3_13p6TeV_Run"+run_nmbr_str+"/aaaa_plot.pdf");
+
+
+
 
 
 }

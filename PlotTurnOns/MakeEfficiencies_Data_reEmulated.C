@@ -30,7 +30,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
 
   TFile f(file,"READ");
-  TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
+  TTree* inTree = (TTree*)f.Get("outTreeForCalibration");
   ULong64_t in_EventNumber =  0;
   Int_t     in_RunNumber =  0;
   Int_t     in_lumi =  0;
@@ -40,20 +40,18 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   Float_t   in_l1tPt =  0;
   Float_t   in_l1tEta =  0;
   Float_t   in_l1tPhi =  0;
-  Int_t     in_l1tQual =  0;
   Int_t     in_l1tIso = 0;
   Int_t     Nvtx = 0;
   inTree->SetBranchAddress("EventNumber", &in_EventNumber);
   inTree->SetBranchAddress("RunNumber", &in_RunNumber);
   inTree->SetBranchAddress("lumi", &in_lumi);
-  inTree->SetBranchAddress("tauPt",&in_offlineTauPt);
-  inTree->SetBranchAddress("tauEta",&in_offlineTauEta);
-  inTree->SetBranchAddress("tauPhi",&in_offlineTauPhi);
-  inTree->SetBranchAddress("l1tPt",&in_l1tPt);
-  inTree->SetBranchAddress("l1tEta",&in_l1tEta);
-  inTree->SetBranchAddress("l1tPhi",&in_l1tPhi);
-  inTree->SetBranchAddress("l1tQual",&in_l1tQual);
-  inTree->SetBranchAddress("l1tIso",&in_l1tIso);
+  inTree->SetBranchAddress("OfflineTau_pt",&in_offlineTauPt);
+  inTree->SetBranchAddress("OfflineTau_eta",&in_offlineTauEta);
+  inTree->SetBranchAddress("OfflineTau_phi",&in_offlineTauPhi);
+  inTree->SetBranchAddress("L1Tau_pt",&in_l1tPt);
+  inTree->SetBranchAddress("L1Tau_eta",&in_l1tEta);
+  inTree->SetBranchAddress("L1Tau_phi",&in_l1tPhi);
+  inTree->SetBranchAddress("L1Tau_IsoFlag",&in_l1tIso);
   inTree->SetBranchAddress("Nvtx",&Nvtx);
 
   Double_t binningPt[23] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,150,210,350,500,700,1000,2000};
@@ -210,7 +208,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
-  TFile* fileout = new TFile("ROOTs/ROOTs_2023/efficiencies_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+  TFile* fileout = new TFile("ROOTs/ROOTs_2023/efficiencies_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     pt->Write();
@@ -429,6 +427,21 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     canvas3.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/etaEffAt"+thr+".pdf");
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // NVTX EFFICIENCY
     TCanvas canvas5("c5","c5",800,800);
     // canvas.SetLeftMargin(0.15);
@@ -462,6 +475,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     legendB.Draw("same");
 
     canvas5.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/nvtxEffAt"+thr+".pdf");
+
 
 
     TCanvas canvas7("c7","c7",800,800);
@@ -530,9 +544,11 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     legendB.Draw("same");
 
     canvas9.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_nvtxEffAt"+thr+".pdf");
+
+
+
+
   }
-
-
 
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
@@ -849,6 +865,9 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
 
 
+
+
+  
   TCanvas canvas2_("c2_","c2_",800,800);
   // canvas.SetLeftMargin(0.15);
   canvas2_.SetGrid();
@@ -867,7 +886,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   turnOnsFixedThr_Iso[6]->SetLineColor(2);
   turnOnsFixedThr_Iso[6]->SetMarkerStyle(8);
   turnOnsFixedThr_Iso[6]->SetMarkerColor(2);
-
+  
   turnOnsFixedThr_Iso[6]->Draw();
 
   texl1->Draw("same");
@@ -879,6 +898,9 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
   legend_.Draw("same");
 
   canvas2_.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/aaaa_plot.pdf");
+
+
+
 
 
 }
