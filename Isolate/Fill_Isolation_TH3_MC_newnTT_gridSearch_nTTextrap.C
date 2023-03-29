@@ -21,6 +21,22 @@
 
 using namespace std;
 
+// VARIABLES DEFINING THE GRID SEARCH PHASE SPACE
+const UInt_t NEffsMin = 10;
+const UInt_t NEmins = 13;
+const UInt_t NEmaxs_sum = 18;
+const Float_t EffsMin[NEffsMin] = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
+const Float_t Emins[NEmins] = {10., 13., 16., 19., 22., 25., 28., 31., 34., 37., 40., 43., 46.};
+const Float_t Emaxs_sum[NEmaxs_sum] = {15., 18., 21., 24., 27., 30., 33., 36., 39., 41., 44., 47., 50., 53., 56., 59., 61., 64.};
+
+// for comparisons and debugging with old code 
+// const UInt_t NEffsMin = 5;
+// const UInt_t NEmins = 2;
+// const UInt_t NEmaxs_sum = 2;
+// const Double_t EffsMin[NEffsMin] = {0.1, 0.4, 0.5, 0.6, 0.7};
+// const Double_t Emins[NEmins] = {20., 25.};
+// const Double_t Emaxs_sum[NEmaxs_sum] = {15., 25.};
+
 Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Efficiency_low_MinPt, Double_t Reaching_100pc_at, TString parametrisation, Double_t Kfact)
 {
   Double_t Efficiency = 0; 
@@ -35,9 +51,6 @@ Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Effic
           Double_t Slope = (1.-Efficiency_low_MinPt)/(Reaching_100pc_at-MinPt);
           Efficiency = Slope*Pt + (1. - Slope*Reaching_100pc_at);
         }
-
-      if(Efficiency<0) Efficiency = 0.;
-      if(Efficiency>=1) Efficiency = 1.;
     }
   else if(parametrisation=="quadratic")
     {
@@ -50,29 +63,29 @@ Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Effic
 
           Efficiency = Slope*Pt + (1. - Slope*Reaching_100pc_at) + Kmax*Kfact * (Pt - MinPt) * (Pt - Reaching_100pc_at);
         }
-
-      if(Efficiency<0) Efficiency = 0.;
-      if(Efficiency>=1) Efficiency = 1.;
     }
   else if(parametrisation=="sigmoid")
     {
       Efficiency = (1-Efficiency_low_MinPt) / (1+exp(-(Pt-(Reaching_100pc_at+MinPt)/2)*Kfact)) + Efficiency_low_MinPt;
-      
-      if(Efficiency<0) Efficiency = 0.;
-      if(Efficiency>=1) Efficiency = 1.;
     }
+
+  if(Efficiency<0) Efficiency = 0.;
+  if(Efficiency>=1) Efficiency = 1.;
 
   return Efficiency ;
 }
 
 
-void Fill_Isolation_TH3(TString compression = "compressed", TString parametrisation = "linear", Double_t Kfact = 0.0, float calibThr = 1.7)
+void Fill_Isolation_TH3(TString version, TString compression = "compressed", TString parametrisation = "linear", Double_t Kfact = 0.0, bool byBin = false, float calibThr = 1.7)
 {
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
     TString Kintgr = to_string(Kfact).substr(0, to_string(Kfact).find("."));
     TString Kdecim = to_string(Kfact).substr(2, to_string(Kfact).find("."));
+
+    TString byBin_tag = "";
+    if (byBin) { byBin_tag = "_byBin"; }
 
     UInt_t tmpIEt;
     UInt_t tmpnTT;
@@ -96,10 +109,10 @@ void Fill_Isolation_TH3(TString compression = "compressed", TString parametrisat
     const UInt_t NbinsnTT = tmpnTT;
 
     std::map<TString,TF1*> fitsIsolation;
-    TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+".root","READ");
+    TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","READ");
     TString TFileName = "";
-    if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0gs_calibThr"+intgr+"p"+decim+"_linear.root";
-    else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+    if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_linear"+byBin_tag+".root";
+    else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+byBin_tag+".root";
     TFile LUTs_Options(TFileName,"RECREATE");
 
     for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
@@ -115,13 +128,13 @@ void Fill_Isolation_TH3(TString compression = "compressed", TString parametrisat
         }
     }
 
-    // VARIABLES DEFINING THE GRID SEARCH PHASE SPACE
-    const UInt_t NEffsMin = 10;
-    const UInt_t NEmins = 13;
-    const UInt_t NEmaxs_sum = 18;
-    const Float_t EffsMin[NEffsMin] = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
-    const Int_t Emins[NEmins] = {10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 46};
-    const Int_t Emaxs_sum[NEmaxs_sum] = {15, 18, 21, 24, 27, 30, 33, 36, 39, 41, 44, 47, 50, 53, 56, 59, 61, 64};
+    std::map<TString,TH3F*> histosIsolation;
+    for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
+    {
+        TString currentHistoName = "Eff_"+to_string(iEff);
+        TH3F* currentHisto = (TH3F*)f_Isolation.Get(currentHistoName);
+        histosIsolation.insert(make_pair(currentHistoName,currentHisto));
+    }
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
@@ -130,12 +143,12 @@ void Fill_Isolation_TH3(TString compression = "compressed", TString parametrisat
         {
             for (UInt_t iEmax = 0; iEmax < NEmaxs_sum; ++iEmax)
             {
-                Float_t effMin = EffsMin[iEff];
+                Double_t effMin = EffsMin[iEff];
                 TString effMin_intgr = to_string(effMin).substr(0, to_string(effMin).find("."));
                 TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
-                Int_t Emin = Emins[iEmin];
-                Int_t Emax = Emins[iEmin] + Emaxs_sum[iEmax];
-                TString HistoName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                Double_t Emin = Emins[iEmin];
+                Double_t Emax = Emins[iEmin] + Emaxs_sum[iEmax];
+                TString HistoName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(int(Emin))+"_eMax"+to_string(int(Emax));
                 TH3F* currentHisto = new TH3F(HistoName, HistoName, NbinsIEta-1 , 0, NbinsIEta-1, NbinsIEt-1, 0, NbinsIEt-1, NbinsnTT-1, 0, NbinsnTT-1);
                 std::cout << " Running " << HistoName << std::endl;
 
@@ -146,21 +159,40 @@ void Fill_Isolation_TH3(TString compression = "compressed", TString parametrisat
                     {
                         for(UInt_t k = 0 ; k < NbinsnTT-1 ; ++k)
                         {
-                            //Progression iEff-iEmin-iEmax
-                            Double_t EfficiencyProgression = FindEfficiency_Progression((hardcodedCompressedIetBins[j]+hardcodedCompressedIetBins[j+1])/2., Emin, effMin, Emax, parametrisation, Kfact);
-                            if(EfficiencyProgression>=0.9999) EfficiencyProgression = 1.0001;
-                            Int_t IntEfficiencyProgression = int(EfficiencyProgression*100);
-                            Int_t IsoCut;
-                            if(IntEfficiencyProgression==100) { IsoCut = 1000; }
+                            if (!byBin)
+                            {
+                                // New fit-based filling of the LUT for checks
+                                Double_t EfficiencyProgression = FindEfficiency_Progression((hardcodedCompressedIetBins[j]+hardcodedCompressedIetBins[j+1])/2., Emin, effMin, Emax, parametrisation, Kfact);
+                                if(EfficiencyProgression>=0.9999) EfficiencyProgression = 1.0001;
+                                Int_t IntEfficiencyProgression = int(EfficiencyProgression*100);
+                                Int_t IsoCut;
+                                if(IntEfficiencyProgression==100) { IsoCut = 1000; }
+                                else
+                                {
+                                    TString IsoProjectionFitName = "fit_pz_"+to_string(IntEfficiencyProgression)+"_eta"+to_string(i)+"_e"+to_string(FindBinCorrespondenceIEt(hardcodedCompressedIetBins[j]));
+                                    TF1* currentFit = (TF1*)fitsIsolation[IsoProjectionFitName];
+                                    IsoCut = Int_t(currentFit->GetParameter(0) + currentFit->GetParameter(1) * FindBinCorrespondencenTT(hardcodedCompressednTTBins[k]));
+                                    if (IsoCut < 0.) { IsoCut = 0; } // safety against negative fitte values
+                                }
+                                currentHisto->SetBinContent(i+1,j+1,k+1,IsoCut);
+                                // if(j+1!=32) { currentHisto->SetBinContent(i+1,j+1,k+1,IsoCut); } // full relaxation in last energy bin
+                                // else        { currentHisto->SetBinContent(i+1,j+1,k+1,1000); }
+                            }
                             else
                             {
-                                TString IsoProjectionFitName = "fit_pz_"+to_string(IntEfficiencyProgression)+"_eta"+to_string(i)+"_e"+to_string(FindBinCorrespondenceIEt(hardcodedCompressedIetBins[j]));
-                                TF1* currentFit = (TF1*)fitsIsolation[IsoProjectionFitName];
-                                IsoCut = Int_t(currentFit->GetParameter(0) + currentFit->GetParameter(1) * FindBinCorrespondencenTT(hardcodedCompressednTTBins[k]));
-                                if (IsoCut < 1) { IsoCut = 1; }
-                            }              
-                            if(j+1!=32) { currentHisto->SetBinContent(i+1,j+1,k+1,IsoCut); }
-                            else        { currentHisto->SetBinContent(i+1,j+1,k+1,1000); }
+                                // Old per-bin filling of the LUT for checks
+                                Double_t EfficiencyProgression = FindEfficiency_Progression((hardcodedCompressedIetBins[j]+hardcodedCompressedIetBins[j+1])/2., Emin, effMin, Emax, parametrisation, Kfact);
+                                if(EfficiencyProgression>=0.9999) EfficiencyProgression = 1.0001;
+                                Int_t IntEfficiencyProgression = int(EfficiencyProgression*100);
+                                Int_t IsoCut;
+                                if(IntEfficiencyProgression==100) { IsoCut = 1000; }
+                                else
+                                {
+                                    TString EfficiencyName = "Eff_"+to_string(IntEfficiencyProgression);
+                                    IsoCut = histosIsolation[EfficiencyName]->GetBinContent(i+1,FindBinCorrespondenceIEt(hardcodedCompressedIetBins[j])+1,FindBinCorrespondencenTT(hardcodedCompressednTTBins[k])+1);
+                                }
+                                currentHisto->SetBinContent(i+1,j+1,k+1,IsoCut);
+                            }
 
                         }
                     }

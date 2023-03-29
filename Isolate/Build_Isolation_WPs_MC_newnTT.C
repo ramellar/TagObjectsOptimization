@@ -26,7 +26,7 @@ using namespace std;
 
 // THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
 
-void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
+void Build_Isolation_WPs(TString date, TString version, TString compression, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -61,7 +61,7 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
   const UInt_t FitMax = tmpFitMax;
 
   TChain data("outTreeCalibrated");
-  data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root");
+  data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_"+date+".root");
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
   TH2F* isoEt_vs_nVtx_barrel = new TH2F("isoEt_vs_nVtx_barrel","isoEt_vs_nVtx_barrel",150,0.,150.,100,0.,100.);
@@ -116,9 +116,6 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
   int   L1Tau_isMerged = -99;
   int   L1Tau_nTT      = -99;
   int   L1Tau_Iso      = -99;
-  // float L1Tau_Calibrated_pt = -99.;
-  // float L1Tau_UnCalibrated_pt = -99.;
-  // float L1Tau_CalibrationConstant = -99.;
   float OfflineTau_pt = -99.;
   int OfflineTau_isMatched = 0;
   int supercompressedE = -99;
@@ -135,16 +132,12 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
   data.SetBranchAddress("L1Tau_hasEM", &L1Tau_hasEM);
   data.SetBranchAddress("L1Tau_nTT", &L1Tau_nTT);
   data.SetBranchAddress("L1Tau_Iso", &L1Tau_Iso);
-  // data.SetBranchAddress("L1Tau_Calibrated_pt", &L1Tau_Calibrated_pt);
-  // data.SetBranchAddress("L1Tau_CalibrationConstant",&L1Tau_CalibrationConstant);
   data.SetBranchAddress("OfflineTau_pt",&OfflineTau_pt);
   data.SetBranchAddress("OfflineTau_isMatched",&OfflineTau_isMatched);
 
   std::map<TString,TH1F*> Histos_PerBin ;
   std::map<Int_t,TH3F*> IsoCut_PerBin ;
   std::map<Int_t,std::map<TString,Int_t>> IsoCut_PerEfficiency_PerBin;
-  // std::map<TString,Int_t> IsoCut_PerBin_90pc ;
-  // std::map<TString,Int_t> IsoCut_PerBin_80pc ;
 
   for(UInt_t i = 0 ; i < NbinsIEta-1 ; ++i)
     {
@@ -173,8 +166,6 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
 
               TH1F* temp_histo = new TH1F(Name_Histo.Data(),Name_Histo.Data(),100,0.,100.);
               Histos_PerBin.insert(make_pair(Name_Histo,temp_histo));
-
-              // cout<<"Name_Histo = "<<Name_Histo<<endl;
             }
         }
     }
@@ -227,13 +218,11 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
       TString Appendix_k = TString(ss_k.str());
       Name_Histo += Appendix_k;
 
-      // cout<<"Name_Histo = "<<Name_Histo<<endl;
-
       Histos_PerBin[Name_Histo]->Fill(L1Tau_Iso);
     }
   
 
-  TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0_calibThr"+intgr+"p"+decim+".root","RECREATE");
+  TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","RECREATE");
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();
@@ -350,37 +339,13 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
                         {
                           if(IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]==-1)
                             {
-                              //cout<<"Efficiency = "<<Efficiency<<", bin = "<<Name_Histo<<", cut = "<<iIso<<endl;
-                              //if(iEff==97) cout<<"IsoCut = "<<iIso<<endl;
                               IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]=iIso;
                               IsoCut_PerBin[iEff]->SetBinContent(i+1,j+1,k+1,iIso);
-                              //cout<<"IsoCut_PerEfficiency_PerBin[iEff][Name_Histo] = "<<IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]<<endl;
                             }
                         }
                     }
                 }
 
-              // IsoCut_PerBin_90pc.insert(make_pair(Name_Histo,-1));
-              // IsoCut_PerBin_80pc.insert(make_pair(Name_Histo,-1));
-
-              // for(UInt_t iIso = 0 ; iIso < 100 ; ++iIso)
-              //  {
-              //    // cout<<"testing iIso = "<<iIso<<endl;
-              //    // cout<<"Histos_PerBin[Name_Histo]->Integral(1,iIso+1) = "<<Histos_PerBin[Name_Histo]->Integral(1,iIso+1)<<endl;
-              //    // cout<<"Histos_PerBin[Name_Histo]->Integral(1,100+1) = "<<Histos_PerBin[Name_Histo]->Integral(1,100+1)<<endl;
-              //    if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=0.9)
-              //      {
-              //        if(IsoCut_PerBin_90pc[Name_Histo]==-1) IsoCut_PerBin_90pc[Name_Histo]=Histos_PerBin[Name_Histo]->GetBinLowEdge(iIso+1);
-              //      }
-              //    if(Histos_PerBin[Name_Histo]->Integral(1,iIso+1)/Histos_PerBin[Name_Histo]->Integral(1,100+1)>=0.8)
-              //      {
-              //        if(IsoCut_PerBin_80pc[Name_Histo]==-1) IsoCut_PerBin_80pc[Name_Histo]=Histos_PerBin[Name_Histo]->GetBinLowEdge(iIso+1);
-              //      }
-              //  }
-
-              // cout<<"50% iso cut for "<<Name_Histo<<" is = "<<IsoCut_PerBin_90pc[Name_Histo]<<endl;
-
-              //if(Histos_PerBin[Name_Histo]->GetEntries()<20)
               if(Histos_PerBin[Name_Histo]->GetEntries()<40)
                 {
                   NumberOfHistosWithLowStats++;
@@ -491,15 +456,10 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
               pt_pass_efficiency[iEff]->Fill(L1Tau_IEt);
               nTT_pass_efficiency[iEff]->Fill(L1Tau_nTT);
             }
-          //cout<<"L1Tau_Iso = "<<L1Tau_Iso<<", cut from map = "<<IsoCut_PerEfficiency_PerBin[iEff][Name_Histo]<<", cut from histo = "<<IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)<<endl;
+
           if(L1Tau_Iso<=IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)) pt_pass_efficiency_TH3[iEff]->Fill(L1Tau_IEt);
-          // if(L1Tau_Iso<=IsoCut_PerBin[iEff]->GetBinContent(binForIsolation.at(0)+1,binForIsolation.at(1)+1,binForIsolation.at(2)+1)) pt_pass_efficiency_TH3[iEff]->Fill(L1Tau_IEt);
         }
 
-      // cout<<"IsoCut_PerEfficiency_PerBin[90][Name_Histo] = "<<IsoCut_PerEfficiency_PerBin[90][Name_Histo]<<endl;
-
-      // if(L1Tau_Iso<=IsoCut_PerEfficiency_PerBin[90][Name_Histo]) pt_pass_90pc->Fill(L1Tau_IEt);
-      // if(L1Tau_Iso<=IsoCut_PerEfficiency_PerBin[80][Name_Histo]) pt_pass_80pc->Fill(L1Tau_IEt);
       pt->Fill(L1Tau_IEt);
       eta->Fill(L1Tau_IEta);
       nTT->Fill(L1Tau_nTT);
@@ -551,7 +511,7 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
     {
       IsoCut_PerBin[iEff]->Write();
 
-      // for each bin in eta/e project icoCut on nTT and make a fit of it
+      // for each bin in eta/e project isoCut on nTT and make a fit of it
       // this approach makes the isoCut strictly increasing and less dependent on statistic fluctuations
       for(UInt_t i = 0 ; i < NbinsIEta-1 ; ++i)
       {
@@ -563,7 +523,7 @@ void Build_Isolation_WPs(TString compression, float calibThr = 1.7)
 
             TString fitName = "fit_pz_"+to_string(iEff)+"_eta"+to_string(i)+"_e"+to_string(j);
             TF1* projection_fit = new TF1(fitName,"[0]+[1]*x", FitMin, FitMax);
-            projection->Fit(projection_fit);
+            projection->Fit(projection_fit, "R");
             projection_fit->Write();
           }
       }

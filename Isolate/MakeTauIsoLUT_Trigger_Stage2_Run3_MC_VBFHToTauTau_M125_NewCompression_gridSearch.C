@@ -28,16 +28,16 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
 
   TFile* fLUTS = new TFile ("ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+option+".root","READ");
   TString outFile = "LUTs/LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax)+"_"+option+".txt";
-  cout<<"OUTFILE = "<<outFile<<endl;
+  std::cout<<"OUTFILE = " << outFile << std::endl;
   
   TH3F* LUT ;
   TString LUT_name = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
   LUT = (TH3F*) fLUTS->Get ( LUT_name.Data());
   
   TH3F* binning = new TH3F ("binning", "binning", NbinsIEta-1, hardcodedIetaBinsFloat, compressedNbinsIEt-1, hardcodedCompressedIetBinsFloat, compressedNbinsnTT-1, hardcodedCompressednTTBinsFloat);
-  cout << "LUT name: " << LUT->GetName() << endl;
-  cout << "Max LUT CuT: " << LUT->GetMaximum() << endl;
-  cout << "Output cmpr bins: " << NbinsIEta-1 << " " << compressedNbinsIEt-1 << " " << compressedNbinsnTT-1 << endl;  
+  std::cout << "LUT name: " << LUT->GetName() << std::endl;
+  std::cout << "Max LUT CuT: " << LUT->GetMaximum() << std::endl;
+  std::cout << "Output cmpr bins: " << NbinsIEta-1 << " " << compressedNbinsIEt-1 << " " << compressedNbinsnTT-1 << std::endl;  
 
   std::ofstream LUTfile(outFile.Data());  
 
@@ -56,12 +56,12 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
   int totInBits  = 12 ;
   int totOutBits = 9 ;  // i.e. cut max 127, but it is largely overestimated: max in LUT is 27 --> 5 bits are enough
 
-  LUTfile << "# Tau isolation LUT from V9 optimization for " << effMin << " and option " << option << "" << endl;
-  if(includeCompression) LUTfile << "# on top of the table there is the in/out compression scheme, followed by the LUT" << endl;
-  LUTfile << "# iso LUT structure is ieta --> iEt -->  nTT" << endl;
-  if(includeCompression) LUTfile << "# Input bits: ieta: " << etaBits << " iEt " << etBits << " nTT: " << nTTBits << endl;
-  LUTfile << "# Compr bits: ieta: " << cmprEta << " iEt: " << cmprEt << " nTT: " << cmprnTT  << endl;
-  LUTfile << "#<header> V10.0 " << totInBits << " " << totOutBits << " </header>"<<endl;
+  LUTfile << "# Tau isolation LUT from V9 optimization for effMin " << effMin << " Emin " << Emin << " Emax " << Emax << "" << std::endl;
+  if(includeCompression) LUTfile << "# on top of the table there is the in/out compression scheme, followed by the LUT" << std::endl;
+  LUTfile << "# iso LUT structure is ieta --> iEt -->  nTT" << std::endl;
+  if(includeCompression) LUTfile << "# Input bits: ieta: " << etaBits << " iEt " << etBits << " nTT: " << nTTBits << std::endl;
+  LUTfile << "# Compr bits: ieta: " << cmprEta << " iEt: " << cmprEt << " nTT: " << cmprnTT  << std::endl;
+  LUTfile << "#<header> V10.0 " << totInBits << " " << totOutBits << " </header>" << std::endl;
   LUTfile << "\n";
 
 
@@ -78,7 +78,7 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
             if (BinEt > compressedNbinsIEt-1) BinEt = compressedNbinsIEt-1;
             LUTfile << TotalIDX << " " << BinEt-1;
             if (i == 0) LUTfile << " # begin of ET compr block";
-            LUTfile << endl;
+            LUTfile << std::endl;
         }
 
         ////////// inTT compr
@@ -89,7 +89,7 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
             if (BinnTT > compressedNbinsnTT-1) BinnTT = compressedNbinsnTT-1;
             LUTfile << TotalIDX << " " << BinnTT-1;
             if (i == 0) LUTfile << " # begin of nTT compr block";
-            LUTfile << endl;
+            LUTfile << std::endl;
         }
 
         ////////// iEta compr
@@ -100,14 +100,12 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
             if (BinEta > NbinsIEta-1) BinEta = NbinsIEta-1;
             LUTfile << TotalIDX << " " << BinEta-1;
             if (i == 0) LUTfile << " # begin of eta compr block";
-            LUTfile << endl;
+            LUTfile << std::endl;
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
     //// print isolation LUT ///////////////////////////////////////////////////
-
-    cout<<"here"<<endl;
 
     // structure: Et -- eta -- nTT
     int onlyIsoAddr = 0;
@@ -117,13 +115,13 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
         {
             for (int inTT = 0; inTT < pow(2, cmprnTT); inTT++)
             {
-                int thr = LUT->GetBinContent(ieta+1,iEt+1,inTT+1)+1;
+                int thr = LUT->GetBinContent(ieta+1, iEt+1, inTT+1)+1; //why was there this +1 ????
                 if(thr>=pow(2,totOutBits)-1) thr=pow(2,totOutBits)-1;
                 LUTfile << TotalIDX << " " << thr;
                 if (iEt == 0 && ieta == 0 && inTT == 0) LUTfile << " # start of isolation LUT -- ieta : iEt : nTT = " << ieta << " : " << iEt << " : " << inTT; 
                 else LUTfile << " # ieta : iEt : inTT = " << ieta << " : " << iEt << " : " << inTT; 
-                LUTfile << endl;
-                cout << onlyIsoAddr << " # ieta : iEt : inTT = " << ieta << " : " << iEt << " : " << inTT <<  " --> thr: " << thr << endl; 
+                LUTfile << std::endl;
+                std::cout << onlyIsoAddr << " # ieta : iEt : inTT = " << ieta << " : " << iEt << " : " << inTT <<  " --> thr: " << thr << std::endl; 
                 TotalIDX++;
                 onlyIsoAddr++;
             }
@@ -131,10 +129,10 @@ void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_
     }
 
     int totIDXexpected = pow(2,etaBits) + pow(2,etBits) + pow (2, nTTBits) + pow (2, cmprEta+cmprEt+cmprnTT);
-    cout << "TOTAL IDX " << TotalIDX << " expected: " << totIDXexpected << endl;
-    cout << "Max allowed by input LUT bits: " << pow(2, totInBits) << endl;
-    if (TotalIDX > pow(2, totInBits))  { cout << " **** WARNING: too few input bits " << totInBits << " , please increase value in header" << endl; }
-    if (TotalIDX == pow(2, totInBits)) { cout << " **** INFO: matched exact number of input bits " << totInBits << endl; }
+    std::cout << "TOTAL IDX " << TotalIDX << " expected: " << totIDXexpected << std::endl;
+    std::cout << "Max allowed by input LUT bits: " << pow(2, totInBits) << std::endl;
+    if (TotalIDX > pow(2, totInBits))  { std::cout << " **** WARNING: too few input bits " << totInBits << " , please increase value in header" << std::endl; }
+    if (TotalIDX == pow(2, totInBits)) { std::cout << " **** INFO: matched exact number of input bits " << totInBits << std::endl; }
 
 
 }
