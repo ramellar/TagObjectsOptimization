@@ -26,11 +26,11 @@ using namespace std;
 void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
 
 {
-  TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
+  // TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
+  TChain data("Ntuplizer_TagAndProbe");
 
   // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MERGED.root";
   // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/2022_08_05_DataReEmul_13p6TeV/SingleMuon_Run2_Run332775_MATCHED.root";
-  // TChain data("Ntuplizer_TagAndProbe");
 
   data.Add(InputFileName.Data());
 
@@ -191,6 +191,7 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
   outTree.Branch("Target", &out_Target, "Target/F");
   outTree.Branch("L1Tau_Qual", &out_l1tEmuQual, "L1Tau_Qual/I");
   outTree.Branch("L1Tau_IsoFlag", &out_l1tEmuIso, "L1Tau_IsoFlag/I");
+  outTree.Branch("Nvtx", &out_Nvtx, "Nvtx/I");
 
   for(UInt_t i = 0 ; i < data.GetEntries() ; ++i)
     {
@@ -267,6 +268,8 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
 
         //out_Target = tauPt/(l1tPt->at(iMatchedL1Tau));
         out_Target = tauPt/(l1tEmuRawEt->at(iMatchedL1Tau)/2.);
+
+        out_Nvtx = Nvtx;
 
         outTree.Fill();
 
