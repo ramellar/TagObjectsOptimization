@@ -1,7 +1,0 @@
-noIso :  FM=57317 - THR=42.51
-Option22 :  FM=66019 - THR=35.51
-Option31_extrap :  FM=65309 - THR=36.51
-
-
-effMin0p8 OptionM6 : FM=66649 - THR=35.51
-effMin0p8 OptionD7 : FM=66312 - THR=35.51
