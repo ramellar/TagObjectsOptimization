@@ -21,14 +21,14 @@
 
 using namespace std;
 
-void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
+void Rate(TString tag, int run, bool doScaleToLumi, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run"+run_str+"__RAW/EphemeralZeroBias0__Run2022G_Run"+run_str+"__RAW.root";
+  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0_reEmulated/EphemeralZeroBias0__Run2022G_Run362617__RAW__Tau2023_opt1/EphemeralZeroBias0__Run2022G_Run362617__RAW__Tau2023_opt1.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
@@ -45,11 +45,11 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
   inTree->SetBranchAddress("EventNumber", &in_EventNumber);
   inTree->SetBranchAddress("RunNumber", &in_RunNumber);
   inTree->SetBranchAddress("lumi", &in_lumi);
-  inTree->SetBranchAddress("l1tPt",&in_l1tPt);
-  inTree->SetBranchAddress("l1tEta",&in_l1tEta);
-  inTree->SetBranchAddress("l1tPhi",&in_l1tPhi);
-  inTree->SetBranchAddress("l1tQual",&in_l1tQual);
-  inTree->SetBranchAddress("l1tIso",&in_l1tIso);
+  inTree->SetBranchAddress("l1tEmuPt",&in_l1tPt);
+  inTree->SetBranchAddress("l1tEmuEta",&in_l1tEta);
+  inTree->SetBranchAddress("l1tEmuPhi",&in_l1tPhi);
+  inTree->SetBranchAddress("l1tEmuQual",&in_l1tQual);
+  inTree->SetBranchAddress("l1tEmuIso",&in_l1tIso);
 
   TH1F* pt_IsoInf = new TH1F("pt_IsoInf","pt_IsoInf",240,0.,240.);
   TH1F* pt_Iso = new TH1F("pt_Iso","pt_Iso",240,0.,240.);
@@ -77,12 +77,15 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
       if (run == 356375) { if(in_lumi>1001) continue; }
       if (run == 356378) { if(in_lumi<-1) continue; }
       if (run == 356381) { if(in_lumi<35) continue; }
-      if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
-      if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
+      if (run == 362616) { if(in_lumi<0) continue; }
+      if (run == 362617) { if(in_lumi<0) continue; }
 
       Float_t weight = 1.;
 
       ++Denominator;
+            
+      bool Filled_IsoInf = kFALSE;
+      bool Filled_Iso = kFALSE;
 
       std::vector<Int_t> Index_Taus_IsoInf;
       Index_Taus_IsoInf.push_back(-1); Index_Taus_IsoInf.push_back(-1);
@@ -133,7 +136,7 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
           DiTauPtPassDistribution_noIso->Fill(pt_Taus_IsoInf.at(0),pt_Taus_IsoInf.at(1),weight);
         }
 
-      if(Index_Taus_Iso.at(0)>=0 && Index_Taus_Iso.at(1)>=0)
+            if(Index_Taus_Iso.at(0)>=0 && Index_Taus_Iso.at(1)>=0)
         {
           DiTauPtPassDistribution_Iso->Fill(pt_Taus_Iso.at(0),pt_Taus_Iso.at(1),weight);
         }
@@ -191,15 +194,13 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
 
   TString scaledToLumi = "";
   if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-  TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+".root","RECREATE");
+  TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_reEmulated_Tau2023_opt1"+scaledToLumi+".root","RECREATE");
 
   DiTauPtPassDistribution_noIso->Write();
   DiTauPtPassDistribution_Iso->Write();
 
   DiTauRate_noIso->Write();
   DiTauRate_Iso->Write();
-
-  f_out.Close();
 
   return;
 }
