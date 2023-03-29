@@ -2,8 +2,8 @@
 Set of tools to evaluate tau trigger performance on T&amp;P
 
 ## Foreword
-This package is based on the developments done by Olivier Davignon, Luca Cadamuro, and Jean-Baptiste Sauvan.
-The original work done by them can be found mainly at these two links: [NTuples production](https://github.com/davignon/TauTagAndProbe/tree/master/TauTagAndProbe), [Objects calibration](https://github.com/jbsauvan/RegressionTraining)
+This package is based on the developments done by Olivier Davignon, Luca Cadamuro, Jean-Baptiste Sauvan, and Jona Motta.
+The original work done by the first three can be found mainly at these two links: [NTuples production](https://github.com/davignon/TauTagAndProbe/tree/master/TauTagAndProbe), [Objects calibration](https://github.com/jbsauvan/RegressionTraining)
 
 This forlder is an attempt to put together all of the developments done on top of these two folders in one single repositoty and one tool: ONE TOOL TO OPTIMIZE THEM ALL - CIT.
 
@@ -155,7 +155,7 @@ Rate() # insert needed arguments
 ```
 
 ## Thresholds
-Having computed the rates, the next step is to compute either the thresholds at fixed rates or the rates at fixed thresholds, by going to the `PlotRates` folder.
+Having computed the rates, the next step is to compute either the thresholds at fixed rates or the rates at fixed thresholds, by going to the `CompareRates` folder.
 
 If you are running the 'old' version of the code, adapt to your needs `CompareRates_ZeroBias_withUnpacked.C`, and run:
 ```bash
@@ -171,61 +171,49 @@ root -l
 compare() # insert needed arguments
 ```
 
-In case you want to evaluate the rate you would get from a specific relaxation skim at a fixed threshold you can use:
-```bash
-root -l
-.L BestRatesAtFixedThr_gridSearch.C+
-compare() # insert needed arguments
-```
-this will print out `.txt` files with the value of the rate for the differnt optons. (This must be done after the rates have been computed in the usual manner as explained above)
-
 ### TurnONs
-Now that also the isolation has been created we can test everything on the turn-on curves. 
-To do so go to the `MakeTurnOns` folder, adapt to to your needs `ApplyIsolationForTurnOns_newnTT.C` and run:
+Now that also the isolation has been created we can test everything on the turn-on curves by going to the `MakeTurnOns` folder.
+Here the turnons can be made aother at fixed threshold or at fixed rates by applying the threshold computed at the previous step.
+
+If you are running the 'old' version of the code, adapt to to your needs `ApplyIsolationForTurnOns.C` and run:
 ```bash
 root -l
-.L ApplyIsolationForTurnOns_newnTT.C+
+.L ApplyIsolationForTurnOns.C+
 ApplyIsolationForTurnOns() # insert needed arguments
 ```
-or 
+
+Else, if you are running the gridsearch, adapt to to your needs `ApplyIsolationForTurnOns_gridSearch.C` and run:
 ```bash
 root -l
-.L ApplyIsolationForTurnOns_newnTT_gridSearch.C+
+.L ApplyIsolationForTurnOns_gridSearch.C+
 ApplyIsolationForTurnOns() # insert needed arguments
 ```
-if you are doing the grid search over the possible relaxation parametrizations.
 
-Having computed the turnONs, they can be plotted going to the `PlotTurnOns` folder, adapting to your needs `CompareTunrOns_withunpacked.C`, and running:
-```bash
-root -l
-.L CompareTunrOns_withunpacked.C
-compare() # insert needed arguments
-```
-or
-```bash
-root -l
-.L CompareTunrOns_gridSearch_withunpacked.C
-compare() # insert needed arguments
-```
-if you are doing the grid search over the possible relaxation parametrizations.
+### Gridsearch best options evaluation
+If in the previous steps we have been using, the gridsearch approach to theoptimisation, we can now compare the different ptions to decide which one is the best for our needs.
 
-The plots produced above will be a bit crouded and difficult to read. FO this reason a second plotting folder is used where only selected turnons will be plotted.
-Move to `PlotGoodGridSearch/` and run one of the followings after having adapted the scripts to your needs:
+To do so go into the `CompareGridSearchTrunons`, adapt to your needs `BestFMturnOns_gridSearch.C`, and run:
 ```bash
-root -l
-.L GoodTurnOns_gridSearch.C
-compare() # insert needed arguments
-```
-or
-```bash
-root -l
+root -l 
 .L BestFMturnOns_gridSearch.C
 compare() # insert needed arguments
 ```
-or
+This one can compare the turnons at fixed threshold or at fixed rate.
+In both cases quality requirements are made on the turnon, and all information is saved in `.txt` files containing the optimisation figures of merit and the rates.
+
+### Validate performance on data
+All of the abve has been done on MC and needs to be validated on data. Threforre, after having re-emulated the data with the new options we need to produce the turnons.
+We can do this in the `PlotTurnOns` folder.
+
+
+We need adapting to your needs one of the three following codes:
+* `MakeEfficiencies_Data_reEmulated.C` : make performance on re-emulated data with the re-optimised taus
+* `MakeEfficiencies_Data_unpacked.C` : make performance on unpacked data from Run3 only
+* `MakeEfficiencies_Data_unpacked_withRun2.C` : make performance on unpacked data from Run3 and Run2 at the same time
+and running:
 ```bash
 root -l
-.L FinalComparison_gridSearch.C
+.L MakeEfficiencies_Data_<tag>.C
 compare() # insert needed arguments
 ```
-These three scripts all allow to plot what we define as "good turnons" depending on different comparison options (i.e. a turn on can be defined as good if it has a certain acceptance, a certain efficiency at a certain pT, or any other possible definition)
+
