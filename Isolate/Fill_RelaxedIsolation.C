@@ -61,7 +61,7 @@ Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Effic
 
 // THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
 
-void Fill_Isolation_TH3(TString compression, int fit_granularity = 1, TString parametrisation = "linear", Double_t Kfact = 0.0, float calibThr = 1.7)
+void Fill_RelaxedIsolation_TH3(TString compression, int fit_granularity = 1, TString parametrisation = "linear", Double_t Kfact = 0.0, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));

@@ -76,7 +76,7 @@ Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Effic
 }
 
 
-void Fill_Isolation_TH3(TString version, TString compression = "compressed", TString parametrisation = "linear", Double_t Kfact = 0.0, bool byBin = false, float calibThr = 1.7)
+void Fill_RelaxedIsolation_TH3(TString version, TString compression = "compressed", TString parametrisation = "linear", Double_t Kfact = 0.0, bool byBin = false, float calibThr = 1.7)
 {
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
