@@ -255,31 +255,11 @@ Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
 
 void ApplyCalibration(float calibThr = 1.7)
 {
-  // SHAPE COMMENT OUT
-  // TFile f_shapes("/home/llr/cms/cadamuro/Tau_ShapeVeto/CMSSW_8_0_10/src/L1Trigger/L1TNtuples/ShapeVeto/shapes_signal.root");
-  // // TH2F* shapes_vs_pt = (TH2F*)f_shapes.Get("hShapes_vs_pt");
-  // // shapes_vs_pt->Clear();
-  // TH2F* shapes_vs_eta = (TH2F*)f_shapes.Get("hShapes_vs_eta");
-  // shapes_vs_eta->Clear();
-  // TH1F* shapes_1D = (TH1F*) f_shapes.Get("hShapes_gt30_merg");
-  // shapes_1D->Clear();
-  //
-  // TH2F* shapes_vs_pt = new TH2F("shapes_vs_pt","shapes_vs_pt",128,0,128,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
-  // shapes_vs_pt->Clear();  
-
   TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
-  // TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0.,100.,200,0.,200.);
   isolation_vs_pt->Clear();
 
   const UInt_t nIsolation = 101;
   const Double_t isolationBins[nIsolation] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
- 
-  // SHAPE COMMENT OUT
-  // const UInt_t nShapes = 129;
-  // const Double_t shapesBins[nShapes] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128};
-  //
-  // TH3F* shapes_vs_isolation_vs_pt = new TH3F("shapes_vs_isolation_vs_pt","shapes_vs_isolation_vs_pt",nShapes-1,shapesBins,nIsolation-1,isolationBins,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
-  // shapes_vs_isolation_vs_pt->Clear();
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -441,22 +421,6 @@ void ApplyCalibration(float calibThr = 1.7)
       out_L1Tau_isMerged = L1Tau_isMerged;
       out_compressedshape = compressedshape;
 
-      // SHAPE COMMENT OUT
-      // out_L1Tau_PassShapeVeto = true;
-      // if (out_L1Tau_IEt > 20 && out_L1Tau_IEt < 30)
-      //   {
-      //     out_L1Tau_PassShapeVeto = (find(veto_set_20.begin(), veto_set_20.end(), symmShape) == veto_set_20.end() ? true : false);
-      //   }
-      // else if (out_L1Tau_IEt > 30 && out_L1Tau_IEt < 40)
-      //   {
-      //     out_L1Tau_PassShapeVeto = (find(veto_set_30.begin(), veto_set_30.end(), symmShape) == veto_set_30.end() ? true : false);
-      //   }
-      // else if (out_L1Tau_IEt > 40 && out_L1Tau_IEt < 50)
-      //   {
-      //     out_L1Tau_PassShapeVeto = (find(veto_set_40.begin(), veto_set_40.end(), symmShape) == veto_set_40.end() ? true : false);
-      //   }
-      // else out_L1Tau_PassShapeVeto = true;
-
       for(Int_t ie = 0 ; ie < supercompressedNbinsIEt ; ++ie)
       {
         if(L1Tau_IEt>=255)
@@ -504,48 +468,11 @@ void ApplyCalibration(float calibThr = 1.7)
 
 
       out_L1Tau_Qual = L1Tau_Qual;
-      
-      // SHAPE COMMENT OUT
-      // short int symmShape = getSymmShape (L1Tau_Qual, remap);
-      // out_L1Tau_PassShapeVeto = true;
-
-      // SHAPE COMMENT OUT
-      // shapes_vs_pt->Fill(symmShape,out_L1Tau_IEt);
-      // // shapes_vs_pt->Fill(symmShape,out_L1Tau_IEt/2.);
-      // shapes_vs_eta->Fill(symmShape,out_L1Tau_IEta);
-      // isolation_vs_pt->Fill(L1Tau_Iso,out_L1Tau_IEt);
-      // shapes_vs_isolation_vs_pt->Fill(symmShape,L1Tau_Iso,out_L1Tau_IEt);
-      // // isolation_vs_pt->Fill(L1Tau_Iso,out_L1Tau_IEt/2.);
-      // if(out_L1Tau_IEt/2.>=30.) shapes_1D->Fill(symmShape);
-
-      // SHAPE COMMENT OUT
-      // if (out_L1Tau_CalibPt >= 20 && out_L1Tau_CalibPt < 30)
-      //   {
-      //     out_L1Tau_PassShapeVeto = (find(veto_set_20.begin(), veto_set_20.end(), symmShape) == veto_set_20.end() ? true : false);
-      //   }
-      // else if (out_L1Tau_CalibPt >= 30 && out_L1Tau_CalibPt < 40)
-      //   {
-      //     out_L1Tau_PassShapeVeto = (find(veto_set_30.begin(), veto_set_30.end(), symmShape) == veto_set_30.end() ? true : false);
-      //   }
-      // else if (out_L1Tau_CalibPt >= 40 && out_L1Tau_CalibPt < 50)
-      //   {
-      //     out_L1Tau_PassShapeVeto = (find(veto_set_40.begin(), veto_set_40.end(), symmShape) == veto_set_40.end() ? true : false);
-      //   }
-      // else out_L1Tau_PassShapeVeto = true;      
 
       outTree.Fill();
 
     }
 
   outTree.Write();
-
-  // SHAPE COMMENT OUT
-  // TFile f_out_shapes("signal_shapes_forTraining_fine_binning_dummy_19_10_17.root","RECREATE");
-  // // TFile f_out_shapes("signal_shapes_forTraining.root","RECREATE");
-  // shapes_vs_pt->Write("shapes_vs_pt");
-  // isolation_vs_pt->Write("isolation_vs_pt");
-  // shapes_vs_isolation_vs_pt->Write("shapes_vs_isolation_vs_pt");
-  // shapes_vs_eta->Write("shapes_vs_eta");
-  // shapes_1D->Write("hShapes_gt30_merg");
 
 }

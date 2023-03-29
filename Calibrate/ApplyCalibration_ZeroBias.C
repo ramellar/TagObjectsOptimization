@@ -19,12 +19,11 @@
 #include <TGraphAsymmErrors.h>
 #include <stdio.h>
 #include <math.h>
-#include "ApplyCalibration_newnTT.C"
+#include "ApplyCalibration.C"
 
 using namespace std;
 
 void ApplyCalibrationZeroBias(float calibThr = 1.7)
-// void ApplyCalibrationZeroBias(TString InputFileName = "Ntuple_ZeroBias_With2017Layer1_ShapeVeto_20_02_17.root")
 {
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
