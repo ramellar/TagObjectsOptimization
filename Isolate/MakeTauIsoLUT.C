@@ -16,7 +16,7 @@
 #include <sstream>
 #include <TBranchElement.h>
 #include <fstream>
-#include "../Calibrate/ApplyCalibration_newnTT.C"
+#include "../Calibrate/ApplyCalibration.C"
 
 void MakeTauIsoLUT_Options(TString version, TString option, Float_t effMin, Int_t Emin, Int_t Emax, float calibThr = 1.7, bool includeCompression = false)
 {
