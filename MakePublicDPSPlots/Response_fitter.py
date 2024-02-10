@@ -89,7 +89,7 @@ if __name__ == "__main__" :
         phiResp_inclusive = inFile.Get('phi_resp_inclusive')
 
     elif options.obj == "eg":
-        inFile = ROOT.TFile('EG/BtoG/TagAndProbe_DataRun3Unpacked_2022_resolution_'+options.tag+'.root')
+        inFile = ROOT.TFile('/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/atjaiswa/DPS_Jul2023/Hist_2023Run3_EraBC_EGamma_UnpackedPerformance.root')
 
         # if   '20GeV' in options.tag: cut = '20'
         # elif '32GeV' in options.tag: cut = '32'
@@ -99,18 +99,18 @@ if __name__ == "__main__" :
         #     exit()
 
         cut = '32'
-        scale_barrel      = inFile.Get('etScale_offlineETcut'+cut+'Gev_barrel')
-        scale_endcap      = inFile.Get('etScale_offlineETcut'+cut+'Gev_ecap')
-        scale_inclusive   = inFile.Get('etScale_offlineETcut'+cut+'Gev_inclusive')
-        ptResol_barrel    = inFile.Get('eTResolutionVsEt_offlineETcut'+cut+'Gev_barrel')
-        ptResol_endcap    = inFile.Get('eTResolutionVsEt_offlineETcut'+cut+'Gev_ecap')
-        ptResol_inclusive = inFile.Get('eTResolutionVsEt_offlineETcut'+cut+'Gev_inclusive')
-        etaResp_barrel    = inFile.Get('etaResolution_offlineETcut'+cut+'Gev_barrel')
-        etaResp_endcap    = inFile.Get('etaResolution_offlineETcut'+cut+'Gev_ecap')
-        etaResp_inclusive = inFile.Get('etaResolution_offlineETcut'+cut+'Gev_inclusive')
-        phiResp_barrel    = inFile.Get('phiResolution_offlineETcut'+cut+'Gev_barrel')
-        phiResp_endcap    = inFile.Get('phiResolution_offlineETcut'+cut+'Gev_ecap')
-        phiResp_inclusive = inFile.Get('phiResolution_offlineETcut'+cut+'Gev_inclusive')
+        scale_barrel      = inFile.Get('EnergyResponse_OffEt'+cut+'_Barrel')
+        scale_endcap      = inFile.Get('EnergyResponse_OffEt'+cut+'_EndCap')
+        scale_inclusive   = inFile.Get('EnergyResponse_OffEt'+cut+'_Barrel')
+        ptResol_barrel    = inFile.Get('EnergyResolutionVsOffEt_Barrel')
+        ptResol_endcap    = inFile.Get('EnergyResolutionVsOffEt_EndCap')
+        ptResol_inclusive = inFile.Get('EnergyResolutionVsOffEt_Barrel')
+        etaResp_barrel    = inFile.Get('EtaResponse_OffEt'+cut+'_Barrel')
+        etaResp_endcap    = inFile.Get('EtaResponse_OffEt'+cut+'_EndCap')
+        etaResp_inclusive = inFile.Get('EtaResponse_OffEt'+cut+'_Barrel')
+        phiResp_barrel    = inFile.Get('PhiResponse_OffEt'+cut+'_Barrel')
+        phiResp_endcap    = inFile.Get('PhiResponse_OffEt'+cut+'_EndCap')
+        phiResp_inclusive = inFile.Get('PhiResponse_OffEt'+cut+'_Barrel')
 
     # CONVERT TO LISTS FOR PYPLOT
     x_scale_barrel = []
@@ -291,7 +291,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
@@ -333,7 +333,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
@@ -396,7 +396,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
@@ -429,9 +429,11 @@ if __name__ == "__main__" :
     p0 =          [   0.,  0.05,     1.,    1.,     1.,    1.,  0.1]
     param_bounds=([ -10.,  0.  ,     0.,    0.,     0.,    0.,  0. ],
                   [  10.,  0.5 ,    10.,   50.,    10.,   50.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_phiResp_barrel[2:], y_phiResp_barrel[2:], p0, maxfev=5000, bounds=param_bounds)
+    popt, pcov = curve_fit(vectDoubleCB, x_phiResp_barrel[2:95]+x_phiResp_barrel[97:], y_phiResp_barrel[2:95]+y_phiResp_barrel[97:], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
 
+    print(y_phiResp_barrel)
+    print(y_phiResp_barrel[:95]+y_phiResp_barrel[97:])
     ax.errorbar(x_phiResp_endcap, y_phiResp_endcap, xerr=x_err_phiResp_endcap, yerr=y_err_phiResp_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   0.,  0.05,     1.,    1.,     1.,    1.,  0.1]
@@ -459,7 +461,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()

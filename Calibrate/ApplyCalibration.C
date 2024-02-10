@@ -263,12 +263,14 @@ void ApplyCalibration(float calibThr = 1.7)
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr"+intgr+"p"+decim+"/Tau_MC_COMPRESSED_2023_03_04.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_2023_03_04.root";
+  // TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_01_optimizationV1/hadded_126X_mcRun3_2023_05_01_COMPRESSED.root";
+  // TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_01_optimizationV1/hadded_126X_mcRun3_2023_05_01_CALIBRATED.root";
+  TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_COMPRESSED_current.root";
+  TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_CALIBRATED_current.root";
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1");
+  TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_RAW_124X.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_RAW_124X_results");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_RAW_124X_results");
 
   TFile f_in(InputFileName.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeForCalibration");
@@ -461,6 +463,7 @@ void ApplyCalibration(float calibThr = 1.7)
       else
         {
           out_L1Tau_CalibConstant = h_LUT_isMerged1->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
+          // std::cout << out_L1Tau_CalibConstant << endl;
           // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
           if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
           out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;

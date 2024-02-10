@@ -30,8 +30,8 @@ void ApplyCalibrationZeroBias(float calibThr = 1.7)
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
   // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run362616__RAW/EphemeralZeroBias0__Run2022G_Run362616__RAW.root";
   // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr1p7/EphemeralZeroBias0__Run2022G_Run362616__CALIBRATED.root";
-  TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run362617__RAW/EphemeralZeroBias0__Run2022G_Run362617__RAW.root";
-  TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr1p7/EphemeralZeroBias0__Run2022G_Run362617__CALIBRATED.root";
+  TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW_curr_calo/EphemeralZeroBias_362616_olivier_current.root";
+  TString OutputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023//2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW_curr_calo/EphemeralZeroBias_362616_olivier_CALIBRATED_current.root";
 
   TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   isolation_vs_pt->Clear();
@@ -39,9 +39,12 @@ void ApplyCalibrationZeroBias(float calibThr = 1.7)
   const UInt_t nIsolation = 101;
   const Double_t isolationBins[nIsolation] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
 
-  TFile f_histos("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1.root","READ");
-  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1");
-  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1"); 
+  TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_RAW_124X.root","READ");
+  TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_RAW_124X_results");
+  TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_RAW_124X_results");
+
+  // TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV1");
+  // TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV1"); 
  
   TH1F* histo_shape = new TH1F("histo_shape","histo_shape",256,0,256);
   TH1F* histo_symmShape = new TH1F("histo_symmShape","histo_symmShape",256,0,256);

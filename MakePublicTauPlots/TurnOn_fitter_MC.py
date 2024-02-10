@@ -275,8 +275,9 @@ if __name__ == "__main__" :
 
     ## from file 1 - noIso
 
-    eff_TGraph = inFile.Get('TurnOn_unpacked_noIso')
-    label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2022 Unpacked' % (thr)
+    eff_TGraph = inFile.Get('TurnOn_noIso')
+    label = r'$E_{T}^{\tau, L1} > %i$ GeV - Current LUTs 2023' % (thr)
+    #label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2022 Unpacked' % (thr)
 
     marker=markers[imap]
 
@@ -327,7 +328,8 @@ if __name__ == "__main__" :
     ## from file 1
 
     eff_TGraph = inFile.Get('TurnOn_unpacked_Iso')
-    label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - 2022 Unpacked' % (thr)
+    # label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - 2022 Unpacked' % (thr)
+    label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - Current LUT 2023' % (thr)
 
     marker=markers[imap]
 
@@ -380,7 +382,8 @@ if __name__ == "__main__" :
 
     if iso_string:
         eff_TGraph = inFile.Get('TurnOn_progression'+options.relaxation)
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - 2023 Re-Emulated' % (thr)
+        # label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - 2023 Re-Emulated' % (thr)
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation - New LUT 2023' % (thr)
     else:
         eff_TGraph = inFile.Get('TurnOn_noIso')
         label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2023 Re-Emulated' % (thr)

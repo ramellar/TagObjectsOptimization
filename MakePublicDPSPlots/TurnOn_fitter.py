@@ -7,6 +7,7 @@ import ROOT
 import sys
 import os
 
+import argparse
 from matplotlib.ticker import FixedLocator, FixedFormatter
 import matplotlib.pyplot as plt
 import matplotlib
@@ -254,13 +255,13 @@ if __name__ == "__main__" :
     parser.add_option("--sels",        dest="sels",        type=str, action='append',     default=None, help='selection wanted: e.g. 30(for thr>30), 30Iso(for thr>30v & isolation), 36OR30Iso(fir thr>36 OR thr>30 & isolation)')
     parser.add_option("--logx",        dest="logx",                  action='store_true', default=False)
     parser.add_option("--smallFitErr", dest="smallFitErr",           action='store_true', default=False)
-    (options, args) = parser.parse_args()
+    (options, args)  = parser.parse_args()
     print(options)
 
     if options.obj == "tau":
-        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/efficiencies_of_Run'+options.tag+'.root')
+        inFile = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2023/efficiencies_of_Run'+options.tag+'_unpacked.root')
     elif options.obj == "eg":
-        inFile = ROOT.TFile('./EG/BtoG/HistogramFile_'+options.tag+'_Eff.root')
+        inFile = ROOT.TFile('/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/atjaiswa/DPS_Jul2023/Hist_2023Run3_EraBC_EGamma_UnpackedPerformance.root')
     else:
         print('** ERROR : only supported objects are tau and eg')
         print('** EXITING')
@@ -275,8 +276,9 @@ if __name__ == "__main__" :
 
     markers = ['o', 's', '^', 'D']
 
+    options.sels = sys.argv[sys.argv.index("--sels") + 1].split()
     for sel in options.sels:
-
+        print("analizing sel", sel)
         if not 'OR' in sel:
             thr_string = sel[:2]
             iso_string = sel[2:]
@@ -292,10 +294,13 @@ if __name__ == "__main__" :
             
             elif options.obj == "eg":
                 if iso_string:
-                    eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_TightIsoEG'+thr_string+'_by_pT_all')
-                    label = r'$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation' % (thr)
+                    print('loose but correct')
+                    eff_TGraph = inFile.Get('EfficiencyVsOffEt_L1Et'+thr_string+'LooseIso_Eta2p5')
+                    label = r'$E_{T}^{e/\gamma, L1} > %i$ GeV & Loose Iso' % (thr)
+                    #eff_TGraph = inFile.Get('EfficiencyVsOffEt_L1Et'+thr_string+'TightIso_Eta2p5')
+                    #label = r'$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Iso' % (thr)
                 else:
-                    eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr_string+'_by_pT_all')
+                    eff_TGraph = inFile.Get('EfficiencyVsOffEt_L1Et'+thr_string+'NoIso_Eta2p5')
                     label = r'$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr)
 
             marker=markers[imap]
@@ -325,15 +330,17 @@ if __name__ == "__main__" :
             elif options.obj == "eg":
                 if iso1_string:
                     if iso2_string:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_TightIsoEG'+thr1_string+'_OR_TightIsoEG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation' % (thr1, thr2)
+                        print("Not set")
+                        #eff_TGraph = inFile.Get('EfficiencyVsOffEt_L1Et'+thr1_string+'_OR_EG'+thr2_string+'_by_pT_all')
+                        #label = '$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr1, thr2)
                     else:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_TightIsoEG'+thr1_string+'_OR_EG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr1, thr2)
+                        print('correct2')
+                        eff_TGraph = inFile.Get('EfficiencyVsOffEt_L1Et'+thr1_string+'TightIsoOrL1Et'+thr2_string+'NoIso_Eta2p5')
+                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Iso OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV - No Iso' % (thr1, thr2)
                 else:
                     if iso2_string:
-                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr1_string+'_OR_TightIsoEG'+thr2_string+'_by_pT_all')
-                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Isolation' % (thr1, thr2)
+                        eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr1_string+'TightIsoOrL1Et'+thr2_string+'_by_pT_all')
+                        label = '$E_{T}^{e/\gamma, L1} > %i$ GeV OR \n$E_{T}^{e/\gamma, L1} > %i$ GeV & Tight Iso' % (thr1, thr2)
                     else:
                         eff_TGraph = inFile.Get('TGraphs/divide_pT_pass_EG'+thr1_string+'_OR_EG'+thr2_string+'_by_pT_all')
                         label = '$E_{T}^{e/\gamma, L1} > %i$ GeV OR\n$E_{T}^{e/\gamma, L1} > %i$ GeV' % (thr1, thr2)
@@ -389,18 +396,32 @@ if __name__ == "__main__" :
                 ##            [xturn,    p, slope, square, cube, inflation, scale, integral,  ct        mean, sigma, alpha,    n, norm]
                 p0 =          [20.,   0.05, 0.005,     0.,   0.,       15.,   1E5,      0.8,  3.,    thr    ,    3.,   3. , 100., 0.95]
                 param_bounds=([5. ,   0.  , 0.   ,    -2.,  -3.,       5. ,   1E3,      0.6,  1.,    thr-10.,    1.,   0.1,   1., 0.9 ],
-                              [35.,   0.1 , 0.02 ,     2.,   3.,       25.,   1E7,      1. , 10.,    thr+10.,   10.,  10. , 200., 1.  ])
+                              [35.,   0.1 , 0.02 ,     2.,   3.,       25.,   1E7,      1. , 100.,    thr+10.,   10.,  10. , 200., 1.  ])
                 popt, pcov = curve_fit(vectCBtimesPOLYlow, x, y, p0, maxfev=5000, bounds=param_bounds)
-
+                print(popt)
                 ax.plot(plot_x, vectCBtimesPOLYlow(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
             else:
-                ##vectATANconvApproxATAN
-                p0 = [0.3,0.5,15.,30.,0.5,10.]
-                param_bounds=([0., 0.,  5., 25., 0.2,   1.],
-                              [1. ,1., 25., 40., 1. , 100.])
-                popt, pcov = curve_fit(vectATANconvApproxATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+                ##            [xturn,    p, slope, square, cube, inflation, scale, integral,  ct        mean, sigma, alpha,    n, norm, xturn,   p, width]
+                p0 =          [10.,   0.05, 0.005,     0.,   0.,        15,   1E5,      0.8,  3.,    thr    ,    3.,   3. , 100., 0.95,   30., 0.8,   10.]
+                param_bounds=([0. ,   0.  , 0.   ,    -1.,  -2.,        5 ,   1E4,      0.6,  1.,    thr-10.,    1.,   0.1,   1., 0.9 ,   25., 0.2,   0.9],
+                              [35.,   0.1 , 0.01 ,     1.,   2.,        20,   1E6,      1. , 10.,    thr+10.,   10.,   10. , 200., 1.  ,  40., 1. ,  100.])
+                #popt, pcov = curve_fit(vectCBtimesPOLYlowConvATAN, x[:13]+x[15:], y[:13]+y[15:], p0, maxfev=5000, bounds=param_bounds)
+                popt, pcov = curve_fit(vectCBtimesPOLYlowConvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+                print(popt)
+                ax.plot(plot_x, vectCBtimesPOLYlowConvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
 
-                ax.plot(plot_x, vectATANconvApproxATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
+                ##            [xturn,    p, slope, square, cube, inflation, scale, integral,  ct        mean, sigma, alpha,    n, norm, xturn,   p, width]
+# p0 =          [20.,   0.05, 0.005,     0.,   0.,        15,   1E5,      0.8,  3.,    thr    ,    3.,   3. , 100., 0.95,   30., 0.8,   10.]
+# param_bounds=([5. ,   0.  , 0.   ,    -1.,  -2.,        10,   1E4,      0.6,  1.,    thr-10.,    1.,   0.1,   1., 0.9 ,   25., 0.2,    1.],
+#               [35.,   0.1 , 0.01 ,     1.,   2.,        20,   1E6,      1. , 10.,    thr+10.,   10.,  10. , 200., 1.  ,   40., 1. ,  100.])
+                
+                ##vectATANconvApproxATAN
+                #p0 =          [0.3,1.5,15., 10.,0.5, 10.]
+                #param_bounds=([0., 0., 1.,  1., 0.2,  0.],
+                #              [10. ,10., 35., 70., 1.,80.])
+                #popt, pcov = curve_fit(vectATANconvApproxATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+                #print(popt)
+                #ax.plot(plot_x, vectATANconvApproxATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
             
         imap+=1
         zorder = zorder + 1
@@ -419,7 +440,7 @@ if __name__ == "__main__" :
         plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
 
     elif options.obj =='eg':
         if options.logx:
@@ -435,7 +456,7 @@ if __name__ == "__main__" :
         plt.xlabel(r'$E_{T}^{e, offline}\ [GeV]$')
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'34 fb$^{-1}$ (13.6 TeV)')
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
         
     plt.ylim(0.000, 1.05)
     plt.ylabel(r'Efficiency')

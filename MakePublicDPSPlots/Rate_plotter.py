@@ -28,7 +28,7 @@ if __name__ == "__main__" :
     if options.obj == "tau":
         inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2022/histos_rate_EphemeralZeroBias0_'+options.tag+'_unpacked.root')
     elif options.obj == "eg":
-        inFile = ROOT.TFile('./EG/HistogramFile_Rate_'+options.tag+'.root')
+        inFile = ROOT.TFile('/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/atjaiswa/DPS_Jul2023/Hist_Rate_EphemeralZB_2023C_368822.root')
     else:
         print('** ERROR : only supported objects are tau and eg')
         print('** EXITING')
@@ -42,7 +42,7 @@ if __name__ == "__main__" :
         DoubleTau = inFile.Get('rate_DiTau')
         DoubleTau_Iso = inFile.Get('rate_Iso_DiTau')
 
-        legend_title=r'Inst. Lumi = $2.05\times10^{34}\ cm^{-2}s^{-1}$'
+        legend_title=r'Inst. Lumi = $2.05\times10^{18}\ cm^{-2}s^{-1}$'
         label_DoubleIso = r'Double-$\tau$'
         label_DoubleIso_Iso = r'Double-$\tau$ & Isolation'
 
@@ -75,7 +75,7 @@ if __name__ == "__main__" :
         plt.grid()
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'107 pb$^{-1}$ (13.6 TeV)')
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'7 pb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/tau_rate_'+options.tag+'.pdf')
         plt.savefig('various/tau_rate_'+options.tag+'.png')
         plt.close()
@@ -86,7 +86,7 @@ if __name__ == "__main__" :
         DoubleEG = inFile.Get('DoubleEG_rate_inclusive')
         DoubleEG_LooseIso = inFile.Get('DoubleEG_rate_DoubleLooseIso')
 
-        legend_title=r'Inst. Lumi = $1.85\times10^{34}\ cm^{-2}s^{-1}$'
+        legend_title=r'Inst. Lumi = $2.0\times10^{34}\ cm^{-2}s^{-1}$'
         label_singleEG = r'Single-$e/\gamma$'
         label_singleEG_TighIso = r'Single-$e/\gamma$ & Tight Isolation'
         label_DoubleEG = r'Double-$e/\gamma$'
@@ -94,7 +94,7 @@ if __name__ == "__main__" :
 
         fig, ax = plt.subplots(figsize=(10,10))
         
-        for rate_TH1, label in zip([singleEG, DoubleEG], [label_singleEG, label_DoubleEG]):
+        for rate_TH1, label in zip([singleEG, singleEG_TighIso, DoubleEG, DoubleEG_LooseIso], [label_singleEG, label_singleEG_TighIso, label_DoubleEG, label_DoubleEG_LooseIso]):
             x = []
             y = []
             x_err = []
@@ -121,7 +121,7 @@ if __name__ == "__main__" :
         plt.grid()
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'94.4 pb$^{-1}$ (13.6 TeV)')
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'7 pb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/eg_rate_'+options.tag+'.pdf')
         plt.savefig('various/eg_rate_'+options.tag+'.png')
         plt.close()

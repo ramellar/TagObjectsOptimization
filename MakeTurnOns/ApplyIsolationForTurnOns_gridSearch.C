@@ -39,7 +39,8 @@ double acceptacePercentage(TH1F* pass, TH1F* tot, float pt) {
     return pass->Integral(binxp,pass->GetNbinsX()+1) / tot->Integral(binxp,tot->GetNbinsX()+1);
 }
 
-void ApplyIsolationForTurnOns(TString date, TString version, TString tag, int run, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
+// void ApplyIsolationForTurnOns(TString date, TString version, int run, int targetRate = 0, int fixedThr = 34, float calibThr = 1.7)
+void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
 {
     TString run_str = to_string(run);
 
@@ -59,11 +60,11 @@ void ApplyIsolationForTurnOns(TString date, TString version, TString tag, int ru
 
     int targetIdx = targetRemap[targetRate];
 
-    TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
-    TFile f_Thresholds("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/thresholds_fixedrate_ZeroBias_Run"+run_str+"_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
-    TFile f_MCunpacked("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr1p7/MC_unpacked.root", "READ");
+    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2023/LUTrelaxation_2023_07_27_Run3_MC_optimization"+version+"_olivier_linear_current.root","READ");
+    TFile f_Thresholds("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/thresholds_fixedrate_ZeroBias_Run"+run_str+"_optimization"+version+"_olivier_2023_07_27_current.root","READ");
+    TFile f_MCunpacked("/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/MINIAOD_124X_current.root", "READ");
 
-    TString InputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_"+date+".root";
+    TString InputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_CALIBRATED_current.root";
     TFile f(InputFileName.Data(),"READ");
     TTree* inTree = (TTree*)f.Get("outTreeCalibrated");
 
@@ -88,11 +89,11 @@ void ApplyIsolationForTurnOns(TString date, TString version, TString tag, int ru
     // binning for turnons compuattions and display
     Double_t binning[22] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,210,350,500,700,1000,2000};
 
-    TString FileNameOut = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/Tau_MC_TURNONS";
+    TString FileNameOut = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/Tau_MC_TURNONS";
     if (fixedThr==0) FileNameOut += "_FIXEDRATE"+fixedRate+"kHz";
     else             FileNameOut += "_FIXEDTHR"+fixedThreshold+"GeV";
     FileNameOut += "_Run"+run_str;
-    FileNameOut += "_"+version+"gs_"+tag+".root";
+    FileNameOut += "_"+version+".root";
     TFile f_turnons(FileNameOut.Data(),"RECREATE");
 
     // START OF GRID SEARCH
@@ -222,7 +223,6 @@ void ApplyIsolationForTurnOns(TString date, TString version, TString tag, int ru
 
     TGraphAsymmErrors* turnOn_MCunpacked2022_Iso = new TGraphAsymmErrors(MCunpacked2022_Iso,MCunpacked2022_tot,"cp");
     turnOn_MCunpacked2022_Iso->Write("TurnOn_unpacked_Iso");
-
     TVectorD acceptance_unpacked_Iso(4);
     acceptance_unpacked_Iso[0] = 0.0; acceptance_unpacked_Iso[1] = 0.0; acceptance_unpacked_Iso[2] = 0.0; acceptance_unpacked_Iso[3] = 0.0;
     acceptance_unpacked_Iso[0] = acceptacePercentage(MCunpacked2022_Iso, MCunpacked2022_tot, 0);

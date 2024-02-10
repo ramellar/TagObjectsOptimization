@@ -27,8 +27,8 @@ using namespace std;
 void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
 
 {
-  // TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
-  TChain data("Ntuplizer_TagAndProbe");
+  TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
+  // TChain data("Ntuplizer_TagAndProbe");
 
   data.Add(InputFileName.Data());
 
@@ -195,7 +195,7 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
     {
       data.GetEntry(i);
       // cout<<"Entry #"<<i<<endl;
-      if(i%10000==0) cout<<"Entry #"<<i<<endl;
+      if(i%1000==0) cout<<"Entry #"<<i<<endl;
 
       float highestL1TauPt = 0.;
       if(fabs(tauEta)>2.2) continue;
@@ -204,12 +204,12 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
       
       for(UInt_t iL1Tau = 0 ; iL1Tau < l1tEmuPt->size() ; ++iL1Tau)
         {
-          if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
-          // if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
+          if(l1tEmuRawEt->at(iL1Tau)/2.<0.) continue; // modify to add tail in the response
+          //if(l1tEmuRawEt->at(iL1Tau)/2.<10.) continue;
           if(fabs(l1tEmuEta->at(iL1Tau))>2.1) continue;
 
           TLorentzVector L1Tau;
-    // L1Tau.SetPtEtaPhiM(l1tPt->at(iL1Tau),l1tEta->at(iL1Tau),l1tPhi->at(iL1Tau),0.);
+          // L1Tau.SetPtEtaPhiM(l1tPt->at(iL1Tau),l1tEta->at(iL1Tau),l1tPhi->at(iL1Tau),0.);
           L1Tau.SetPtEtaPhiM(l1tEmuPt->at(iL1Tau),l1tEmuEta->at(iL1Tau),l1tEmuPhi->at(iL1Tau),0.);
 
           // cout<<"l1tEmuRawEt.at(iL1Tau)/2. = "<<l1tEmuRawEt->at(iL1Tau)/2.<<endl;

@@ -26,7 +26,8 @@ using namespace std;
 
 // THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
 
-void Build_Isolation_WPs(TString date, TString version, TString compression, float calibThr = 1.7)
+// void Build_Isolation_WPs(TString date, TString version, TString compression, float calibThr = 1.7)
+void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -61,7 +62,9 @@ void Build_Isolation_WPs(TString date, TString version, TString compression, flo
   const UInt_t FitMax = tmpFitMax;
 
   TChain data("outTreeCalibrated");
-  data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_"+date+".root");
+  // data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_"+date+".root");
+  data.Add("/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_CALIBRATED_current.root");
+
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
   TH2F* isoEt_vs_nVtx_barrel = new TH2F("isoEt_vs_nVtx_barrel","isoEt_vs_nVtx_barrel",150,0.,150.,100,0.,100.);
@@ -222,7 +225,8 @@ void Build_Isolation_WPs(TString date, TString version, TString compression, flo
     }
   
 
-  TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","RECREATE");
+  // TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","RECREATE");
+  TFile f_out("ROOTs4LUTs_2023/LUTisolation_2023_07_27_Run3_MC_optimization_olivier_current.root","RECREATE");
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();

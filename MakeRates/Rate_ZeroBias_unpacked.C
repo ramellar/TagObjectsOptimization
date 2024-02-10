@@ -28,8 +28,11 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run"+run_str+"__RAW/EphemeralZeroBias0__Run2022G_Run"+run_str+"__RAW.root";
+  TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW_curr_calo/EphemeralZeroBias_362616_olivier_current.root";
+  // TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/DP_note/rates_2023C_376883/rates_367883_RAW.root";
   TFile f_in(FileName_in.Data(),"READ");
+  
+  // TTree* inTree = (TTree*)f_in.Get("Ntuplizer_noTagAndProbe/TagAndProbe");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
   //Replace by unpacked stuff from input file that you produced with ApplyCalibrationUnpacked.C
@@ -65,7 +68,7 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
   for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
     { 
       inTree->GetEntry(i);
-      if(i%10000==0) cout<<"Entry #"<<i<<endl; 
+      if(i%100000==0) cout<<"Entry #"<<i<<endl; 
       // SET RUN INFO
       if (run == 355414) { if(in_lumi<0) continue; }
       if (run == 355417) { if(in_lumi>40) continue; }
@@ -79,6 +82,16 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
       if (run == 356381) { if(in_lumi<35) continue; }
       if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
       if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
+      if (run == 366727) { if(in_lumi<198 || in_lumi>242) continue; }
+      if (run == 366821) { if(in_lumi<144 || in_lumi>920) continue; }
+      if (run == 366833) { if(in_lumi<240 || in_lumi>620) continue; }
+      if (run == 366895) { if(in_lumi<370 || in_lumi>1242) continue; }
+      if (run == 367079) { if(in_lumi<196 || in_lumi>570) continue; }
+      if (run == 366874) { if(in_lumi<59 || in_lumi>564) continue; }
+      if (run == 366801) { if(in_lumi<115 || in_lumi>240) continue; }
+      if (run == 366820) { if(in_lumi<240 || in_lumi>410) continue; }
+      if (run == 366729) { if(in_lumi<28 || in_lumi>410) continue; }
+      if (run == 367619) { if(in_lumi>576) continue; }
 
       Float_t weight = 1.;
 
@@ -146,6 +159,17 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
   if (run == 355865 or run == 355872 or run == 355913) { nb = 590.; }
   if (run == 356375 or run == 356378 or run == 356381) { nb = 974.; }
   if (run == 362616 or run == 362617) { nb = 2450; }
+  if (run == 366727) { nb = 398; } // colliding bunches
+  if (run == 366821) { nb = 398; } // colliding bunches  
+  if (run == 366833) { nb = 386; } // colliding bunches  
+  if (run == 366895) { nb = 986; } // colliding bunches  
+  if (run == 367079) { nb = 986; } // colliding bunches  
+  if (run == 366874) { nb = 898; } // colliding bunches
+  if (run == 366801) { nb = 398; } // colliding bunches
+  if (run == 366820) { nb = 398; } // colliding bunches
+  if (run == 366729) { nb = 398; } // colliding bunches
+  if (run == 367619) { nb = 2361; } // colliding bunches
+  if (run == 367883) { nb = 2345; } // colliding bunches
   if (nb == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the nb initialization" << std::endl;
@@ -164,6 +188,17 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
   if (run == 356381) thisLumiRun = 5.000E33;
   if (run == 362616) thisLumiRun = 2.05E34;
   if (run == 362617) thisLumiRun = 2.50E34;
+  if (run == 366727) thisLumiRun = 3.6E33; // end lumi
+  if (run == 366820) thisLumiRun = 3.5E33; // end lumi
+  if (run == 366821) thisLumiRun = 2.7E33; // end lumi
+  if (run == 366833) thisLumiRun = 2.8E33; // end lumi
+  if (run == 366895) thisLumiRun = 6.3E33; // end lumi
+  if (run == 367079) thisLumiRun = 8.4E33; // end lumi
+  if (run == 366874) thisLumiRun = 6.9E33; // end lumi
+  if (run == 366801) thisLumiRun = 2.7E33; // end lumi
+  if (run == 366729) thisLumiRun = 3.2E33; // end lumi
+  if (run == 367619) thisLumiRun = 1.3E34; // end lumi
+  if (run == 367883) thisLumiRun = 2.0E34; // end lumi
   if (thisLumiRun == 0. and doScaleToLumi)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;
@@ -191,7 +226,7 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
 
   TString scaledToLumi = "";
   if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-  TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+".root","RECREATE");
+  TFile f_out("histos_2023/olivier/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+".root","RECREATE");
 
   DiTauPtPassDistribution_noIso->Write();
   DiTauPtPassDistribution_Iso->Write();

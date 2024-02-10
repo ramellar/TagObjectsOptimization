@@ -21,7 +21,7 @@
 #include <TF1.h>
 #include <stdio.h>
 #include <math.h>
-#include "../Calibrate/ApplyCalibration_newnTT.C"
+#include "../Calibrate/ApplyCalibration.C"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     TString InputFileName = file;
     TFile f(InputFileName.Data(),"READ");
-    TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
+    TTree* inTree = (TTree*)f.Get("outTreeForCalibration");
     Int_t   in_RunNumber =  0;
     Float_t tauPt = 0;
     Float_t tauEta = 0;

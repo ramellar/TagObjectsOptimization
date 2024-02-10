@@ -21,11 +21,149 @@
 #include <TF1.h>
 #include <stdio.h>
 #include <math.h>
-#include "../Calibrate/ApplyCalibration_newnTT.C"
+#include "../Calibrate/ApplyCalibration.C"
 
 using namespace std;
+#include <TCanvas.h>
+#include <TLegend.h>
 
-void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_option = "crystalball")
+double Median(const TH1F* histogram) {
+    int nBins = histogram->GetNbinsX();
+    vector<double> binContents;
+    vector<double> binPosition;
+    for (int i = 1; i <= nBins; ++i) {
+        if (histogram->GetBinContent(i) == 0) { continue; }
+        double content = histogram->GetBinContent(i);
+        double position = histogram->GetBinCenter(i);
+        binContents.push_back(content);
+        binPosition.push_back(position);
+    }
+    return TMath::Median(binPosition.size(), &binPosition[0], &binContents[0]);
+}
+
+double MAD(const TH1F* histogram) {
+    double median = Median(histogram);
+
+    int nBins = histogram->GetNbinsX();
+    vector<double> binContents;
+    vector<double> binPosition;
+    for (int i = 1; i <= nBins; ++i) {
+        if (histogram->GetBinContent(i) == 0) { continue; }
+        double content = histogram->GetBinContent(i);
+        double position = histogram->GetBinCenter(i);
+        binContents.push_back(content);
+        binPosition.push_back(abs(position-median));
+    }
+    return TMath::Median(binPosition.size(), &binPosition[0], &binContents[0]);
+}
+
+void DrawHistogramsWithFits(std::vector<TH1F*> barrel_response_ptBins,
+                            std::vector<TF1*> fit_barrel_response_ptBins,
+                            std::vector<TH1F*> endcap_response_ptBins,
+                            std::vector<TF1*> fit_endcap_response_ptBins) {
+    TCanvas* canvas = new TCanvas("canvas", "Histograms with Fits", 1000, 1000);
+    canvas->Divide(3, 4);
+    
+    for (size_t i = 0; i < barrel_response_ptBins.size(); ++i) {
+        canvas->cd(i + 1);
+        barrel_response_ptBins[i]->Draw("hist");
+        fit_barrel_response_ptBins[i]->Draw("same"); 
+       
+    	TLegend* legend = new TLegend(0.65, 0.55, 0.85, 0.7);
+    	legend->AddEntry(barrel_response_ptBins[i], "Data", "l");
+    	legend->AddEntry(fit_barrel_response_ptBins[i], "Fit", "l");
+    	legend->Draw();
+        }
+ 
+    canvas->Update();
+    canvas->SaveAs("various/fits_FWHM_barrel.png");
+    canvas->SaveAs("variuos/fits_FWHM_barrel.pdf");
+   
+    delete canvas;
+    
+    TCanvas* canvas_endcap = new TCanvas("canvas", "Histograms with Fits", 1000, 1000);
+    canvas_endcap->Divide(3, 4);
+    
+    for (size_t i = 0; i < endcap_response_ptBins.size(); ++i) {
+        canvas_endcap->cd(i + 1);
+        endcap_response_ptBins[i]->Draw("hist");
+        fit_endcap_response_ptBins[i]->Draw("same"); 
+       
+    	TLegend* legend = new TLegend(0.65, 0.55, 0.85, 0.7);
+    	legend->AddEntry(endcap_response_ptBins[i], "Data", "l");
+    	legend->AddEntry(fit_endcap_response_ptBins[i], "Fit", "l");
+    	legend->Draw();
+        }
+ 
+    canvas_endcap->Update();
+    canvas_endcap->SaveAs("various/fits_FWHM_endcap.png");
+    canvas_endcap->SaveAs("variuos/fits_FWHM_endcap.pdf");
+   
+    delete canvas;
+    }
+
+
+void createHistograms(const std::vector<double>& tauPt,
+                      const std::vector<double>& l1tTauPt,
+                      const std::vector<double>& tauEta,
+                      const std::vector<double>& tauPhi,
+                      const std::vector<int>& nvtx) {
+
+    TCanvas *canvas_tauPt = new TCanvas("canvas_tauPt", "Histograms for tauPt and L1 Pt", 800, 600);
+    TCanvas *canvas_tauEta_Phi = new TCanvas("canvas_tauEta_Phi", "Histograms for tauEta and tauPhi", 800, 600);
+
+    TH1D *hist_l1tTauPt = new TH1D("hist_l1tTauPt", "Histogram for L1 Pt", 50, 0, 50);
+    hist_l1tTauPt->SetLineColor(kBlue);
+    for (const auto& value : l1tTauPt) {
+        hist_l1tTauPt->Fill(value);
+    }
+    canvas_tauPt->cd();
+    hist_l1tTauPt->Draw();
+
+    TH1D *hist_tauPt = new TH1D("hist_tauPt", "Histogram for tauPt", 50, 0, 50);
+    hist_tauPt->SetLineColor(kRed);
+    for (const auto& value : tauPt) {
+        hist_tauPt->Fill(value);
+    }
+    canvas_tauPt->cd();
+    hist_tauPt->Draw("SAME");
+
+    TH1D *hist_tauEta = new TH1D("hist_tauEta", "Histogram for tauEta", 50, -3, 3);
+    hist_tauEta->SetLineColor(kGreen);
+    for (const auto& value : tauEta) {
+        hist_tauEta->Fill(value);
+    }
+    canvas_tauEta_Phi->cd();
+    hist_tauEta->Draw();
+
+    TH1D *hist_tauPhi = new TH1D("hist_tauPhi", "Histogram for tauPhi", 50, -3.14, 3.14);
+    hist_tauPhi->SetLineColor(kOrange);
+    for (const auto& value : tauPhi) {
+        hist_tauPhi->Fill(value);
+    }
+    canvas_tauEta_Phi->cd();
+    hist_tauPhi->Draw("SAME");
+
+    canvas_tauPt->cd();
+    TLegend *legend_tauPt = new TLegend(0.7, 0.7, 0.9, 0.9);
+    legend_tauPt->AddEntry(hist_tauPt, "tauPt", "l");
+    legend_tauPt->AddEntry(hist_l1tTauPt, "L1 Pt", "l");
+    legend_tauPt->Draw();
+
+    canvas_tauEta_Phi->cd();
+    TLegend *legend_tauEta_Phi = new TLegend(0.7, 0.7, 0.9, 0.9);
+    legend_tauEta_Phi->AddEntry(hist_tauEta, "tauEta", "l");
+    legend_tauEta_Phi->AddEntry(hist_tauPhi, "tauPhi", "l");
+    legend_tauEta_Phi->Draw();
+
+    canvas_tauPt->Update();
+    canvas_tauEta_Phi->Update();
+    canvas_tauPt->SaveAs("various/discarted_events_tauPt.png");
+    canvas_tauEta_Phi->SaveAs("various/discarted_events_tauEta_Phi.png");
+    }
+
+ 
+void MakeResolutions(TString file, int run_nmbr, TString era = "", TString method = "RMS", TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
@@ -61,6 +199,8 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     std::vector<float> signedEtaBins = {-2.1, -1.8, -1.479, -1.305, -1.0, -0.5, 0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
 
     Double_t ptBins_t[15]        = {20, 25, 30, 35, 40, 45, 50, 60, 70, 90, 110, 130, 160, 200, 500};
+    // New Binning
+    // Double_t ptBins_t[15]        = {20, 27, 34, 41, 48, 55, 60, 70, 90, 110, 130, 160, 200, 400, 500};
     Double_t etaBins_t[7]        = {0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
     Double_t signedEtaBins_t[13] = {-2.1, -1.8, -1.479, -1.305, -1.0, -0.5, 0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
 
@@ -158,8 +298,15 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TH1F* phi_resp_endcap = new TH1F("phi_resp_endcap","phi_resp_endcap",200,-1,1);
     TH1F* phi_resp_inclusive = new TH1F("phi_resp_inclusive","phi_resp_inclusive",200,-1,1);
 
+    TH1F* l1tau_histo = new TH1F("l1tau","l1tau",20,30,100);
+    TH1F* tauPt_histo = new TH1F("tauPt","tauPt",20,30,100);
     // ADDITIONAL USEFULL PLOTS
     TH1F* Nvtx = new TH1F("Nvtx","Nvtx",70,0,70);
+    // std::vector<double> collection_tauPt;
+    // std::vector<double> collection_l1tTauPt;
+    // std::vector<double> collection_tauEta;
+    // std::vector<double> collection_tauPhi;
+    // std::vector<int> collection_nvtx;
 
     for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
     {
@@ -168,10 +315,11 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         // either process the full dataset or just the events with a specific run number
         if (run_nmbr != -1) { if (run_nmbr != in_RunNumber)  { continue; } }
 
-        if(l1tTauPt<0.) { continue; }
+        if(l1tTauPt<0.) { continue; }  // modify here to change tail in unpacked
 
         if(l1tTauPt>128.) { continue; } // skip saturated objects
 
+        // if(l1tTauIso<1) { continue; } // isolated taus (l1tTauIso = 1)
         // if(l1tTauPt/tauPt<0.6)
         // { 
         //     pt->Fill(tauPt);
@@ -181,6 +329,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         // }
 
         Nvtx->Fill(nvtx);
+        // if (nvtx < 30 and nvtx > 40) { continue; }
 
         // fill inclusive distributions skipping low energy taus
         if(tauPt<30)
@@ -206,8 +355,20 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         {
             if(tauPt > ptBins[i] and tauPt <= ptBins[i+1])
             {
+                // if (l1tTauPt/tauPt < 0.5 or l1tTauPt/tauPt >= 1.5) { 
+                //     // cout << tauPt << ", L1 Pt" << l1tTauPt << ", eta" << tauEta << ", phi" << tauPhi << ", vertices" << nvtx << " => bad event" << endl;
+                //     collection_tauPt.push_back(tauPt);
+                //     collection_l1tTauPt.push_back(l1tTauPt);
+                //     collection_tauEta.push_back(tauEta);
+                //     collection_tauPhi.push_back(tauPhi);
+                //     collection_nvtx.push_back(nvtx);
+                //     //continue; 
+                //     }
                 response_ptBins[i]->Fill(l1tTauPt/tauPt);
-                
+                if (tauPt > 30 and tauPt < 50) {
+                   l1tau_histo->Fill(l1tTauPt);
+                   tauPt_histo->Fill(tauPt);
+                }
                 if (abs(tauEta) < 1.305) { barrel_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
                 else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { endcap_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
             }
@@ -282,6 +443,10 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         endcap_response_ptBins[i]->Fit(fit_endcap_response_ptBins[i]);
     }
 
+    // DrawHistogramsWithFits(barrel_response_ptBins, fit_barrel_response_ptBins,
+    //                        endcap_response_ptBins, fit_endcap_response_ptBins);
+    // createHistograms(collection_tauPt, collection_l1tTauPt, collection_tauEta, collection_tauPhi, collection_nvtx);
+    
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
     {
         if (fit_option=="gauss")
@@ -313,8 +478,34 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TH2F* PTvsETA_resolution = new TH2F("PTvsETA_resolution","PTvsETA_resolution",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
     TH2F* PTvsETA_scale = new TH2F("PTvsETA_events","PTvsETA_events",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
 
+    double median_barrel;
+    double mad_barrel;
+    double median_endcap;
+    double mad_endcap;
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
+        if (method == "median")
+        {
+        if (response_ptBins[i]->GetMean() != 0.0) {median_barrel = Median(barrel_response_ptBins[i]);}
+        if (response_ptBins[i]->GetMean() != 0.0) {mad_barrel = MAD(barrel_response_ptBins[i]);}
+        if (response_ptBins[i]->GetMean() != 0.0) {median_endcap = Median(endcap_response_ptBins[i]);}
+        if (response_ptBins[i]->GetMean() != 0.0) {mad_endcap = MAD(endcap_response_ptBins[i]);}
+        
+        std::cout << "Median " << median_barrel << " MAD: " << mad_barrel << std::endl;
+        pt_scale_fctPt->SetBinContent(i+1, response_ptBins[i]->GetMean());
+        pt_scale_fctPt->SetBinError(i+1, response_ptBins[i]->GetMeanError());
+
+        if (response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctPt->SetBinContent(i+1, response_ptBins[i]->GetRMS()/response_ptBins[i]->GetMean()); }
+        if (response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctPt->SetBinError(i+1, response_ptBins[i]->GetRMSError()/response_ptBins[i]->GetMean()); }
+
+        if (barrel_response_ptBins[i]->GetMean() != 0.0) { pt_resol_barrel_fctPt->SetBinContent(i+1, mad_barrel/median_barrel); }
+        if (barrel_response_ptBins[i]->GetMean() != 0.0) { pt_resol_barrel_fctPt->SetBinError(i+1, barrel_response_ptBins[i]->GetRMSError()/barrel_response_ptBins[i]->GetMean()); }
+        
+        if (endcap_response_ptBins[i]->GetMean() != 0.0) { pt_resol_endcap_fctPt->SetBinContent(i+1, mad_endcap/median_endcap); }
+        if (endcap_response_ptBins[i]->GetMean() != 0.0) { pt_resol_endcap_fctPt->SetBinError(i+1, endcap_response_ptBins[i]->GetRMSError()/endcap_response_ptBins[i]->GetMean()); }
+        }
+        else 
+        {
         pt_scale_fctPt->SetBinContent(i+1, response_ptBins[i]->GetMean());
         pt_scale_fctPt->SetBinError(i+1, response_ptBins[i]->GetMeanError());
 
@@ -326,6 +517,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
         if (endcap_response_ptBins[i]->GetMean() != 0.0) { pt_resol_endcap_fctPt->SetBinContent(i+1, endcap_response_ptBins[i]->GetRMS()/endcap_response_ptBins[i]->GetMean()); }
         if (endcap_response_ptBins[i]->GetMean() != 0.0) { pt_resol_endcap_fctPt->SetBinError(i+1, endcap_response_ptBins[i]->GetRMSError()/endcap_response_ptBins[i]->GetMean()); }
+        }
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -335,9 +527,9 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         pt_scale_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetMean());
         pt_scale_fctEta->SetBinError(i+etaBins.size(), plusEta_response_ptBins[i]->GetMeanError());
 
-        if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMS()/minusEta_response_ptBins[i]->GetMean()); }
+        if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMS()*2.35/minusEta_response_ptBins[i]->GetMean()); }
         if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinError(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMSError()/minusEta_response_ptBins[i]->GetMean()); }
-        if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMS()/plusEta_response_ptBins[i]->GetMean()); }
+        if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMS()*2.35/plusEta_response_ptBins[i]->GetMean()); }
         if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinError(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMSError()/plusEta_response_ptBins[i]->GetMean()); }
     }
 
@@ -348,7 +540,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         {
             if (pt_resp_PtEtaBin[k]->GetMean() != 0.)
             {
-                if (pt_resp_PtEtaBin[k]->GetMean() != 0.0) { PTvsETA_resolution->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetRMS()/pt_resp_PtEtaBin[k]->GetMean()); }
+                if (pt_resp_PtEtaBin[k]->GetMean() != 0.0) { PTvsETA_resolution->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetRMS()*2.35/pt_resp_PtEtaBin[k]->GetMean()); }
                 if (pt_resp_PtEtaBin[k]->GetMean() != 0.0) { PTvsETA_resolution->SetBinError(i,j,pt_resp_PtEtaBin[k]->GetRMSError()/pt_resp_PtEtaBin[k]->GetMean()); }
                 
                 PTvsETA_scale->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetMean());
@@ -417,6 +609,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     phi_resp_inclusive->Write();
     PTvsETA_resolution->Write();
     PTvsETA_scale->Write();
+    l1tau_histo->Write();
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         response_ptBins[i]->Write();
@@ -431,7 +624,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     }
     Nvtx->Write();
     fileout->Close();
-
+/*
     // ----------------------------------------------------------------------------
     // plot performance
 
@@ -1486,7 +1679,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl2Z->Draw("same");
 
     canvas5S.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_inclusive_vsRun2.pdf");
-
-    
-
+ 
+*/
 }
+

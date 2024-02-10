@@ -58,7 +58,7 @@ float integral(TH1F* fine_pt, float xp) {
   return fine_pt->Integral(binxp,fine_pt->GetNbinsX());
 }
 
-void ApplyIsolationForTurnOns(int run, int targetRate = 14, float calibThr = 1.7, Bool_t nTTRange = kFALSE)
+void ApplyIsolationForTurnOns(int run, int targetRate = 0, float calibThr = 1.7, Bool_t nTTRange = kFALSE)
 {
   TString run_str = to_string(run); // run=-1 corresponds to rate evaluated with SingleNeutrino MC
 

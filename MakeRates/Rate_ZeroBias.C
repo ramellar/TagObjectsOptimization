@@ -120,7 +120,7 @@ void Rate(int run, TString parametrisation = "linear", Double_t Kfact = 0.0, flo
   // cout << histosIsolation["LUT_WP50"]->GetBinContent(1,1,1) << endl;
   // return;
 
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p2_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias0__Run2022G_Run"+run_str+"__CALIBRATED.root";
+  TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run362617__RAW/ntuple_ZeroBias_Run362617_RAW.root/EphemeralZeroBias0__Run2022G_Run"+run_str+"__CALIBRATED.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 

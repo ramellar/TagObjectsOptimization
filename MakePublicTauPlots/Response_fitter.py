@@ -74,7 +74,8 @@ if __name__ == "__main__" :
     (options, args) = parser.parse_args()
     print(options)
 
-    inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'+options.inFile)
+    inFile = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'+options.inFile)
+    inFile2 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'+options.inFile2)
 
     scale_barrel      = inFile.Get('pt_barrel_resp_ptInclusive')
     scale_endcap      = inFile.Get('pt_endcap_resp_ptInclusive')
@@ -148,9 +149,6 @@ if __name__ == "__main__" :
         y_err_ptResol_inclusive.append(ptResol_inclusive.GetBinError(ibin+1))
 
 
-
-
-    inFile2 = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'+options.inFile2)
 
     scale_barrel_2      = inFile2.Get('pt_barrel_resp_ptInclusive')
     scale_endcap_2      = inFile2.Get('pt_endcap_resp_ptInclusive')
@@ -237,10 +235,10 @@ if __name__ == "__main__" :
 
     plt.rcParams['legend.title_fontsize'] = 'small'
     cmap = matplotlib.cm.get_cmap('Set1')
-    plot_x = np.linspace(-3,3,4000)
+    plot_x = np.linspace(0.25,3,4000)
     fig, ax = plt.subplots(figsize=(10,10))
     
-    ax.errorbar(x_scale_barrel, y_scale_barrel, xerr=x_err_scale_barrel, yerr=y_err_scale_barrel, ls='None', label=barrel_label+' - 2022 Unpacked', lw=2, marker='o', color=cmap(0))
+    ax.errorbar(x_scale_barrel, y_scale_barrel, xerr=x_err_scale_barrel, yerr=y_err_scale_barrel, ls='None', label=barrel_label+' - 2022', lw=2, marker='o', color=cmap(0))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
     param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
@@ -248,7 +246,7 @@ if __name__ == "__main__" :
     popt, pcov = curve_fit(vectDoubleCB, x_scale_barrel[2:], y_scale_barrel[2:], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
 
-    ax.errorbar(x_scale_barrel_2, y_scale_barrel_2, xerr=x_err_scale_barrel_2, yerr=y_err_scale_barrel_2, ls='None', label=barrel_label+' - 2023 Re-Emulated', lw=2, marker='o', color=cmap(1))
+    ax.errorbar(x_scale_barrel_2, y_scale_barrel_2, xerr=x_err_scale_barrel_2, yerr=y_err_scale_barrel_2, ls='None', label=barrel_label+' - 2023', lw=2, marker='o', color=cmap(1))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
     param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
@@ -266,14 +264,14 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'3.2 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
     plt.savefig(plot_name+'_barrel.pdf')
     plt.savefig(plot_name+'_barrel.png')
     plt.close()
 
     fig, ax = plt.subplots(figsize=(10,10))
 
-    ax.errorbar(x_scale_endcap, y_scale_endcap, xerr=x_err_scale_endcap, yerr=y_err_scale_endcap, ls='None', label=endcap_label+' - 2022 Unpacked', lw=2, marker='s', color=cmap(0))
+    ax.errorbar(x_scale_endcap, y_scale_endcap, xerr=x_err_scale_endcap, yerr=y_err_scale_endcap, ls='None', label=endcap_label+' - 2022', lw=2, marker='s', color=cmap(0))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
     param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
@@ -281,7 +279,8 @@ if __name__ == "__main__" :
     popt, pcov = curve_fit(vectDoubleCB, x_scale_endcap[2:], y_scale_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
     ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
 
-    ax.errorbar(x_scale_endcap_2, y_scale_endcap_2, xerr=x_err_scale_endcap_2, yerr=y_err_scale_endcap_2, ls='None', label=endcap_label+' - 2023 Re-Emulated', lw=2, marker='s', color=cmap(1))
+    #ax.errorbar(x_scale_endcap_2, y_scale_endcap_2, xerr=x_err_scale_endcap_2, yerr=y_err_scale_endcap_2, ls='None', label=endcap_label+' - 2022 - $p_{T}^{	au}$>0', lw=2, marker='s', color=cmap(1))
+    ax.errorbar(x_scale_endcap_2, y_scale_endcap_2, xerr=x_err_scale_endcap_2, yerr=y_err_scale_endcap_2, ls='None', label=endcap_label+' - 2023', lw=2, marker='s', color=cmap(1))
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
     param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
@@ -300,45 +299,45 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'3.2 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
     plt.savefig(plot_name+'_endcap.pdf')
     plt.savefig(plot_name+'_endcap.png')
     plt.close()
 
 
-    fig, ax = plt.subplots(figsize=(10,10))
-
-    ax.errorbar(x_scale_inclusive, y_scale_inclusive, xerr=x_err_scale_inclusive, yerr=y_err_scale_inclusive, ls='None', label=inclusive_label+' - 2022 Unpacked', lw=2, marker='s', color=cmap(0))
-    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_scale_inclusive[2:], y_scale_inclusive[2:], p0, maxfev=5000, bounds=param_bounds)
-    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
-
-    ax.errorbar(x_scale_inclusive_2, y_scale_inclusive_2, xerr=x_err_scale_inclusive_2, yerr=y_err_scale_inclusive_2, ls='None', label=inclusive_label+' - 2023 Re-Emulated', lw=2, marker='s', color=cmap(1))
-    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_scale_inclusive_2[2:], y_scale_inclusive_2[2:], p0, maxfev=5000, bounds=param_bounds)
-    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
-
-
-    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
-    leg._legend_box.align = "left"
-    plt.ylim(0., max(max(y_scale_inclusive), max(y_scale_inclusive_2)) * 1.4)
-    plt.xlim(x_lim)
-    # plt.yscale('log')
-    plt.xlabel(x_label)
-    plt.ylabel(r'a.u.')
-    plt.grid()
-    for xtick in ax.xaxis.get_major_ticks():
-        xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'3.2 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name+'.pdf')
-    plt.savefig(plot_name+'.png')
-    plt.close()
+##    fig, ax = plt.subplots(figsize=(10,10))
+##
+##    ax.errorbar(x_scale_barrel, y_scale_barrel, xerr=x_err_scale_barrel, yerr=y_err_scale_barrel, ls='None', label=barrel_label, lw=2, marker='s', color=cmap(0))
+##    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
+##    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
+##    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
+##                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
+##    popt, pcov = curve_fit(vectDoubleCB, x_scale_barrel[2:], y_scale_barrel[2:], p0, maxfev=5000, bounds=param_bounds)
+##    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
+##
+##    ax.errorbar(x_scale_endcap, y_scale_endcap, xerr=x_err_scale_endcap, yerr=y_err_scale_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
+##    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
+##    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
+##    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
+##                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
+##    popt, pcov = curve_fit(vectDoubleCB, x_scale_endcap[2:], y_scale_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
+##    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
+##
+##
+##    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
+##    leg._legend_box.align = "left"
+##    plt.ylim(0., max(max(y_scale_inclusive), max(y_scale_endcap)) * 1.4)
+##    plt.xlim(x_lim)
+##    # plt.yscale('log')
+##    plt.xlabel(x_label)
+##    plt.ylabel(r'a.u.')
+##    plt.grid()
+##    for xtick in ax.xaxis.get_major_ticks():
+##        xtick.set_pad(10)
+##    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+##    plt.savefig(plot_name+'.pdf')
+##    plt.savefig(plot_name+'.png')
+##    plt.close()
 
 
 
@@ -347,7 +346,7 @@ if __name__ == "__main__" :
 
     # PLOT PT RESOLUTION
     x_lim = (20.,110.)
-    y_lim = (min(y_ptResol_barrel_2[9], y_ptResol_endcap_2[9]) * 0.6, max(max(y_ptResol_barrel_2), max(y_ptResol_endcap_2)) * 1.1)
+    y_lim = (min(y_ptResol_barrel[9], y_ptResol_endcap[9]) * 0.6, max(max(y_ptResol_barrel), max(y_ptResol_endcap)) * 1.1)
     x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
     barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
     endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
@@ -357,8 +356,8 @@ if __name__ == "__main__" :
 
     fig, ax = plt.subplots(figsize=(10,10))
     
-    ax.errorbar(x_ptResol_barrel, y_ptResol_barrel, xerr=x_err_ptResol_barrel, yerr=y_err_ptResol_barrel, ls='None', label=barrel_label+' - 2022 Unpacked', lw=2, marker='o', color=cmap(0))
-    ax.errorbar(x_ptResol_endcap_2, y_ptResol_endcap_2, xerr=x_err_ptResol_endcap_2, yerr=y_err_ptResol_endcap_2, ls='None', label=endcap_label+' - 2023 Re-Emulated', lw=2, marker='s', color=cmap(1))
+    ax.errorbar(x_ptResol_barrel, y_ptResol_barrel, xerr=x_err_ptResol_barrel, yerr=y_err_ptResol_barrel, ls='None', label=barrel_label+' - 2022', lw=2, marker='o', color=cmap(0))
+    ax.errorbar(x_ptResol_barrel_2, y_ptResol_barrel_2, xerr=x_err_ptResol_barrel_2, yerr=y_err_ptResol_barrel_2, ls='None', label=barrel_label+' - 2023', lw=2, marker='s', color=cmap(1))
 
     leg = plt.legend(loc = 'upper right', fontsize=20)
     leg._legend_box.align = "left"
@@ -370,7 +369,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'3.2 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
     plt.savefig(plot_name+'_barrel.pdf')
     plt.savefig(plot_name+'_barrel.png')
     plt.close()
@@ -378,8 +377,8 @@ if __name__ == "__main__" :
 
     fig, ax = plt.subplots(figsize=(10,10))
 
-    ax.errorbar(x_ptResol_endcap, y_ptResol_endcap, xerr=x_err_ptResol_endcap, yerr=y_err_ptResol_endcap, ls='None', label=endcap_label+' - 2022 Unpacked', lw=2, marker='s', color=cmap(0))
-    ax.errorbar(x_ptResol_barrel_2, y_ptResol_barrel_2, xerr=x_err_ptResol_barrel_2, yerr=y_err_ptResol_barrel_2, ls='None', label=barrel_label+' - 2023 Re-Emulated', lw=2, marker='o', color=cmap(1))    
+    ax.errorbar(x_ptResol_endcap, y_ptResol_endcap, xerr=x_err_ptResol_endcap, yerr=y_err_ptResol_endcap, ls='None', label=endcap_label+' - 2022', lw=2, marker='s', color=cmap(0))
+    ax.errorbar(x_ptResol_endcap_2, y_ptResol_endcap_2, xerr=x_err_ptResol_endcap_2, yerr=y_err_ptResol_endcap_2, ls='None', label=endcap_label+' - 2023', lw=2, marker='o', color=cmap(1))    
 
     leg = plt.legend(loc = 'upper right', fontsize=20)
     leg._legend_box.align = "left"
@@ -391,72 +390,39 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'3.2 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
     plt.savefig(plot_name+'_endcap.pdf')
     plt.savefig(plot_name+'_endcap.png')
     plt.close()
 
 
-    # PLOT PT RESOLUTION
-    x_lim = (20.,110.)
-    y_lim = (min(y_ptResol_inclusive[9], y_ptResol_inclusive_2[9]) * 0.6, max(max(y_ptResol_inclusive), max(y_ptResol_inclusive_2)) * 1.1)
-    x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
-    barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
-    endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
-    inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
-    plot_name = 'responses/tau_pt_resolution_'+options.tag
-    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
-
-    fig, ax = plt.subplots(figsize=(10,10))
-    
-    ax.errorbar(x_ptResol_inclusive, y_ptResol_inclusive, xerr=x_err_ptResol_inclusive, yerr=y_err_ptResol_inclusive, ls='None', label=inclusive_label+' - 2022 Unpacked', lw=2, marker='o', color=cmap(0))
-    ax.errorbar(x_ptResol_inclusive_2, y_ptResol_inclusive_2, xerr=x_err_ptResol_inclusive_2, yerr=y_err_ptResol_inclusive_2, ls='None', label=inclusive_label+' - 2023 Re-Emulated', lw=2, marker='s', color=cmap(1))
-
-    leg = plt.legend(loc = 'upper right', fontsize=20)
-    leg._legend_box.align = "left"
-    plt.ylim(y_lim)
-    plt.xlim(x_lim)
-    # plt.yscale('log')
-    plt.xlabel(x_label)
-    plt.ylabel(r'Energy resolution')
-    plt.grid()
-    for xtick in ax.xaxis.get_major_ticks():
-        xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'3.2 fb$^{-1}$ (13.6 TeV)')
-    plt.savefig(plot_name+'.pdf')
-    plt.savefig(plot_name+'.png')
-    plt.close()
-
-    
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+##    # PLOT PT RESOLUTION
+##    x_lim = (20.,110.)
+##    y_lim = (min(y_ptResol_inclusive[9], y_ptResol_endcap[9]) * 0.6, max(max(y_ptResol_inclusive), max(y_ptResol_endcap)) * 1.1)
+##    x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
+##    barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
+##    endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
+##    inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
+##    plot_name = 'responses/tau_pt_resolution_'+options.tag
+##    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
+##
+##    fig, ax = plt.subplots(figsize=(10,10))
+##    
+##    ax.errorbar(x_ptResol_barrel, y_ptResol_barrel, xerr=x_err_ptResol_barrel, yerr=y_err_ptResol_barrel, ls='None', label=barrel_label, lw=2, marker='o', color=cmap(0))
+##    ax.errorbar(x_ptResol_endcap, y_ptResol_endcap, xerr=x_err_ptResol_endcap, yerr=y_err_ptResol_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
+##
+##    leg = plt.legend(loc = 'upper right', fontsize=20)
+##    leg._legend_box.align = "left"
+##    plt.ylim(0.05,0.3)
+##    plt.xlim(x_lim)
+##    # plt.yscale('log')
+##    plt.xlabel(x_label)
+##    plt.ylabel(r'Energy resolution')
+##    plt.grid()
+##    for xtick in ax.xaxis.get_major_ticks():
+##        xtick.set_pad(10)
+##    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+##    plt.savefig(plot_name+'.pdf')
+##    plt.savefig(plot_name+'.png')
+##    plt.close()
+## 

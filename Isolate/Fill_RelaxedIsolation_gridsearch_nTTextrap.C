@@ -76,7 +76,7 @@ Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Effic
 }
 
 
-void Fill_RelaxedIsolation_TH3(TString version, TString compression = "compressed", TString parametrisation = "linear", Double_t Kfact = 0.0, bool byBin = false, float calibThr = 1.7)
+void Fill_RelaxedIsolation_TH3(TString version = "V1", TString compression = "compressed", TString parametrisation = "linear", Double_t Kfact = 0.0, bool byBin = false, float calibThr = 1.7)
 {
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -109,10 +109,10 @@ void Fill_RelaxedIsolation_TH3(TString version, TString compression = "compresse
     const UInt_t NbinsnTT = tmpnTT;
 
     std::map<TString,TF1*> fitsIsolation;
-    TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","READ");
+    TFile f_Isolation("ROOTs4LUTs_2023/LUTisolation_2023_07_27_Run3_MC_optimization_olivier_current.root","READ");
     TString TFileName = "";
-    if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_linear"+byBin_tag+".root";
-    else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+byBin_tag+".root";
+    if(parametrisation=="linear") TFileName = "ROOTs4LUTs_2023/LUTrelaxation_2023_07_27_Run3_MC_optimization"+version+"_olivier_linear_current.root";
+    else                          TFileName = "ROOTs4LUTs_2023/LUTrelaxation_2023_07_27_Run3_MC_optimization"+version+"_olivier_current.root";
     TFile LUTs_Options(TFileName,"RECREATE");
 
     for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)

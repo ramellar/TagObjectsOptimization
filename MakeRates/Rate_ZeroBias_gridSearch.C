@@ -23,15 +23,17 @@
 
 using namespace std;
 
-void Rate(TString date, TString version, int run, TString tag, bool doScaleToLumi=false, float calibThr = 1.7)
+void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1.7)
 {
     TString run_str = to_string(run);
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-    TFile f_Isolation("/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","READ");
-    TString FileName_in = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/EphemeralZeroBias0__Run2022G_Run"+run_str+"__CALIBRATED.root";
+    // TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2023/LUTrelaxation_2023_05_01_Run3_MC_optimization"+version+"_linear.root","READ");
+    // TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run"+run_str+"__RAW/ntuple_ZeroBias_Run"+run_str+"_RAW_CALIBRATED.root";
+    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2023/LUTrelaxation_2023_07_27_Run3_MC_optimizationV1_olivier_linear_current.root","READ");
+    TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW_curr_calo/EphemeralZeroBias_362616_olivier_CALIBRATED_current.root";
     TFile f_in(FileName_in.Data(),"READ");
     TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
@@ -68,7 +70,7 @@ void Rate(TString date, TString version, int run, TString tag, bool doScaleToLum
     if (doScaleToLumi) scale *= scaleToLumi / thisLumiRun;
 
     // CREATE OUTPUT FILE
-    TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_optimization"+version+"gs_calibThr"+intgr+"p"+decim+"_"+tag+".root","RECREATE");
+    TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_optimization"+version+"_gridsearch_2023_07_27_current.root","RECREATE");
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)

@@ -94,10 +94,10 @@ void Fill_RelaxedIsolation_TH3(TString compression, int fit_granularity = 1, TSt
 
   std::map<TString,TH3F*> histosIsolation;
   std::map<TString,TF1*> fitsIsolation;
-  TFile f_Isolation("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+".root","READ");
+  TFile f_Isolation("ROOTs4LUTs_2023/LUTisolation_2023_05_01_Run3_MC_optimization_olivier.root","READ");
   TString TFileName = "";
-  if(parametrisation=="linear") TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+"_linear_old.root";
-  else                          TFileName = "ROOTs4LUTs/ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimizationV0p2_calibThr"+intgr+"p"+decim+"_"+parametrisation+Kintgr+"p"+Kdecim+".root";
+  if(parametrisation=="linear") TFileName = "ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization_olivier_linear.root";
+  else                          TFileName = "ROOTs4LUTs_2023/LUTrelaxation_Trigger_Stage2_Run3_MC_optimization_olivier.root";
   TFile LUTs_Options(TFileName,"RECREATE");
 
   for(UInt_t iEff = 0 ; iEff < 101 ; ++iEff)
