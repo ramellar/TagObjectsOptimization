@@ -58,37 +58,10 @@ vectDoubleCB = np.vectorize(DoubleCB)
 # param_bounds=([ -10.,  -10.,   -10., -10.,   -10., -10.,  0. ],
 #               [  10.,   10.,    10.,  10.,    10.,  10.,  1. ])
 
-
-
-#######################################################################
-######################### SCRIPT BODY #################################
-#######################################################################
-
-if __name__ == "__main__" :
-    parser = OptionParser()
-    parser = OptionParser()
-    parser.add_option("--inFile",    dest="inFile",                         default=None)
-    parser.add_option("--inFile2",   dest="inFile2",                        default=None)
-    parser.add_option("--tag",       dest="tag",                            default=None)
-    parser.add_option("--inclusive", dest="inclusive", action='store_true', default=False)
-    (options, args) = parser.parse_args()
-    print(options)
-
-    inFile = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'+options.inFile)
-    inFile2 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'+options.inFile2)
-
+def compute_scale(inFile, inclusive=True):
     scale_barrel      = inFile.Get('pt_barrel_resp_ptInclusive')
     scale_endcap      = inFile.Get('pt_endcap_resp_ptInclusive')
     scale_inclusive   = inFile.Get('pt_response_ptInclusive')
-    ptResol_barrel    = inFile.Get('pt_resol_barrel_fctPt')
-    ptResol_endcap    = inFile.Get('pt_resol_endcap_fctPt')
-    ptResol_inclusive = inFile.Get('pt_resol_fctPt')
-    etaResp_barrel    = inFile.Get('eta_resp_barrel')
-    etaResp_endcap    = inFile.Get('eta_resp_endcap')
-    etaResp_inclusive = inFile.Get('eta_resp_inclusive')
-    phiResp_barrel    = inFile.Get('phi_resp_barrel')
-    phiResp_endcap    = inFile.Get('phi_resp_endcap')
-    phiResp_inclusive = inFile.Get('phi_resp_inclusive')
 
     # CONVERT TO LISTS FOR PYPLOT
     x_scale_barrel = []
@@ -119,6 +92,13 @@ if __name__ == "__main__" :
         x_err_scale_inclusive.append(scale_inclusive.GetBinWidth(ibin+1)/2.)
         y_err_scale_inclusive.append(scale_inclusive.GetBinError(ibin+1))
 
+    return x_scale_inclusive, y_scale_inclusive, x_err_scale_inclusive, y_err_scale_inclusive
+
+def compute_resol(inFile, inclusive=True):
+    ptResol_barrel    = inFile.Get('pt_resol_barrel_fctPt')
+    ptResol_endcap    = inFile.Get('pt_resol_endcap_fctPt')
+    ptResol_inclusive = inFile.Get('pt_resol_fctPt')
+
     # CONVERT TO LISTS FOR PYPLOT
     x_ptResol_barrel = []
     y_ptResol_barrel = []
@@ -148,281 +128,109 @@ if __name__ == "__main__" :
         x_err_ptResol_inclusive.append(ptResol_inclusive.GetBinWidth(ibin+1)/2.)
         y_err_ptResol_inclusive.append(ptResol_inclusive.GetBinError(ibin+1))
 
+    return x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive
 
 
-    scale_barrel_2      = inFile2.Get('pt_barrel_resp_ptInclusive')
-    scale_endcap_2      = inFile2.Get('pt_endcap_resp_ptInclusive')
-    scale_inclusive_2   = inFile2.Get('pt_response_ptInclusive')
-    ptResol_barrel_2    = inFile2.Get('pt_resol_barrel_fctPt')
-    ptResol_endcap_2    = inFile2.Get('pt_resol_endcap_fctPt')
-    ptResol_inclusive_2 = inFile2.Get('pt_resol_fctPt')
-    etaResp_barrel_2    = inFile2.Get('eta_resp_barrel')
-    etaResp_endcap_2    = inFile2.Get('eta_resp_endcap')
-    etaResp_inclusive_2 = inFile2.Get('eta_resp_inclusive')
-    phiResp_barrel_2    = inFile2.Get('phi_resp_barrel')
-    phiResp_endcap_2    = inFile2.Get('phi_resp_endcap')
-    phiResp_inclusive_2 = inFile2.Get('phi_resp_inclusive')
-
-    # CONVERT TO LISTS FOR PYPLOT
-    x_scale_barrel_2 = []
-    y_scale_barrel_2 = []
-    x_err_scale_barrel_2 = []
-    y_err_scale_barrel_2 = []
-    x_scale_endcap_2 = []
-    y_scale_endcap_2 = []
-    x_err_scale_endcap_2 = []
-    y_err_scale_endcap_2 = []
-    x_scale_inclusive_2 = []
-    y_scale_inclusive_2 = []
-    x_err_scale_inclusive_2 = []
-    y_err_scale_inclusive_2 = []
-    for ibin in range(scale_barrel.GetNbinsX()):
-        x_scale_barrel_2.append(scale_barrel_2.GetBinLowEdge(ibin+1) + scale_barrel_2.GetBinWidth(ibin+1)/2.)
-        y_scale_barrel_2.append(scale_barrel_2.GetBinContent(ibin+1))
-        x_err_scale_barrel_2.append(scale_barrel_2.GetBinWidth(ibin+1)/2.)
-        y_err_scale_barrel_2.append(scale_barrel_2.GetBinError(ibin+1))
-
-        x_scale_endcap_2.append(scale_endcap_2.GetBinLowEdge(ibin+1) + scale_endcap_2.GetBinWidth(ibin+1)/2.)
-        y_scale_endcap_2.append(scale_endcap_2.GetBinContent(ibin+1))
-        x_err_scale_endcap_2.append(scale_endcap_2.GetBinWidth(ibin+1)/2.)
-        y_err_scale_endcap_2.append(scale_endcap_2.GetBinError(ibin+1))
-
-        x_scale_inclusive_2.append(scale_inclusive_2.GetBinLowEdge(ibin+1) + scale_inclusive_2.GetBinWidth(ibin+1)/2.)
-        y_scale_inclusive_2.append(scale_inclusive_2.GetBinContent(ibin+1))
-        x_err_scale_inclusive_2.append(scale_inclusive_2.GetBinWidth(ibin+1)/2.)
-        y_err_scale_inclusive_2.append(scale_inclusive_2.GetBinError(ibin+1))
-
-    # CONVERT TO LISTS FOR PYPLOT
-    x_ptResol_barrel_2 = []
-    y_ptResol_barrel_2 = []
-    x_err_ptResol_barrel_2 = []
-    y_err_ptResol_barrel_2 = []
-    x_ptResol_endcap_2 = []
-    y_ptResol_endcap_2 = []
-    x_err_ptResol_endcap_2 = []
-    y_err_ptResol_endcap_2 = []
-    x_ptResol_inclusive_2 = []
-    y_ptResol_inclusive_2 = []
-    x_err_ptResol_inclusive_2 = []
-    y_err_ptResol_inclusive_2 = []
-    for ibin in range(ptResol_barrel.GetNbinsX()):
-        x_ptResol_barrel_2.append(ptResol_barrel_2.GetBinLowEdge(ibin+1) + ptResol_barrel_2.GetBinWidth(ibin+1)/2.)
-        y_ptResol_barrel_2.append(ptResol_barrel_2.GetBinContent(ibin+1))
-        x_err_ptResol_barrel_2.append(ptResol_barrel_2.GetBinWidth(ibin+1)/2.)
-        y_err_ptResol_barrel_2.append(ptResol_barrel_2.GetBinError(ibin+1))
-
-        x_ptResol_endcap_2.append(ptResol_endcap_2.GetBinLowEdge(ibin+1) + ptResol_endcap_2.GetBinWidth(ibin+1)/2.)
-        y_ptResol_endcap_2.append(ptResol_endcap_2.GetBinContent(ibin+1))
-        x_err_ptResol_endcap_2.append(ptResol_endcap_2.GetBinWidth(ibin+1)/2.)
-        y_err_ptResol_endcap_2.append(ptResol_endcap_2.GetBinError(ibin+1))
-
-        x_ptResol_inclusive_2.append(ptResol_inclusive_2.GetBinLowEdge(ibin+1) + ptResol_inclusive_2.GetBinWidth(ibin+1)/2.)
-        y_ptResol_inclusive_2.append(ptResol_inclusive_2.GetBinContent(ibin+1))
-        x_err_ptResol_inclusive_2.append(ptResol_inclusive_2.GetBinWidth(ibin+1)/2.)
-        y_err_ptResol_inclusive_2.append(ptResol_inclusive_2.GetBinError(ibin+1))
-
-
-
-    # PLOT PT SCALE
+def plot_pt_scale(inFile, label, color, ax):
     x_lim = (0.,2.)
     x_label = r'$E_{T}^{\tau, L1}/p_{T}^{\tau, offline}$'
     barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
     endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
-    inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
-    legend_title = r'$p_{T}^{\tau, offline}>30\ GeV$'
-    plot_name = 'responses/tau_pt_scale_'+options.tag
-    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
-
-    plt.rcParams['legend.title_fontsize'] = 'small'
+    inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'    
+    plt.rcParams['legend.title_fontsize'] = 'xx-small'
     cmap = matplotlib.cm.get_cmap('Set1')
-    plot_x = np.linspace(0.25,3,4000)
-    fig, ax = plt.subplots(figsize=(10,10))
+    plot_x = np.linspace(-3,3,4000)
+
+    x_scale_inclusive, y_scale_inclusive, x_err_scale_inclusive, y_err_scale_inclusive = compute_scale(inFile)
+
+    ax.errorbar(x_scale_inclusive, y_scale_inclusive, xerr=x_err_scale_inclusive, yerr=y_err_scale_inclusive, 
+                ls='None', label=inclusive_label+label, lw=2, marker='s', color=cmap(color))
+    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
+    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
+    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
+                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
+    popt, pcov = curve_fit(vectDoubleCB, x_scale_inclusive[2:], y_scale_inclusive[2:], p0, maxfev=5000, bounds=param_bounds)
+    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(color))
     
-    ax.errorbar(x_scale_barrel, y_scale_barrel, xerr=x_err_scale_barrel, yerr=y_err_scale_barrel, ls='None', label=barrel_label+' - 2022', lw=2, marker='o', color=cmap(0))
-    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-                  [  10.,   1. ,    10.,   50.,    10.,   50.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_scale_barrel[2:], y_scale_barrel[2:], p0, maxfev=5000, bounds=param_bounds)
-    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
-
-    ax.errorbar(x_scale_barrel_2, y_scale_barrel_2, xerr=x_err_scale_barrel_2, yerr=y_err_scale_barrel_2, ls='None', label=barrel_label+' - 2023', lw=2, marker='o', color=cmap(1))
-    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-                  [  10.,   1. ,    10.,   50.,    10.,   50.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_scale_barrel_2[2:], y_scale_barrel_2[2:], p0, maxfev=5000, bounds=param_bounds)
-    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
-
-    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
+    leg = plt.legend(loc = 'upper left', fontsize=18)
     leg._legend_box.align = "left"
-    plt.ylim(0., max(max(y_scale_barrel_2), max(y_scale_endcap_2)) * 1.4)
+    plt.ylim(0.,0.167)
     plt.xlim(x_lim)
-    # plt.yscale('log')
     plt.xlabel(x_label)
     plt.ylabel(r'a.u.')
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-    plt.savefig(plot_name+'_barrel.pdf')
-    plt.savefig(plot_name+'_barrel.png')
-    plt.close()
-
-    fig, ax = plt.subplots(figsize=(10,10))
-
-    ax.errorbar(x_scale_endcap, y_scale_endcap, xerr=x_err_scale_endcap, yerr=y_err_scale_endcap, ls='None', label=endcap_label+' - 2022', lw=2, marker='s', color=cmap(0))
-    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_scale_endcap[2:], y_scale_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
-    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
-
-    #ax.errorbar(x_scale_endcap_2, y_scale_endcap_2, xerr=x_err_scale_endcap_2, yerr=y_err_scale_endcap_2, ls='None', label=endcap_label+' - 2022 - $p_{T}^{	au}$>0', lw=2, marker='s', color=cmap(1))
-    ax.errorbar(x_scale_endcap_2, y_scale_endcap_2, xerr=x_err_scale_endcap_2, yerr=y_err_scale_endcap_2, ls='None', label=endcap_label+' - 2023', lw=2, marker='s', color=cmap(1))
-    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
-    popt, pcov = curve_fit(vectDoubleCB, x_scale_endcap_2[2:], y_scale_endcap_2[2:], p0, maxfev=5000, bounds=param_bounds)
-    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
 
 
-    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
-    leg._legend_box.align = "left"
-    plt.ylim(0., max(max(y_scale_barrel_2), max(y_scale_endcap_2)) * 1.4)
-    plt.xlim(x_lim)
-    # plt.yscale('log')
-    plt.xlabel(x_label)
-    plt.ylabel(r'a.u.')
-    plt.grid()
-    for xtick in ax.xaxis.get_major_ticks():
-        xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-    plt.savefig(plot_name+'_endcap.pdf')
-    plt.savefig(plot_name+'_endcap.png')
-    plt.close()
-
-
-##    fig, ax = plt.subplots(figsize=(10,10))
-##
-##    ax.errorbar(x_scale_barrel, y_scale_barrel, xerr=x_err_scale_barrel, yerr=y_err_scale_barrel, ls='None', label=barrel_label, lw=2, marker='s', color=cmap(0))
-##    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-##    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-##    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-##                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
-##    popt, pcov = curve_fit(vectDoubleCB, x_scale_barrel[2:], y_scale_barrel[2:], p0, maxfev=5000, bounds=param_bounds)
-##    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(0))
-##
-##    ax.errorbar(x_scale_endcap, y_scale_endcap, xerr=x_err_scale_endcap, yerr=y_err_scale_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
-##    ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
-##    p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
-##    param_bounds=([ -10.,   0. ,     0.,    0.,     0.,    0.,  0. ],
-##                  [  10.,   1. ,    10.,   25.,    10.,   25.,  1. ])
-##    popt, pcov = curve_fit(vectDoubleCB, x_scale_endcap[2:], y_scale_endcap[2:], p0, maxfev=5000, bounds=param_bounds)
-##    ax.plot(plot_x, vectDoubleCB(plot_x, *popt), '-', label='_', lw=2, color=cmap(1))
-##
-##
-##    leg = plt.legend(loc = 'upper left', fontsize=20, title=legend_title)
-##    leg._legend_box.align = "left"
-##    plt.ylim(0., max(max(y_scale_inclusive), max(y_scale_endcap)) * 1.4)
-##    plt.xlim(x_lim)
-##    # plt.yscale('log')
-##    plt.xlabel(x_label)
-##    plt.ylabel(r'a.u.')
-##    plt.grid()
-##    for xtick in ax.xaxis.get_major_ticks():
-##        xtick.set_pad(10)
-##    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
-##    plt.savefig(plot_name+'.pdf')
-##    plt.savefig(plot_name+'.png')
-##    plt.close()
-
-
-
-
-
-
-    # PLOT PT RESOLUTION
+def plot_pt_resolution(inFile, label, color, ax):
     x_lim = (20.,110.)
-    y_lim = (min(y_ptResol_barrel[9], y_ptResol_endcap[9]) * 0.6, max(max(y_ptResol_barrel), max(y_ptResol_endcap)) * 1.1)
     x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
     barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
     endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
     inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
-    plot_name = 'responses/tau_pt_resolution_'+options.tag
+    cmap = matplotlib.cm.get_cmap('Set1')
+
+    x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive = compute_resol(inFile)
+
+    ax.errorbar(x_ptResol_inclusive, y_ptResol_inclusive, xerr=x_err_ptResol_inclusive, yerr=y_err_ptResol_inclusive, 
+                ls='None', label=inclusive_label+label, lw=2, marker='o', color=cmap(color))
+
+    leg = plt.legend(loc = 'upper right', fontsize=18)
+    leg._legend_box.align = "left"
+    plt.ylim(0.05,0.30)
+    plt.xlim(x_lim)
+    plt.xlabel(x_label)
+    plt.ylabel(r'Energy resolution')
+    plt.grid()
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
+ 
+
+#######################################################################
+######################### SCRIPT BODY #################################
+#######################################################################
+
+''' python3 Response_fitter.py --inFile1 resolutions_of_Run2023_all_eras_unpacked.root --inFile2 resolutions_of_Run2024W-MC_caloParams_2023_v0_4_cfi_reEmulated.root --tag 2024W-MC_caloParams_2023_v0_4_cfi '''
+
+if __name__ == "__main__" :
+    parser = OptionParser()
+    parser = OptionParser()
+    parser.add_option("--inFile1",   dest="inFile1",                        default=None)
+    parser.add_option("--inFile2",   dest="inFile2",                        default=None)
+    parser.add_option("--tag",       dest="tag",                            default=None)
+    parser.add_option("--inclusive", dest="inclusive", action='store_true', default=False)
+    (options, args) = parser.parse_args()
+    print(options)
+
+    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'
+    inFile1 = ROOT.TFile(main_folder+options.inFile1)
+    inFile2 = ROOT.TFile(main_folder+options.inFile2)
+
+    label1 = r' - 2023 unpacked'
+    label2 = r' - 2024 MC re-Emulated'
+
+    # PLOT PT SCALE
+    fig, ax = plt.subplots(figsize=(10,10))
+    plot_pt_scale(inFile1, label1, 0, ax)
+    plot_pt_scale(inFile2, label2, 1, ax)
+
+    plot_name = 'responses/2024/tau_pt_scale_'+options.tag
     if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
-
-    fig, ax = plt.subplots(figsize=(10,10))
-    
-    ax.errorbar(x_ptResol_barrel, y_ptResol_barrel, xerr=x_err_ptResol_barrel, yerr=y_err_ptResol_barrel, ls='None', label=barrel_label+' - 2022', lw=2, marker='o', color=cmap(0))
-    ax.errorbar(x_ptResol_barrel_2, y_ptResol_barrel_2, xerr=x_err_ptResol_barrel_2, yerr=y_err_ptResol_barrel_2, ls='None', label=barrel_label+' - 2023', lw=2, marker='s', color=cmap(1))
-
-    leg = plt.legend(loc = 'upper right', fontsize=20)
-    leg._legend_box.align = "left"
-    plt.ylim(y_lim)
-    plt.xlim(x_lim)
-    # plt.yscale('log')
-    plt.xlabel(x_label)
-    plt.ylabel(r'Energy resolution')
-    plt.grid()
-    for xtick in ax.xaxis.get_major_ticks():
-        xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-    plt.savefig(plot_name+'_barrel.pdf')
-    plt.savefig(plot_name+'_barrel.png')
-    plt.close()
-    
-
-    fig, ax = plt.subplots(figsize=(10,10))
-
-    ax.errorbar(x_ptResol_endcap, y_ptResol_endcap, xerr=x_err_ptResol_endcap, yerr=y_err_ptResol_endcap, ls='None', label=endcap_label+' - 2022', lw=2, marker='s', color=cmap(0))
-    ax.errorbar(x_ptResol_endcap_2, y_ptResol_endcap_2, xerr=x_err_ptResol_endcap_2, yerr=y_err_ptResol_endcap_2, ls='None', label=endcap_label+' - 2023', lw=2, marker='o', color=cmap(1))    
-
-    leg = plt.legend(loc = 'upper right', fontsize=20)
-    leg._legend_box.align = "left"
-    plt.ylim(y_lim)
-    plt.xlim(x_lim)
-    # plt.yscale('log')
-    plt.xlabel(x_label)
-    plt.ylabel(r'Energy resolution')
-    plt.grid()
-    for xtick in ax.xaxis.get_major_ticks():
-        xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-    plt.savefig(plot_name+'_endcap.pdf')
-    plt.savefig(plot_name+'_endcap.png')
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
     plt.close()
 
-
-##    # PLOT PT RESOLUTION
-##    x_lim = (20.,110.)
-##    y_lim = (min(y_ptResol_inclusive[9], y_ptResol_endcap[9]) * 0.6, max(max(y_ptResol_inclusive), max(y_ptResol_endcap)) * 1.1)
-##    x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
-##    barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
-##    endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
-##    inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
-##    plot_name = 'responses/tau_pt_resolution_'+options.tag
-##    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
-##
-##    fig, ax = plt.subplots(figsize=(10,10))
-##    
-##    ax.errorbar(x_ptResol_barrel, y_ptResol_barrel, xerr=x_err_ptResol_barrel, yerr=y_err_ptResol_barrel, ls='None', label=barrel_label, lw=2, marker='o', color=cmap(0))
-##    ax.errorbar(x_ptResol_endcap, y_ptResol_endcap, xerr=x_err_ptResol_endcap, yerr=y_err_ptResol_endcap, ls='None', label=endcap_label, lw=2, marker='s', color=cmap(1))
-##
-##    leg = plt.legend(loc = 'upper right', fontsize=20)
-##    leg._legend_box.align = "left"
-##    plt.ylim(0.05,0.3)
-##    plt.xlim(x_lim)
-##    # plt.yscale('log')
-##    plt.xlabel(x_label)
-##    plt.ylabel(r'Energy resolution')
-##    plt.grid()
-##    for xtick in ax.xaxis.get_major_ticks():
-##        xtick.set_pad(10)
-##    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
-##    plt.savefig(plot_name+'.pdf')
-##    plt.savefig(plot_name+'.png')
-##    plt.close()
-## 
+    # PLOT PT RESOLUTION
+    fig, ax = plt.subplots(figsize=(10,10))
+    plot_pt_resolution(inFile1, label1, 0, ax)
+    plot_pt_resolution(inFile2, label2, 1, ax)
+    
+    plot_name = 'responses/2024/tau_pt_resolution_'+options.tag
+    if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
+    plt.savefig(plot_name+'.pdf')
+    plt.savefig(plot_name+'.png')
+    plt.close()
+ 
