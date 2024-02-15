@@ -279,15 +279,15 @@ if __name__ == "__main__" :
 
 
     if iso_string:
-        # eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
+        eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
         # eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p6_eMin25_eMax66')
-        eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p9_eMin19_eMax58')
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - SF cur + LUT1 cur + LUT2 cur' % (thr)
+        # eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p9_eMin19_eMax58')
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2023 unpacked' % (thr)
     else:
-        # eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
-        eff_TGraph = inFile1.Get('TurnOn_noIso') # after optimization thr fixed at 34
+        eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
+        # eff_TGraph = inFile1.Get('TurnOn_noIso') # after optimization thr fixed at 34
         #label = r'$E_{T}^{\tau, L1} > %i$ GeV - SF cur + LUT1 cur' % (thr)
-        label = r'14kHz - SF cur + LUT1 cur' 
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2023 unpacked' % (thr) 
 
     marker=markers[imap]
 
@@ -340,14 +340,14 @@ if __name__ == "__main__" :
 
     if iso_string:
         thr = 34;
-        eff_TGraph = inFile2.Get('TurnOn_progression_effMin0p6_eMin19_eMax63')
-        # eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - SF new + LUT1 new + LUT2 new' % (thr)
+        # eff_TGraph = inFile2.Get('TurnOn_progression_effMin0p6_eMin19_eMax63')
+        eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2024 MC re-Emulated' % (thr)
     else:
-        #eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
-        eff_TGraph = inFile2.Get('TurnOn_noIso') # after optimization 
+        eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
+        # eff_TGraph = inFile2.Get('TurnOn_noIso') # after optimization 
         #label = r'$E_{T}^{\tau, L1} > %i$ GeV - SF new + LUT1 new' % (thr)
-        label = r'14kHz - SF new + LUT1 new' 
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2024 MC re-Emulated' % (thr)
 
     marker=markers[imap]
 
@@ -461,7 +461,7 @@ if __name__ == "__main__" :
         ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$100$', r'$500$']))
     else:
         plt.xlim(15., 150.)
-    leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$, Rate=14kHz')
+    leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$')
     leg._legend_box.align = "left"
     plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
     for xtick in ax.xaxis.get_major_ticks():

@@ -265,10 +265,10 @@ void ApplyCalibration(float calibThr = 1.7)
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
   // TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_01_optimizationV1/hadded_126X_mcRun3_2023_05_01_COMPRESSED.root";
   // TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_01_optimizationV1/hadded_126X_mcRun3_2023_05_01_CALIBRATED.root";
-  TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_COMPRESSED_current.root";
-  TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_CALIBRATED_current.root";
+  TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_COMPRESSED.root";
+  TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_CALIBRATED.root";
 
-  TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_RAW_124X.root","READ");
+  TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2024/corrections_BDT_training_optimizationV0_results.root","READ");
   TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_RAW_124X_results");
   TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_RAW_124X_results");
 

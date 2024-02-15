@@ -27,8 +27,8 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   // rename("/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_03_30_optimizationV1" , "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_30_optimizationV1");
 
   TFile* fLUTS ;
-  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_RAW_124X.root");
-  else           fLUTS = new TFile ("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2023/corrections_Trigger_Stage2_Run3_MC_RAW_124X.root");
+  if(withLayer1) fLUTS = new TFile ("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2024/corrections_BDT_training_optimizationV0_results.root");
+  else           fLUTS = new TFile ("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2024/corrections_BDT_training_optimizationV0_results.root ");
 
   TH3F* LUT_isMerged0 ;
   TH3F* LUT_isMerged1 ;//calibration constant is a number c(compressedieta, compressediet, hasEM, isMerged)
@@ -62,7 +62,7 @@ void MakeTauCalibLUT(float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
   //if(withLayer1) outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
   //else outFile = "LUTs_meanparam/calibration/Tau_Calibration_LUT_92X_mean.txt";
   // outFile = "/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs_2023/LUTcalibration_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV0p1_calibThr"+intgr+"p"+decim+".txt";
-  outFile = "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs_2023/LUTcalibration_2023_07_27_olivier_current.txt";
+  outFile = "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/LUTs_2024/LUTcalibration_2024W-MC_v0.txt";
 
   std::ofstream LUTfile (outFile.Data());
 

@@ -62,8 +62,7 @@ void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr
   const UInt_t FitMax = tmpFitMax;
 
   TChain data("outTreeCalibrated");
-  // data.Add("/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/"+date+"_optimization"+version+"_calibThr"+intgr+"p"+decim+"/Tau_MC_CALIBRATED_"+date+".root");
-  data.Add("/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_CALIBRATED_current.root");
+  data.Add("/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_CALIBRATED.root");
 
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
@@ -226,7 +225,7 @@ void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr
   
 
   // TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","RECREATE");
-  TFile f_out("ROOTs4LUTs_2023/LUTisolation_2023_07_27_Run3_MC_optimization_olivier_current.root","RECREATE");
+  TFile f_out("ROOTs4LUTs_2024/LUTisolation_optimizationV0.root","RECREATE");
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();

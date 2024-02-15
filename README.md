@@ -108,7 +108,7 @@ root -l
 .L Build_Isolation_WPs.C+
 Build_Isolation_WPs() # insert needed arguments
 ```
-This one has the possibility of building the WPs based on `compressed` or `supercompressed` variables. Due to statistics limits, it is always better to run in `compressed` mode.
+This one has the possibility of building the WPs based on `compressed` or `supercompressed` variables. Due to statistics limits, it is always better to run in `supercompressed` mode.
 
 Then the relaxation of the isolation needs to be performed. To do so, adapt to your needs `Fill_RelaxedIsolation.C` and run:
 ```bash

@@ -8,8 +8,8 @@ compressedEFile = "./CompressionLUTs/tauCompressELUT_5bit_v8.txt"
 compressedShapeFile = "./CompressionLUTs/egCompressShapesLUT_calibr_4bit_v4.txt"
 compressednTTFile = "./CompressionLUTs/tauCompressnTTLUT_5bit_v8.txt"
 
-inputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_MATCHED_current.root";
-outputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_COMPRESSED_current.root";
+inputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_MATCHED.root";
+outputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_COMPRESSED.root";
 
 
 treeName = "outTreeForCalibration"
