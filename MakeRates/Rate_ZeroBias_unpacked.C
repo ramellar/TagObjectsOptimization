@@ -28,11 +28,10 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW_curr_calo/EphemeralZeroBias_362616_olivier_current.root";
-  // TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/DP_note/rates_2023C_376883/rates_367883_RAW.root";
+  TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/EphemeralZeroBias_2023D_RAW_369978/EphemeralZeroBias_2023D_RAW_369978.root";
   TFile f_in(FileName_in.Data(),"READ");
   
-  // TTree* inTree = (TTree*)f_in.Get("Ntuplizer_noTagAndProbe/TagAndProbe");
+  // TTree* inTree = (TTree*)f_in.Get("Ntuplizer_noTagAndProbe/TagAndProbe"); // this could be wrong
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
 
   //Replace by unpacked stuff from input file that you produced with ApplyCalibrationUnpacked.C
@@ -69,11 +68,11 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
     { 
       inTree->GetEntry(i);
       if(i%100000==0) cout<<"Entry #"<<i<<endl; 
+      
       // SET RUN INFO
       if (run == 355414) { if(in_lumi<0) continue; }
       if (run == 355417) { if(in_lumi>40) continue; }
       if (run == 355418) { if((in_lumi>38 && in_lumi<60) || in_lumi>98) continue; }
-      if (run == 355769) { if((in_lumi>76 && in_lumi<99) || (in_lumi>162 && in_lumi<198) || (in_lumi>245 && in_lumi<269) || (in_lumi>333 && in_lumi<357) || (in_lumi>436 && in_lumi<460) || in_lumi>539) continue; }
       if (run == 355865) { if(in_lumi>286 || in_lumi<26) continue; }
       if (run == 355872) { if(in_lumi>1217 || in_lumi<997) continue; }
       if (run == 355913) { if(in_lumi>103) continue; }
@@ -168,6 +167,7 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
   if (run == 366801) { nb = 398; } // colliding bunches
   if (run == 366820) { nb = 398; } // colliding bunches
   if (run == 366729) { nb = 398; } // colliding bunches
+  if (run == 369978) { nb = 1165; } // colliding bunches
   if (run == 367619) { nb = 2361; } // colliding bunches
   if (run == 367883) { nb = 2345; } // colliding bunches
   if (nb == 0.)
@@ -198,6 +198,7 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
   if (run == 366801) thisLumiRun = 2.7E33; // end lumi
   if (run == 366729) thisLumiRun = 3.2E33; // end lumi
   if (run == 367619) thisLumiRun = 1.3E34; // end lumi
+  if (run == 369978) thisLumiRun = 1.0E34; // end lumi
   if (run == 367883) thisLumiRun = 2.0E34; // end lumi
   if (thisLumiRun == 0. and doScaleToLumi)
   {
@@ -226,7 +227,7 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
 
   TString scaledToLumi = "";
   if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-  TFile f_out("histos_2023/olivier/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+".root","RECREATE");
+  TFile f_out("histos_2024/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+"_optimization24_v0.root","RECREATE");
 
   DiTauPtPassDistribution_noIso->Write();
   DiTauPtPassDistribution_Iso->Write();

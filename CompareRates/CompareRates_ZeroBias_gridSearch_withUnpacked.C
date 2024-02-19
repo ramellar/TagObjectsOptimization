@@ -18,20 +18,20 @@
 
 using namespace std;
 
-void compare(TString version, int run,  bool doScaleToLumi = true, float calibThr = 1.7) {
-    TString run_str = to_string(run);
+void compare(int run = 0,  bool doScaleToLumi = true, float calibThr = 1.7) {
+    // TString run_str = to_string(run);
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-    TFile* f_gridseacrh = new TFile("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run"+run_str+"_optimization"+version+"_gridsearch_2023_07_27_current.root","READ");
+    TFile* f_gridseacrh = new TFile("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_optimization24_v0_gridsearch.root","READ");
 
     TString scaledToLumi = "";
     if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-    TFile* f_unpacked = new TFile("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run"+run_str+"_unpacked_2023_07_27_current.root","READ");
+    TFile* f_unpacked = new TFile("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_unpacked_optimization24_v0.root","READ");
 
     // CREATE OUTPUT FILE
-    TFile f_out("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/thresholds_fixedrate_ZeroBias_Run"+run_str+"_optimization"+version+"_olivier_2023_07_27_current.root","RECREATE");
+    TFile f_out("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization24_v0.root","RECREATE");
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)

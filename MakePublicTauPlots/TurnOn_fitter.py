@@ -279,10 +279,12 @@ if __name__ == "__main__" :
 
 
     if iso_string:
+        thr = 29
+        thr_string = str(thr)
         eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
         # eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p6_eMin25_eMax66')
         # eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p9_eMin19_eMax58')
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2023 unpacked' % (thr)
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2024 MC - LUT 2023' % (thr)
     else:
         eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
         # eff_TGraph = inFile1.Get('TurnOn_noIso') # after optimization thr fixed at 34
@@ -340,9 +342,9 @@ if __name__ == "__main__" :
 
     if iso_string:
         thr = 34;
-        # eff_TGraph = inFile2.Get('TurnOn_progression_effMin0p6_eMin19_eMax63')
-        eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2024 MC re-Emulated' % (thr)
+        eff_TGraph = inFile2.Get('TurnOn_progression_effMin0p9_eMin10_eMax34')
+        # eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
+        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2024 MC - LUT 2024' % (thr)
     else:
         eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
         # eff_TGraph = inFile2.Get('TurnOn_noIso') # after optimization 

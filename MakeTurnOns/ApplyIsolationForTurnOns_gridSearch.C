@@ -40,7 +40,7 @@ double acceptacePercentage(TH1F* pass, TH1F* tot, float pt) {
 }
 
 // void ApplyIsolationForTurnOns(TString date, TString version, int run, int targetRate = 0, int fixedThr = 34, float calibThr = 1.7)
-void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
+void ApplyIsolationForTurnOns(TString version, int run = 0, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
 {
     TString run_str = to_string(run);
 
@@ -60,11 +60,11 @@ void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int
 
     int targetIdx = targetRemap[targetRate];
 
-    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2023/LUTrelaxation_2023_07_27_Run3_MC_optimization"+version+"_olivier_linear_current.root","READ");
-    TFile f_Thresholds("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/thresholds_fixedrate_ZeroBias_Run"+run_str+"_optimization"+version+"_olivier_2023_07_27_current.root","READ");
-    TFile f_MCunpacked("/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/MINIAOD_124X_current.root", "READ");
+    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2024/LUTrelaxation_optimizationV0.root","READ");
+    TFile f_Thresholds("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization24_v0.root","READ");
+    TFile f_MCunpacked("/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_MINIAOD.root", "READ");
 
-    TString InputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/RAW_124X_CALIBRATED_current.root";
+    TString InputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_CALIBRATED.root";
     TFile f(InputFileName.Data(),"READ");
     TTree* inTree = (TTree*)f.Get("outTreeCalibrated");
 
@@ -89,7 +89,7 @@ void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int
     // binning for turnons compuattions and display
     Double_t binning[22] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,210,350,500,700,1000,2000};
 
-    TString FileNameOut = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/current_calo_params/Tau_MC_TURNONS";
+    TString FileNameOut = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/Tau_MC_TURNONS_test";
     if (fixedThr==0) FileNameOut += "_FIXEDRATE"+fixedRate+"kHz";
     else             FileNameOut += "_FIXEDTHR"+fixedThreshold+"GeV";
     FileNameOut += "_Run"+run_str;
@@ -97,11 +97,14 @@ void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int
     TFile f_turnons(FileNameOut.Data(),"RECREATE");
 
     // START OF GRID SEARCH
-    for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
+    // for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
+    for (UInt_t iEff = 9; iEff < 10; ++iEff)
     {
-        for (UInt_t iEmin = 0; iEmin < NEmins; ++iEmin)
+        // for (UInt_t iEmin = 0; iEmin < NEmins; ++iEmin)
+        for (UInt_t iEmin = 0; iEmin < 3; ++iEmin)
         {
-            for (UInt_t iEmax = 0; iEmax < NEmaxs_sum; ++iEmax)
+            // for (UInt_t iEmax = 0; iEmax < NEmaxs_sum; ++iEmax)
+            for (UInt_t iEmax = 2; iEmax < 5; ++iEmax)
             {
                 Float_t effMin = EffsMin[iEff];
                 TString effMin_intgr = to_string(effMin).substr(0, to_string(effMin).find("."));
@@ -195,7 +198,6 @@ void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int
 
     TTree* inTree_unpacked = (TTree*)f_MCunpacked.Get("Ntuplizer_noTagAndProbe/TagAndProbe");
     
-    float PtThr_2022 = 34.;
     float in_offlinePt = 0;
     float in_l1tPt = 0;
     float in_l1tEta = 0;
@@ -206,9 +208,19 @@ void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int
     inTree_unpacked->SetBranchAddress("l1tEta",&in_l1tEta);
     inTree_unpacked->SetBranchAddress("l1tIso",&in_l1tIso);
 
-    TH1F* MCunpacked2022_tot = new TH1F("MCunpacked2022_tot","MCunpacked2022_tot",21,binning);
-    TH1F* MCunpacked2022_Iso = new TH1F("MCunpacked2022_Iso","MCunpacked2022_Iso",21,binning);
-    TH1F* MCunpacked2022_noIso = new TH1F("MCunpacked2022_noIso","MCunpacked2022_noIso",21,binning);
+    TH1F* MCunpacked_tot   = new TH1F("MCunpacked_tot","MCunpacked_tot",21,binning);
+    TH1F* MCunpacked_Iso   = new TH1F("MCunpacked_Iso","MCunpacked_Iso",21,binning);
+    TH1F* MCunpacked_noIso = new TH1F("MCunpacked_noIso","MCunpacked_noIso",21,binning);
+
+    Float_t Threshold_Iso;
+    if (fixedThr != 0) { Threshold_Iso = fixedThr; }
+    else
+    {
+        TString ThresholdsName = "Thresholds_Iso_unpacked";
+        TVectorD* ThresholdsVect_Iso  = (TVectorD*)f_Thresholds.Get(ThresholdsName);
+        Threshold_Iso = ThresholdsVect_Iso[0][targetIdx];
+        std::cout << "Running on the unpacked MC: applying a threshold of " << Threshold_Iso << " for " << fixedRate << "kHz" << std::endl;
+    }
 
     for(UInt_t i = 0 ; i < inTree_unpacked->GetEntries() ; ++i)
     {
@@ -216,30 +228,30 @@ void ApplyIsolationForTurnOns(TString version, int run, int targetRate = 14, int
 
         if(fabs(in_l1tEta)>2.1) continue;
 
-        MCunpacked2022_tot->Fill(in_offlinePt);
-        if(in_l1tPt>=PtThr_2022 && in_l1tIso>0) { MCunpacked2022_Iso->Fill(in_offlinePt); }
-        if(in_l1tPt>=PtThr_2022)                { MCunpacked2022_noIso->Fill(in_offlinePt); }
+        MCunpacked_tot->Fill(in_offlinePt);
+        if(in_l1tPt>=Threshold_Iso && in_l1tIso>0) { MCunpacked_Iso->Fill(in_offlinePt); }
+        if(in_l1tPt>=Threshold_Iso)                { MCunpacked_noIso->Fill(in_offlinePt); }
     }
 
-    TGraphAsymmErrors* turnOn_MCunpacked2022_Iso = new TGraphAsymmErrors(MCunpacked2022_Iso,MCunpacked2022_tot,"cp");
-    turnOn_MCunpacked2022_Iso->Write("TurnOn_unpacked_Iso");
+    TGraphAsymmErrors* turnOn_MCunpacked_Iso = new TGraphAsymmErrors(MCunpacked_Iso,MCunpacked_tot,"cp");
+    turnOn_MCunpacked_Iso->Write("TurnOn_unpacked_Iso");
     TVectorD acceptance_unpacked_Iso(4);
     acceptance_unpacked_Iso[0] = 0.0; acceptance_unpacked_Iso[1] = 0.0; acceptance_unpacked_Iso[2] = 0.0; acceptance_unpacked_Iso[3] = 0.0;
-    acceptance_unpacked_Iso[0] = acceptacePercentage(MCunpacked2022_Iso, MCunpacked2022_tot, 0);
-    acceptance_unpacked_Iso[1] = acceptacePercentage(MCunpacked2022_Iso, MCunpacked2022_tot, 20);
-    acceptance_unpacked_Iso[2] = acceptacePercentage(MCunpacked2022_Iso, MCunpacked2022_tot, 40);
-    acceptance_unpacked_Iso[3] = acceptacePercentage(MCunpacked2022_Iso, MCunpacked2022_tot, 60);
+    acceptance_unpacked_Iso[0] = acceptacePercentage(MCunpacked_Iso, MCunpacked_tot, 0);
+    acceptance_unpacked_Iso[1] = acceptacePercentage(MCunpacked_Iso, MCunpacked_tot, 20);
+    acceptance_unpacked_Iso[2] = acceptacePercentage(MCunpacked_Iso, MCunpacked_tot, 40);
+    acceptance_unpacked_Iso[3] = acceptacePercentage(MCunpacked_Iso, MCunpacked_tot, 60);
     acceptance_unpacked_Iso.Write("Acceptance_Iso");
 
-    TGraphAsymmErrors* turnOn_MCunpacked2022_noIso = new TGraphAsymmErrors(MCunpacked2022_noIso,MCunpacked2022_tot,"cp");
-    turnOn_MCunpacked2022_noIso->Write("TurnOn_unpacked_noIso");
+    TGraphAsymmErrors* turnOn_MCunpacked_noIso = new TGraphAsymmErrors(MCunpacked_noIso,MCunpacked_tot,"cp");
+    turnOn_MCunpacked_noIso->Write("TurnOn_unpacked_noIso");
 
     TVectorD acceptance_unpacked_noIso(4);
     acceptance_unpacked_noIso[0] = 0.0; acceptance_unpacked_noIso[1] = 0.0; acceptance_unpacked_noIso[2] = 0.0; acceptance_unpacked_noIso[3] = 0.0;
-    acceptance_unpacked_noIso[0] = acceptacePercentage(MCunpacked2022_noIso, MCunpacked2022_tot, 0);
-    acceptance_unpacked_noIso[1] = acceptacePercentage(MCunpacked2022_noIso, MCunpacked2022_tot, 20);
-    acceptance_unpacked_noIso[2] = acceptacePercentage(MCunpacked2022_noIso, MCunpacked2022_tot, 40);
-    acceptance_unpacked_noIso[3] = acceptacePercentage(MCunpacked2022_noIso, MCunpacked2022_tot, 60);
+    acceptance_unpacked_noIso[0] = acceptacePercentage(MCunpacked_noIso, MCunpacked_tot, 0);
+    acceptance_unpacked_noIso[1] = acceptacePercentage(MCunpacked_noIso, MCunpacked_tot, 20);
+    acceptance_unpacked_noIso[2] = acceptacePercentage(MCunpacked_noIso, MCunpacked_tot, 40);
+    acceptance_unpacked_noIso[3] = acceptacePercentage(MCunpacked_noIso, MCunpacked_tot, 60);
     acceptance_unpacked_noIso.Write("Acceptance_noIso");
 
     f_turnons.Close();

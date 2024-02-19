@@ -399,7 +399,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2023/resolutions_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_2024/resolutions_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();
@@ -627,7 +627,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl2->SetBorderSize(0);
     texl2->Draw("same");
 
-    canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins.pdf");
+    canvas.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins.pdf");
 
     // ##############
 
@@ -669,7 +669,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvasA.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_fromFit.pdf");
+    canvasA.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_fromFit.pdf");
 
     // ##############
 
@@ -719,7 +719,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins.pdf");
+    canvas1.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins.pdf");
 
     // ##############
 
@@ -757,7 +757,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvasB.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_fromFit.pdf");
+    canvasB.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_fromFit.pdf");
 
     // ##############
 
@@ -807,7 +807,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas2.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins.pdf");
+    canvas2.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins.pdf");
 
     // ##############
 
@@ -843,7 +843,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas3.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins.pdf");
+    canvas3.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins.pdf");
 
     // ##############
 
@@ -892,7 +892,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas4.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive.pdf");
+    canvas4.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive.pdf");
 
     // ##############
 
@@ -919,7 +919,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas5.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptVSeta.pdf");
+    canvas5.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptVSeta.pdf");
 
     // ##############
 
@@ -946,7 +946,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     texl1->Draw("same");
     texl2->Draw("same");
 
-    canvas6.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptVSeta.pdf");
+    canvas6.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptVSeta.pdf");
 
 
     // TCanvas canvas7("c","c",800,800);
@@ -1032,7 +1032,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         legend.AddEntry(barrel_response_ptBins[i],"Run-3 (2022)","LPE");
         legend.Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
+        canvas.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
     }
 
 
@@ -1084,7 +1084,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         legend.AddEntry(endcap_response_ptBins[i],"Run-3 (2022)","LPE");
         legend.Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
+        canvas.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
     }
 
     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
@@ -1147,7 +1147,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         texl2->SetBorderSize(0);
         texl2->Draw("same");
 
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
+        canvas.SaveAs("PDFs/PDFs_2024/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
     }
 
 

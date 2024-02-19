@@ -205,12 +205,12 @@ if __name__ == "__main__" :
     (options, args) = parser.parse_args()
     print(options)
 
-    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2023/'
+    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
 
-    label1 = r' - 2023 unpacked'
-    label2 = r' - 2024 MC re-Emulated'
+    label1 = r' - 2023 Calibration LUT'
+    label2 = r' - 2024 Calibration LUT'
 
     # PLOT PT SCALE
     fig, ax = plt.subplots(figsize=(10,10))

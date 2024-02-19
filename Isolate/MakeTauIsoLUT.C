@@ -18,7 +18,7 @@
 #include <fstream>
 #include "../Calibrate/ApplyCalibration.C"
 
-void MakeTauIsoLUT_Options(TString version, Float_t effMin, Int_t Emin, Int_t Emax, float calibThr = 1.7, bool includeCompression = false)
+void MakeTauIsoLUT_Options(Float_t effMin, Int_t Emin, Int_t Emax, float calibThr = 1.7, bool includeCompression = false)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -26,8 +26,8 @@ void MakeTauIsoLUT_Options(TString version, Float_t effMin, Int_t Emin, Int_t Em
   TString effMin_intgr = to_string(effMin).substr(0, to_string(effMin).find("."));
   TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
 
-  TFile* fLUTS = new TFile ("ROOTs4LUTs_2023/LUTrelaxation_2023_05_01_Run3_MC_optimizationV1_olivier_linear.root","READ");
-  TString outFile = "LUTs/LUTs_2023/LUTrelaxation_2023_05_01_Run3_MC_optimization"+version+"_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax)+".txt";
+  TFile* fLUTS = new TFile ("ROOTs4LUTs_2024/LUTrelaxation_optimizationV0.root","READ");
+  TString outFile = "LUTs/LUTs_2024/LUTrelaxation_optimization24_v0_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax)+".txt";
   std::cout<<"OUTFILE = " << outFile << std::endl;
   
   TH3F* LUT ;

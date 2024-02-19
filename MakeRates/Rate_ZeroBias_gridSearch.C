@@ -30,10 +30,8 @@ void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-    // TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2023/LUTrelaxation_2023_05_01_Run3_MC_optimization"+version+"_linear.root","READ");
-    // TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run"+run_str+"__RAW/ntuple_ZeroBias_Run"+run_str+"_RAW_CALIBRATED.root";
-    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2023/LUTrelaxation_2023_07_27_Run3_MC_optimizationV1_olivier_linear_current.root","READ");
-    TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW_curr_calo/EphemeralZeroBias_362616_olivier_CALIBRATED_current.root";
+    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2024/LUTrelaxation_optimizationV0.root","READ");
+    TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/EphemeralZeroBias_2023D_RAW_369978/EphemeralZeroBias_2023D_RAW_369978_CALIBRATED_24v0.root";
     TFile f_in(FileName_in.Data(),"READ");
     TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
 
@@ -65,12 +63,13 @@ void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1
     inTree->GetEntry(0);
     if (in_RunNumber == 362616) { nb = 2450; thisLumiRun = 2.05E34; }
     if (in_RunNumber == 362617) { nb = 2450; thisLumiRun = 2.50E34; }
+    if (in_RunNumber == 369978) { nb = 1165; thisLumiRun = 1.0E34; }
     if (thisLumiRun == 0. || nb == 0) { std::cout << "ERROR: something went wrong with the run selection and the lumi/nb initialization" << std::endl; return; }
     scale = 0.001 * nb * 11245.6;
     if (doScaleToLumi) scale *= scaleToLumi / thisLumiRun;
 
     // CREATE OUTPUT FILE
-    TFile f_out("histos_2023/histos_rate_ZeroBias_Run"+run_str+"_optimization"+version+"_gridsearch_2023_07_27_current.root","RECREATE");
+    TFile f_out("histos_2024/histos_rate_ZeroBias_Run"+run_str+"_optimization24_v0_gridsearch.root","RECREATE");
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
@@ -97,7 +96,8 @@ void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1
                 Int_t Denominator = 0;
 
                 // loop over events
-                for(UInt_t ievt = 0 ; ievt < Nevents ; ++ievt)
+                // for(UInt_t ievt = 0 ; ievt < Nevents ; ++ievt)
+                for(UInt_t ievt = 0 ; ievt < 1000000 ; ++ievt)
                 {
                     inTree->GetEntry(ievt);
                     if(ievt%50000==0) cout<<"Entry #"<<ievt<<endl; 
