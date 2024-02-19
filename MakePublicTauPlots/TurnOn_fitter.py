@@ -240,59 +240,7 @@ vectCBtimesPOLYlowConvPOLYhigh = np.vectorize(CBtimesPOLYlowConvPOLYhigh)
 # param_bounds=([5. ,   0.  , 0.   ,    -1.,  -2.,        10,   1E4,      0.6,  1.,    thr-10.,    1.,   0.1,   1., 0.9 ,           45.,    0.2,     0. ,     -0.00001,   -0.00001],
 #               [35.,   0.1 , 0.01 ,     1.,   2.,        20,   1E6,      1. , 10.,    thr+10.,   10.,  10. , 200., 1.  ,           55.,    1. ,     1. ,      0.00001,   0.00001])
 
-
-
-
-#######################################################################
-######################### SCRIPT BODY #################################
-#######################################################################
-
-if __name__ == "__main__" :
-    parser = OptionParser()
-    parser.add_option("--inFile1",     dest="inFile1",                                    default=None)
-    parser.add_option("--inFile2",     dest="inFile2",                                    default=None)
-    #parser.add_option("--inFile3",     dest="inFile3",                                    default=None)
-    parser.add_option("--tag",         dest="tag",                                        default=None)
-    parser.add_option("--sel",         dest="sel",         type=str,                      default=None, help='selection wanted: e.g. 30(for thr>30), 30Iso(for thr>30v & isolation)')
-    parser.add_option("--logx",        dest="logx",                  action='store_true', default=False)
-    parser.add_option("--smallFitErr", dest="smallFitErr",           action='store_true', default=False)
-    (options, args) = parser.parse_args()
-    print(options)
-
-    # insert files like efficiencies_of_Run in PlotTurnOns folder
-    inFile1 = ROOT.TFile(options.inFile1);
-    inFile2 = ROOT.TFile(options.inFile2);
-    #inFile3 = ROOT.TFile(options.inFile3);
-   
-    # create plot where to print everything
-    plt.rcParams['legend.title_fontsize'] = 'small'
-    cmap = matplotlib.cm.get_cmap('Set1'); imap=0
-    plot_x = np.linspace(0,1000,2000)
-    fig, ax = plt.subplots(figsize=(10,10))
-    zorder = 1
-
-    markers = ['o', 's', '^', 'D']
-
-    thr_string = options.sel[:2]
-    iso_string = options.sel[2:]
-    thr = int(thr_string)
-
-
-    if iso_string:
-        thr = 29
-        thr_string = str(thr)
-        eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
-        # eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p6_eMin25_eMax66')
-        # eff_TGraph = inFile1.Get('TurnOn_progression_effMin0p9_eMin19_eMax58')
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2024 MC - LUT 2023' % (thr)
-    else:
-        eff_TGraph = inFile1.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
-        # eff_TGraph = inFile1.Get('TurnOn_noIso') # after optimization thr fixed at 34
-        #label = r'$E_{T}^{\tau, L1} > %i$ GeV - SF cur + LUT1 cur' % (thr)
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2023 unpacked' % (thr) 
-
-    marker=markers[imap]
-
+def compute_TurnOn(eff_TGraph):
     x = []
     y = []
     x_err = []
@@ -301,8 +249,6 @@ if __name__ == "__main__" :
     y_errFit = []
 
     for ibin in range(eff_TGraph.GetN()):
-        # if eff_TGraph.GetPointX(ibin) < thr: continue
-
         x.append(eff_TGraph.GetPointX(ibin))
         y.append(eff_TGraph.GetPointY(ibin))
         x_err.append(eff_TGraph.GetErrorX(ibin))
@@ -312,7 +258,6 @@ if __name__ == "__main__" :
         y_errU.append(errU)
         y_errD.append(errD)
 
-        # store two possibilities for fitting error: make the fit with the largest or the smallest error
         if errU > errD:
             y_errS = errD
             y_errL = errU
@@ -321,141 +266,30 @@ if __name__ == "__main__" :
             y_errL = errD
         if options.smallFitErr: y_errFit.append(y_errS)
         else:                   y_errFit.append(y_errL)
-    
-    ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color=cmap(imap), zorder=zorder)
-    zorder = zorder + 1
+    return x, y, x_err, [y_errD, y_errU] 
+
+
+def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
+    plt.ylim(0.000, 1.05)
+    plt.rcParams['legend.title_fontsize'] = 'small'
+    cmap = matplotlib.cm.get_cmap('Set1')
+    plot_x = np.linspace(0,1000,2000)
+    markers = ['o', 's', '^', 'D']
+    marker=markers[color]
+
+    x, y, x_err, y_err = compute_TurnOn(eff_TGraph)
+    ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
 
     ##vectCBconvATAN
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
     p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   80.]
     param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
                   [thr+10.,    10.,  10. ,150.,     1.  ,  110., 1. ,   100.])
-    print(y)# print(x[:-7]+x[-5:])
     popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
     print(popt)
 
-    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
+    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
         
-    imap+=1
-    zorder = zorder + 1
-   
-
-    if iso_string:
-        thr = 34;
-        eff_TGraph = inFile2.Get('TurnOn_progression_effMin0p9_eMin10_eMax34')
-        # eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - 2024 MC - LUT 2024' % (thr)
-    else:
-        eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
-        # eff_TGraph = inFile2.Get('TurnOn_noIso') # after optimization 
-        #label = r'$E_{T}^{\tau, L1} > %i$ GeV - SF new + LUT1 new' % (thr)
-        label = r'$E_{T}^{\tau, L1} > %i$ GeV - 2024 MC re-Emulated' % (thr)
-
-    marker=markers[imap]
-
-    x = []
-    y = []
-    x_err = []
-    y_errU = []
-    y_errD = []
-    y_errFit = []
-
-    for ibin in range(eff_TGraph.GetN()):
-        # if eff_TGraph.GetPointX(ibin) < thr: continue
-
-        x.append(eff_TGraph.GetPointX(ibin))
-        y.append(eff_TGraph.GetPointY(ibin))
-        x_err.append(eff_TGraph.GetErrorX(ibin))
-        
-        errU = eff_TGraph.GetErrorYhigh(ibin)
-        errD = eff_TGraph.GetErrorYlow(ibin)
-        y_errU.append(errU)
-        y_errD.append(errD)
-
-        # store two possibilities for fitting error: make the fit with the largest or the smallest error
-        if errU > errD:
-            y_errS = errD
-            y_errL = errU
-        else:
-            y_errS = errU
-            y_errL = errD
-        if options.smallFitErr: y_errFit.append(y_errS)
-        else:                   y_errFit.append(y_errL)
-   
-    ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color=cmap(imap), zorder=zorder)
-    zorder = zorder + 1
-
-    ##vectCBconvATAN
-    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   80.]
-    param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+10.,   10.,  10. , 150.,     1.  ,  110., 1. ,   100.])
-    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
-
-    print(popt)
-
-    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
-    imap+=1
-    zorder = zorder + 1
-
-    
-    # if iso_string:
-    #     thr = 38
-    #     eff_TGraph = inFile2.Get('TurnOn_progression_effMin0p9_eMin34_eMax98')
-    #     # eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_Iso_by_pt')
-    #     label = r'$E_{T}^{\tau, L1} > %i$ GeV & Iso - SF new + LUT1 new + LUT2 new' % (thr)
-    # else:
-    #     eff_TGraph = inFile2.Get('divide_ptProgressionAt'+thr_string+'_noIso_by_pt')
-    #     label = r'$E_{T}^{\tau, L1} > %i$ GeV - SF cur + LUT1 cur' % (thr)
-
-    # marker=markers[imap]
-
-    # x = []
-    # y = []
-    # x_err = []
-    # y_errU = []
-    # y_errD = []
-    # y_errFit = []
-
-    # for ibin in range(eff_TGraph.GetN()):
-    #     # if eff_TGraph.GetPointX(ibin) < thr: continue
-
-    #     x.append(eff_TGraph.GetPointX(ibin))
-    #     y.append(eff_TGraph.GetPointY(ibin))
-    #     x_err.append(eff_TGraph.GetErrorX(ibin))
-    #     
-    #     errU = eff_TGraph.GetErrorYhigh(ibin)
-    #     errD = eff_TGraph.GetErrorYlow(ibin)
-    #     y_errU.append(errU)
-    #     y_errD.append(errD)
-
-    #     # store two possibilities for fitting error: make the fit with the largest or the smallest error
-    #     if errU > errD:
-    #         y_errS = errD
-    #         y_errL = errU
-    #     else:
-    #         y_errS = errU
-    #         y_errL = errD
-    #     if options.smallFitErr: y_errFit.append(y_errS)
-    #     else:                   y_errFit.append(y_errL)
-   
-    # ax.errorbar(x, y, xerr=x_err,yerr=[y_errD, y_errU], ls='None', label=label, lw=2, marker=marker, color=cmap(imap), zorder=zorder)
-    # zorder = zorder + 1
-
-    # ##vectCBconvATAN
-    # #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    # p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   80.]
-    # param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-    #               [thr+10.,    5.1,  10. , 150.,     1.  ,  110., 1. ,   100.])
-    # popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
-
-    # print(popt)
-
-    # ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(imap), zorder=zorder)
-    # imap+=1
-    # zorder = zorder + 1
-
-
     if options.logx:
         plt.xlim(10., 500.)
         plt.xscale('log')
@@ -466,35 +300,65 @@ if __name__ == "__main__" :
     leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$')
     leg._legend_box.align = "left"
     plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
+    plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'MC - 13.6 TeV')
-        
-    plt.ylim(0.000, 1.05)
-    plt.ylabel(r'Efficiency')
+    
+def read_file(inFile, iso, thr, label, opt=False):
+    if iso:
+        eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_Iso_by_pt') if not opt else \
+                     inFile.Get('TurnOn_progression_effMin0p9_eMin10_eMax34')
+        label = r'$E_{T}^{\tau, L1} > %s$ GeV & Iso -%s' % (thr, label)
+    else:
+        eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_noIso_by_pt')
+        label = r'$E_{T}^{\tau, L1} > %s$ GeV -%s' % (thr, label)
+
+    return eff_TGraph, label
+    
+#######################################################################
+######################### SCRIPT BODY #################################
+#######################################################################
+
+if __name__ == "__main__" :
+    parser = OptionParser()
+    parser.add_option("--inFile1",     dest="inFile1",                                    default=None)
+    parser.add_option("--inFile2",     dest="inFile2",                                    default=None)
+    # parser.add_option("--inFile3",     dest="inFile3",                                    default=None)
+    parser.add_option("--tag",         dest="tag",                                        default=None)
+    parser.add_option("--logx",        dest="logx",                  action='store_true', default=False)
+    parser.add_option("--smallFitErr", dest="smallFitErr",           action='store_true', default=False)
+    (options, args) = parser.parse_args()
+    print(options)
+
+    
+    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2023/'
+    opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/'
+    inFile1 = ROOT.TFile(main_folder + options.inFile1)
+    inFile2 = ROOT.TFile(opt_folder  + options.inFile2)
+    # inFile3 = ROOT.TFile(main_folder+options.inFile3)
+   
+    label1 = '2024 MC - LUT 2023'
+    label2 = '2024 MC - LUT 2024'
+    
+    thr1 = '29Iso'
+    thr2 = '34Iso'
+
+    thr1_string, iso1_string = thr1[:2], thr1[2:]
+    thr2_string, iso2_string = thr2[:2], thr2[2:]
+    
+    eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1)
+    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2, True)
+   
+    # PLOT TURNONS
+    fig, ax = plt.subplots(figsize=(10,10))
+    plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 0, ax, options)
+    plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 1, ax, options)
+
+    plot_name = 'turnons/turnons_Run'+options.tag
     plt.grid()
-    plot_name = 'turnons/turnons_Run'+options.tag+'_'+str(options.sel)+'_'
     if options.logx: plot_name += 'log_'
-    plot_name = plot_name[:-1]
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
-    plt.close()
-
-
-    plt.figure(figsize=(10,10))
-    plt.plot(plot_x, vectCB(plot_x, *popt[:5]), '-', label='CB', lw=2, color=cmap(2))
-    plt.plot(plot_x, vectApproxATAN(plot_x, *popt[5:]), '-', label='ApproxATAN', lw=2, color=cmap(1))
-    plt.plot(plot_x, vectCBconvATAN(plot_x, *popt), '--', label='CBconvATAN', lw=2, color=cmap(0))
-    leg = plt.legend(loc = 'lower right', fontsize=16, title='Convolution decomposition')
-    leg._legend_box.align = "left"
-    plt.ylim(0.000, 1.05)
-    plt.xlim(0., 110.)
-    # plt.yscale('log')
-    plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
-    plt.ylabel(r'Efficiency')
-    plt.grid()
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'')
-    plt.savefig('turnons/tau_convolution_decomposition_example.pdf')
-    plt.savefig('turnons/tau_convolution_decomposition_example.png')
     plt.close()
 

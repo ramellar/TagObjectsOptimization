@@ -158,7 +158,6 @@ def plot_pt_scale(inFile, label, color, ax):
     plt.xlim(x_lim)
     plt.xlabel(x_label)
     plt.ylabel(r'a.u.')
-    plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
@@ -183,7 +182,6 @@ def plot_pt_resolution(inFile, label, color, ax):
     plt.xlim(x_lim)
     plt.xlabel(x_label)
     plt.ylabel(r'Energy resolution')
-    plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
@@ -229,6 +227,7 @@ if __name__ == "__main__" :
     plot_pt_resolution(inFile2, label2, 1, ax)
     
     plot_name = 'responses/2024/tau_pt_resolution_'+options.tag
+    plt.grid()
     if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
