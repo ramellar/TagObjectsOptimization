@@ -14,65 +14,36 @@ import mplhep
 plt.style.use(mplhep.style.CMS)
 
 
-#######################################################################
-######################### SCRIPT BODY #################################
-#######################################################################
-
 if __name__ == "__main__" :
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run369978_reEmulated_Tau2023_v4.root --inFile2 histos_rate_ZeroBias_Run369978_reEmulated_Tau2023_v4_HCAL_corr.root --tag 2023LUTs_2024conditions_HCAL_new_calib '''
+
     parser = OptionParser()
-    parser.add_option("--inFile",      dest="inFile",                                     default=None)
-    parser.add_option("--inFile2",     dest="inFile2",                                    default=None)
-    parser.add_option("--tag",       dest="tag",                            default=None)
+    parser.add_option("--inFile1", dest="inFile1", default=None)
+    parser.add_option("--inFile2", dest="inFile2", default=None)
+    parser.add_option("--tag",     dest="tag",     default=None)
     (options, args) = parser.parse_args()
     print(options)
 
-    #inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/'+options.inFile)
-    #inFile2 = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/'+options.inFile2)
+    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/'
+    inFile1 = ROOT.TFile(main_folder + options.inFile1)
+    inFile2 = ROOT.TFile(main_folder + options.inFile2)
 
-    #inFile10 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366727_reEmulated_Tau2023v1.root')
-    inFile2 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run367079_zeroBias_unpacked.root')
-    #inFile3 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366801_reEmulated_Tau2023v1.root')
-    #inFile4 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366820_reEmulated_Tau2023v1.root')
-    #inFile5 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366821_reEmulated_Tau2023v1.root')
-    #inFile6 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366833_reEmulated_Tau2023v1.root')
-    #inFile7 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366874_reEmulated_Tau2023v1.root')
-    #inFile8 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run366895_reEmulated_Tau2023v1.root')
-    #inFile9 = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run367079_reEmulated_Tau2023v1.root')
-    inFile = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run367079_unpacked.root')
-    
     plt.rcParams['legend.title_fontsize'] = 'x-small'
     cmap = matplotlib.cm.get_cmap('Set1'); imap=-1
     markers = ['o', 's', '^', 'D']
 
     #DoubleTau = inFile.Get('DiTauRate_noIso')
-    #DoubleTau_Iso_10 = inFile10.Get('DiTauRate_Iso')
+    DoubleTau_Iso_1 = inFile1.Get('DiTauRate_Iso')
     DoubleTau_Iso_2 = inFile2.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_3 = inFile3.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_4 = inFile4.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_5 = inFile5.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_6 = inFile6.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_7 = inFile7.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_8 = inFile8.Get('DiTauRate_Iso')
-    #DoubleTau_Iso_9 = inFile9.Get('DiTauRate_Iso')
-    DoubleTau_Iso = inFile.Get('DiTauRate_Iso')
 
     legend_title=r'Double-$\tau$ & Isolation rate comparison'
     #legend_title=r'Inst. Lumi = $3.5\times10^{33}\ cm^{-2}s^{-1}$'
-    #label_DoubleIso_Iso_10 = r'Double-$\tau$ & Iso Run 366727 398b'
-    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso Run 367079 ZeroBias'
-    #label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso Run 366801 398b'
-    #label_DoubleIso_Iso_4 = r'Double-$\tau$ & Iso Run 366820 398b'
-    #label_DoubleIso_Iso_5 = r'Double-$\tau$ & Iso Run 366821 398b'
-    #label_DoubleIso_Iso_6 = r'Double-$\tau$ & Iso Run 366833 386b'
-    #label_DoubleIso_Iso_7 = r'Double-$\tau$ & Iso Run 366874 898b'
-    #label_DoubleIso_Iso_8 = r'Double-$\tau$ & Iso Run 366895 986b'
-    #label_DoubleIso_Iso_9 = r'Double-$\tau$ & Iso Run 367079 986b'
-    label_DoubleIso_Iso = r'Double-$\tau$ & Iso Run 367079 Ephemeral'
+    label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso Run 369978 re-Emu w/o HCAL'
+    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso Run 369978 re-Emu w/ HCAL'
 
     fig, ax = plt.subplots(figsize=(10,10))
     
-    #for rate_TH1, label in zip([DoubleTau_Iso, DoubleTau_Iso_2, DoubleTau_Iso_5, DoubleTau_Iso_6, DoubleTau_Iso_8, DoubleTau_Iso_9, DoubleTau_Iso_10], [label_DoubleIso_Iso, label_DoubleIso_Iso_2, label_DoubleIso_Iso_5, label_DoubleIso_Iso_6, label_DoubleIso_Iso_8, label_DoubleIso_Iso_9, label_DoubleIso_Iso_10]):
-    for rate_TH1, label in zip([DoubleTau_Iso, DoubleTau_Iso_2], [label_DoubleIso_Iso, label_DoubleIso_Iso_2]):
+    for rate_TH1, label in zip([DoubleTau_Iso_1, DoubleTau_Iso_2], [label_DoubleIso_Iso_1, label_DoubleIso_Iso_2]):
         x = []
         y = []
         x_err = []
