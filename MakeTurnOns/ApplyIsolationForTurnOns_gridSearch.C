@@ -20,7 +20,7 @@
 #include <TGraphAsymmErrors.h>
 #include <stdio.h>
 #include <math.h>
-#include "../Isolate/Fill_RelaxedIsolation_gridsearch_nTTextrap.C"
+#include "../Isolate/Fill_RelaxedIsolation_gridsearch.C"
 
 using namespace std;
 
@@ -39,11 +39,8 @@ double acceptacePercentage(TH1F* pass, TH1F* tot, float pt) {
     return pass->Integral(binxp,pass->GetNbinsX()+1) / tot->Integral(binxp,tot->GetNbinsX()+1);
 }
 
-// void ApplyIsolationForTurnOns(TString date, TString version, int run, int targetRate = 0, int fixedThr = 34, float calibThr = 1.7)
-void ApplyIsolationForTurnOns(TString version, int run = 0, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
+void ApplyIsolationForTurnOns(TString InputFileName, TString FileNameOut, TString isolation, TString threshold, TString unpacked, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
 {
-    TString run_str = to_string(run);
-
     TString fixedRate = to_string(targetRate);
     TString fixedThreshold = to_string(fixedThr);
 
@@ -60,11 +57,14 @@ void ApplyIsolationForTurnOns(TString version, int run = 0, int targetRate = 14,
 
     int targetIdx = targetRemap[targetRate];
 
-    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2024/LUTrelaxation_optimizationV0.root","READ");
-    TFile f_Thresholds("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization24_v0.root","READ");
-    TFile f_MCunpacked("/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_MINIAOD.root", "READ");
+    TFile f_Isolation(isolation, "READ");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2024/LUTrelaxation_Run3Summer23_caloParams_2023_v0_4.root"
+    TFile f_Thresholds(threshold, "READ");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization_Run3Summer23_caloParams_2023_v0_4.root"
+    TFile f_MCunpacked(unpacked, "READ");
+    // "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Run3Summer23_MINIAOD.root"
 
-    TString InputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_CALIBRATED.root";
+    // TString InputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Run3Summer23_caloParams_2023_v0_4_CALIBRATED.root";
     TFile f(InputFileName.Data(),"READ");
     TTree* inTree = (TTree*)f.Get("outTreeCalibrated");
 
@@ -89,22 +89,17 @@ void ApplyIsolationForTurnOns(TString version, int run = 0, int targetRate = 14,
     // binning for turnons compuattions and display
     Double_t binning[22] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,210,350,500,700,1000,2000};
 
-    TString FileNameOut = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/Tau_MC_TURNONS_test";
-    if (fixedThr==0) FileNameOut += "_FIXEDRATE"+fixedRate+"kHz";
-    else             FileNameOut += "_FIXEDTHR"+fixedThreshold+"GeV";
-    FileNameOut += "_Run"+run_str;
-    FileNameOut += "_"+version+".root";
+    // TString FileNameOut = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/Tau_MC_TURNONS_test";
+    // if (fixedThr==0) FileNameOut += "_FIXEDRATE"+fixedRate+"kHz";
+    // else             FileNameOut += "_FIXEDTHR"+fixedThreshold+"GeV";
     TFile f_turnons(FileNameOut.Data(),"RECREATE");
 
     // START OF GRID SEARCH
-    // for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
-    for (UInt_t iEff = 9; iEff < 10; ++iEff)
+    for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
     {
-        // for (UInt_t iEmin = 0; iEmin < NEmins; ++iEmin)
-        for (UInt_t iEmin = 0; iEmin < 3; ++iEmin)
+        for (UInt_t iEmin = 0; iEmin < NEmins; ++iEmin)
         {
-            // for (UInt_t iEmax = 0; iEmax < NEmaxs_sum; ++iEmax)
-            for (UInt_t iEmax = 2; iEmax < 5; ++iEmax)
+            for (UInt_t iEmax = 0; iEmax < NEmaxs_sum; ++iEmax)
             {
                 Float_t effMin = EffsMin[iEff];
                 TString effMin_intgr = to_string(effMin).substr(0, to_string(effMin).find("."));

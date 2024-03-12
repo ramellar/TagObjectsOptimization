@@ -26,8 +26,7 @@ using namespace std;
 
 // THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
 
-// void Build_Isolation_WPs(TString date, TString version, TString compression, float calibThr = 1.7)
-void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr = 1.7)
+void Build_Isolation(TString inputFile, TString outFile, TString compression = "supercompressed", float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -62,7 +61,8 @@ void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr
   const UInt_t FitMax = tmpFitMax;
 
   TChain data("outTreeCalibrated");
-  data.Add("/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_CALIBRATED.root");
+  data.Add(inputFile);
+  // "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Run3Summer23_caloParams_2023_v0_4_CALIBRATED.root"
 
 
   TH2F* isoEt_vs_nVtx = new TH2F("isoEt_vs_nVtx","isoEt_vs_nVtx",150,0.,150.,100,0.,100.);
@@ -105,9 +105,9 @@ void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr
   TF1* iso_vs_compressednTT_barrel_fit = new TF1("iso_vs_compressednTT_barrel_fit","[0]+[1]*x",0,31);
   TF1* iso_vs_compressednTT_endcaps_fit = new TF1("iso_vs_compressednTT_endcaps_fit","[0]+[1]*x",0,31);
 
-  iso_vs_compressednTT_profile->Fit(iso_vs_compressednTT_fit);
-  iso_vs_compressednTT_barrel_profile->Fit(iso_vs_compressednTT_barrel_fit);
-  iso_vs_compressednTT_endcaps_profile->Fit(iso_vs_compressednTT_endcaps_fit);
+  iso_vs_compressednTT_profile->Fit(iso_vs_compressednTT_fit, "Q");
+  iso_vs_compressednTT_barrel_profile->Fit(iso_vs_compressednTT_barrel_fit, "Q");
+  iso_vs_compressednTT_endcaps_profile->Fit(iso_vs_compressednTT_endcaps_fit, "Q");
 
   int   L1Tau_IEt      = -99;
   int   compressedE      = -99;
@@ -225,7 +225,8 @@ void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr
   
 
   // TFile f_out("ROOTs4LUTs/ROOTs4LUTs_2023/LUTisolation_Trigger_Stage2_Run3_MC_optimization"+version+"_calibThr"+intgr+"p"+decim+".root","RECREATE");
-  TFile f_out("ROOTs4LUTs_2024/LUTisolation_optimizationV0.root","RECREATE");
+  TFile f_out(outFile,"RECREATE");
+  // "ROOTs4LUTs_2024/LUTisolation_Run3Summer23_caloParams_2023_v0_4.root"
 
   isoEt_vs_nVtx->Write();
   isoEt_vs_nVtx_barrel->Write();
@@ -526,7 +527,7 @@ void Build_Isolation_WPs(TString compression = "supercompressed", float calibThr
 
             TString fitName = "fit_pz_"+to_string(iEff)+"_eta"+to_string(i)+"_e"+to_string(j);
             TF1* projection_fit = new TF1(fitName,"[0]+[1]*x", FitMin, FitMax);
-            projection->Fit(projection_fit, "R");
+            projection->Fit(projection_fit, "QR");
             projection_fit->Write();
           }
       }

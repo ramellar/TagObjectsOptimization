@@ -21,14 +21,14 @@
 
 using namespace std;
 
-void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
+void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi = false, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/EphemeralZeroBias_2023D_RAW_369978/EphemeralZeroBias_2023D_RAW_369978.root";
+  // TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/EphemeralZeroBias_2023D_RAW_369978_optimization23_v4_HCAL_corr.root";
   TFile f_in(FileName_in.Data(),"READ");
   
   // TTree* inTree = (TTree*)f_in.Get("Ntuplizer_noTagAndProbe/TagAndProbe"); // this could be wrong
@@ -227,7 +227,8 @@ void Rate(int run, bool doScaleToLumi = false, float calibThr = 1.7)
 
   TString scaledToLumi = "";
   if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-  TFile f_out("histos_2024/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+"_optimization24_v0.root","RECREATE");
+  TFile f_out(FileName_out,"RECREATE");
+  // "histos_2024/histos_rate_ZeroBias_Run"+run_str+"_unpacked"+scaledToLumi+"_optimization24_v0.root"
 
   DiTauPtPassDistribution_noIso->Write();
   DiTauPtPassDistribution_Iso->Write();

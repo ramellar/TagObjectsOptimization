@@ -23,15 +23,13 @@
 
 using namespace std;
 
-void ApplyCalibrationZeroBias(float calibThr = 1.7)
+void ApplyCalibrationZeroBias(TString InputFileName, TString OutputFileName, TString corrections, float calibThr = 1.7)
 {
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  // TString InputFileName  = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/EphemeralZeroBias0__Run2022G_Run362616__RAW/EphemeralZeroBias0__Run2022G_Run362616__RAW.root";
-  // TString OutputFileName = "/data_CMS/cms/motta/Run3preparation/Run3preparation_2023/2023_03_04_optimizationV0p1_calibThr1p7/EphemeralZeroBias0__Run2022G_Run362616__CALIBRATED.root";
-  TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/EphemeralZeroBias_2023D_RAW_369978/EphemeralZeroBias_2023D_RAW_369978.root";
-  TString OutputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/EphemeralZeroBias_2023D_RAW_369978/EphemeralZeroBias_2023D_RAW_369978_CALIBRATED_24v0.root";
+  // TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/EphemeralZeroBias_2023D_RAW_369978_optimization23_v4_HCAL_corr.root";
+  // TString OutputFileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/EphemeralZeroBias_2023D_RAW_369978_optimization23_v4_HCAL_corr_CALIBRATED.root";
 
   TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   isolation_vs_pt->Clear();
@@ -39,13 +37,10 @@ void ApplyCalibrationZeroBias(float calibThr = 1.7)
   const UInt_t nIsolation = 101;
   const Double_t isolationBins[nIsolation] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
 
-  TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2024/corrections_BDT_training_optimizationV0_results.root","READ");
+  TFile f_histos(corrections,"READ");
   TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_RAW_124X_results");
   TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_RAW_124X_results");
 
-  // TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV1");
-  // TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV1"); 
- 
   TH1F* histo_shape = new TH1F("histo_shape","histo_shape",256,0,256);
   TH1F* histo_symmShape = new TH1F("histo_symmShape","histo_symmShape",256,0,256);
 
@@ -182,7 +177,7 @@ void ApplyCalibrationZeroBias(float calibThr = 1.7)
   //for(UInt_t i = 0 ; i < 100000 ; ++i)
     {
       inTree->GetEntry(i);
-      if(i%10000==0) cout<<"Entry #"<<i<<"/"<<Entries<<endl;
+      if(i%100000==0) cout<<"Entry #"<<i<<"/"<<Entries<<endl;
 
       out_EventNumber = -999;
       out_RunNumber =  -999;
@@ -348,4 +343,3 @@ void ApplyCalibrationZeroBias(float calibThr = 1.7)
   histo_symmShape->Write();
   
 }
-

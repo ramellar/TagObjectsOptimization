@@ -253,7 +253,7 @@ Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
   return -1;
 }
 
-void ApplyCalibration(float calibThr = 1.7)
+void ApplyCalibration(TString InputFileName, TString OutputFileName, TString corrections, float calibThr = 1.7)
 {
   TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   isolation_vs_pt->Clear();
@@ -263,12 +263,11 @@ void ApplyCalibration(float calibThr = 1.7)
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
-  // TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_01_optimizationV1/hadded_126X_mcRun3_2023_05_01_COMPRESSED.root";
-  // TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_01_optimizationV1/hadded_126X_mcRun3_2023_05_01_CALIBRATED.root";
-  TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_COMPRESSED.root";
-  TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/2024W-MC_caloParams_2023_v0_4_cfi_CALIBRATED.root";
+  // TString InputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Run3Summer23_caloParams_2023_v0_4_COMPRESSED.root";
+  // TString OutputFileName  = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Run3Summer23_caloParams_2023_v0_4_CALIBRATED.root";
 
-  TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2024/corrections_BDT_training_optimizationV0_results.root","READ");
+  TFile f_histos(corrections, "READ");
+  // TFile f_histos("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Calibrate/corrections_2024/corrections_BDT_training_optimizationV0_2023Summer_caloParams_2023_v0_4.root","READ");
   TH3F* h_LUT_isMerged0 = (TH3F*)f_histos.Get("LUT_isMerged0_GBRFullLikelihood_RAW_124X_results");
   TH3F* h_LUT_isMerged1 = (TH3F*)f_histos.Get("LUT_isMerged1_GBRFullLikelihood_RAW_124X_results");
 

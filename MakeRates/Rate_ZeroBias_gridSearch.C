@@ -19,21 +19,22 @@
 #include <fstream>
 #include <map>
 #include <typeinfo>
-#include "../Isolate/Fill_RelaxedIsolation_gridsearch_nTTextrap.C"
+#include "../Isolate/Fill_RelaxedIsolation_gridsearch.C"
 
 using namespace std;
 
-void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1.7)
+void Rate(TString FileName_in, TString FileName_out, TString isolation, int run, bool doScaleToLumi=false, float calibThr = 1.7)
 {
     TString run_str = to_string(run);
 
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-    TFile f_Isolation("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2024/LUTrelaxation_optimizationV0.root","READ");
-    TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/EphemeralZeroBias_2023D_RAW_369978/EphemeralZeroBias_2023D_RAW_369978_CALIBRATED_24v0.root";
+    TFile f_Isolation(isolation, "READ");
     TFile f_in(FileName_in.Data(),"READ");
     TTree* inTree = (TTree*)f_in.Get("outTreeCalibrated");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/Isolate/ROOTs4LUTs_2024/LUTrelaxation_Run3Summer23_caloParams_2023_v0_4.root"
+    // "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/EphemeralZeroBias_2023D_RAW_369978_optimization23_v4_HCAL_corr_CALIBRATED.root";
 
     UInt_t Nevents = inTree->GetEntries();
 
@@ -69,7 +70,8 @@ void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1
     if (doScaleToLumi) scale *= scaleToLumi / thisLumiRun;
 
     // CREATE OUTPUT FILE
-    TFile f_out("histos_2024/histos_rate_ZeroBias_Run"+run_str+"_optimization24_v0_gridsearch.root","RECREATE");
+    TFile f_out(FileName_out, "RECREATE");
+    // "histos_2024/histos_rate_ZeroBias_Run"+run_str+"_optimization_Run3Summer23_caloParams_2023_v0_4.root"
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
@@ -100,7 +102,7 @@ void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1
                 for(UInt_t ievt = 0 ; ievt < 1000000 ; ++ievt)
                 {
                     inTree->GetEntry(ievt);
-                    if(ievt%50000==0) cout<<"Entry #"<<ievt<<endl; 
+                    if(ievt%100000==0) cout<<"Entry #"<<ievt<<endl; 
                     // SET RUN INFO
                     if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
                     if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
@@ -195,7 +197,7 @@ void Rate(TString version, int run, bool doScaleToLumi=false, float calibThr = 1
     for(UInt_t ievt = 0 ; ievt < Nevents ; ++ievt)
     {
         inTree->GetEntry(ievt);
-        if(ievt%50000==0) cout<<"Entry #"<<ievt<<endl; 
+        if(ievt%100000==0) cout<<"Entry #"<<ievt<<endl; 
         // SET RUN INFO
         if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
         if (in_RunNumber == 362617) { if(in_lumi<0) continue; }

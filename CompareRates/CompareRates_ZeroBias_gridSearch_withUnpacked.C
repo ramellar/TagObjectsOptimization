@@ -18,20 +18,21 @@
 
 using namespace std;
 
-void compare(int run = 0,  bool doScaleToLumi = true, float calibThr = 1.7) {
-    // TString run_str = to_string(run);
-
+void compare(TString unpackedFile, TString gridsearchFile, TString outputFile, bool doScaleToLumi = true, float calibThr = 1.7) {
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
-    TFile* f_gridseacrh = new TFile("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_optimization24_v0_gridsearch.root","READ");
+    TFile* f_gridseacrh = new TFile(gridsearchFile,"READ");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_optimization_Run3Summer23_caloParams_2023_v0_4.root"
 
     TString scaledToLumi = "";
-    if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-    TFile* f_unpacked = new TFile("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_unpacked_optimization24_v0.root","READ");
+    // if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
+    TFile* f_unpacked = new TFile(unpackedFile,"READ");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_unpacked_Run3Summer23_caloParams_2023_v0_4.root"
 
     // CREATE OUTPUT FILE
-    TFile f_out("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization24_v0.root","RECREATE");
+    TFile f_out(outputFile, "RECREATE");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization_Run3Summer23_caloParams_2023_v0_4.root"
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)

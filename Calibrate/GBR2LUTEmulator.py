@@ -23,7 +23,7 @@ class GBR2LUTEmulator:
         scram_arch = os.environ["SCRAM_ARCH"]
         ROOT.gSystem.AddDynamicPath("{0}/lib/{1}/".format(cmsswBase, scram_arch))
         ROOT.gSystem.Load("libHiggsAnalysisGBRLikelihood.so") 
-        print "inputFileName",self.inputFileName
+        # print "inputFileName",self.inputFileName
         self.inputFile = ROOT.TFile.Open(self.inputFileName)
         self.forest = ROOT.MakeNullPointer( "GBRForest" ) 
         #self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
@@ -34,9 +34,9 @@ class GBR2LUTEmulator:
         #if len(varlist)!=2:
         #    raise StandardError("ERROR: Number of input variables != 2. Not implemented for the moment.")
         for i,name in enumerate(varlist):
-            print "var ",i
-            print name
-            print self.variablePoints[i][0]
+            # print "var ",i
+            # print name
+            # print self.variablePoints[i][0]
             if self.variablePoints[i][0]!=name:
                 raise StandardError("ERROR: Input variables are not given in the correct order in self.variablePoints")
             self.inputVariables.append(name)
@@ -70,7 +70,7 @@ class GBR2LUTEmulator:
 #the header is first valid line starting with #<header> versionStr(unused but may be in future) nrBitsAddress nrBitsData </header>
 #<header> V2 20 9 </header>
 #"""
-            print >>output, header
+            # print >>output, header
             for inputs in product(*inputPoints):
                 # convert into sorted shapes for the BRT
                 inputsCopy = list(copy.copy(inputs))
@@ -105,7 +105,7 @@ class GBR2LUTEmulator:
                 #print "yint = ",yint
                 if yint>511: # threshold
                     yint=511
-                print >>output, address, yint, "#", strInputs
+                # print >>output, address, yint, "#", strInputs
                 address += 1
 
     def createTH1(self):
@@ -176,7 +176,7 @@ class GBR2LUTEmulator:
         canvas.SetLeftMargin(0.15);
         canvas.SetRightMargin(0.15);
         self.lut.Draw("")
-        print outCanvasName
+        # print outCanvasName
         canvas.SaveAs(outCanvasName)
 
 
@@ -230,11 +230,11 @@ class GBR2LUTEmulator:
                 strInputs = ""
                 for inp in inputs:
                     strInputs += str(inp)+" "
-                print >>output, strInputs, resp
+                # print >>output, strInputs, resp
 
         outputRooFile = ROOT.TFile(self.outputFileName,"RECREATE")
         outCanvasName = self.outputFileName
-        print  self.outputFileName
+        # print  self.outputFileName
         outCanvasName = outCanvasName.replace(".root",".pdf")
         #print outCanvasName
         canvas = ROOT.TCanvas("c_test","c_test",800,800)
@@ -325,9 +325,9 @@ class GBR2LUTEmulator:
         npoints2 = len(self.variablePoints[1][1])
         npoints3 = len(self.variablePoints[2][1])
 
-        print "npoints1",npoints1
-        print "npoints2",npoints2
-        print "npoints3",npoints3
+        # print "npoints1",npoints1
+        # print "npoints2",npoints2
+        # print "npoints3",npoints3
         #
         binlow = self.variablePoints[0][1][0] - (self.variablePoints[0][1][1]-self.variablePoints[0][1][0])/2.
         bins1.append(binlow)
@@ -371,7 +371,7 @@ class GBR2LUTEmulator:
                 bin1 = self.lut.GetXaxis().FindBin(value1)
                 bin2 = self.lut.GetYaxis().FindBin(value2)
                 bin3 = self.lut.GetZaxis().FindBin(value3)
-                print bin1,"",bin2,"",bin3," --> ",resp
+                # print bin1,"",bin2,"",bin3," --> ",resp
                 #added by Olivier
                 low  = 0.2;
                 high = 5.;
@@ -386,11 +386,11 @@ class GBR2LUTEmulator:
                 strInputs = ""
                 for inp in inputs:
                     strInputs += str(inp)+" "
-                print >>output, strInputs, resp
+                # print >>output, strInputs, resp
 
         outputRooFile = ROOT.TFile(self.outputFileName,"RECREATE")
         outCanvasName = self.outputFileName
-        print  self.outputFileName
+        # print  self.outputFileName
         outCanvasName = outCanvasName.replace(".root",".pdf")
         #print outCanvasName
         canvas = ROOT.TCanvas("c_test","c_test",800,800)
@@ -433,10 +433,10 @@ class GBR2LUTEmulator:
         npoints3 = len(self.variablePoints[2][1])
         npoints4 = len(self.variablePoints[3][1])
 
-        print "npoints1",npoints1
-        print "npoints2",npoints2
-        print "npoints3",npoints3
-        print "npoints4",npoints4
+        # print "npoints1",npoints1
+        # print "npoints2",npoints2
+        # print "npoints3",npoints3
+        # print "npoints4",npoints4
         #
         binlow = self.variablePoints[0][1][0] - (self.variablePoints[0][1][1]-self.variablePoints[0][1][0])/2.
         bins1.append(binlow)
@@ -498,7 +498,7 @@ class GBR2LUTEmulator:
                 else:
                     bin4 = 2
 
-                print bin1,"",bin2,"",bin3,"",bin4," --> ",resp
+                # print bin1,"",bin2,"",bin3,"",bin4," --> ",resp
                 #added by Olivier
                 low  = 0.2;
                 high = 5.;
@@ -511,19 +511,19 @@ class GBR2LUTEmulator:
                 #print bin1,"",bin2,"",bin3," --> ",corr
                 if bin4==1:
                     self.lut.SetBinContent(bin1, bin2, bin3, corr)
-                    print "filling histo1"
+                    # print "filling histo1"
                 else:
                     self.lut2.SetBinContent(bin1, bin2, bin3, corr)
-                    print "filling histo2"
+                    # print "filling histo2"
                 #self.lut.SetBinContent(bin1, bin2, resp)
                 strInputs = ""
                 for inp in inputs:
                     strInputs += str(inp)+" "
-                print >>output, strInputs, resp
+                # print >>output, strInputs, resp
 
         outputRooFile = ROOT.TFile(self.outputFileName,"RECREATE")
         outCanvasName = self.outputFileName
-        print  self.outputFileName
+        # print  self.outputFileName
         outCanvasName = outCanvasName.replace(".root",".pdf")
         #print outCanvasName
 

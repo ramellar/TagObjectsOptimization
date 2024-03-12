@@ -1,10 +1,15 @@
 import ROOT
+import argparse
 #from GBR2LUT import GBR2LUT
 from GBR2LUTEmulator import GBR2LUTEmulator
 
-inputFile = "forests_2023/BDT_training_optimizationV0_results.root"
-# inputFile = "forests_2023/current/GBRFullLikelihood_Trigger_Stage2_Run3_MC_compressedieta_compressediet_hasEM_isMerged_optimizationV1_results.root"
+parser = argparse.ArgumentParser(description="Produce root LUT")
+parser.add_argument("-i", "--input",  help="Input file path")
+parser.add_argument("-o", "--output", help="Output file path")
+args = parser.parse_args()
 
+inputFile = args.input
+outputFile = args.output
 sortedShapesFile = "CompressionCalibIdent/compressedSortedShapes.txt"
 
 header = """
@@ -40,7 +45,7 @@ gbr2luts = []
 gbr2luts.append(GBR2LUTEmulator())
 gbr2luts[-1].name = "GBRFullLikelihood_RAW_124X_results"
 gbr2luts[-1].inputFileName = inputFile
-gbr2luts[-1].outputFileName = "corrections_2024/corrections_BDT_training_optimizationV0_results.root"
+gbr2luts[-1].outputFileName = outputFile
 gbr2luts[-1].sortedShapes = sortedShapesFile
 gbr2luts[-1].variablePoints.append(("abs(compressedieta)",ietapoints))
 gbr2luts[-1].variablePoints.append(("compressedE",epoints))
