@@ -12,8 +12,11 @@ fit.exe
 *._*
 *.DS_Store
 Calibrate/LUTs
+Calibrate/LUTs_2024
 MakeRates/*.txt
+Isolate/LUTs/LUTs_2024/
 PlotCalibrationResolution/plots
 PlotGoodGridSearch/plots*/
 RoundsOptimizationV_.txt
 fullBlownCreator.*
+*.nfs*
