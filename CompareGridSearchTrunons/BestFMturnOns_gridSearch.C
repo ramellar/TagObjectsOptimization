@@ -15,7 +15,7 @@
 #include <TVector.h>
 #include <fstream>
 #include <map>
-#include "../Isolate/Fill_RelaxedIsolation_gridsearch_nTTextrap.C"
+#include "../Isolate/Fill_RelaxedIsolation_gridsearch.C"
 
 using namespace std;
 
@@ -108,10 +108,8 @@ void isLowerRate(std::vector< std::pair<TString, float> > &orderedHz, float newH
     }
 }
 
-void compare(TString date, TString version, int run, TString FMtype, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
+void compare(TString inFile, TString outFile, TString thresholds, TString rates_unpacked, TString FMtype, int targetRate = 14, int fixedThr = 0, float calibThr = 1.7)
 {
-    TString run_str = to_string(run);
-
     TString fixedRate = to_string(targetRate);
     TString fixedThreshold = to_string(fixedThr);
 
@@ -144,15 +142,16 @@ void compare(TString date, TString version, int run, TString FMtype, int targetR
     std::vector< std::pair<TString, std::pair<float,std::pair<float,float>>> > FM_ordered = { std::pair("init", std::pair(0,std::pair(0,0))) };
     std::vector< std::pair<TString, float> > orderedHzAtThr = { std::pair("init", 0) };
 
-    TString FileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Tau_MC_TURNONS";
-    if (fixedThr==0) FileName += "_FIXEDRATE"+fixedRate+"kHz";
-    else             FileName += "_FIXEDTHR"+fixedThreshold+"GeV";
-    FileName += "_Run"+run_str;
-    FileName += "_"+version+".root";
-    TFile* f_Turnons = new TFile(FileName, "READ");
+    // TString FileName = "/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/Tau_MC_TURNONS";
+    // if (fixedThr==0) FileName += "_FIXEDRATE"+fixedRate+"kHz";
+    // else             FileName += "_FIXEDTHR"+fixedThreshold+"GeV";
+    // FileName += "_Run"+run_str;
+    TFile* f_Turnons = new TFile(inFile, "READ");
 
-    TFile f_Thresholds("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization_Run3Summer23_caloParams_2023_v0_4.root","READ");
-    TFile f_rate("/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_unpacked_Run3Summer23_caloParams_2023_v0_4.root","READ");
+    TFile f_Thresholds(thresholds, "READ");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run369978_unpacked_optimization_Run3Summer23_caloParams_2023_v0_4.root"
+    TFile f_rate(rates_unpacked,"READ");
+    // "/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run369978_unpacked_Run3Summer23_caloParams_2023_v0_4.root"
 
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
@@ -209,15 +208,14 @@ void compare(TString date, TString version, int run, TString FMtype, int targetR
     }
 
     FM_ordered.pop_back(); // remove init entry
-    TString Filename = "FMs/FMs_2024/"; 
-    if (FMtype=="FM") Filename += "FM_orderd_turnons";
-    else if (FMtype=="FMtACC") Filename += "FMtACC_orderd_turnons";
-    if (targetRate!=0) Filename += "_FIXEDRATE"+fixedRate+"kHz";
-    if (fixedThr!=0)   Filename += "_FIXEDTHR"+fixedThreshold+"GeV";
-    Filename += "_Run"+run_str;
-    Filename += "_"+version+".txt";
+    // TString Filename = "FMs/FMs_2024/"; 
+    // if (FMtype=="FM") Filename += "FM_orderd_turnons";
+    // else if (FMtype=="FMtACC") Filename += "FMtACC_orderd_turnons";
+    // if (targetRate!=0) Filename += "_FIXEDRATE"+fixedRate+"kHz";
+    // if (fixedThr!=0)   Filename += "_FIXEDTHR"+fixedThreshold+"GeV";
+    // Filename += "_Run"+run_str;
     ofstream file;
-    file.open(Filename, std::ofstream::trunc);
+    file.open(outFile, std::ofstream::trunc);
     file << "## HEARDER ##" << std::endl;
     for (long unsigned int i = 0; i < FM_ordered.size(); ++i)
     {
@@ -229,7 +227,7 @@ void compare(TString date, TString version, int run, TString FMtype, int targetR
     if (fixedThr != 0)
     {
         orderedHzAtThr.pop_back(); // remove init entry
-        TString FilenameRate = "FMs/FMs_2024/optimization"+version+"/BestRatesAt"+to_string(fixedThr)+"Thr_Run"+run_str+"_optimization"+version+"_"+date+".txt";
+        TString FilenameRate = "FMs/FMs_2024/optimization/BestRatesAt"+to_string(fixedThr)+"Thr_Run_optimization.txt";
         ofstream fileRate;
         fileRate.open(FilenameRate, std::ofstream::trunc);
         fileRate << std::endl << std::endl;

@@ -41,11 +41,11 @@ int main(int argc, char** argv)
         manager.makeRegression();
     }
 
+    std::cout<<"status"<<std::endl;
     if(!status)
         std::cout<<"FATAL: A fatal error occured - QUIT -\n";
     else
         std::cout<<"- Finish - All good -\n";
 
-
-    return status;
+    // return status;
 }

@@ -99,7 +99,7 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
 
                 // loop over events
                 // for(UInt_t ievt = 0 ; ievt < Nevents ; ++ievt)
-                for(UInt_t ievt = 0 ; ievt < 1000000 ; ++ievt)
+                for(UInt_t ievt = 0 ; ievt < 100000 ; ++ievt)
                 {
                     inTree->GetEntry(ievt);
                     if(ievt%100000==0) cout<<"Entry #"<<ievt<<endl; 
