@@ -30,17 +30,17 @@ Regression.1.CutEE: OfflineTau_pt>18
 EOF
 }
 
-# # matching
-# echo 'Matching..'
-# 
-# cd ${pwd}/MatchAndCompress
-# root -l -b <<EOF
-# .L MakeTreeForCalibration.C+
-# MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root")
-# .q
-# EOF
-# 
-# python produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
+# matching
+echo 'Matching..'
+
+cd ${pwd}/MatchAndCompress
+root -l -b <<EOF
+.L MakeTreeForCalibration.C+
+MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root")
+.q
+EOF
+
+python produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
 
 # Calibration
 echo 'Calibrating..'
@@ -54,7 +54,6 @@ cd ${pwd}/Calibrate/
 python makeTH4_LUT.py -i forests_2024/BDT_training_optimization_"${1}"_results.root \
                       -o corrections_2024/corrections_BDT_training_"${1}".root
 
-echo 'ciao ciao'
 root -l -b <<EOF
 .L ApplyCalibration.C+
 ApplyCalibration("${working_dir}${1}_COMPRESSED.root", "${working_dir}${1}_CALIBRATED.root", \
