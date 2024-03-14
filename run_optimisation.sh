@@ -2,7 +2,8 @@
 set -e
 # sh run_optimisation.sh 2023S-MC_caloParams_2023_v0_4 EphemeralZeroBias_2023D_RAW_369978_optimization23_v4_HCAL_corr 369978 Run3Summer23_MINIAOD.root
 
-working_dir='/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2023S-MC_caloParams_2023_v0_4/test/'
+working_dir='/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/Winter24_GT_140/test/'
+# /data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/test/'
 pwd=$(pwd)
 
 create_config_file() {
@@ -126,7 +127,7 @@ cd ${pwd}/MakeTurnOns
 root -l -b <<EOF
 .L ApplyIsolationForTurnOns_gridSearch.C+
 ApplyIsolationForTurnOns("${working_dir}${1}_CALIBRATED.root", \
-                         "${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}", \
+                         "${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
                          "../Isolate/ROOTs4LUTs_2024/LUTrelaxation_${1}.root", \
                          "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${3}_${1}unpacked_optimization.root", \
                          "${working_dir}${4}", 14, 0)
@@ -136,7 +137,7 @@ EOF
 cd ${pwd}/CompareGridSearchTrunons
 root -l -b <<EOF
 .L BestFMturnOns_gridSearch.C+
-compare("${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}", \
+compare("${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
         "FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run${3}_${1}.txt", \
         "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${3}_${1}unpacked_optimization.root", \
         "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${3}_${1}_unpacked.root", "FM")
