@@ -25,7 +25,7 @@
 
 using namespace std;
 
-void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_option = "crystalball")
+void MakeResolutions_noCalib(TString file, int run_nmbr, TString era = "",  TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
@@ -182,7 +182,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         if (run_nmbr != -1) { if (run_nmbr != in_RunNumber)  { continue; } }
 
         float l1tTauPt_float = (float)l1tTauPt/2;
-        if(l1tTauPt_float<10.) { continue; }
+        if(l1tTauPt_float<0.) { continue; }
 
         if(l1tTauPt_float>128.) { continue; } // skip saturated objects
 
@@ -424,7 +424,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2023/resolutions_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_2024/resolutions_of_"+run_nmbr_str+"_reEmulated_no_calibration.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();
@@ -464,1061 +464,1058 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     Nvtx->Write();
     fileout->Close();
 
-    // ----------------------------------------------------------------------------
-    // plot performance
-
-    gStyle->SetOptStat(000000);
-
-    for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
-    {
-        TString lowP ;
-        lowP.Form("%.1f", ptBins[i]);
-        TString highP;
-        highP.Form("%.1f", ptBins[i+1]);
-
-        TCanvas canvas("c","c",800,800);
-        canvas.SetLeftMargin(0.15);
-        canvas.SetGrid();
-        // canvas.SetLogy();
-
-        // use dummy histogram to define style
-        empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
-        empty->SetTitle("");
-
-        // empty->GetXaxis()->SetRangeUser(0.,250.);
-        empty->GetYaxis()->SetRangeUser(0., max(barrel_response_ptBins[i]->GetMaximum(),endcap_response_ptBins[i]->GetMaximum())*1.3 );
-
-        empty->GetXaxis()->SetTitleOffset(1.3);
-        empty->GetYaxis()->SetTitle("a.u.");
-        empty->GetYaxis()->SetTitleOffset(1.3);
-        empty->SetTitle("");
-        empty->SetStats(0);
-
-        empty->Draw();
-
-        barrel_response_ptBins[i]->SetLineWidth(2);
-        barrel_response_ptBins[i]->SetLineColor(1);
-        barrel_response_ptBins[i]->SetMarkerStyle(8);
-        barrel_response_ptBins[i]->SetMarkerColor(1);
-
-        endcap_response_ptBins[i]->SetLineWidth(2);
-        endcap_response_ptBins[i]->SetLineColor(2);
-        endcap_response_ptBins[i]->SetMarkerStyle(8);
-        endcap_response_ptBins[i]->SetMarkerColor(2);
-
-        barrel_response_ptBins[i]->Draw("same");
-        endcap_response_ptBins[i]->Draw("same");
-
-        fit_barrel_response_ptBins[i]->SetLineWidth(2);
-        fit_barrel_response_ptBins[i]->SetLineColor(1);
-
-        fit_endcap_response_ptBins[i]->SetLineWidth(2);
-        fit_endcap_response_ptBins[i]->SetLineColor(2);
-
-        fit_barrel_response_ptBins[i]->Draw("same");
-        fit_endcap_response_ptBins[i]->Draw("same");
-
-        TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
-        texl1->AddText("CMS Internal");
-        texl1->SetTextSize(0.03);
-        texl1->SetFillStyle(0);
-        texl1->SetBorderSize(0);
-        texl1->Draw("same");
-
-        TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
-        if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
-        else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
-        texl2->SetTextSize(0.03);
-        texl2->SetFillStyle(0);
-        texl2->SetBorderSize(0);
-        texl2->Draw("same");
-
-        TLegend legend(0.55,0.75,0.88,0.88);
-        legend.SetBorderSize(0);
-        legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
-        legend.AddEntry(barrel_response_ptBins[i],"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-        legend.AddEntry(endcap_response_ptBins[i],"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
-        legend.Draw("same");
-
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowP+"pt"+highP+".pdf");
-    }
-
-    for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
-    {
-        TString lowE;
-        lowE.Form("%.3f", etaBins[i]);
-        TString highE;
-        highE.Form("%.3f", etaBins[i+1]);
-
-        TCanvas canvas("c","c",800,800);
-        canvas.SetLeftMargin(0.15);
-        canvas.SetGrid();
-        // canvas.SetLogy();
-
-        // use dummy histogram to define style
-        empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
-        empty->SetTitle("");
-
-        // empty->GetXaxis()->SetRangeUser(0.,250.);
-        empty->GetYaxis()->SetRangeUser(0., absEta_response_ptBins[i]->GetMaximum()*1.3 );
-
-        empty->GetXaxis()->SetTitleOffset(1.3);
-        empty->GetYaxis()->SetTitle("a.u.");
-        empty->GetYaxis()->SetTitleOffset(1.3);
-        empty->SetTitle("");
-        empty->SetStats(0);
-
-        empty->Draw();
-
-        absEta_response_ptBins[i]->SetLineWidth(2);
-        absEta_response_ptBins[i]->SetLineColor(1);
-        absEta_response_ptBins[i]->SetMarkerStyle(8);
-        absEta_response_ptBins[i]->SetMarkerColor(1);
-
-        absEta_response_ptBins[i]->Draw("same");
-
-        fit_absEta_response_ptBins[i]->SetLineWidth(2);
-        fit_absEta_response_ptBins[i]->SetLineColor(1);
-
-        fit_absEta_response_ptBins[i]->Draw("same");
-
-        TLegend legend(0.55,0.75,0.88,0.88);
-        legend.SetBorderSize(0);
-        legend.AddEntry(absEta_response_ptBins[i],lowE+"<|#eta^{Offline #tau}|<"+highE,"LPE");
-        legend.Draw("same");
-
-        TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
-        texl1->AddText("CMS Internal");
-        texl1->SetTextSize(0.03);
-        texl1->SetFillStyle(0);
-        texl1->SetBorderSize(0);
-        texl1->Draw("same");
-
-        TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
-        if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
-        else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
-        texl2->SetTextSize(0.03);
-        texl2->SetFillStyle(0);
-        texl2->SetBorderSize(0);
-        texl2->Draw("same");
-
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
-    }
-
-    // ##############
-
-    TCanvas canvas("c","c",800,800);
-    canvas.SetLeftMargin(0.15);
-    canvas.SetGrid();
-    // canvas.SetLogy();
-
-    pt_resol_endcap_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    pt_resol_endcap_fctPt->SetTitle("");
-    pt_resol_endcap_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    pt_resol_endcap_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    pt_resol_endcap_fctPt->GetYaxis()->SetTitleOffset(1.5);
-    pt_resol_endcap_fctPt->SetTitle("");
-    pt_resol_endcap_fctPt->SetStats(0);
-
-    pt_resol_endcap_fctPt->GetXaxis()->SetRangeUser(20.,100.);
-    // pt_resol_endcap_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
-
-    pt_resol_barrel_fctPt->SetLineWidth(2);
-    pt_resol_barrel_fctPt->SetLineColor(1);
-    pt_resol_barrel_fctPt->SetMarkerStyle(8);
-    pt_resol_barrel_fctPt->SetMarkerColor(1);
-
-    pt_resol_endcap_fctPt->SetLineWidth(2);
-    pt_resol_endcap_fctPt->SetLineColor(2);
-    pt_resol_endcap_fctPt->SetMarkerStyle(8);
-    pt_resol_endcap_fctPt->SetMarkerColor(2);
-
-    // fit_pt_resol_barrel_fctPt->Draw("LPE");
-    pt_resol_endcap_fctPt->Draw("LPE");
-    pt_resol_barrel_fctPt->Draw("same LPE");
-
-    TLegend legend(0.55,0.75,0.88,0.88);
-    legend.SetBorderSize(0);
-    legend.AddEntry(pt_resol_barrel_fctPt,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    legend.AddEntry(pt_resol_endcap_fctPt,"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
-    legend.Draw("same");
-
-    TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
-    texl1->AddText("CMS Internal");
-    texl1->SetTextSize(0.03);
-    texl1->SetFillStyle(0);
-    texl1->SetBorderSize(0);
-    texl1->Draw("same");
-
-    TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
-    if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
-    else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
-    texl2->SetTextSize(0.03);
-    texl2->SetFillStyle(0);
-    texl2->SetBorderSize(0);
-    texl2->Draw("same");
-
-    canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins.pdf");
-
-    // ##############
-
-    TCanvas canvasA("cA","cA",800,800);
-    canvasA.SetLeftMargin(0.15);
-    canvasA.SetGrid();
-    // canvas.SetLogy();
-
-    fit_pt_resol_barrel_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    fit_pt_resol_barrel_fctPt->SetTitle("");
-    fit_pt_resol_barrel_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    fit_pt_resol_barrel_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    fit_pt_resol_barrel_fctPt->GetYaxis()->SetTitleOffset(1.5);
-    fit_pt_resol_barrel_fctPt->SetTitle("");
-    fit_pt_resol_barrel_fctPt->SetStats(0);
-
-    fit_pt_resol_barrel_fctPt->GetXaxis()->SetRangeUser(20.,100.);
-    // fit_pt_resol_barrel_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
-
-    fit_pt_resol_barrel_fctPt->SetLineWidth(2);
-    fit_pt_resol_barrel_fctPt->SetLineColor(1);
-    fit_pt_resol_barrel_fctPt->SetMarkerStyle(8);
-    fit_pt_resol_barrel_fctPt->SetMarkerColor(1);
-
-    fit_pt_resol_endcap_fctPt->SetLineWidth(2);
-    fit_pt_resol_endcap_fctPt->SetLineColor(2);
-    fit_pt_resol_endcap_fctPt->SetMarkerStyle(8);
-    fit_pt_resol_endcap_fctPt->SetMarkerColor(2);
-
-    fit_pt_resol_barrel_fctPt->Draw("LPE");
-    fit_pt_resol_endcap_fctPt->Draw("same LPE");
-
-    TLegend legendA(0.55,0.75,0.88,0.88);
-    legendA.SetBorderSize(0);
-    legendA.AddEntry(fit_pt_resol_barrel_fctPt,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    legendA.AddEntry(fit_pt_resol_endcap_fctPt,"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
-    legendA.Draw("same");
-    
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvasA.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_fromFit.pdf");
-
-    // ##############
-
-    TCanvas canvas1("c","c",800,800);
-    canvas1.SetLeftMargin(0.15);
-    canvas1.SetGrid();
-    // canvas1.SetLogy();
-
-    pt_resol_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
-    pt_resol_fctEta->SetTitle("");
-
-    pt_resol_fctEta->GetYaxis()->SetRangeUser(0., 0.6);
-
-    pt_resol_fctEta->GetXaxis()->SetTitleOffset(1.3);
-    pt_resol_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    pt_resol_fctEta->GetYaxis()->SetTitleOffset(1.3);
-    pt_resol_fctEta->SetTitle("");
-    pt_resol_fctEta->SetStats(0);
-
-    pt_resol_fctEta->SetLineWidth(2);
-    pt_resol_fctEta->SetLineColor(1);
-    pt_resol_fctEta->SetMarkerStyle(8);
-    pt_resol_fctEta->SetMarkerColor(1);
-
-    pt_resol_fctEta->Draw("LPE");
-
-    TBox b1(1.305,0.,1.479,0.6);
-    b1.SetFillColor(16);
-    b1.Draw("same");
-    TBox b2(-1.479,0.,-1.305,0.6);
-    b2.SetFillColor(16);
-    b2.Draw("same");
-    TBox b3(1.305,0.,1.479,0.6);
-    b3.SetFillColor(1);
-    b3.SetFillStyle(3004);
-    b3.Draw("same");
-    TBox b4(-1.479,0.,-1.305,0.6);
-    b4.SetFillColor(1);
-    b4.SetFillStyle(3004);
-    b4.Draw("same");
-
-    // TLegend legend1(0.55,0.75,0.88,0.88);
-    // legend1.SetBorderSize(0);
-    // legend1.AddEntry(pt_resol_fctEta,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    // legend1.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins.pdf");
-
-    // ##############
-
-    TCanvas canvasB("cB","cB",800,800);
-    canvasB.SetLeftMargin(0.15);
-    canvasB.SetGrid();
-    // canvas1.SetLogy();
-
-    fit_pt_resol_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
-    fit_pt_resol_fctEta->SetTitle("");
-    fit_pt_resol_fctEta->GetYaxis()->SetRangeUser(0., 0.6);
-    fit_pt_resol_fctEta->GetXaxis()->SetTitleOffset(1.3);
-    fit_pt_resol_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    fit_pt_resol_fctEta->GetYaxis()->SetTitleOffset(1.3);
-    fit_pt_resol_fctEta->SetTitle("");
-    fit_pt_resol_fctEta->SetStats(0);
-
-    fit_pt_resol_fctEta->SetLineWidth(2);
-    fit_pt_resol_fctEta->SetLineColor(1);
-    fit_pt_resol_fctEta->SetMarkerStyle(8);
-    fit_pt_resol_fctEta->SetMarkerColor(1);
-
-    fit_pt_resol_fctEta->Draw("LPE");
-
-    b1.Draw("same");
-    b2.Draw("same");
-    b3.Draw("same");
-    b4.Draw("same");
-
-    // TLegend legend1(0.55,0.75,0.88,0.88);
-    // legend1.SetBorderSize(0);
-    // legend1.AddEntry(pt_resol_fctEta,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    // legend1.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvasB.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_fromFit.pdf");
-
-    // ##############
-
-    TCanvas canvas2("c","c",800,800);
-    canvas2.SetLeftMargin(0.15);
-    canvas2.SetGrid();
-    // canvas2.SetLogy();
-
-    pt_scale_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
-    pt_scale_fctEta->SetTitle("");
-
-    pt_scale_fctEta->GetYaxis()->SetRangeUser(0., 2.);
-
-    pt_scale_fctEta->GetXaxis()->SetTitleOffset(1.3);
-    pt_scale_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
-    pt_scale_fctEta->GetYaxis()->SetTitleOffset(1.3);
-    pt_scale_fctEta->SetTitle("");
-    pt_scale_fctEta->SetStats(0);
-
-    pt_scale_fctEta->SetLineWidth(2);
-    pt_scale_fctEta->SetLineColor(1);
-    pt_scale_fctEta->SetMarkerStyle(8);
-    pt_scale_fctEta->SetMarkerColor(1);
-
-    pt_scale_fctEta->Draw("LPE");
-
-    TBox b5(1.305,0.,1.479,2);
-    b5.SetFillColor(16);
-    b5.Draw("same");
-    TBox b6(-1.479,0.,-1.305,2);
-    b6.SetFillColor(16);
-    b6.Draw("same");
-    TBox b7(1.305,0.,1.479,2);
-    b7.SetFillColor(1);
-    b7.SetFillStyle(3004);
-    b7.Draw("same");
-    TBox b8(-1.479,0.,-1.305,2);
-    b8.SetFillColor(1);
-    b8.SetFillStyle(3004);
-    b8.Draw("same");
-
-    // TLegend legend2(0.55,0.75,0.88,0.88);
-    // legend2.SetBorderSize(0);
-    // legend2.AddEntry(pt_scale_fctEta,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    // legend2.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvas2.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins.pdf");
-
-    // ##############
-
-    TCanvas canvas3("c","c",800,800);
-    canvas3.SetLeftMargin(0.15);
-    canvas3.SetGrid();
-    // canvas3.SetLogy();
-
-    pt_scale_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    pt_scale_fctPt->SetTitle("");
-
-    pt_scale_fctPt->GetYaxis()->SetRangeUser(20., 100.);
-    pt_scale_fctPt->GetYaxis()->SetRangeUser(0., 2.);
-
-    pt_scale_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    pt_scale_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
-    pt_scale_fctPt->GetYaxis()->SetTitleOffset(1.3);
-    pt_scale_fctPt->SetTitle("");
-    pt_scale_fctPt->SetStats(0);
-
-    pt_scale_fctPt->SetLineWidth(2);
-    pt_scale_fctPt->SetLineColor(1);
-    pt_scale_fctPt->SetMarkerStyle(8);
-    pt_scale_fctPt->SetMarkerColor(1);
-
-    pt_scale_fctPt->Draw("LPE");
-
-    // TLegend legend3(0.55,0.75,0.88,0.88);
-    // legend3.SetBorderSize(0);
-    // legend3.AddEntry(pt_scale_fctPt,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    // legend3.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvas3.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins.pdf");
-
-    // ##############
-
-    TCanvas canvas4("c","c",800,800);
-    canvas4.SetLeftMargin(0.15);
-    canvas4.SetGrid();
-    // canvas4.SetLogy();
-
-    pt_response_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
-    pt_response_ptInclusive->SetTitle("");
-
-    pt_response_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
-    pt_response_ptInclusive->GetYaxis()->SetTitle("a.u.");
-    pt_response_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
-    pt_response_ptInclusive->SetTitle("");
-    pt_response_ptInclusive->SetStats(0);
-
-    pt_response_ptInclusive->GetYaxis()->SetRangeUser(0., max(pt_barrel_resp_ptInclusive->GetMaximum(),pt_endcap_resp_ptInclusive->GetMaximum())*1.3 );
-
-    pt_barrel_resp_ptInclusive->SetLineWidth(2);
-    pt_barrel_resp_ptInclusive->SetLineColor(1);
-    pt_barrel_resp_ptInclusive->SetMarkerStyle(8);
-    pt_barrel_resp_ptInclusive->SetMarkerColor(1);
-
-    pt_endcap_resp_ptInclusive->SetLineWidth(2);
-    pt_endcap_resp_ptInclusive->SetLineColor(2);
-    pt_endcap_resp_ptInclusive->SetMarkerStyle(8);
-    pt_endcap_resp_ptInclusive->SetMarkerColor(2);
-
-    pt_response_ptInclusive->SetLineWidth(2);
-    pt_response_ptInclusive->SetLineColor(4);
-    pt_response_ptInclusive->SetMarkerStyle(8);
-    pt_response_ptInclusive->SetMarkerColor(4);
-
-    pt_response_ptInclusive->Draw();
-    pt_endcap_resp_ptInclusive->Draw("same");
-    pt_barrel_resp_ptInclusive->Draw("same");
-
-    TLegend legend4(0.55,0.75,0.88,0.88);
-    legend4.SetBorderSize(0);
-    legend4.AddEntry(pt_response_ptInclusive,"Inclusive |#eta^{Offline #tau}|<2.1","LPE");
-    legend4.AddEntry(pt_barrel_resp_ptInclusive,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
-    legend4.AddEntry(pt_endcap_resp_ptInclusive,"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
-    legend4.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvas4.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive.pdf");
-
-    // ##############
-
-    TCanvas canvas5("c","c",800,800);
-    canvas5.SetLeftMargin(0.15);
-    canvas5.SetGrid();
-    // canvas5.SetLogy();
-
-    PTvsETA_resolution->SetTitle("");
-    PTvsETA_resolution->GetXaxis()->SetRangeUser(15.,200.);
-    PTvsETA_resolution->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
-    PTvsETA_resolution->GetYaxis()->SetTitle("#eta^{Offline #tau} [GeV]");
-    PTvsETA_resolution->GetZaxis()->SetTitle("Resolution");
-    PTvsETA_resolution->Draw("colz");
-
-    TBox b9(15., 1.305,200.,1.479);
-    b9.SetFillColor(16);
-    b9.Draw("same");
-    TBox b10(15., 1.305,200.,1.479);
-    b10.SetFillColor(1);
-    b10.SetFillStyle(3004);
-    b10.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvas5.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptVSeta.pdf");
-
-    // ##############
-
-    TCanvas canvas6("c","c",800,800);
-    canvas6.SetLeftMargin(0.15);
-    canvas6.SetGrid();
-    // canvas6.SetLogy();
-
-    PTvsETA_scale->SetTitle("");
-    PTvsETA_scale->GetXaxis()->SetRangeUser(15.,200.);
-    PTvsETA_scale->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
-    PTvsETA_scale->GetYaxis()->SetTitle("#eta^{Offline #tau} [GeV]");
-    PTvsETA_scale->GetZaxis()->SetTitle("Scale");
-    PTvsETA_scale->Draw("colz");
-
-    TBox b11(15., 1.305,200.,1.479);
-    b11.SetFillColor(16);
-    b11.Draw("same");
-    TBox b12(15., 1.305,200.,1.479);
-    b12.SetFillColor(1);
-    b12.SetFillStyle(3004);
-    b12.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-
-    canvas6.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptVSeta.pdf");
-
-
-    // TCanvas canvas7("c","c",800,800);
-    // canvas7.SetLeftMargin(0.15);
-    // canvas7.SetGrid();
-    // pt->Draw();
-    // canvas7.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/pt.pdf");
-
-    // TCanvas canvas8("c","c",800,800);
-    // canvas8.SetLeftMargin(0.15);
-    // canvas8.SetGrid();
-    // eta->Draw();
-    // canvas8.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/eta.pdf");
-
-    // TCanvas canvas9("c","c",800,800);
-    // canvas9.SetLeftMargin(0.15);
-    // canvas9.SetGrid();
-    // l1tpt->Draw();
-    // canvas9.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/l1tpt.pdf");
-
-    // ----------------------------------------------------------------------------
-    // plot performance VS Run2
-
-    gStyle->SetOptStat(000000);
-
-    for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
-    {
-        TString lowP ;
-        lowP.Form("%.1f", ptBins[i]);
-        TString highP;
-        highP.Form("%.1f", ptBins[i+1]);
-
-        TCanvas canvas("c","c",800,800);
-        canvas.SetLeftMargin(0.15);
-        canvas.SetGrid();
-        // canvas.SetLogy();
-
-        // use dummy histogram to define style
-        empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
-        empty->SetTitle("");
-
-        // empty->GetXaxis()->SetRangeUser(0.,250.);
-        empty->GetYaxis()->SetRangeUser(0., max(barrel_response_ptBins[i]->GetMaximum(),endcap_response_ptBins[i]->GetMaximum())*1.3 );
-
-        empty->GetXaxis()->SetTitleOffset(1.3);
-        empty->GetYaxis()->SetTitle("a.u.");
-        empty->GetYaxis()->SetTitleOffset(1.3);
-        empty->SetTitle("");
-        empty->SetStats(0);
-
-        empty->Draw();
-
-        barrel_response_ptBins[i]->SetLineWidth(2);
-        barrel_response_ptBins[i]->SetLineColor(1);
-        barrel_response_ptBins[i]->SetMarkerStyle(8);
-        barrel_response_ptBins[i]->SetMarkerColor(1);
-        
-        barrel_response_ptBins[i]->Draw("same");
-
-        fit_barrel_response_ptBins[i]->SetLineWidth(2);
-        fit_barrel_response_ptBins[i]->SetLineColor(1);
-
-        fit_barrel_response_ptBins[i]->Draw("same");
-
-        TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
-        texl1->AddText("CMS Internal");
-        texl1->SetTextSize(0.03);
-        texl1->SetFillStyle(0);
-        texl1->SetBorderSize(0);
-        texl1->Draw("same");
-
-        TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
-        if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
-        else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
-        texl2->SetTextSize(0.03);
-        texl2->SetFillStyle(0);
-        texl2->SetBorderSize(0);
-        texl2->Draw("same");
-
-        TLegend legend(0.55,0.75,0.88,0.88);
-        legend.SetBorderSize(0);
-        legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
-        legend.AddEntry(barrel_response_ptBins[i],"Run-3 (2022)","LPE");
-        legend.Draw("same");
-
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
-    }
-
-
-    for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
-    {
-        TString lowP ;
-        lowP.Form("%.1f", ptBins[i]);
-        TString highP;
-        highP.Form("%.1f", ptBins[i+1]);
-
-        TCanvas canvas("c","c",800,800);
-        canvas.SetLeftMargin(0.15);
-        canvas.SetGrid();
-        // canvas.SetLogy();
-
-        // use dummy histogram to define style
-        empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
-        empty->SetTitle("");
-
-        // empty->GetXaxis()->SetRangeUser(0.,250.);
-        empty->GetYaxis()->SetRangeUser(0., max(barrel_response_ptBins[i]->GetMaximum(),endcap_response_ptBins[i]->GetMaximum())*1.3 );
-
-        empty->GetXaxis()->SetTitleOffset(1.3);
-        empty->GetYaxis()->SetTitle("a.u.");
-        empty->GetYaxis()->SetTitleOffset(1.3);
-        empty->SetTitle("");
-        empty->SetStats(0);
-
-        empty->Draw();
-
-        endcap_response_ptBins[i]->SetLineWidth(2);
-        endcap_response_ptBins[i]->SetLineColor(1);
-        endcap_response_ptBins[i]->SetMarkerStyle(8);
-        endcap_response_ptBins[i]->SetMarkerColor(1);
-
-        endcap_response_ptBins[i]->Draw("same");
-
-        fit_endcap_response_ptBins[i]->SetLineWidth(2);
-        fit_endcap_response_ptBins[i]->SetLineColor(1);
-
-        fit_endcap_response_ptBins[i]->Draw("same");
-
-        texl1->Draw("same");
-        texl2->Draw("same");
-
-        TLegend legend(0.55,0.75,0.88,0.88);
-        legend.SetBorderSize(0);
-        legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
-        legend.AddEntry(endcap_response_ptBins[i],"Run-3 (2022)","LPE");
-        legend.Draw("same");
-
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
-    }
-
-    for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
-    {
-        TString lowE;
-        lowE.Form("%.3f", etaBins[i]);
-        TString highE;
-        highE.Form("%.3f", etaBins[i+1]);
-
-        TCanvas canvas("c","c",800,800);
-        canvas.SetLeftMargin(0.15);
-        canvas.SetGrid();
-        // canvas.SetLogy();
-
-        // use dummy histogram to define style
-        empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
-        empty->SetTitle("");
-
-        // empty->GetXaxis()->SetRangeUser(0.,250.);
-        empty->GetYaxis()->SetRangeUser(0., absEta_response_ptBins[i]->GetMaximum()*1.3 );
-
-        empty->GetXaxis()->SetTitleOffset(1.3);
-        empty->GetYaxis()->SetTitle("a.u.");
-        empty->GetYaxis()->SetTitleOffset(1.3);
-        empty->SetTitle("");
-        empty->SetStats(0);
-
-        empty->Draw();
-
-        absEta_response_ptBins[i]->SetLineWidth(2);
-        absEta_response_ptBins[i]->SetLineColor(1);
-        absEta_response_ptBins[i]->SetMarkerStyle(8);
-        absEta_response_ptBins[i]->SetMarkerColor(1);
-
-        absEta_response_ptBins[i]->Draw("same");
-
-        fit_absEta_response_ptBins[i]->SetLineWidth(2);
-        fit_absEta_response_ptBins[i]->SetLineColor(1);
-
-        fit_absEta_response_ptBins[i]->Draw("same");
-
-        TLegend legend(0.55,0.75,0.88,0.88);
-        legend.SetBorderSize(0);
-        legend.SetHeader(lowE+"<|#eta^{Offline #tau}|<"+highE);
-        legend.AddEntry(absEta_response_ptBins[i],"Run-3 (2022)","LPE");
-        legend.Draw("same");
-
-        TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
-        texl1->AddText("CMS Internal");
-        texl1->SetTextSize(0.03);
-        texl1->SetFillStyle(0);
-        texl1->SetBorderSize(0);
-        texl1->Draw("same");
-
-        TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
-        if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
-        else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
-        texl2->SetTextSize(0.03);
-        texl2->SetFillStyle(0);
-        texl2->SetBorderSize(0);
-        texl2->Draw("same");
-
-        canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
-    }
-
-
-    // ##############
-
-    TCanvas canvasZ("cZ","cZ",800,800);
-    canvasZ.SetLeftMargin(0.15);
-    canvasZ.SetGrid();
-    // canvasZ.SetLogy();
-
-    pt_resol_endcap_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    pt_resol_endcap_fctPt->SetTitle("");
-    pt_resol_endcap_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    pt_resol_endcap_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    pt_resol_endcap_fctPt->GetYaxis()->SetTitleOffset(1.5);
-    pt_resol_endcap_fctPt->SetTitle("");
-    pt_resol_endcap_fctPt->SetStats(0);
-
-    pt_resol_endcap_fctPt->GetXaxis()->SetRangeUser(20.,100.);
-    // pt_resol_endcap_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
-
-    pt_resol_endcap_fctPt->SetLineWidth(2);
-    pt_resol_endcap_fctPt->SetLineColor(1);
-    pt_resol_endcap_fctPt->SetMarkerStyle(8);
-    pt_resol_endcap_fctPt->SetMarkerColor(1);
-
-    // fit_pt_resol_barrel_fctPt->Draw("LPE");
-    pt_resol_endcap_fctPt->Draw("LPE");
-
-    TLegend legendZ(0.55,0.75,0.88,0.88);
-    legendZ.SetBorderSize(0);
-    legendZ.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
-    legendZ.AddEntry(pt_resol_endcap_fctPt,"Run-3 (2022)","LPE");
-    legendZ.Draw("same");
-
-    TPaveText* texl1Z = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
-    texl1Z->AddText("CMS Internal");
-    texl1Z->SetTextSize(0.03);
-    texl1Z->SetFillStyle(0);
-    texl1Z->SetBorderSize(0);
-    texl1Z->Draw("same");
-
-    TPaveText* texl2Z = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
-    if (run_nmbr != -1) { texl2Z->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
-    else                { texl2Z->AddText("Runs 2022 (13.6 TeV)"); }
-    texl2Z->SetTextSize(0.03);
-    texl2Z->SetFillStyle(0);
-    texl2Z->SetBorderSize(0);
-    texl2Z->Draw("same");
-
-    canvasZ.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_resolution_ptBins_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvasY("cY","cY",800,800);
-    canvasY.SetLeftMargin(0.15);
-    canvasY.SetGrid();
-    // canvasY.SetLogy();
-
-    pt_resol_barrel_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    pt_resol_barrel_fctPt->SetTitle("");
-    pt_resol_barrel_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    pt_resol_barrel_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    pt_resol_barrel_fctPt->GetYaxis()->SetTitleOffset(1.5);
-    pt_resol_barrel_fctPt->SetTitle("");
-    pt_resol_barrel_fctPt->SetStats(0);
-
-    pt_resol_barrel_fctPt->GetXaxis()->SetRangeUser(20.,100.);
-    // pt_resol_barrel_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
-
-    pt_resol_barrel_fctPt->SetLineWidth(2);
-    pt_resol_barrel_fctPt->SetLineColor(1);
-    pt_resol_barrel_fctPt->SetMarkerStyle(8);
-    pt_resol_barrel_fctPt->SetMarkerColor(1);
-
-    // fit_pt_resol_barrel_fctPt->Draw("LPE");
-    pt_resol_barrel_fctPt->Draw("LPE");
-
-    TLegend legendY(0.55,0.75,0.88,0.88);
-    legendY.SetBorderSize(0);
-    legendY.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
-    legendY.AddEntry(pt_resol_barrel_fctPt,"Run-3 (2022)","LPE");
-    legendY.Draw("same");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-
-    canvasY.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_resolution_ptBins_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvasYX("cYX","cYX",800,800);
-    canvasYX.SetLeftMargin(0.15);
-    canvasYX.SetGrid();
-    // canvasY.SetLogy();
-
-    pt_resol_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    pt_resol_fctPt->SetTitle("");
-    pt_resol_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    pt_resol_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    pt_resol_fctPt->GetYaxis()->SetTitleOffset(1.5);
-    pt_resol_fctPt->SetTitle("");
-    pt_resol_fctPt->SetStats(0);
-
-    pt_resol_fctPt->GetXaxis()->SetRangeUser(20.,100.);
-    // pt_resol_barrel_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
-
-    pt_resol_fctPt->SetLineWidth(2);
-    pt_resol_fctPt->SetLineColor(1);
-    pt_resol_fctPt->SetMarkerStyle(8);
-    pt_resol_fctPt->SetMarkerColor(1);
-
-    // fit_pt_resol_barrel_fctPt->Draw("LPE");
-    pt_resol_fctPt->Draw("LPE");
-
-    TLegend legendYX(0.55,0.75,0.88,0.88);
-    legendYX.SetBorderSize(0);
-    legendYX.AddEntry(pt_resol_fctPt,"Run-3 (2022)","LPE");
-    legendYX.Draw("same");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-
-    canvasYX.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvas1Y("c1Y","c1Y",800,800);
-    canvas1Y.SetLeftMargin(0.15);
-    canvas1Y.SetGrid();
-    // canvas1.SetLogy();
-
-    pt_resol_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
-    pt_resol_fctEta->SetTitle("");
-
-    pt_resol_fctEta->GetYaxis()->SetRangeUser(0., 0.6);
-
-    pt_resol_fctEta->GetXaxis()->SetTitleOffset(1.3);
-    pt_resol_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
-    pt_resol_fctEta->GetYaxis()->SetTitleOffset(1.3);
-    pt_resol_fctEta->SetTitle("");
-    pt_resol_fctEta->SetStats(0);
-
-    pt_resol_fctEta->SetLineWidth(2);
-    pt_resol_fctEta->SetLineColor(1);
-    pt_resol_fctEta->SetMarkerStyle(8);
-    pt_resol_fctEta->SetMarkerColor(1);
-
-    pt_resol_fctEta->Draw("LPE");
-
-    b1.Draw("same");
-    b2.Draw("same");
-    b3.Draw("same");
-    b4.Draw("same");
-
-    TLegend legendB(0.55,0.75,0.88,0.88);
-    legendB.SetBorderSize(0);
-    legendB.AddEntry(pt_resol_fctEta,"Run-3 (2022)","LPE");
-    legendB.Draw("same");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-
-    canvas1Y.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvas2W("c2W","c2W",800,800);
-    canvas2W.SetLeftMargin(0.15);
-    canvas2W.SetGrid();
-    // canvas2.SetLogy();
-
-    pt_scale_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
-    pt_scale_fctEta->SetTitle("");
-
-    pt_scale_fctEta->GetYaxis()->SetRangeUser(0., 2.);
-
-    pt_scale_fctEta->GetXaxis()->SetTitleOffset(1.3);
-    pt_scale_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
-    pt_scale_fctEta->GetYaxis()->SetTitleOffset(1.3);
-    pt_scale_fctEta->SetTitle("");
-    pt_scale_fctEta->SetStats(0);
-
-    pt_scale_fctEta->SetLineWidth(2);
-    pt_scale_fctEta->SetLineColor(1);
-    pt_scale_fctEta->SetMarkerStyle(8);
-    pt_scale_fctEta->SetMarkerColor(1);
-
-    pt_scale_fctEta->Draw("LPE");
-
-    b5.Draw("same");
-    b6.Draw("same");
-    b7.Draw("same");
-    b8.Draw("same");
-
-    texl1->Draw("same");
-    texl2->Draw("same");
-    legendB.Draw("same");
-
-    canvas2W.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvas3V("c3V","c3V",800,800);
-    canvas3V.SetLeftMargin(0.15);
-    canvas3V.SetGrid();
-    // canvas3.SetLogy();
-
-    pt_scale_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
-    pt_scale_fctPt->SetTitle("");
-
-    pt_scale_fctPt->GetYaxis()->SetRangeUser(20., 100.);
-    pt_scale_fctPt->GetYaxis()->SetRangeUser(0., 2.);
-
-    pt_scale_fctPt->GetXaxis()->SetTitleOffset(1.3);
-    pt_scale_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
-    pt_scale_fctPt->GetYaxis()->SetTitleOffset(1.3);
-    pt_scale_fctPt->SetTitle("");
-    pt_scale_fctPt->SetStats(0);
-
-    pt_scale_fctPt->SetLineWidth(2);
-    pt_scale_fctPt->SetLineColor(1);
-    pt_scale_fctPt->SetMarkerStyle(8);
-    pt_scale_fctPt->SetMarkerColor(1);
-
-    pt_scale_fctPt->Draw("LPE");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-    legendB.Draw("same");
-
-    canvas3V.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvas4U("4U","c4U",800,800);
-    canvas4U.SetLeftMargin(0.15);
-    canvas4U.SetGrid();
-    // canvas4U.SetLogy();
-
-    pt_response_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
-    pt_response_ptInclusive->SetTitle("");
-
-    pt_response_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
-    pt_response_ptInclusive->GetYaxis()->SetTitle("a.u.");
-    pt_response_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
-    pt_response_ptInclusive->SetTitle("");
-    pt_response_ptInclusive->SetStats(0);
-
-    pt_response_ptInclusive->GetYaxis()->SetRangeUser(0., pt_response_ptInclusive->GetMaximum()*1.3 );
-
-    pt_response_ptInclusive->SetLineWidth(2);
-    pt_response_ptInclusive->SetLineColor(1);
-    pt_response_ptInclusive->SetMarkerStyle(8);
-    pt_response_ptInclusive->SetMarkerColor(1);
-
-    pt_response_ptInclusive->Draw();
-
-    TLegend legend4U(0.55,0.75,0.88,0.88);
-    legend4U.SetBorderSize(0);
-    legend4U.AddEntry(pt_response_ptInclusive,"Run-3 (2022)","LPE");
-    legend4U.Draw("same");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-
-    canvas4U.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive_vsRun2.pdf");
-
-
-    // ##############
-
-    TCanvas canvas5T("c5T","c5T",800,800);
-    canvas5T.SetLeftMargin(0.15);
-    canvas5T.SetGrid();
-    // canvas4.SetLogy();
-
-    pt_barrel_resp_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
-    pt_barrel_resp_ptInclusive->SetTitle("");
-
-    pt_barrel_resp_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
-    pt_barrel_resp_ptInclusive->GetYaxis()->SetTitle("a.u.");
-    pt_barrel_resp_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
-    pt_barrel_resp_ptInclusive->SetTitle("");
-    pt_barrel_resp_ptInclusive->SetStats(0);
-
-    pt_barrel_resp_ptInclusive->GetYaxis()->SetRangeUser(0., pt_barrel_resp_ptInclusive->GetMaximum()*1.3 );
-
-    pt_barrel_resp_ptInclusive->SetLineWidth(2);
-    pt_barrel_resp_ptInclusive->SetLineColor(1);
-    pt_barrel_resp_ptInclusive->SetMarkerStyle(8);
-    pt_barrel_resp_ptInclusive->SetMarkerColor(1);
-
-    pt_response_ptInclusive->Draw();
-
-    TLegend legend5T(0.55,0.75,0.88,0.88);
-    legend5T.SetBorderSize(0);
-    legend5T.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
-    legend5T.AddEntry(pt_barrel_resp_ptInclusive,"Run-3 (2022)","LPE");
-    legend5T.Draw("same");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-
-    canvas5T.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_inclusive_vsRun2.pdf");
-
-    // ##############
-
-    TCanvas canvas5S("c5S","c5S",800,800);
-    canvas5S.SetLeftMargin(0.15);
-    canvas5S.SetGrid();
-
-    pt_endcap_resp_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
-    pt_endcap_resp_ptInclusive->SetTitle("");
-
-    pt_endcap_resp_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
-    pt_endcap_resp_ptInclusive->GetYaxis()->SetTitle("a.u.");
-    pt_endcap_resp_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
-    pt_endcap_resp_ptInclusive->SetTitle("");
-    pt_endcap_resp_ptInclusive->SetStats(0);
-
-    pt_endcap_resp_ptInclusive->GetYaxis()->SetRangeUser(0., pt_endcap_resp_ptInclusive->GetMaximum()*1.3 );
-
-    pt_endcap_resp_ptInclusive->SetLineWidth(2);
-    pt_endcap_resp_ptInclusive->SetLineColor(1);
-    pt_endcap_resp_ptInclusive->SetMarkerStyle(8);
-    pt_endcap_resp_ptInclusive->SetMarkerColor(1);
-
-    pt_response_ptInclusive->Draw();
-
-    TLegend legend5S(0.55,0.75,0.88,0.88);
-    legend5S.SetBorderSize(0);
-    legend5S.SetHeader("Endcap 1.479<|#eta^{Offline #tau}|<2.1");
-    legend5S.AddEntry(pt_endcap_resp_ptInclusive,"Run-3 (2022)","LPE");
-    legend5S.Draw("same");
-
-    texl1Z->Draw("same");
-    texl2Z->Draw("same");
-
-    canvas5S.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_inclusive_vsRun2.pdf");
-
-    
-
+//     // ----------------------------------------------------------------------------
+//     // plot performance
+// 
+//     gStyle->SetOptStat(000000);
+// 
+//     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
+//     {
+//         TString lowP ;
+//         lowP.Form("%.1f", ptBins[i]);
+//         TString highP;
+//         highP.Form("%.1f", ptBins[i+1]);
+// 
+//         TCanvas canvas("c","c",800,800);
+//         canvas.SetLeftMargin(0.15);
+//         canvas.SetGrid();
+//         // canvas.SetLogy();
+// 
+//         // use dummy histogram to define style
+//         empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
+//         empty->SetTitle("");
+// 
+//         // empty->GetXaxis()->SetRangeUser(0.,250.);
+//         empty->GetYaxis()->SetRangeUser(0., max(barrel_response_ptBins[i]->GetMaximum(),endcap_response_ptBins[i]->GetMaximum())*1.3 );
+// 
+//         empty->GetXaxis()->SetTitleOffset(1.3);
+//         empty->GetYaxis()->SetTitle("a.u.");
+//         empty->GetYaxis()->SetTitleOffset(1.3);
+//         empty->SetTitle("");
+//         empty->SetStats(0);
+// 
+//         empty->Draw();
+// 
+//         barrel_response_ptBins[i]->SetLineWidth(2);
+//         barrel_response_ptBins[i]->SetLineColor(1);
+//         barrel_response_ptBins[i]->SetMarkerStyle(8);
+//         barrel_response_ptBins[i]->SetMarkerColor(1);
+// 
+//         endcap_response_ptBins[i]->SetLineWidth(2);
+//         endcap_response_ptBins[i]->SetLineColor(2);
+//         endcap_response_ptBins[i]->SetMarkerStyle(8);
+//         endcap_response_ptBins[i]->SetMarkerColor(2);
+// 
+//         barrel_response_ptBins[i]->Draw("same");
+//         endcap_response_ptBins[i]->Draw("same");
+// 
+//         fit_barrel_response_ptBins[i]->SetLineWidth(2);
+//         fit_barrel_response_ptBins[i]->SetLineColor(1);
+// 
+//         fit_endcap_response_ptBins[i]->SetLineWidth(2);
+//         fit_endcap_response_ptBins[i]->SetLineColor(2);
+// 
+//         fit_barrel_response_ptBins[i]->Draw("same");
+//         fit_endcap_response_ptBins[i]->Draw("same");
+// 
+//         TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
+//         texl1->AddText("CMS Internal");
+//         texl1->SetTextSize(0.03);
+//         texl1->SetFillStyle(0);
+//         texl1->SetBorderSize(0);
+//         texl1->Draw("same");
+// 
+//         TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+//         if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
+//         else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
+//         texl2->SetTextSize(0.03);
+//         texl2->SetFillStyle(0);
+//         texl2->SetBorderSize(0);
+//         texl2->Draw("same");
+// 
+//         TLegend legend(0.55,0.75,0.88,0.88);
+//         legend.SetBorderSize(0);
+//         legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
+//         legend.AddEntry(barrel_response_ptBins[i],"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//         legend.AddEntry(endcap_response_ptBins[i],"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
+//         legend.Draw("same");
+// 
+//         canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowP+"pt"+highP+".pdf");
+//     }
+// 
+//     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
+//     {
+//         TString lowE;
+//         lowE.Form("%.3f", etaBins[i]);
+//         TString highE;
+//         highE.Form("%.3f", etaBins[i+1]);
+// 
+//         TCanvas canvas("c","c",800,800);
+//         canvas.SetLeftMargin(0.15);
+//         canvas.SetGrid();
+//         // canvas.SetLogy();
+// 
+//         // use dummy histogram to define style
+//         empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
+//         empty->SetTitle("");
+// 
+//         // empty->GetXaxis()->SetRangeUser(0.,250.);
+//         empty->GetYaxis()->SetRangeUser(0., absEta_response_ptBins[i]->GetMaximum()*1.3 );
+// 
+//         empty->GetXaxis()->SetTitleOffset(1.3);
+//         empty->GetYaxis()->SetTitle("a.u.");
+//         empty->GetYaxis()->SetTitleOffset(1.3);
+//         empty->SetTitle("");
+//         empty->SetStats(0);
+// 
+//         empty->Draw();
+// 
+//         absEta_response_ptBins[i]->SetLineWidth(2);
+//         absEta_response_ptBins[i]->SetLineColor(1);
+//         absEta_response_ptBins[i]->SetMarkerStyle(8);
+//         absEta_response_ptBins[i]->SetMarkerColor(1);
+// 
+//         absEta_response_ptBins[i]->Draw("same");
+// 
+//         fit_absEta_response_ptBins[i]->SetLineWidth(2);
+//         fit_absEta_response_ptBins[i]->SetLineColor(1);
+// 
+//         fit_absEta_response_ptBins[i]->Draw("same");
+// 
+//         TLegend legend(0.55,0.75,0.88,0.88);
+//         legend.SetBorderSize(0);
+//         legend.AddEntry(absEta_response_ptBins[i],lowE+"<|#eta^{Offline #tau}|<"+highE,"LPE");
+//         legend.Draw("same");
+// 
+//         TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
+//         texl1->AddText("CMS Internal");
+//         texl1->SetTextSize(0.03);
+//         texl1->SetFillStyle(0);
+//         texl1->SetBorderSize(0);
+//         texl1->Draw("same");
+// 
+//         TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+//         if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
+//         else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
+//         texl2->SetTextSize(0.03);
+//         texl2->SetFillStyle(0);
+//         texl2->SetBorderSize(0);
+//         texl2->Draw("same");
+// 
+//         canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
+//     }
+// 
+//     // ##############
+// 
+//     TCanvas canvas("c","c",800,800);
+//     canvas.SetLeftMargin(0.15);
+//     canvas.SetGrid();
+//     // canvas.SetLogy();
+// 
+//     pt_resol_endcap_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     pt_resol_endcap_fctPt->SetTitle("");
+//     pt_resol_endcap_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     pt_resol_endcap_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     pt_resol_endcap_fctPt->GetYaxis()->SetTitleOffset(1.5);
+//     pt_resol_endcap_fctPt->SetTitle("");
+//     pt_resol_endcap_fctPt->SetStats(0);
+// 
+//     pt_resol_endcap_fctPt->GetXaxis()->SetRangeUser(20.,100.);
+//     // pt_resol_endcap_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
+// 
+//     pt_resol_barrel_fctPt->SetLineWidth(2);
+//     pt_resol_barrel_fctPt->SetLineColor(1);
+//     pt_resol_barrel_fctPt->SetMarkerStyle(8);
+//     pt_resol_barrel_fctPt->SetMarkerColor(1);
+// 
+//     pt_resol_endcap_fctPt->SetLineWidth(2);
+//     pt_resol_endcap_fctPt->SetLineColor(2);
+//     pt_resol_endcap_fctPt->SetMarkerStyle(8);
+//     pt_resol_endcap_fctPt->SetMarkerColor(2);
+// 
+//     // fit_pt_resol_barrel_fctPt->Draw("LPE");
+//     pt_resol_endcap_fctPt->Draw("LPE");
+//     pt_resol_barrel_fctPt->Draw("same LPE");
+// 
+//     TLegend legend(0.55,0.75,0.88,0.88);
+//     legend.SetBorderSize(0);
+//     legend.AddEntry(pt_resol_barrel_fctPt,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     legend.AddEntry(pt_resol_endcap_fctPt,"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
+//     legend.Draw("same");
+// 
+//     TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
+//     texl1->AddText("CMS Internal");
+//     texl1->SetTextSize(0.03);
+//     texl1->SetFillStyle(0);
+//     texl1->SetBorderSize(0);
+//     texl1->Draw("same");
+// 
+//     TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+//     if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
+//     else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
+//     texl2->SetTextSize(0.03);
+//     texl2->SetFillStyle(0);
+//     texl2->SetBorderSize(0);
+//     texl2->Draw("same");
+// 
+//     canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvasA("cA","cA",800,800);
+//     canvasA.SetLeftMargin(0.15);
+//     canvasA.SetGrid();
+//     // canvas.SetLogy();
+// 
+//     fit_pt_resol_barrel_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     fit_pt_resol_barrel_fctPt->SetTitle("");
+//     fit_pt_resol_barrel_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     fit_pt_resol_barrel_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     fit_pt_resol_barrel_fctPt->GetYaxis()->SetTitleOffset(1.5);
+//     fit_pt_resol_barrel_fctPt->SetTitle("");
+//     fit_pt_resol_barrel_fctPt->SetStats(0);
+// 
+//     fit_pt_resol_barrel_fctPt->GetXaxis()->SetRangeUser(20.,100.);
+//     // fit_pt_resol_barrel_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
+// 
+//     fit_pt_resol_barrel_fctPt->SetLineWidth(2);
+//     fit_pt_resol_barrel_fctPt->SetLineColor(1);
+//     fit_pt_resol_barrel_fctPt->SetMarkerStyle(8);
+//     fit_pt_resol_barrel_fctPt->SetMarkerColor(1);
+// 
+//     fit_pt_resol_endcap_fctPt->SetLineWidth(2);
+//     fit_pt_resol_endcap_fctPt->SetLineColor(2);
+//     fit_pt_resol_endcap_fctPt->SetMarkerStyle(8);
+//     fit_pt_resol_endcap_fctPt->SetMarkerColor(2);
+// 
+//     fit_pt_resol_barrel_fctPt->Draw("LPE");
+//     fit_pt_resol_endcap_fctPt->Draw("same LPE");
+// 
+//     TLegend legendA(0.55,0.75,0.88,0.88);
+//     legendA.SetBorderSize(0);
+//     legendA.AddEntry(fit_pt_resol_barrel_fctPt,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     legendA.AddEntry(fit_pt_resol_endcap_fctPt,"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
+//     legendA.Draw("same");
+//     
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvasA.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_fromFit.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas1("c","c",800,800);
+//     canvas1.SetLeftMargin(0.15);
+//     canvas1.SetGrid();
+//     // canvas1.SetLogy();
+// 
+//     pt_resol_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+//     pt_resol_fctEta->SetTitle("");
+// 
+//     pt_resol_fctEta->GetYaxis()->SetRangeUser(0., 0.6);
+// 
+//     pt_resol_fctEta->GetXaxis()->SetTitleOffset(1.3);
+//     pt_resol_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     pt_resol_fctEta->GetYaxis()->SetTitleOffset(1.3);
+//     pt_resol_fctEta->SetTitle("");
+//     pt_resol_fctEta->SetStats(0);
+// 
+//     pt_resol_fctEta->SetLineWidth(2);
+//     pt_resol_fctEta->SetLineColor(1);
+//     pt_resol_fctEta->SetMarkerStyle(8);
+//     pt_resol_fctEta->SetMarkerColor(1);
+// 
+//     pt_resol_fctEta->Draw("LPE");
+// 
+//     TBox b1(1.305,0.,1.479,0.6);
+//     b1.SetFillColor(16);
+//     b1.Draw("same");
+//     TBox b2(-1.479,0.,-1.305,0.6);
+//     b2.SetFillColor(16);
+//     b2.Draw("same");
+//     TBox b3(1.305,0.,1.479,0.6);
+//     b3.SetFillColor(1);
+//     b3.SetFillStyle(3004);
+//     b3.Draw("same");
+//     TBox b4(-1.479,0.,-1.305,0.6);
+//     b4.SetFillColor(1);
+//     b4.SetFillStyle(3004);
+//     b4.Draw("same");
+// 
+//     // TLegend legend1(0.55,0.75,0.88,0.88);
+//     // legend1.SetBorderSize(0);
+//     // legend1.AddEntry(pt_resol_fctEta,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     // legend1.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvas1.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvasB("cB","cB",800,800);
+//     canvasB.SetLeftMargin(0.15);
+//     canvasB.SetGrid();
+//     // canvas1.SetLogy();
+// 
+//     fit_pt_resol_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+//     fit_pt_resol_fctEta->SetTitle("");
+//     fit_pt_resol_fctEta->GetYaxis()->SetRangeUser(0., 0.6);
+//     fit_pt_resol_fctEta->GetXaxis()->SetTitleOffset(1.3);
+//     fit_pt_resol_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     fit_pt_resol_fctEta->GetYaxis()->SetTitleOffset(1.3);
+//     fit_pt_resol_fctEta->SetTitle("");
+//     fit_pt_resol_fctEta->SetStats(0);
+// 
+//     fit_pt_resol_fctEta->SetLineWidth(2);
+//     fit_pt_resol_fctEta->SetLineColor(1);
+//     fit_pt_resol_fctEta->SetMarkerStyle(8);
+//     fit_pt_resol_fctEta->SetMarkerColor(1);
+// 
+//     fit_pt_resol_fctEta->Draw("LPE");
+// 
+//     b1.Draw("same");
+//     b2.Draw("same");
+//     b3.Draw("same");
+//     b4.Draw("same");
+// 
+//     // TLegend legend1(0.55,0.75,0.88,0.88);
+//     // legend1.SetBorderSize(0);
+//     // legend1.AddEntry(pt_resol_fctEta,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     // legend1.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvasB.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_fromFit.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas2("c","c",800,800);
+//     canvas2.SetLeftMargin(0.15);
+//     canvas2.SetGrid();
+//     // canvas2.SetLogy();
+// 
+//     pt_scale_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+//     pt_scale_fctEta->SetTitle("");
+// 
+//     pt_scale_fctEta->GetYaxis()->SetRangeUser(0., 2.);
+// 
+//     pt_scale_fctEta->GetXaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
+//     pt_scale_fctEta->GetYaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctEta->SetTitle("");
+//     pt_scale_fctEta->SetStats(0);
+// 
+//     pt_scale_fctEta->SetLineWidth(2);
+//     pt_scale_fctEta->SetLineColor(1);
+//     pt_scale_fctEta->SetMarkerStyle(8);
+//     pt_scale_fctEta->SetMarkerColor(1);
+// 
+//     pt_scale_fctEta->Draw("LPE");
+// 
+//     TBox b5(1.305,0.,1.479,2);
+//     b5.SetFillColor(16);
+//     b5.Draw("same");
+//     TBox b6(-1.479,0.,-1.305,2);
+//     b6.SetFillColor(16);
+//     b6.Draw("same");
+//     TBox b7(1.305,0.,1.479,2);
+//     b7.SetFillColor(1);
+//     b7.SetFillStyle(3004);
+//     b7.Draw("same");
+//     TBox b8(-1.479,0.,-1.305,2);
+//     b8.SetFillColor(1);
+//     b8.SetFillStyle(3004);
+//     b8.Draw("same");
+// 
+//     // TLegend legend2(0.55,0.75,0.88,0.88);
+//     // legend2.SetBorderSize(0);
+//     // legend2.AddEntry(pt_scale_fctEta,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     // legend2.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvas2.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas3("c","c",800,800);
+//     canvas3.SetLeftMargin(0.15);
+//     canvas3.SetGrid();
+//     // canvas3.SetLogy();
+// 
+//     pt_scale_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     pt_scale_fctPt->SetTitle("");
+// 
+//     pt_scale_fctPt->GetYaxis()->SetRangeUser(20., 100.);
+//     pt_scale_fctPt->GetYaxis()->SetRangeUser(0., 2.);
+// 
+//     pt_scale_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
+//     pt_scale_fctPt->GetYaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctPt->SetTitle("");
+//     pt_scale_fctPt->SetStats(0);
+// 
+//     pt_scale_fctPt->SetLineWidth(2);
+//     pt_scale_fctPt->SetLineColor(1);
+//     pt_scale_fctPt->SetMarkerStyle(8);
+//     pt_scale_fctPt->SetMarkerColor(1);
+// 
+//     pt_scale_fctPt->Draw("LPE");
+// 
+//     // TLegend legend3(0.55,0.75,0.88,0.88);
+//     // legend3.SetBorderSize(0);
+//     // legend3.AddEntry(pt_scale_fctPt,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     // legend3.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvas3.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas4("c","c",800,800);
+//     canvas4.SetLeftMargin(0.15);
+//     canvas4.SetGrid();
+//     // canvas4.SetLogy();
+// 
+//     pt_response_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
+//     pt_response_ptInclusive->SetTitle("");
+// 
+//     pt_response_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
+//     pt_response_ptInclusive->GetYaxis()->SetTitle("a.u.");
+//     pt_response_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
+//     pt_response_ptInclusive->SetTitle("");
+//     pt_response_ptInclusive->SetStats(0);
+// 
+//     pt_response_ptInclusive->GetYaxis()->SetRangeUser(0., max(pt_barrel_resp_ptInclusive->GetMaximum(),pt_endcap_resp_ptInclusive->GetMaximum())*1.3 );
+// 
+//     pt_barrel_resp_ptInclusive->SetLineWidth(2);
+//     pt_barrel_resp_ptInclusive->SetLineColor(1);
+//     pt_barrel_resp_ptInclusive->SetMarkerStyle(8);
+//     pt_barrel_resp_ptInclusive->SetMarkerColor(1);
+// 
+//     pt_endcap_resp_ptInclusive->SetLineWidth(2);
+//     pt_endcap_resp_ptInclusive->SetLineColor(2);
+//     pt_endcap_resp_ptInclusive->SetMarkerStyle(8);
+//     pt_endcap_resp_ptInclusive->SetMarkerColor(2);
+// 
+//     pt_response_ptInclusive->SetLineWidth(2);
+//     pt_response_ptInclusive->SetLineColor(4);
+//     pt_response_ptInclusive->SetMarkerStyle(8);
+//     pt_response_ptInclusive->SetMarkerColor(4);
+// 
+//     pt_response_ptInclusive->Draw();
+//     pt_endcap_resp_ptInclusive->Draw("same");
+//     pt_barrel_resp_ptInclusive->Draw("same");
+// 
+//     TLegend legend4(0.55,0.75,0.88,0.88);
+//     legend4.SetBorderSize(0);
+//     legend4.AddEntry(pt_response_ptInclusive,"Inclusive |#eta^{Offline #tau}|<2.1","LPE");
+//     legend4.AddEntry(pt_barrel_resp_ptInclusive,"Barrel |#eta^{Offline #tau}|<1.305","LPE");
+//     legend4.AddEntry(pt_endcap_resp_ptInclusive,"Endcap 1.479<|#eta^{Offline #tau}|<2.1","LPE");
+//     legend4.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvas4.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas5("c","c",800,800);
+//     canvas5.SetLeftMargin(0.15);
+//     canvas5.SetGrid();
+//     // canvas5.SetLogy();
+// 
+//     PTvsETA_resolution->SetTitle("");
+//     PTvsETA_resolution->GetXaxis()->SetRangeUser(15.,200.);
+//     PTvsETA_resolution->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
+//     PTvsETA_resolution->GetYaxis()->SetTitle("#eta^{Offline #tau} [GeV]");
+//     PTvsETA_resolution->GetZaxis()->SetTitle("Resolution");
+//     PTvsETA_resolution->Draw("colz");
+// 
+//     TBox b9(15., 1.305,200.,1.479);
+//     b9.SetFillColor(16);
+//     b9.Draw("same");
+//     TBox b10(15., 1.305,200.,1.479);
+//     b10.SetFillColor(1);
+//     b10.SetFillStyle(3004);
+//     b10.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvas5.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptVSeta.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas6("c","c",800,800);
+//     canvas6.SetLeftMargin(0.15);
+//     canvas6.SetGrid();
+//     // canvas6.SetLogy();
+// 
+//     PTvsETA_scale->SetTitle("");
+//     PTvsETA_scale->GetXaxis()->SetRangeUser(15.,200.);
+//     PTvsETA_scale->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
+//     PTvsETA_scale->GetYaxis()->SetTitle("#eta^{Offline #tau} [GeV]");
+//     PTvsETA_scale->GetZaxis()->SetTitle("Scale");
+//     PTvsETA_scale->Draw("colz");
+// 
+//     TBox b11(15., 1.305,200.,1.479);
+//     b11.SetFillColor(16);
+//     b11.Draw("same");
+//     TBox b12(15., 1.305,200.,1.479);
+//     b12.SetFillColor(1);
+//     b12.SetFillStyle(3004);
+//     b12.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+// 
+//     canvas6.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptVSeta.pdf");
+// 
+// 
+//     // TCanvas canvas7("c","c",800,800);
+//     // canvas7.SetLeftMargin(0.15);
+//     // canvas7.SetGrid();
+//     // pt->Draw();
+//     // canvas7.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/pt.pdf");
+// 
+//     // TCanvas canvas8("c","c",800,800);
+//     // canvas8.SetLeftMargin(0.15);
+//     // canvas8.SetGrid();
+//     // eta->Draw();
+//     // canvas8.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/eta.pdf");
+// 
+//     // TCanvas canvas9("c","c",800,800);
+//     // canvas9.SetLeftMargin(0.15);
+//     // canvas9.SetGrid();
+//     // l1tpt->Draw();
+//     // canvas9.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/l1tpt.pdf");
+// 
+//     // ----------------------------------------------------------------------------
+//     // plot performance VS Run2
+// 
+//     gStyle->SetOptStat(000000);
+// 
+//     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
+//     {
+//         TString lowP ;
+//         lowP.Form("%.1f", ptBins[i]);
+//         TString highP;
+//         highP.Form("%.1f", ptBins[i+1]);
+// 
+//         TCanvas canvas("c","c",800,800);
+//         canvas.SetLeftMargin(0.15);
+//         canvas.SetGrid();
+//         // canvas.SetLogy();
+// 
+//         // use dummy histogram to define style
+//         empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
+//         empty->SetTitle("");
+// 
+//         // empty->GetXaxis()->SetRangeUser(0.,250.);
+//         empty->GetYaxis()->SetRangeUser(0., max(barrel_response_ptBins[i]->GetMaximum(),endcap_response_ptBins[i]->GetMaximum())*1.3 );
+// 
+//         empty->GetXaxis()->SetTitleOffset(1.3);
+//         empty->GetYaxis()->SetTitle("a.u.");
+//         empty->GetYaxis()->SetTitleOffset(1.3);
+//         empty->SetTitle("");
+//         empty->SetStats(0);
+// 
+//         empty->Draw();
+// 
+//         barrel_response_ptBins[i]->SetLineWidth(2);
+//         barrel_response_ptBins[i]->SetLineColor(1);
+//         barrel_response_ptBins[i]->SetMarkerStyle(8);
+//         barrel_response_ptBins[i]->SetMarkerColor(1);
+//         
+//         barrel_response_ptBins[i]->Draw("same");
+// 
+//         fit_barrel_response_ptBins[i]->SetLineWidth(2);
+//         fit_barrel_response_ptBins[i]->SetLineColor(1);
+// 
+//         fit_barrel_response_ptBins[i]->Draw("same");
+// 
+//         TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
+//         texl1->AddText("CMS Internal");
+//         texl1->SetTextSize(0.03);
+//         texl1->SetFillStyle(0);
+//         texl1->SetBorderSize(0);
+//         texl1->Draw("same");
+// 
+//         TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+//         if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
+//         else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
+//         texl2->SetTextSize(0.03);
+//         texl2->SetFillStyle(0);
+//         texl2->SetBorderSize(0);
+//         texl2->Draw("same");
+// 
+//         TLegend legend(0.55,0.75,0.88,0.88);
+//         legend.SetBorderSize(0);
+//         legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
+//         legend.AddEntry(barrel_response_ptBins[i],"Run-3 (2022)","LPE");
+//         legend.Draw("same");
+// 
+//         canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
+//     }
+// 
+// 
+//     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
+//     {
+//         TString lowP ;
+//         lowP.Form("%.1f", ptBins[i]);
+//         TString highP;
+//         highP.Form("%.1f", ptBins[i+1]);
+// 
+//         TCanvas canvas("c","c",800,800);
+//         canvas.SetLeftMargin(0.15);
+//         canvas.SetGrid();
+//         // canvas.SetLogy();
+// 
+//         // use dummy histogram to define style
+//         empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
+//         empty->SetTitle("");
+// 
+//         // empty->GetXaxis()->SetRangeUser(0.,250.);
+//         empty->GetYaxis()->SetRangeUser(0., max(barrel_response_ptBins[i]->GetMaximum(),endcap_response_ptBins[i]->GetMaximum())*1.3 );
+// 
+//         empty->GetXaxis()->SetTitleOffset(1.3);
+//         empty->GetYaxis()->SetTitle("a.u.");
+//         empty->GetYaxis()->SetTitleOffset(1.3);
+//         empty->SetTitle("");
+//         empty->SetStats(0);
+// 
+//         empty->Draw();
+// 
+//         endcap_response_ptBins[i]->SetLineWidth(2);
+//         endcap_response_ptBins[i]->SetLineColor(1);
+//         endcap_response_ptBins[i]->SetMarkerStyle(8);
+//         endcap_response_ptBins[i]->SetMarkerColor(1);
+// 
+//         endcap_response_ptBins[i]->Draw("same");
+// 
+//         fit_endcap_response_ptBins[i]->SetLineWidth(2);
+//         fit_endcap_response_ptBins[i]->SetLineColor(1);
+// 
+//         fit_endcap_response_ptBins[i]->Draw("same");
+// 
+//         texl1->Draw("same");
+//         texl2->Draw("same");
+// 
+//         TLegend legend(0.55,0.75,0.88,0.88);
+//         legend.SetBorderSize(0);
+//         legend.SetHeader(lowP+" < p_{T}^{Offline #tau} < "+highP+" [GeV]");
+//         legend.AddEntry(endcap_response_ptBins[i],"Run-3 (2022)","LPE");
+//         legend.Draw("same");
+// 
+//         canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_"+lowP+"pt"+highP+"_vsRun2.pdf");
+//     }
+// 
+//     for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
+//     {
+//         TString lowE;
+//         lowE.Form("%.3f", etaBins[i]);
+//         TString highE;
+//         highE.Form("%.3f", etaBins[i+1]);
+// 
+//         TCanvas canvas("c","c",800,800);
+//         canvas.SetLeftMargin(0.15);
+//         canvas.SetGrid();
+//         // canvas.SetLogy();
+// 
+//         // use dummy histogram to define style
+//         empty->GetXaxis()->SetTitle("E_{T}^{L1 #tau} / p_{T}^{Offline #tau}");
+//         empty->SetTitle("");
+// 
+//         // empty->GetXaxis()->SetRangeUser(0.,250.);
+//         empty->GetYaxis()->SetRangeUser(0., absEta_response_ptBins[i]->GetMaximum()*1.3 );
+// 
+//         empty->GetXaxis()->SetTitleOffset(1.3);
+//         empty->GetYaxis()->SetTitle("a.u.");
+//         empty->GetYaxis()->SetTitleOffset(1.3);
+//         empty->SetTitle("");
+//         empty->SetStats(0);
+// 
+//         empty->Draw();
+// 
+//         absEta_response_ptBins[i]->SetLineWidth(2);
+//         absEta_response_ptBins[i]->SetLineColor(1);
+//         absEta_response_ptBins[i]->SetMarkerStyle(8);
+//         absEta_response_ptBins[i]->SetMarkerColor(1);
+// 
+//         absEta_response_ptBins[i]->Draw("same");
+// 
+//         fit_absEta_response_ptBins[i]->SetLineWidth(2);
+//         fit_absEta_response_ptBins[i]->SetLineColor(1);
+// 
+//         fit_absEta_response_ptBins[i]->Draw("same");
+// 
+//         TLegend legend(0.55,0.75,0.88,0.88);
+//         legend.SetBorderSize(0);
+//         legend.SetHeader(lowE+"<|#eta^{Offline #tau}|<"+highE);
+//         legend.AddEntry(absEta_response_ptBins[i],"Run-3 (2022)","LPE");
+//         legend.Draw("same");
+// 
+//         TPaveText* texl1 = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
+//         texl1->AddText("CMS Internal");
+//         texl1->SetTextSize(0.03);
+//         texl1->SetFillStyle(0);
+//         texl1->SetBorderSize(0);
+//         texl1->Draw("same");
+// 
+//         TPaveText* texl2 = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+//         if (run_nmbr != -1) { texl2->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
+//         else                { texl2->AddText("Runs 2022 (13.6 TeV)"); }
+//         texl2->SetTextSize(0.03);
+//         texl2->SetFillStyle(0);
+//         texl2->SetBorderSize(0);
+//         texl2->Draw("same");
+// 
+//         canvas.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_"+lowE+"eta"+highE+".pdf");
+//     }
+// 
+// 
+//     // ##############
+// 
+//     TCanvas canvasZ("cZ","cZ",800,800);
+//     canvasZ.SetLeftMargin(0.15);
+//     canvasZ.SetGrid();
+//     // canvasZ.SetLogy();
+// 
+//     pt_resol_endcap_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     pt_resol_endcap_fctPt->SetTitle("");
+//     pt_resol_endcap_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     pt_resol_endcap_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     pt_resol_endcap_fctPt->GetYaxis()->SetTitleOffset(1.5);
+//     pt_resol_endcap_fctPt->SetTitle("");
+//     pt_resol_endcap_fctPt->SetStats(0);
+// 
+//     pt_resol_endcap_fctPt->GetXaxis()->SetRangeUser(20.,100.);
+//     // pt_resol_endcap_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
+// 
+//     pt_resol_endcap_fctPt->SetLineWidth(2);
+//     pt_resol_endcap_fctPt->SetLineColor(1);
+//     pt_resol_endcap_fctPt->SetMarkerStyle(8);
+//     pt_resol_endcap_fctPt->SetMarkerColor(1);
+// 
+//     // fit_pt_resol_barrel_fctPt->Draw("LPE");
+//     pt_resol_endcap_fctPt->Draw("LPE");
+// 
+//     TLegend legendZ(0.55,0.75,0.88,0.88);
+//     legendZ.SetBorderSize(0);
+//     legendZ.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
+//     legendZ.AddEntry(pt_resol_endcap_fctPt,"Run-3 (2022)","LPE");
+//     legendZ.Draw("same");
+// 
+//     TPaveText* texl1Z = new TPaveText(0.27,0.87,0.2,0.99,"NDC");
+//     texl1Z->AddText("CMS Internal");
+//     texl1Z->SetTextSize(0.03);
+//     texl1Z->SetFillStyle(0);
+//     texl1Z->SetBorderSize(0);
+//     texl1Z->Draw("same");
+// 
+//     TPaveText* texl2Z = new TPaveText(0.60,0.87,0.89,0.99,"NDC");
+//     if (run_nmbr != -1) { texl2Z->AddText("Run "+run_nmbr_str+" (13.6 TeV)"); }
+//     else                { texl2Z->AddText("Runs 2022 (13.6 TeV)"); }
+//     texl2Z->SetTextSize(0.03);
+//     texl2Z->SetFillStyle(0);
+//     texl2Z->SetBorderSize(0);
+//     texl2Z->Draw("same");
+// 
+//     canvasZ.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_resolution_ptBins_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvasY("cY","cY",800,800);
+//     canvasY.SetLeftMargin(0.15);
+//     canvasY.SetGrid();
+//     // canvasY.SetLogy();
+// 
+//     pt_resol_barrel_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     pt_resol_barrel_fctPt->SetTitle("");
+//     pt_resol_barrel_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     pt_resol_barrel_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     pt_resol_barrel_fctPt->GetYaxis()->SetTitleOffset(1.5);
+//     pt_resol_barrel_fctPt->SetTitle("");
+//     pt_resol_barrel_fctPt->SetStats(0);
+// 
+//     pt_resol_barrel_fctPt->GetXaxis()->SetRangeUser(20.,100.);
+//     // pt_resol_barrel_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
+// 
+//     pt_resol_barrel_fctPt->SetLineWidth(2);
+//     pt_resol_barrel_fctPt->SetLineColor(1);
+//     pt_resol_barrel_fctPt->SetMarkerStyle(8);
+//     pt_resol_barrel_fctPt->SetMarkerColor(1);
+// 
+//     // fit_pt_resol_barrel_fctPt->Draw("LPE");
+//     pt_resol_barrel_fctPt->Draw("LPE");
+// 
+//     TLegend legendY(0.55,0.75,0.88,0.88);
+//     legendY.SetBorderSize(0);
+//     legendY.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
+//     legendY.AddEntry(pt_resol_barrel_fctPt,"Run-3 (2022)","LPE");
+//     legendY.Draw("same");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+// 
+//     canvasY.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_resolution_ptBins_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvasYX("cYX","cYX",800,800);
+//     canvasYX.SetLeftMargin(0.15);
+//     canvasYX.SetGrid();
+//     // canvasY.SetLogy();
+// 
+//     pt_resol_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     pt_resol_fctPt->SetTitle("");
+//     pt_resol_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     pt_resol_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     pt_resol_fctPt->GetYaxis()->SetTitleOffset(1.5);
+//     pt_resol_fctPt->SetTitle("");
+//     pt_resol_fctPt->SetStats(0);
+// 
+//     pt_resol_fctPt->GetXaxis()->SetRangeUser(20.,100.);
+//     // pt_resol_barrel_fctPt->GetYaxis()->SetRangeUser(0.12,0.36);
+// 
+//     pt_resol_fctPt->SetLineWidth(2);
+//     pt_resol_fctPt->SetLineColor(1);
+//     pt_resol_fctPt->SetMarkerStyle(8);
+//     pt_resol_fctPt->SetMarkerColor(1);
+// 
+//     // fit_pt_resol_barrel_fctPt->Draw("LPE");
+//     pt_resol_fctPt->Draw("LPE");
+// 
+//     TLegend legendYX(0.55,0.75,0.88,0.88);
+//     legendYX.SetBorderSize(0);
+//     legendYX.AddEntry(pt_resol_fctPt,"Run-3 (2022)","LPE");
+//     legendYX.Draw("same");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+// 
+//     canvasYX.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_ptBins_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas1Y("c1Y","c1Y",800,800);
+//     canvas1Y.SetLeftMargin(0.15);
+//     canvas1Y.SetGrid();
+//     // canvas1.SetLogy();
+// 
+//     pt_resol_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+//     pt_resol_fctEta->SetTitle("");
+// 
+//     pt_resol_fctEta->GetYaxis()->SetRangeUser(0., 0.6);
+// 
+//     pt_resol_fctEta->GetXaxis()->SetTitleOffset(1.3);
+//     pt_resol_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} resolution");
+//     pt_resol_fctEta->GetYaxis()->SetTitleOffset(1.3);
+//     pt_resol_fctEta->SetTitle("");
+//     pt_resol_fctEta->SetStats(0);
+// 
+//     pt_resol_fctEta->SetLineWidth(2);
+//     pt_resol_fctEta->SetLineColor(1);
+//     pt_resol_fctEta->SetMarkerStyle(8);
+//     pt_resol_fctEta->SetMarkerColor(1);
+// 
+//     pt_resol_fctEta->Draw("LPE");
+// 
+//     b1.Draw("same");
+//     b2.Draw("same");
+//     b3.Draw("same");
+//     b4.Draw("same");
+// 
+//     TLegend legendB(0.55,0.75,0.88,0.88);
+//     legendB.SetBorderSize(0);
+//     legendB.AddEntry(pt_resol_fctEta,"Run-3 (2022)","LPE");
+//     legendB.Draw("same");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+// 
+//     canvas1Y.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/resolution_etaBins_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas2W("c2W","c2W",800,800);
+//     canvas2W.SetLeftMargin(0.15);
+//     canvas2W.SetGrid();
+//     // canvas2.SetLogy();
+// 
+//     pt_scale_fctEta->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+//     pt_scale_fctEta->SetTitle("");
+// 
+//     pt_scale_fctEta->GetYaxis()->SetRangeUser(0., 2.);
+// 
+//     pt_scale_fctEta->GetXaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctEta->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
+//     pt_scale_fctEta->GetYaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctEta->SetTitle("");
+//     pt_scale_fctEta->SetStats(0);
+// 
+//     pt_scale_fctEta->SetLineWidth(2);
+//     pt_scale_fctEta->SetLineColor(1);
+//     pt_scale_fctEta->SetMarkerStyle(8);
+//     pt_scale_fctEta->SetMarkerColor(1);
+// 
+//     pt_scale_fctEta->Draw("LPE");
+// 
+//     b5.Draw("same");
+//     b6.Draw("same");
+//     b7.Draw("same");
+//     b8.Draw("same");
+// 
+//     texl1->Draw("same");
+//     texl2->Draw("same");
+//     legendB.Draw("same");
+// 
+//     canvas2W.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_etaBins_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas3V("c3V","c3V",800,800);
+//     canvas3V.SetLeftMargin(0.15);
+//     canvas3V.SetGrid();
+//     // canvas3.SetLogy();
+// 
+//     pt_scale_fctPt->GetXaxis()->SetTitle("p^{Offline #tau}_{T} [GeV]");
+//     pt_scale_fctPt->SetTitle("");
+// 
+//     pt_scale_fctPt->GetYaxis()->SetRangeUser(20., 100.);
+//     pt_scale_fctPt->GetYaxis()->SetRangeUser(0., 2.);
+// 
+//     pt_scale_fctPt->GetXaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctPt->GetYaxis()->SetTitle("E^{L1 #tau}_{T} scale");
+//     pt_scale_fctPt->GetYaxis()->SetTitleOffset(1.3);
+//     pt_scale_fctPt->SetTitle("");
+//     pt_scale_fctPt->SetStats(0);
+// 
+//     pt_scale_fctPt->SetLineWidth(2);
+//     pt_scale_fctPt->SetLineColor(1);
+//     pt_scale_fctPt->SetMarkerStyle(8);
+//     pt_scale_fctPt->SetMarkerColor(1);
+// 
+//     pt_scale_fctPt->Draw("LPE");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+//     legendB.Draw("same");
+// 
+//     canvas3V.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/scale_ptBins_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas4U("4U","c4U",800,800);
+//     canvas4U.SetLeftMargin(0.15);
+//     canvas4U.SetGrid();
+//     // canvas4U.SetLogy();
+// 
+//     pt_response_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
+//     pt_response_ptInclusive->SetTitle("");
+// 
+//     pt_response_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
+//     pt_response_ptInclusive->GetYaxis()->SetTitle("a.u.");
+//     pt_response_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
+//     pt_response_ptInclusive->SetTitle("");
+//     pt_response_ptInclusive->SetStats(0);
+// 
+//     pt_response_ptInclusive->GetYaxis()->SetRangeUser(0., pt_response_ptInclusive->GetMaximum()*1.3 );
+// 
+//     pt_response_ptInclusive->SetLineWidth(2);
+//     pt_response_ptInclusive->SetLineColor(1);
+//     pt_response_ptInclusive->SetMarkerStyle(8);
+//     pt_response_ptInclusive->SetMarkerColor(1);
+// 
+//     pt_response_ptInclusive->Draw();
+// 
+//     TLegend legend4U(0.55,0.75,0.88,0.88);
+//     legend4U.SetBorderSize(0);
+//     legend4U.AddEntry(pt_response_ptInclusive,"Run-3 (2022)","LPE");
+//     legend4U.Draw("same");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+// 
+//     canvas4U.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/response_inclusive_vsRun2.pdf");
+// 
+// 
+//     // ##############
+// 
+//     TCanvas canvas5T("c5T","c5T",800,800);
+//     canvas5T.SetLeftMargin(0.15);
+//     canvas5T.SetGrid();
+//     // canvas4.SetLogy();
+// 
+//     pt_barrel_resp_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
+//     pt_barrel_resp_ptInclusive->SetTitle("");
+// 
+//     pt_barrel_resp_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
+//     pt_barrel_resp_ptInclusive->GetYaxis()->SetTitle("a.u.");
+//     pt_barrel_resp_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
+//     pt_barrel_resp_ptInclusive->SetTitle("");
+//     pt_barrel_resp_ptInclusive->SetStats(0);
+// 
+//     pt_barrel_resp_ptInclusive->GetYaxis()->SetRangeUser(0., pt_barrel_resp_ptInclusive->GetMaximum()*1.3 );
+// 
+//     pt_barrel_resp_ptInclusive->SetLineWidth(2);
+//     pt_barrel_resp_ptInclusive->SetLineColor(1);
+//     pt_barrel_resp_ptInclusive->SetMarkerStyle(8);
+//     pt_barrel_resp_ptInclusive->SetMarkerColor(1);
+// 
+//     pt_response_ptInclusive->Draw();
+// 
+//     TLegend legend5T(0.55,0.75,0.88,0.88);
+//     legend5T.SetBorderSize(0);
+//     legend5T.SetHeader("Barrel |#eta^{Offline #tau}|<1.305");
+//     legend5T.AddEntry(pt_barrel_resp_ptInclusive,"Run-3 (2022)","LPE");
+//     legend5T.Draw("same");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+// 
+//     canvas5T.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/barrel_response_inclusive_vsRun2.pdf");
+// 
+//     // ##############
+// 
+//     TCanvas canvas5S("c5S","c5S",800,800);
+//     canvas5S.SetLeftMargin(0.15);
+//     canvas5S.SetGrid();
+// 
+//     pt_endcap_resp_ptInclusive->GetXaxis()->SetTitle("E^{L1 #tau}_{T} / p^{Offline #tau}_{T}");
+//     pt_endcap_resp_ptInclusive->SetTitle("");
+// 
+//     pt_endcap_resp_ptInclusive->GetXaxis()->SetTitleOffset(1.3);
+//     pt_endcap_resp_ptInclusive->GetYaxis()->SetTitle("a.u.");
+//     pt_endcap_resp_ptInclusive->GetYaxis()->SetTitleOffset(1.3);
+//     pt_endcap_resp_ptInclusive->SetTitle("");
+//     pt_endcap_resp_ptInclusive->SetStats(0);
+// 
+//     pt_endcap_resp_ptInclusive->GetYaxis()->SetRangeUser(0., pt_endcap_resp_ptInclusive->GetMaximum()*1.3 );
+// 
+//     pt_endcap_resp_ptInclusive->SetLineWidth(2);
+//     pt_endcap_resp_ptInclusive->SetLineColor(1);
+//     pt_endcap_resp_ptInclusive->SetMarkerStyle(8);
+//     pt_endcap_resp_ptInclusive->SetMarkerColor(1);
+// 
+//     pt_response_ptInclusive->Draw();
+// 
+//     TLegend legend5S(0.55,0.75,0.88,0.88);
+//     legend5S.SetBorderSize(0);
+//     legend5S.SetHeader("Endcap 1.479<|#eta^{Offline #tau}|<2.1");
+//     legend5S.AddEntry(pt_endcap_resp_ptInclusive,"Run-3 (2022)","LPE");
+//     legend5S.Draw("same");
+// 
+//     texl1Z->Draw("same");
+//     texl2Z->Draw("same");
+// 
+//     canvas5S.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/endcap_response_inclusive_vsRun2.pdf");
 }

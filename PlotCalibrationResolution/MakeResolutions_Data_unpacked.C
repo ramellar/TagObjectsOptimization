@@ -21,7 +21,7 @@
 #include <TF1.h>
 #include <stdio.h>
 #include <math.h>
-#include "../Calibrate/ApplyCalibration.C"
+// #include "../Calibrate/ApplyCalibration.C"
 
 using namespace std;
 #include <TCanvas.h>
@@ -163,14 +163,14 @@ void createHistograms(const std::vector<double>& tauPt,
     }
 
  
-void MakeResolutions(TString file, int run_nmbr, TString era = "", TString method = "RMS", TString fit_option = "crystalball")
+void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
 
     TString InputFileName = file;
     TFile f(InputFileName.Data(),"READ");
-    TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
+    TTree* inTree = (TTree*)f.Get(tree); // "Ntuplizer/TagAndProbe" "Ntuplizer_noTagAndProbe/TagAndProbe"
     Int_t   in_RunNumber =  0;
     Float_t tauPt = 0;
     Float_t tauEta = 0;
@@ -315,7 +315,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", TString metho
         // either process the full dataset or just the events with a specific run number
         if (run_nmbr != -1) { if (run_nmbr != in_RunNumber)  { continue; } }
 
-        if(l1tTauPt<0.) { continue; }  // modify here to change tail in unpacked
+        if(l1tTauPt<l1tTauPt_cut) { continue; }  // modify here to change tail in unpacked
 
         if(l1tTauPt>128.) { continue; } // skip saturated objects
 

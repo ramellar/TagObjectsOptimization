@@ -20,18 +20,17 @@
 #include <stdio.h>
 #include <math.h>
 #include <typeinfo>
-#include "../Calibrate/ApplyCalibration.C"
+// #include "../Calibrate/ApplyCalibration.C"
 
 using namespace std;
 
-void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
+void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = "")
 {
   TString run_nmbr_str = to_string(run_nmbr);
   if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
 
   TFile f(file,"READ");
-  TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
-  // TTree* inTree = (TTree*)f.Get("Ntuplizer_noTagAndProbe/TagAndProbe");
+  TTree* inTree = (TTree*)f.Get(tree); // "Ntuplizer/TagAndProbe" "Ntuplizer_noTagAndProbe/TagAndProbe"
   ULong64_t in_EventNumber =  0;
   Int_t     in_RunNumber =  0;
   Int_t     in_lumi =  0;
@@ -144,9 +143,9 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
     if (in_l1tPt<0.) { continue; }
 
     if (in_offlineTauEta>2.1) { continue; }
-    if (Nvtx < 30 and Nvtx > 40) { 
-       cout << "################## Selecting a window for PU ############" << endl;
-       continue; }
+//     if (Nvtx < 30 and Nvtx > 40) { 
+//        cout << "################## Selecting a window for PU ############" << endl;
+//        continue; }
     pt->Fill(in_offlineTauPt);
     if (in_offlineTauEta<1.305){ barrel_pt->Fill(in_offlineTauPt); }
     if (in_offlineTauEta>1.479){ endcap_pt->Fill(in_offlineTauPt); }
@@ -164,14 +163,14 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
       if(in_l1tPt>=thr)
       { 
-        if (thr==34) {
-           L1pt_included_noIso->Fill(in_offlineTauPt);
-           if (in_offlineTauPt > 70 && in_offlineTauPt <= 90) {
-           l1tEmuHasEM_included->Fill(in_l1tEmuHasEM);
-           l1tEmuIsMerged_included->Fill(in_l1tEmuIsMerged);
-           L1eta_included_noIso->Fill(in_offlineTauEta);
-           L1phi_included_noIso->Fill(in_offlineTauPhi); }
-        }
+        // if (thr==34) {
+        //    L1pt_included_noIso->Fill(in_offlineTauPt);
+        //    if (in_offlineTauPt > 70 && in_offlineTauPt <= 90) {
+        //    l1tEmuHasEM_included->Fill(in_l1tEmuHasEM);
+        //    l1tEmuIsMerged_included->Fill(in_l1tEmuIsMerged);
+        //    L1eta_included_noIso->Fill(in_offlineTauEta);
+        //    L1phi_included_noIso->Fill(in_offlineTauPhi); }
+        // }
         ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt);
         if (in_offlineTauEta<1.305) { barrel_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt); }
         if (in_offlineTauEta>1.479) { endcap_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt); }
@@ -183,16 +182,16 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
           if (in_offlineTauEta>1.479){ endcap_nvtxProgressionFixedThr_noIso[j]->Fill(Nvtx); }
         }
       } 
-      if(thr==34 && in_l1tPt<=34) 
-      {
-        L1pt_noIso->Fill(in_offlineTauPt);
-        if (in_offlineTauPt > 70 && in_offlineTauPt <= 90) {
-            l1tEmuHasEM->Fill(in_l1tEmuHasEM);
-            l1tEmuIsMerged->Fill(in_l1tEmuIsMerged);
-            L1eta_noIso->Fill(in_offlineTauEta);
-            L1phi_noIso->Fill(in_offlineTauPhi);
-        }
-      }
+      // if(thr==34 && in_l1tPt<=34) 
+      // {
+      //   L1pt_noIso->Fill(in_offlineTauPt);
+      //   if (in_offlineTauPt > 70 && in_offlineTauPt <= 90) {
+      //       l1tEmuHasEM->Fill(in_l1tEmuHasEM);
+      //       l1tEmuIsMerged->Fill(in_l1tEmuIsMerged);
+      //       L1eta_noIso->Fill(in_offlineTauEta);
+      //       L1phi_noIso->Fill(in_offlineTauPhi);
+      //   }
+      // }
       if(in_l1tPt>=thr && in_l1tIso>0)
       { 
         ptProgressionFixedThr_Iso[j]->Fill(in_offlineTauPt);
@@ -241,53 +240,53 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 //  legend6->Draw("same");
 //  canvas6.SaveAs("not_selected_taus_IsMerged.pdf");
 
-
-  TCanvas canvas7("c","c",800,800);
-  L1pt_noIso->SetStats(0);
-  L1pt_noIso->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
-  L1pt_noIso->Draw();
-  L1pt_included_noIso->SetStats(0);
-  L1pt_included_noIso->SetLineColor(2);
-  L1pt_included_noIso->Draw("same");
-  gPad->SetLogy();
-
-  TLegend* legend7 = new TLegend(0.42,0.8,0.694,0.9);
-  legend7->AddEntry( L1pt_noIso, "not included taus", "l");
-  legend7->AddEntry( L1pt_included_noIso, "included taus", "l");
-  legend7->Draw("same");
-  canvas7.SaveAs("not_selected_taus_l1pt.pdf");
-
-
-  TCanvas canvas8("c","c",800,800);
-  L1eta_included_noIso->SetStats(0);
-  L1eta_included_noIso->SetLineColor(2);
-  L1eta_included_noIso->Draw("same");
-  L1eta_noIso->SetStats(0);
-  L1eta_noIso->GetXaxis()->SetTitle("#eta^{Offline #tau}");
-  L1eta_noIso->Draw("same");
-  gPad->SetLogy();
-
-  TLegend* legend8 = new TLegend(0.42,0.8,0.694,0.9);
-  legend8->AddEntry( L1pt_noIso, "not included taus", "l");
-  legend8->AddEntry( L1pt_included_noIso, "included taus", "l");
-  legend8->Draw("same");
-  canvas8.SaveAs("not_selected_taus_l1eta.pdf");
-
-
-  TCanvas canvas9("c","c",800,800);
-  L1phi_included_noIso->SetStats(0);
-  L1phi_included_noIso->SetLineColor(2);
-  L1phi_included_noIso->Draw("same");
-  L1phi_noIso->SetStats(0);
-  L1phi_noIso->GetXaxis()->SetTitle("#phi^{Offline #tau}");
-  L1phi_noIso->Draw("same");
-  gPad->SetLogy();
-
-  TLegend* legend9 = new TLegend(0.42,0.8,0.694,0.9);
-  legend9->AddEntry( L1pt_noIso, "not included taus", "l");
-  legend9->AddEntry( L1pt_included_noIso, "included taus", "l");
-  legend9->Draw("same");
-  canvas9.SaveAs("not_selected_taus_l1phi.pdf");
+// 
+//   TCanvas canvas7("c","c",800,800);
+//   L1pt_noIso->SetStats(0);
+//   L1pt_noIso->GetXaxis()->SetTitle("p_{T}^{Offline #tau} [GeV]");
+//   L1pt_noIso->Draw();
+//   L1pt_included_noIso->SetStats(0);
+//   L1pt_included_noIso->SetLineColor(2);
+//   L1pt_included_noIso->Draw("same");
+//   gPad->SetLogy();
+// 
+//   TLegend* legend7 = new TLegend(0.42,0.8,0.694,0.9);
+//   legend7->AddEntry( L1pt_noIso, "not included taus", "l");
+//   legend7->AddEntry( L1pt_included_noIso, "included taus", "l");
+//   legend7->Draw("same");
+//   canvas7.SaveAs("not_selected_taus_l1pt.pdf");
+// 
+// 
+//   TCanvas canvas8("c","c",800,800);
+//   L1eta_included_noIso->SetStats(0);
+//   L1eta_included_noIso->SetLineColor(2);
+//   L1eta_included_noIso->Draw("same");
+//   L1eta_noIso->SetStats(0);
+//   L1eta_noIso->GetXaxis()->SetTitle("#eta^{Offline #tau}");
+//   L1eta_noIso->Draw("same");
+//   gPad->SetLogy();
+// 
+//   TLegend* legend8 = new TLegend(0.42,0.8,0.694,0.9);
+//   legend8->AddEntry( L1pt_noIso, "not included taus", "l");
+//   legend8->AddEntry( L1pt_included_noIso, "included taus", "l");
+//   legend8->Draw("same");
+//   canvas8.SaveAs("not_selected_taus_l1eta.pdf");
+// 
+// 
+//   TCanvas canvas9("c","c",800,800);
+//   L1phi_included_noIso->SetStats(0);
+//   L1phi_included_noIso->SetLineColor(2);
+//   L1phi_included_noIso->Draw("same");
+//   L1phi_noIso->SetStats(0);
+//   L1phi_noIso->GetXaxis()->SetTitle("#phi^{Offline #tau}");
+//   L1phi_noIso->Draw("same");
+//   gPad->SetLogy();
+// 
+//   TLegend* legend9 = new TLegend(0.42,0.8,0.694,0.9);
+//   legend9->AddEntry( L1pt_noIso, "not included taus", "l");
+//   legend9->AddEntry( L1pt_included_noIso, "included taus", "l");
+//   legend9->Draw("same");
+//   canvas9.SaveAs("not_selected_taus_l1phi.pdf");
 
   std::vector<TGraphAsymmErrors*> turnOnsFixedThr_noIso = {};
   std::vector<TGraphAsymmErrors*> turnOnsFixedThr_Iso = {};
@@ -330,7 +329,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
-  TFile* fileout = new TFile("ROOTs/ROOTs_2023/efficiencies_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+  TFile* fileout = new TFile("ROOTs/ROOTs_2024/efficiencies_of_"+run_nmbr_str+"_unpacked.root","RECREATE");
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     pt->Write();

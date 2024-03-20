@@ -12,6 +12,18 @@ import matplotlib
 import mplhep
 plt.style.use(mplhep.style.CMS)
 
+single_bins = [
+    'pt_resp_ptBin20.0to25.0',
+    'pt_resp_ptBin25.0to30.0',
+    'pt_resp_ptBin30.0to35.0',
+    'pt_resp_ptBin35.0to40.0',
+    'pt_resp_ptBin40.0to45.0',
+    'pt_resp_ptBin45.0to50.0',
+    'pt_resp_ptBin50.0to60.0',
+    'pt_resp_ptBin60.0to70.0',
+    'pt_resp_ptBin70.0to90.0',
+    'pt_resp_ptBin90.0to110.0'
+]
 
 def CB(x, mean=1, sigma=1, alpha=1, n=1, norm=1):
     t = (x - mean)/sigma
@@ -58,10 +70,10 @@ vectDoubleCB = np.vectorize(DoubleCB)
 # param_bounds=([ -10.,  -10.,   -10., -10.,   -10., -10.,  0. ],
 #               [  10.,   10.,    10.,  10.,    10.,  10.,  1. ])
 
-def compute_scale(inFile, inclusive=True):
+def compute_scale(inFile, inclusive='pt_response_ptInclusive'):
     scale_barrel      = inFile.Get('pt_barrel_resp_ptInclusive')
     scale_endcap      = inFile.Get('pt_endcap_resp_ptInclusive')
-    scale_inclusive   = inFile.Get('pt_response_ptInclusive')
+    scale_inclusive   = inFile.Get(inclusive)
 
     # CONVERT TO LISTS FOR PYPLOT
     x_scale_barrel = []
@@ -131,7 +143,7 @@ def compute_resol(inFile, inclusive=True):
     return x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive
 
 
-def plot_pt_scale(inFile, label, color, ax):
+def plot_pt_scale(inFile, label, color, ax, bin_tree='pt_response_ptInclusive'):
     x_lim = (0.,2.)
     x_label = r'$E_{T}^{\tau, L1}/p_{T}^{\tau, offline}$'
     barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
@@ -141,7 +153,7 @@ def plot_pt_scale(inFile, label, color, ax):
     cmap = matplotlib.cm.get_cmap('Set1')
     plot_x = np.linspace(-3,3,4000)
 
-    x_scale_inclusive, y_scale_inclusive, x_err_scale_inclusive, y_err_scale_inclusive = compute_scale(inFile)
+    x_scale_inclusive, y_scale_inclusive, x_err_scale_inclusive, y_err_scale_inclusive = compute_scale(inFile, bin_tree)
 
     ax.errorbar(x_scale_inclusive, y_scale_inclusive, xerr=x_err_scale_inclusive, yerr=y_err_scale_inclusive, 
                 ls='None', label=inclusive_label+label, lw=2, marker='s', color=cmap(color))
@@ -176,7 +188,7 @@ def plot_pt_resolution(inFile, label, color, ax):
     ax.errorbar(x_ptResol_inclusive, y_ptResol_inclusive, xerr=x_err_ptResol_inclusive, yerr=y_err_ptResol_inclusive, 
                 ls='None', label=inclusive_label+label, lw=2, marker='o', color=cmap(color))
 
-    leg = plt.legend(loc = 'upper right', fontsize=18)
+    leg = plt.legend(loc = 'lower right', fontsize=18)
     leg._legend_box.align = "left"
     plt.ylim(0.05,0.30)
     plt.xlim(x_lim)
@@ -198,7 +210,9 @@ if __name__ == "__main__" :
     parser = OptionParser()
     parser.add_option("--inFile1",   dest="inFile1",                        default=None)
     parser.add_option("--inFile2",   dest="inFile2",                        default=None)
+    # parser.add_option("--inFile3",   dest="inFile3",                        default=None)
     parser.add_option("--tag",       dest="tag",                            default=None)
+    parser.add_option("--bins", dest="bins", action="store_true", default=False)
     parser.add_option("--inclusive", dest="inclusive", action='store_true', default=False)
     (options, args) = parser.parse_args()
     print(options)
@@ -207,8 +221,8 @@ if __name__ == "__main__" :
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
 
-    label1 = r' - 2023 Calibration LUT'
-    label2 = r' - 2024 Calibration LUT'
+    label1 = r' - 2023D unpacked'
+    label2 = r' - 2023D newSF newLayer2'
 
     # PLOT PT SCALE
     fig, ax = plt.subplots(figsize=(10,10))
@@ -216,10 +230,24 @@ if __name__ == "__main__" :
     plot_pt_scale(inFile2, label2, 1, ax)
 
     plot_name = 'responses/2024/tau_pt_scale_'+options.tag
+    print(plot_name+'.pdf') 
     if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
+
+    if options.bins:
+      for single_bin in single_bins:
+        print('Producing plot for ', single_bin)
+        fig, ax = plt.subplots(figsize=(10,10))
+        plot_pt_scale(inFile1, label1, 0, ax, single_bin)
+        plot_pt_scale(inFile2, label2, 1, ax, single_bin)
+
+        plot_name = 'responses/2024/tau_pt_scale_'+options.tag+'_'+single_bin
+        if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
+        plt.savefig(plot_name+'.pdf')
+        plt.savefig(plot_name+'.png')
+        plt.close()
 
     # PLOT PT RESOLUTION
     fig, ax = plt.subplots(figsize=(10,10))
@@ -227,9 +255,9 @@ if __name__ == "__main__" :
     plot_pt_resolution(inFile2, label2, 1, ax)
     
     plot_name = 'responses/2024/tau_pt_resolution_'+options.tag
+    print(plot_name+'.pdf') 
     plt.grid()
     if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
- 

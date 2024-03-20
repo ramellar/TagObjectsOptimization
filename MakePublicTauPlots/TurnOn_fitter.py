@@ -285,7 +285,7 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   80.]
     param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
                   [thr+10.,    10.,  10. ,150.,     1.  ,  110., 1. ,   100.])
-    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000) #, bounds=param_bounds)
     print(popt)
 
     ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
@@ -305,7 +305,7 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
         xtick.set_pad(10)
     mplhep.cms.label('Preliminary', data=True, rlabel=r'MC - 13.6 TeV')
     
-def read_file(inFile, iso, thr, label, opt=False):
+def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
     if iso:
         eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_Iso_by_pt') if not opt else \
                      inFile.Get('TurnOn_progression_effMin0p9_eMin10_eMax34')
@@ -320,6 +320,8 @@ def read_file(inFile, iso, thr, label, opt=False):
 ######################### SCRIPT BODY #################################
 #######################################################################
 
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Run2024W-MC_caloParams_2023_v0_4_cfi_reEmulated.root --inFile2 Tau_MC_TURNONS_FIXEDRATE14kHz_Run369978_v0.root --tag 2024W-MC_23_vs_24LUTs '''
+
 if __name__ == "__main__" :
     parser = OptionParser()
     parser.add_option("--inFile1",     dest="inFile1",                                    default=None)
@@ -332,23 +334,23 @@ if __name__ == "__main__" :
     print(options)
 
     
-    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2023/'
-    opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/'
+    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
+    # opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
     inFile1 = ROOT.TFile(main_folder + options.inFile1)
-    inFile2 = ROOT.TFile(opt_folder  + options.inFile2)
+    inFile2 = ROOT.TFile(main_folder + options.inFile2)
     # inFile3 = ROOT.TFile(main_folder+options.inFile3)
    
-    label1 = '2024 MC - LUT 2023'
-    label2 = '2024 MC - LUT 2024'
+    label1 = r' - 2023D unpacked'
+    label2 = r' - 2023D newSF newLayer2'
     
-    thr1 = '29Iso'
+    thr1 = '34Iso'
     thr2 = '34Iso'
 
     thr1_string, iso1_string = thr1[:2], thr1[2:]
     thr2_string, iso2_string = thr2[:2], thr2[2:]
     
-    eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1)
-    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2, True)
+    eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
+    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_progression_effMin0p9_eMin16_eMax31')
    
     # PLOT TURNONS
     fig, ax = plt.subplots(figsize=(10,10))
@@ -356,6 +358,8 @@ if __name__ == "__main__" :
     plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 1, ax, options)
 
     plot_name = 'turnons/turnons_Run'+options.tag
+    plot_name += '_iso' if iso1_string else 'no_iso'
+    print(plot_name+'.pdf')
     plt.grid()
     if options.logx: plot_name += 'log_'
     plt.savefig(plot_name+'.pdf')

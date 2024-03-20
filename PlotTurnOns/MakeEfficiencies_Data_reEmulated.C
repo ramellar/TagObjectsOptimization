@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <typeinfo>
-#include "../Calibrate/ApplyCalibration.C"
+// #include "../Calibrate/ApplyCalibration.C"
 
 using namespace std;
 
@@ -164,16 +164,16 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
       if(in_l1tPt>=thr)
       {
-        if (thr==34) {
-           L1pt_included_noIso->Fill(in_offlineTauPt);
-           if (in_offlineTauPt > 50 && in_offlineTauPt <= 60) {
-           cout << in_RawIEta << ',' << in_RawIEt << ',' << in_HasEM << ',' << in_IsMerged << ", 1"  << endl;
-           RawIEt_included->Fill(in_RawIEt);
-           HasEM_included->Fill(in_HasEM);
-           IsMerged_included->Fill(in_IsMerged);
-           L1eta_included_noIso->Fill(in_offlineTauEta);
-           L1phi_included_noIso->Fill(in_offlineTauPhi); }
-        } 
+        // if (thr==34) {
+        //    L1pt_included_noIso->Fill(in_offlineTauPt);
+        //    if (in_offlineTauPt > 50 && in_offlineTauPt <= 60) {
+        //    cout << in_RawIEta << ',' << in_RawIEt << ',' << in_HasEM << ',' << in_IsMerged << ", 1"  << endl;
+        //    RawIEt_included->Fill(in_RawIEt);
+        //    HasEM_included->Fill(in_HasEM);
+        //    IsMerged_included->Fill(in_IsMerged);
+        //    L1eta_included_noIso->Fill(in_offlineTauEta);
+        //    L1phi_included_noIso->Fill(in_offlineTauPhi); }
+        // } 
         ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt);
         if (in_offlineTauEta<1.305) { barrel_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt); }
         if (in_offlineTauEta>1.479) { endcap_ptProgressionFixedThr_noIso[j]->Fill(in_offlineTauPt); }
@@ -185,18 +185,18 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
           if (in_offlineTauEta>1.479){ endcap_nvtxProgressionFixedThr_noIso[j]->Fill(Nvtx); }
         }
       }
-      if(thr==34 && in_l1tPt<=34)
-      {
-        L1pt_noIso->Fill(in_offlineTauPt);
-        if (in_offlineTauPt > 50 && in_offlineTauPt <= 60) {
-           cout << in_RawIEta << ',' << in_RawIEt << ',' << in_HasEM << ',' << in_IsMerged << ", 0"  << endl;
-           RawIEt->Fill(in_RawIEt);
-           HasEM->Fill(in_HasEM);
-           IsMerged->Fill(in_IsMerged);
-           L1eta_noIso->Fill(in_offlineTauEta);
-           L1phi_noIso->Fill(in_offlineTauPhi);
-        }
-      }
+      // if(thr==34 && in_l1tPt<=34)
+      // {
+      //   L1pt_noIso->Fill(in_offlineTauPt);
+      //   if (in_offlineTauPt > 50 && in_offlineTauPt <= 60) {
+      //      cout << in_RawIEta << ',' << in_RawIEt << ',' << in_HasEM << ',' << in_IsMerged << ", 0"  << endl;
+      //      RawIEt->Fill(in_RawIEt);
+      //      HasEM->Fill(in_HasEM);
+      //      IsMerged->Fill(in_IsMerged);
+      //      L1eta_noIso->Fill(in_offlineTauEta);
+      //      L1phi_noIso->Fill(in_offlineTauPhi);
+      //   }
+      // }
       if(in_l1tPt>=thr && in_l1tIso>0)
       { 
         ptProgressionFixedThr_Iso[j]->Fill(in_offlineTauPt);
@@ -324,7 +324,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
-  TFile* fileout = new TFile("ROOTs/ROOTs_2023/efficiencies_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
+  TFile* fileout = new TFile("ROOTs/ROOTs_2024/efficiencies_of_"+run_nmbr_str+"_reEmulated.root","RECREATE");
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     pt->Write();
@@ -1014,9 +1014,5 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "")
 //  legend_.Draw("same");
 //
 //  canvas2_.SaveAs("PDFs/PDFs_2023/Run3_13p6TeV_Run"+run_nmbr_str+"/aaaa_plot.pdf");
-
-
-
-
 
 }
