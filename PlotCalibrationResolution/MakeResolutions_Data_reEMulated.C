@@ -3,6 +3,7 @@
 #include <TFile.h>
 #include <TSelector.h>
 #include <iostream>
+#include <cstdlib>
 #include <TLorentzVector.h>
 #include <TVector.h>
 #include <TH1.h>
@@ -25,7 +26,7 @@
 
 using namespace std;
 
-void MakeResolutions(TString file, int run_nmbr, TString era = "", float l1tTauPt_cut=0., TString fit_option = "crystalball")
+void MakeResolutions(TString file, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
@@ -37,6 +38,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", float l1tTauP
     Float_t tauPt = 0;
     Float_t tauEta = 0;
     Float_t tauPhi = 0;
+    Int_t   tauDecayMode = -1;
     Float_t l1tTauPt = 0;
     Float_t l1tTauEta = 0;
     Float_t l1tTauPhi = 0;
@@ -46,6 +48,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", float l1tTauP
     inTree->SetBranchAddress("OfflineTau_pt",&tauPt);
     inTree->SetBranchAddress("OfflineTau_eta",&tauEta);
     inTree->SetBranchAddress("OfflineTau_phi",&tauPhi);
+    inTree->SetBranchAddress("OfflineTau_decayMode",&tauDecayMode);
     inTree->SetBranchAddress("L1Tau_pt",&l1tTauPt);
     inTree->SetBranchAddress("L1Tau_eta",&l1tTauEta);
     inTree->SetBranchAddress("L1Tau_phi",&l1tTauPhi);
@@ -172,6 +175,9 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", float l1tTauP
 
         if(l1tTauPt>128.) { continue; } // skip saturated objects
 
+        if (DecayMode != -1) {
+            if (tauDecayMode != DecayMode) { continue; }
+        }
         // if(l1tTauPt/tauPt<0.6)
         // { 
         //     pt->Fill(tauPt);

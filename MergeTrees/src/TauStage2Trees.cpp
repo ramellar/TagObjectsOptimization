@@ -22,7 +22,7 @@ void TauStage2Trees::linkMainVariables()
     m_mainTree->SetBranchStatus("tauEta"       , true);
     m_mainTree->SetBranchStatus("tauPhi"       , true);
     m_mainTree->SetBranchStatus("tauCharge"       , true);
-    m_mainTree->SetBranchStatus("tauDecayMode"       , true);
+    m_mainTree->SetBranchStatus("tauDM"       , true);
     // m_mainTree->SetBranchStatus("muonPt"       , true);
     // m_mainTree->SetBranchStatus("muonEta"       , true);
     // m_mainTree->SetBranchStatus("muonPhi"       , true);
@@ -41,7 +41,7 @@ void TauStage2Trees::linkMainVariables()
     m_mainTree->SetBranchAddress("tauEta"         , &m_tauEta);
     m_mainTree->SetBranchAddress("tauPhi"         , &m_tauPhi);
     m_mainTree->SetBranchAddress("tauCharge"         , &m_tauCharge);
-    m_mainTree->SetBranchAddress("tauDecayMode"         , &m_tauDecayMode);
+    m_mainTree->SetBranchAddress("tauDM"         , &m_tauDecayMode);
     m_mainTree->SetBranchAddress("hasTriggerMuonType"         , &m_hasTriggerMuonType);
     m_mainTree->SetBranchAddress("hasTriggerTauType"         , &m_hasTriggerTauType);
     m_mainTree->SetBranchAddress("isMatched"         , &m_isMatched);
@@ -172,7 +172,7 @@ void TauStage2Trees::linkOutputVariables()
   m_outputTree->Branch("tauEta"         , &m_tauEta);
   m_outputTree->Branch("tauPhi"         , &m_tauPhi);
   m_outputTree->Branch("tauCharge"         , &m_tauCharge);
-  m_outputTree->Branch("tauDecayMode"         , &m_tauDecayMode);
+  m_outputTree->Branch("tauDM"         , &m_tauDecayMode);
   m_outputTree->Branch("hasTriggerMuonType"         , &m_hasTriggerMuonType);
   m_outputTree->Branch("hasTriggerTauType"         , &m_hasTriggerTauType);
   m_outputTree->Branch("isMatched"         , &m_isMatched);

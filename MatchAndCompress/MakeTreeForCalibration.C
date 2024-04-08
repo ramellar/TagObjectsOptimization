@@ -24,11 +24,11 @@ using namespace std;
 
 // input is a MERGED root file and output is a MATCHED root file
 
-void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
+void MakeTreeForCalibration(TString InputFileName, TString OutputFileName, TString tree="Ntuplizer_TagAndProbe")
 
 {
-  // TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
-  TChain data("Ntuplizer_TagAndProbe");
+  //TChain data("Ntuplizer_noTagAndProbe_TagAndProbe");
+  TChain data(tree);
 
   data.Add(InputFileName.Data());
 
@@ -39,7 +39,7 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
   Float_t         tauEta = 0;
   Float_t         tauPhi = 0;
   Int_t           tauCharge = 0;
-  Int_t           tauDecayMode = 0;
+  Int_t           tauDM = 0;
   Bool_t          hasTriggerMuonType = 0;
   Bool_t          hasTriggerTauType = 0;
   Bool_t          isMatched = 0;
@@ -103,7 +103,7 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
   data.SetBranchAddress("tauEta", &tauEta, &b_tauEta);
   data.SetBranchAddress("tauPhi", &tauPhi, &b_tauPhi);
   data.SetBranchAddress("tauCharge", &tauCharge, &b_tauCharge);
-  data.SetBranchAddress("tauDecayMode", &tauDecayMode, &b_tauDecayMode);
+  data.SetBranchAddress("tauDM", &tauDM, &b_tauDecayMode);
   data.SetBranchAddress("hasTriggerMuonType", &hasTriggerMuonType, &b_hasTriggerMuonType);
   data.SetBranchAddress("hasTriggerTauType", &hasTriggerTauType, &b_hasTriggerTauType);
   data.SetBranchAddress("isMatched", &isMatched, &b_isMatched);
@@ -237,7 +237,7 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName)
         out_tauEta = tauEta;
         out_tauPhi = tauPhi;
         out_tauCharge = tauCharge;
-        out_tauDecayMode = tauDecayMode;
+        out_tauDecayMode = tauDM;
 
         out_l1tQual = l1tEmuQual->at(iMatchedL1Tau);
         out_l1tPt = l1tEmuPt->at(iMatchedL1Tau);

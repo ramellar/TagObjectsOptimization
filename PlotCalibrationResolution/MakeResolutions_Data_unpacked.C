@@ -163,7 +163,7 @@ void createHistograms(const std::vector<double>& tauPt,
     }
 
  
-void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
+void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
@@ -175,6 +175,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     Float_t tauPt = 0;
     Float_t tauEta = 0;
     Float_t tauPhi = 0;
+    Int_t tauDM = -1;
     Float_t l1tTauPt = 0;
     Float_t l1tTauEta = 0;
     Float_t l1tTauPhi = 0;
@@ -184,6 +185,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     inTree->SetBranchAddress("tauPt",     &tauPt);
     inTree->SetBranchAddress("tauEta",    &tauEta);
     inTree->SetBranchAddress("tauPhi",    &tauPhi);
+    inTree->SetBranchAddress("tauDM",     &tauDM);
     inTree->SetBranchAddress("l1tPt",     &l1tTauPt);
     inTree->SetBranchAddress("l1tEta",    &l1tTauEta);
     inTree->SetBranchAddress("l1tPhi",    &l1tTauPhi);
@@ -318,7 +320,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         if(l1tTauPt<l1tTauPt_cut) { continue; }  // modify here to change tail in unpacked
 
         if(l1tTauPt>128.) { continue; } // skip saturated objects
-
+        if(DecayMode != -1) {
+            if (tauDM != DecayMode) { continue; }
+        }
         // if(l1tTauIso<1) { continue; } // isolated taus (l1tTauIso = 1)
         // if(l1tTauPt/tauPt<0.6)
         // { 

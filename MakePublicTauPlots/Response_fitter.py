@@ -210,7 +210,7 @@ if __name__ == "__main__" :
     parser = OptionParser()
     parser.add_option("--inFile1",   dest="inFile1",                        default=None)
     parser.add_option("--inFile2",   dest="inFile2",                        default=None)
-    # parser.add_option("--inFile3",   dest="inFile3",                        default=None)
+    parser.add_option("--inFile3",   dest="inFile3",                        default=None)
     parser.add_option("--tag",       dest="tag",                            default=None)
     parser.add_option("--bins", dest="bins", action="store_true", default=False)
     parser.add_option("--inclusive", dest="inclusive", action='store_true', default=False)
@@ -220,14 +220,17 @@ if __name__ == "__main__" :
     main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
+    inFile3 = ROOT.TFile(main_folder+options.inFile3)
 
-    label1 = r' - 2023D unpacked'
-    label2 = r' - 2023D newSF newLayer2'
+    label1 = r' - 2023D Unpacked newSFs 1-prong'
+    label2 = r' - 2023D Unpacked newSFs 1-prong+pi0'
+    label3 = r' - 2023D Unpacked newSFs 3-prong'
 
     # PLOT PT SCALE
     fig, ax = plt.subplots(figsize=(10,10))
     plot_pt_scale(inFile1, label1, 0, ax)
     plot_pt_scale(inFile2, label2, 1, ax)
+    plot_pt_scale(inFile3, label3, 2, ax)
 
     plot_name = 'responses/2024/tau_pt_scale_'+options.tag
     print(plot_name+'.pdf') 
@@ -253,6 +256,7 @@ if __name__ == "__main__" :
     fig, ax = plt.subplots(figsize=(10,10))
     plot_pt_resolution(inFile1, label1, 0, ax)
     plot_pt_resolution(inFile2, label2, 1, ax)
+    plot_pt_resolution(inFile3, label3, 2, ax)
     
     plot_name = 'responses/2024/tau_pt_resolution_'+options.tag
     print(plot_name+'.pdf') 
