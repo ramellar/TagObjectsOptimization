@@ -37,10 +37,50 @@ scram b -j 10
 git clone https://github.com/jonamotta/TauObjectsOptimization # package for the full optimization
 ```
 
-## Tool utilization
+## Deriving Calibration and Isolation LUTs using bash script
 
 ### Production of the input objects
-To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages.
+To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages. Generally what you need to derive the calibration and isolation LUTs are the following files:
+* `MERGED` file : resulting from the merging of RAW ntuples with `MINIAOD` 
+* `MINIAOD` : offline reconstructed taus
+* `ZeroBias` : RAW ntuples reEmulated using same caloParams of the RAW ntuples. Generally a high pile-up and high rate (110kHz) run is choosen
+
+### Merging, matching, and compression
+Enter `MergeTrees` and run `make clean ; make`.
+
+To merge the files first create/modify the needed `.config` file inside the `MergeTrees/run` directory. There the `MINIAOD` file has to be specified as primary and the `RAW` one as secondary (always use absolute paths). Check that the files really contain the TTrees that the executable will look for. 
+Then jus run:
+```bash
+./merge.exe run_<year>/<optimization_version>/<config>.config 
+```
+
+### Running the optimisation
+Once you have the `MERGED` file in your folder, simply lauch: 
+```bash
+sh run_optimisation.sh <tag_given_to_merged> <tag_given_to_zerobias> <miniaod_file>
+```
+
+An example is provided in the bash script itself. The `working\_directory` in the basj script has to be configured.
+The script will produce in a few hours the following files:
+* `ROOT` file in you working directory containing all the TurnOns at 14kHz resulting from the gridsearch
+* `txt` file in `CompareGridSearchTrunons/FMs/FMs_2024/` containing each processed TunrOns and the corresponding FigureOfMerit
+* LUTs are stored in `Calibration` and `Isolate` folders
+
+## Computing reponses and efficiencies from Data
+
+### Production of the input objects
+To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages. Input files:
+* `ROOT` file resulting from the `hadd` of the reEmulated ntuples
+* `MINIAOD` : offline reconstructed taus
+
+### Running the plot productions
+```bash
+sh produce_plots.sh <tag_given_to_data_file> <miniaod_file>
+```
+
+To produce public plots, new python files have been included in `MakePublicTauPlots` folder.
+
+## Else, without bash script
 
 ### Merging, matching, and compression
 Enter `MergeTrees` and run `make clean ; make`.
