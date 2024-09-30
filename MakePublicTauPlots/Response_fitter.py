@@ -106,10 +106,10 @@ def compute_scale(inFile, inclusive='pt_response_ptInclusive'):
 
     return x_scale_inclusive, y_scale_inclusive, x_err_scale_inclusive, y_err_scale_inclusive
 
-def compute_resol(inFile, inclusive=True):
+def compute_resol(inFile, inclusive='pt_resol_fctPt'):
     ptResol_barrel    = inFile.Get('pt_resol_barrel_fctPt')
     ptResol_endcap    = inFile.Get('pt_resol_endcap_fctPt')
-    ptResol_inclusive = inFile.Get('pt_resol_fctPt')
+    ptResol_inclusive = inFile.Get(inclusive)
 
     # CONVERT TO LISTS FOR PYPLOT
     x_ptResol_barrel = []
@@ -175,7 +175,7 @@ def plot_pt_scale(inFile, label, color, ax, bin_tree='pt_response_ptInclusive'):
     mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
 
 
-def plot_pt_resolution(inFile, label, color, ax):
+def plot_pt_resolution(inFile, label, color, ax, bin_tree='pt_resol_fctPt'):
     x_lim = (20.,110.)
     x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
     barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
@@ -183,7 +183,7 @@ def plot_pt_resolution(inFile, label, color, ax):
     inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
     cmap = matplotlib.cm.get_cmap('Set1')
 
-    x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive = compute_resol(inFile)
+    x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive = compute_resol(inFile, bin_tree)
 
     ax.errorbar(x_ptResol_inclusive, y_ptResol_inclusive, xerr=x_err_ptResol_inclusive, yerr=y_err_ptResol_inclusive, 
                 ls='None', label=inclusive_label+label, lw=2, marker='o', color=cmap(color))
@@ -203,14 +203,14 @@ def plot_pt_resolution(inFile, label, color, ax):
 ######################### SCRIPT BODY #################################
 #######################################################################
 
-''' python3 Response_fitter.py --inFile1 resolutions_of_Run2023_all_eras_unpacked.root --inFile2 resolutions_of_Run2024W-MC_caloParams_2023_v0_4_cfi_reEmulated.root --tag 2024W-MC_caloParams_2023_v0_4_cfi '''
+''' python3 Response_fitter.py --inFile1 --inFile2 --tag  '''
 
 if __name__ == "__main__" :
     parser = OptionParser()
     parser = OptionParser()
     parser.add_option("--inFile1",   dest="inFile1",                        default=None)
     parser.add_option("--inFile2",   dest="inFile2",                        default=None)
-    parser.add_option("--inFile3",   dest="inFile3",                        default=None)
+    # parser.add_option("--inFile3",   dest="inFile3",                        default=None)
     parser.add_option("--tag",       dest="tag",                            default=None)
     parser.add_option("--bins", dest="bins", action="store_true", default=False)
     parser.add_option("--inclusive", dest="inclusive", action='store_true', default=False)
@@ -220,17 +220,17 @@ if __name__ == "__main__" :
     main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
-    inFile3 = ROOT.TFile(main_folder+options.inFile3)
+    # inFile3 = ROOT.TFile(main_folder+options.inFile3)
 
-    label1 = r' - 2023D Unpacked newSFs 1-prong'
-    label2 = r' - 2023D Unpacked newSFs 1-prong+pi0'
-    label3 = r' - 2023D Unpacked newSFs 3-prong'
+    label1 = r'Unpacked 2024 EraH'
+    label2 = r'Re-Emu 2024H w/ 24W opt'
+    # label3 = r'Re-Emu pedestals + corrections'
 
     # PLOT PT SCALE
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_pt_scale(inFile1, label1, 0, ax)
-    plot_pt_scale(inFile2, label2, 1, ax)
-    plot_pt_scale(inFile3, label3, 2, ax)
+    plot_pt_scale(inFile1, label1, 0, ax) # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile2, label2, 1, ax) # , 'pt_endcap_resp_ptInclusive')
+    # plot_pt_scale(inFile3, label3, 2, ax)
 
     plot_name = 'responses/2024/tau_pt_scale_'+options.tag
     print(plot_name+'.pdf') 
@@ -254,9 +254,9 @@ if __name__ == "__main__" :
 
     # PLOT PT RESOLUTION
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_pt_resolution(inFile1, label1, 0, ax)
-    plot_pt_resolution(inFile2, label2, 1, ax)
-    plot_pt_resolution(inFile3, label3, 2, ax)
+    plot_pt_resolution(inFile1, label1, 0, ax) #, 'pt_resol_barrel_fctPt')
+    plot_pt_resolution(inFile2, label2, 1, ax) #, 'pt_resol_endcap_fctPt')
+    # plot_pt_resolution(inFile3, label3, 2, ax)
     
     plot_name = 'responses/2024/tau_pt_resolution_'+options.tag
     print(plot_name+'.pdf') 

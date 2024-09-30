@@ -284,8 +284,9 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
     p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   80.]
     param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+10.,    10.,  10. ,150.,     1.  ,  110., 1. ,   100.])
-    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000) #, bounds=param_bounds)
+                  [thr+10.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    print(x[:-2], y[:-2])
+    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
     print(popt)
 
     ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
@@ -303,16 +304,17 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'MC - 13.6 TeV')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'2024 - 13.6 TeV')
     
 def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
     if iso:
         eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_Iso_by_pt') if not opt else \
-                     inFile.Get('TurnOn_progression_effMin0p9_eMin10_eMax34')
-        label = r'$E_{T}^{\tau, L1} > %s$ GeV & Iso -%s' % (thr, label)
+                     inFile.Get(tunrOn)
+        label = r'$E_{T}^{\tau, L1} > %s$ GeV & Iso - %s' % (thr, label)
     else:
-        eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_noIso_by_pt')
-        label = r'$E_{T}^{\tau, L1} > %s$ GeV -%s' % (thr, label)
+        eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_noIso_by_pt') if not opt else \
+                     inFile.Get('TurnOn_noIso')
+        label = r'$E_{T}^{\tau, L1} > %s$ GeV - %s' % (thr, label)
 
     return eff_TGraph, label
     
@@ -335,30 +337,37 @@ if __name__ == "__main__" :
 
     
     main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
-    # opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
-    inFile1 = ROOT.TFile(main_folder + options.inFile1)
-    inFile2 = ROOT.TFile(main_folder + options.inFile2)
+    opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
+    inFile1 = ROOT.TFile(main_folder+options.inFile1)
+    inFile2 = ROOT.TFile(main_folder+options.inFile2)
     # inFile3 = ROOT.TFile(main_folder+options.inFile3)
+    # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
+    # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
    
-    label1 = r' - 2023D unpacked'
-    label2 = r' - 2023D newSF newLayer2'
+    label1 = r'Unpacked 2024 EraH'
+    label2 = r'Re-Emu 2024H W/ 24W opt'
+    # label3 = r'Re-Emu pedestals + corrections'
     
     thr1 = '34Iso'
     thr2 = '34Iso'
+    # thr3 = '34Iso'
 
     thr1_string, iso1_string = thr1[:2], thr1[2:]
     thr2_string, iso2_string = thr2[:2], thr2[2:]
+    # thr3_string, iso3_string = thr3[:2], thr3[2:]
     
     eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
-    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_progression_effMin0p9_eMin16_eMax31')
+    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
+    # eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
    
     # PLOT TURNONS
     fig, ax = plt.subplots(figsize=(10,10))
     plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 0, ax, options)
     plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 1, ax, options)
+    # plot_TurnOn(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
 
     plot_name = 'turnons/turnons_Run'+options.tag
-    plot_name += '_iso' if iso1_string else 'no_iso'
+    plot_name += '_iso' if iso1_string else '_no_iso'
     print(plot_name+'.pdf')
     plt.grid()
     if options.logx: plot_name += 'log_'
