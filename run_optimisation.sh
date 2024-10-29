@@ -1,9 +1,8 @@
 #!/usr/bin/bash
 set -e
-# sh run_optimisation.sh 2023S-MC_caloParams_2023_v0_4 EphemeralZeroBias_2023D_RAW_369978_optimization23_v4_HCAL_corr 369978 Run3Summer23_MINIAOD.root
+# sh run_optimisation.sh <tag_to_name_folder> <tag_given_to_zerobias> <miniaod_file> <run>
 
-working_dir='/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/Winter24_GT_140/test/'
-# /data_CMS/cms/mchiusi/Run3preparation/Run3_2024/2024W-MC_caloParams_2023_v0_4_cfi/test/'
+working_dir='/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/MC22_Summer_optimization_june/'
 pwd=$(pwd)
 
 create_config_file() {
@@ -31,13 +30,57 @@ Regression.1.CutEE: OfflineTau_pt>18
 EOF
 }
 
+create_file_merge() {
+    cat <<EOF >"${1}/MergeTrees/run_2024/${2}/${2}_${3}.config"
+TreeClass: TauStage2Trees
+
+MainFiles: ${5}
+MainTree: Ntuplizer_noTagAndProbe/TagAndProbe
+
+SecondaryTrees.N: 1
+SecondaryTrees.0.Tree: ZeroBias/ZeroBias
+SecondaryTrees.0.Files: ${6}
+
+OutputFile:  ${4}${2}_MERGED_${3}.root
+EOF
+}
+
+# merging
+echo 'Merging..'
+
+cd ${pwd}/MergeTrees
+make clean &> /dev/null; make &> /dev/null
+mkdir ${pwd}/MergeTrees/run_2024/${1}
+
+prefixes=("VBF_" "GluGlu" "VBFp")
+for prefix in "${prefixes[@]}"
+do
+  raw_file=$(ls ${working_dir}${prefix}*RAW*.root 2>/dev/null)
+  aod_file=$(ls ${working_dir}${prefix}*MINIAOD*.root 2>/dev/null)
+
+  echo ${raw_file}
+  if [[ -n "$raw_file" && -n "$aod_file" ]]; then
+    echo "Processing RAW file: $raw_file and MINIAOD file: $aod_file..."
+    create_file_merge "${pwd}" "${1}" "${prefix}" "${working_dir}" "${aod_file}" "${raw_file}"
+    ./merge.exe ${pwd}/MergeTrees/run_2024/${1}/${1}_${prefix}.config
+  else
+   echo "No matching RAW and MINIAOD files found for prefix ${prefix}"
+   continue
+  fi
+done
+
+# hadd files
+echo 'Hadding merged files..'
+hadd ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
+
+
 # matching
 echo 'Matching..'
 
 cd ${pwd}/MatchAndCompress
 root -l -b <<EOF
 .L MakeTreeForCalibration.C+
-MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root")
+MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_noTagAndProbe_TagAndProbe")
 .q
 EOF
 
@@ -81,7 +124,7 @@ echo 'Isolation..'
 cd ${pwd}/Isolate
 root -l -b <<EOF
 .L Build_Isolation.C+
-Build_Isolation("${working_dir}${1}_CALIBRATED.root", "ROOTs4LUTs_2024/LUTisolation_${1}.root")
+Build_Isolation("${working_dir}${1}_CALIBRATED.root", "ROOTs4LUTs_2024/LUTisolation_${1}.root", 0, 8)
 .q
 EOF
 
@@ -97,14 +140,14 @@ echo 'Making rates..'
 cd ${pwd}/MakeRates
 root -l -b <<EOF
 .L Rate_ZeroBias_unpacked.C+
-Rate("${working_dir}${2}.root", "histos_2024/histos_rate_ZeroBias_Run${3}_${1}_unpacked.root", ${3})
+Rate("${working_dir}${2}.root", "histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
 .q
 EOF
 
 root -l -b <<EOF
 .L Rate_ZeroBias_gridSearch.C+
-Rate("${working_dir}${2}_CALIBRATED.root", "histos_2024/histos_rate_ZeroBias_Run${3}_${1}_optimisation.root", \
-     "../Isolate/ROOTs4LUTs_2024/LUTrelaxation_${1}.root", ${3})
+Rate("${working_dir}${2}_CALIBRATED.root", "histos_2024/histos_rate_ZeroBias_Run${4}_${1}_optimisation.root", \
+     "../Isolate/ROOTs4LUTs_2024/LUTrelaxation_${1}.root", ${4})
 .q
 EOF
 
@@ -114,12 +157,12 @@ echo 'Computing Thresholds..'
 cd ${pwd}/CompareRates
 root -l -b <<EOF
 .L CompareRates_ZeroBias_gridSearch_withUnpacked.C+
-compare("../MakeRates/histos_2024/histos_rate_ZeroBias_Run${3}_${1}_unpacked.root", \
-        "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${3}_${1}_optimisation.root", \
-        "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${3}_${1}unpacked_optimization.root")
+compare("../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", \
+        "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_optimisation.root", \
+        "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root")
 .q
 EOF
-
+ 
 # TunrOns
 echo 'Making TunrOns..'
 
@@ -129,8 +172,8 @@ root -l -b <<EOF
 ApplyIsolationForTurnOns("${working_dir}${1}_CALIBRATED.root", \
                          "${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
                          "../Isolate/ROOTs4LUTs_2024/LUTrelaxation_${1}.root", \
-                         "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${3}_${1}unpacked_optimization.root", \
-                         "${working_dir}${4}", 14, 0)
+                         "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root", \
+                         "${working_dir}${3}", 14, 0)
 .q
 EOF
 
@@ -138,10 +181,10 @@ cd ${pwd}/CompareGridSearchTrunons
 root -l -b <<EOF
 .L BestFMturnOns_gridSearch.C+
 compare("${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
-        "FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run${3}_${1}.txt", \
-        "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${3}_${1}unpacked_optimization.root", \
-        "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${3}_${1}_unpacked.root", "FM")
+        "FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run${4}_${1}.txt", \
+        "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root", \
+        "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", "FM")
 .q
 EOF
 
-echo "Finish -- All good, best turnOns in CompareGridSearchTrunons/FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run$3_$1.txt"
+echo "Finish -- All good, best turnOns in CompareGridSearchTrunons/FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run$4_$1.txt"
