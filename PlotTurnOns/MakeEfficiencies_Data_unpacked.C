@@ -228,13 +228,15 @@ void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = ""
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
   TFile* fileout = new TFile("ROOTs/ROOTs_2024/efficiencies_of_"+run_nmbr_str+"_unpacked.root","RECREATE");
+  
+  pt->Write();
+  barrel_pt->Write();
+  endcap_pt->Write();
+  eta->Write();
+  nvtx->Write();
+    
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
-    pt->Write();
-    barrel_pt->Write();
-    endcap_pt->Write();
-    eta->Write();
-    nvtx->Write();
 
     ptProgressionFixedThr_noIso[i]->Write();
     ptProgressionFixedThr_Iso[i]->Write();
