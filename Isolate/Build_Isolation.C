@@ -26,28 +26,28 @@ using namespace std;
 
 // THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
 
-void Build_Isolation(TString inputFile, TString outFile, TString compression = "supercompressed", float calibThr = 1.7)
+void Build_Isolation(TString inputFile, TString outFile, UInt_t tmpFitMin = 3, UInt_t tmpFitMax = 14, TString compression = "supercompressed", float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
   UInt_t tmpIEt;
   UInt_t tmpnTT;
-  UInt_t tmpFitMin;
-  UInt_t tmpFitMax;
+  // UInt_t tmpFitMin;
+  // UInt_t tmpFitMax;
   if (compression == "compressed")
   {
     tmpIEt = compressedNbinsIEt;
     tmpnTT = compressedNbinsnTT;
-    tmpFitMin = 6;
-    tmpFitMax = 25;
+    // tmpFitMin = 6;
+    // tmpFitMax = 25;
   }
   else if (compression == "supercompressed")
   {
     tmpIEt = supercompressedNbinsIEt;
     tmpnTT = supercompressedNbinsnTT;
-    tmpFitMin = 3;
-    tmpFitMax = 14;
+    // tmpFitMin = 0;
+    // tmpFitMax = 8;
   }
   else
   {
@@ -527,6 +527,7 @@ void Build_Isolation(TString inputFile, TString outFile, TString compression = "
 
             TString fitName = "fit_pz_"+to_string(iEff)+"_eta"+to_string(i)+"_e"+to_string(j);
             TF1* projection_fit = new TF1(fitName,"[0]+[1]*x", FitMin, FitMax);
+            projection_fit->SetParLimits(1, 0, 10000);
             projection->Fit(projection_fit, "QR");
             projection_fit->Write();
           }
