@@ -29,7 +29,8 @@ if __name__ == "__main__" :
     #inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/'+options.inFile)
     #inFile2 = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/'+options.inFile2)
 
-    inFile = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run367883_unpacked.root')
+    # inFile = ROOT.TFile('/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2023/histos_rate_ZeroBias_Run367883_unpacked.root')
+    inFile = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2024/histos_rate_ZeroBias_Run386604_raw_plots_unpacked.root')
     
     plt.rcParams['legend.title_fontsize'] = 'small'
     cmap = matplotlib.cm.get_cmap('Set1'); imap=0
@@ -37,9 +38,10 @@ if __name__ == "__main__" :
 
     DoubleTau = inFile.Get('DiTauRate_noIso')
     DoubleTau_Iso = inFile.Get('DiTauRate_Iso')
+    
 
     #legend_title=r'Double-$\tau$ rate comparison'
-    legend_title=r'Inst. Lumi = $2.04\times10^{34}\ cm^{-2}s^{-1}$'
+    legend_title=r'Inst. Lumi = $2.10\times10^{34}\ cm^{-2}s^{-1}$'
     label_Double = r'Double-$\tau$'
     label_DoubleIso = r'Double-$\tau$ & Isolation'
 

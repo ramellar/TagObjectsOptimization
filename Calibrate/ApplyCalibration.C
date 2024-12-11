@@ -50,7 +50,7 @@ const Int_t hardcodedCompressednTTBins[compressedNbinsnTT] = {0, 6, 11, 16, 21, 
 const Float_t hardcodedCompressednTTBinsFloat[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
 const Double_t hardcodedCompressednTTBinsDouble[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
 
-
+// checks whether a specific bit in a given integer is set (1) or not (0)
 bool CheckBit (short int number, int bitpos)
 {
   bool res = number & (1 << bitpos);

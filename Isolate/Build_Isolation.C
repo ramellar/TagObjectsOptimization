@@ -36,7 +36,7 @@ using namespace std;
     - Iso_Per_effciiency_Per_bin: which gives the value of the isolation cut for each value of efficnecy and each histogram
   -From these maps ("dictionnaries") we plot in the output:
     -Each histogram (inclusive and per bins of eta, Et and nTT)
-    -The efficiencies as a fct of pt, eta and nTT, that we refer to as flat effciiencies
+    -The efficiencies as a fct of pt, eta and nTT, that we refer to as flat efficiencies
     -The Iso Cut as a fct of nTT and we perform a fit in it to deal with the low statitics*/
 
 void Build_Isolation(TString inputFile, TString outFile, UInt_t tmpFitMin = 3, UInt_t tmpFitMax = 14, TString compression = "supercompressed", float calibThr = 1.7)

@@ -33,7 +33,7 @@ for f in ${working_dir}${1}_*.root
 do
   i=$(( i + 1 ))
   echo "Processing $f file..."
-  create_file_merge "${pwd}" "${1}" "${i}" "${working_dir}" "${2}" "${f}"
+  create_file_merge "${pwd}" "${1}" "${i}" "${working_dir}" "${2}" "${f}"x
   ./merge.exe ${pwd}/MergeTrees/run_2024/${1}/${1}_${i}.config 
 done
 

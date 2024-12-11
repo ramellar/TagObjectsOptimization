@@ -336,7 +336,7 @@ if __name__ == "__main__" :
     print(options)
 
     
-    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
+    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
     opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
@@ -344,11 +344,11 @@ if __name__ == "__main__" :
     # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
     # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
    
-    label1 = r'Unpacked 2024 EraH'
-    label2 = r'Re-Emu 2024H W/ 24W opt'
+    label1 = r'Unpacked 2024 EraI'
+    label2 = r'Unpacked 2024 EraI Iso'
     # label3 = r'Re-Emu pedestals + corrections'
     
-    thr1 = '34Iso'
+    thr1 = '34'
     thr2 = '34Iso'
     # thr3 = '34Iso'
 

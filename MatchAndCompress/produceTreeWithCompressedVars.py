@@ -11,7 +11,9 @@ compressednTTFile = "./CompressionLUTs/tauCompressnTTLUT_5bit_v8.txt"
 
 treeName = "outTreeForCalibration"
 
+#read th LUT and make a dictionary
 def readLUT(lutFileName):
+    #Initialize a dictionary
     lut = {}
     i=0
     # print lutFileName
@@ -21,9 +23,9 @@ def readLUT(lutFileName):
             # print "line #",i," content = ",line
             if line[0]=='#': continue
             if line[0]=="" : continue
-            tokens = line.split()
+            tokens = line.split() #Splits the line into a list of words or numbers
             # print "tokens = ",tokens
-            if len(tokens)<2: continue
+            if len(tokens)<2: continue #Ensures there are at least two tokens
             # print tokens[0]
             lut[int(tokens[0])] = int(tokens[1])
             # print "lut content",lut[int(tokens[0])]
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     inputFileName = args.input
     outputFileName = args.output
 
-    print "Compressing.. "
+    print("Compressing.. ")
     ## Read Ieta,E,shape compression mapping
     compressedIeta  = readLUT(compressedIetaFile)
     compressedE     = readLUT(compressedEFile)
@@ -90,8 +92,8 @@ if __name__ == "__main__":
     shapeHisto = ROOT.TH1F("compressedShapeHisto", "compressedShapeHisto", 128, -0.5, 127.5)
     
     
-    data = {"RunNumber"     :array.array('i',[0]),
-            "EventNumber"   :array.array('i',[0]),
+    data = {"RunNumber"     :array.array('i',[0]), #Creates fixed-type arrays to store values from each tree entry.
+            "EventNumber"   :array.array('i',[0]), #Creates an array of type 'i' (integer) initialized with a single element, 0.
             #"Weight"  :array.array('f',[0.]),
             #"group"   :array.array('i',[0]),
             #"Cluster_iEta"    :array.array('i',[0]),
@@ -125,7 +127,7 @@ if __name__ == "__main__":
     for e in xrange(nentries):
         if inputTree.OfflineTau_isMatched!=1: continue
         inputTree.GetEntry(e)
-        data["RunNumber"][0]    = int(inputTree.RunNumber)
+        data["RunNumber"][0]    = int(inputTree.RunNumber) #Retrieves the first (and only) element of the array associated with the "RunNumber" key.
         data["EventNumber"][0]  =  int(inputTree.EventNumber)
         data["L1Tau_IEt"][0]      =  int(inputTree.L1Tau_RawIEt)
         data["L1Tau_IEta"][0]      =  int(inputTree.L1Tau_IEta)
@@ -144,8 +146,10 @@ if __name__ == "__main__":
         data["L1Tau_nTT"][0] =   int(inputTree.L1Tau_nTT)
         data["L1Tau_Iso"][0] =   int(inputTree.L1Tau_Iso)
         data["L1Tau_IsoFlag"][0] =   int(inputTree.L1Tau_IsoFlag)
+        #Compressing values
         data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["L1Tau_IEta"][0])], data["L1Tau_IEta"][0]))
         #data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["Cluster_iEta"][0])], data["Cluster_iEta"][0]))
+        #Ensures that the E does not exceed the 255 value
         data["compressedE"][0]     = compressedE[min(data["L1Tau_IEt"][0],255)]
         #data["compressedshape"][0] = compressedShape[data["Cluster_shape"][0]]
         data["compressednTT"][0] = compressednTT[data["L1Tau_nTT"][0]]

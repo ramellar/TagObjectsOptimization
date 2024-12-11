@@ -24,7 +24,7 @@ if __name__ == "__main__" :
     (options, args) = parser.parse_args()
     print(options)
 
-    main_folder = '/home/llr/cms/mchiusi/Run3preparation/Run3preparation_2023/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2024/'
+    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2024/'
     inFile1 = ROOT.TFile(main_folder + options.inFile1)
     inFile2 = ROOT.TFile(main_folder + options.inFile2)
 
@@ -33,8 +33,9 @@ if __name__ == "__main__" :
     markers = ['o', 's', '^', 'D']
 
     #DoubleTau = inFile.Get('DiTauRate_noIso')
-    DoubleTau_Iso_1 = inFile1.Get('DiTauRate_Iso')
+    DoubleTau_Iso_1 = inFile1.Get('DiTauRate')
     DoubleTau_Iso_2 = inFile2.Get('DiTauRate_Iso')
+
 
     legend_title=r'Double-$\tau$ & Isolation rate comparison'
     #legend_title=r'Inst. Lumi = $3.5\times10^{33}\ cm^{-2}s^{-1}$'
@@ -48,6 +49,7 @@ if __name__ == "__main__" :
         y = []
         x_err = []
         y_err = []
+        print(rate_TH1.ClassName())
         for ibin in range(rate_TH1.GetNbinsX()):
             x.append(rate_TH1.GetBinLowEdge(ibin+1) + rate_TH1.GetBinWidth(ibin+1)/2.)
             y.append(rate_TH1.GetBinContent(ibin+1))

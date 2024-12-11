@@ -70,28 +70,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
       if(i%100000==0) cout<<"Entry #"<<i<<endl; 
       
       // SET RUN INFO
-      if (run == 355414) { if(in_lumi<0) continue; }
-      if (run == 355417) { if(in_lumi>40) continue; }
-      if (run == 355418) { if((in_lumi>38 && in_lumi<60) || in_lumi>98) continue; }
-      if (run == 355865) { if(in_lumi>286 || in_lumi<26) continue; }
-      if (run == 355872) { if(in_lumi>1217 || in_lumi<997) continue; }
-      if (run == 355913) { if(in_lumi>103) continue; }
-      if (run == 356375) { if(in_lumi>1001) continue; }
-      if (run == 356378) { if(in_lumi<-1) continue; }
-      if (run == 356381) { if(in_lumi<35) continue; }
-      if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
-      if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
-      if (run == 366727) { if(in_lumi<198 || in_lumi>242) continue; }
-      if (run == 366821) { if(in_lumi<144 || in_lumi>920) continue; }
-      if (run == 366833) { if(in_lumi<240 || in_lumi>620) continue; }
-      if (run == 366895) { if(in_lumi<370 || in_lumi>1242) continue; }
-      if (run == 367079) { if(in_lumi<196 || in_lumi>570) continue; }
-      if (run == 366874) { if(in_lumi<59 || in_lumi>564) continue; }
-      if (run == 366801) { if(in_lumi<115 || in_lumi>240) continue; }
-      if (run == 366820) { if(in_lumi<240 || in_lumi>410) continue; }
-      if (run == 366729) { if(in_lumi<28 || in_lumi>410) continue; }
-      if (run == 367619) { if(in_lumi>576) continue; }
-
+      if (run == 386604) { if(in_lumi<114 || in_lumi>1685) continue; }
       Float_t weight = 1.;
 
       ++Denominator;
@@ -153,53 +132,14 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
 
   // SET RUN INFO
   float nb = 0.;
-  if (run == 355414 or run == 355417 or run == 355418) { nb = 62.; }
-  if (run == 355769) { nb = 302.; }
-  if (run == 355865 or run == 355872 or run == 355913) { nb = 590.; }
-  if (run == 356375 or run == 356378 or run == 356381) { nb = 974.; }
-  if (run == 362616 or run == 362617) { nb = 2450; }
-  if (run == 366727) { nb = 398; } // colliding bunches
-  if (run == 366821) { nb = 398; } // colliding bunches  
-  if (run == 366833) { nb = 386; } // colliding bunches  
-  if (run == 366895) { nb = 986; } // colliding bunches  
-  if (run == 367079) { nb = 986; } // colliding bunches  
-  if (run == 366874) { nb = 898; } // colliding bunches
-  if (run == 366801) { nb = 398; } // colliding bunches
-  if (run == 366820) { nb = 398; } // colliding bunches
-  if (run == 366729) { nb = 398; } // colliding bunches
-  if (run == 369978) { nb = 1165; } // colliding bunches
-  if (run == 367619) { nb = 2361; } // colliding bunches
-  if (run == 367883) { nb = 2345; } // colliding bunches
+  if (run == 386604) { nb = 2340; } // colliding bunches
   if (nb == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the nb initialization" << std::endl;
     return;
   }
   float thisLumiRun = 0.;
-  if (run == 355414) thisLumiRun = 0.265E33;
-  if (run == 355417) thisLumiRun = 0.256E33;
-  if (run == 355418) thisLumiRun = 0.249E33;
-  if (run == 355769) thisLumiRun = 1.540E33;
-  if (run == 355865) thisLumiRun = 2.567E33;
-  if (run == 355872) thisLumiRun = 2.667E33;
-  if (run == 355913) thisLumiRun = 2.537E33;
-  if (run == 356375) thisLumiRun = 5.700E33;
-  if (run == 356378) thisLumiRun = 6.350E33;
-  if (run == 356381) thisLumiRun = 5.000E33;
-  if (run == 362616) thisLumiRun = 2.05E34;
-  if (run == 362617) thisLumiRun = 2.50E34;
-  if (run == 366727) thisLumiRun = 3.6E33; // end lumi
-  if (run == 366820) thisLumiRun = 3.5E33; // end lumi
-  if (run == 366821) thisLumiRun = 2.7E33; // end lumi
-  if (run == 366833) thisLumiRun = 2.8E33; // end lumi
-  if (run == 366895) thisLumiRun = 6.3E33; // end lumi
-  if (run == 367079) thisLumiRun = 8.4E33; // end lumi
-  if (run == 366874) thisLumiRun = 6.9E33; // end lumi
-  if (run == 366801) thisLumiRun = 2.7E33; // end lumi
-  if (run == 366729) thisLumiRun = 3.2E33; // end lumi
-  if (run == 367619) thisLumiRun = 1.3E34; // end lumi
-  if (run == 369978) thisLumiRun = 1.0E34; // end lumi
-  if (run == 367883) thisLumiRun = 2.0E34; // end lumi
+  if (run == 386604) thisLumiRun = 2.10E34;
   if (thisLumiRun == 0. and doScaleToLumi)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;

@@ -1,8 +1,9 @@
 #makefile 
 
-
+# compiler choice
 CC   =   g++
 
+# load libraries (wall warning all)
 #UCFLAGS = -O0 -g3 -Wall -gstabs+  
 UCFLAGS = -O3 -Wall -gstabs+ -std=c++0x
 
@@ -12,6 +13,8 @@ LIBS :=  $(shell root-config --libs) -lTreePlayer
 GLIBS := $(shell root-config --glibs)
 
 VPATH = ./src/
+
+# load, put in a same obj
 
 SRCPP = main.cpp\
 	Utilities.cpp\
@@ -35,6 +38,7 @@ obj/%.o : %.cpp
 	@echo compiling $*
 	@$(CC) -c $< $(UCFLAGS) $(RUCFLAGS) -o $@
 
+# merge executable
 merge.exe : $(OBJCPP) 
 	@echo linking...
 	@$(CC) $^ $(ACLIBS) $(LIBS) $(GLIBS)  -o $@
