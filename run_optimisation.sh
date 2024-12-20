@@ -95,54 +95,60 @@ EOF
 
 # #Compressed
 
-# python produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
+# python3 produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
 
-# # Calibration
-# echo 'Calibrating..'
+# Calibration
+echo 'Calibrating..'
 
-# if [ ! -d ${pwd}/Calibrate/forests_${4} ]; then
-#     mkdir ${pwd}/MergeTrees/forests_${4}
-#     echo "Directory created."
-# else
-#     echo "Directory already exists."
-# fi
+if [ ! -d ${pwd}/Calibrate/forests_2024 ]; then
+    mkdir ${pwd}/Calibrate/forests_2024
+    echo "Directory created."
+else
+    echo "Directory already exists."
+fi
 
-# if [ ! -d ${pwd}/Calibrate/forests_${4} ]; then
-#     mkdir ${pwd}/MergeTrees/corrections_${4}
-#     echo "Directory created."
-# else
-#     echo "Directory already exists."
-# fi
+if [ ! -d ${pwd}/Calibrate/corrections_2024 ]; then
+    mkdir ${pwd}/Calibrate/corrections_2024
+    echo "Directory created."
+else
+    echo "Directory already exists."
+fi
 
-# cd ${pwd}/Calibrate/RegressionTraining
+cd ${pwd}/Calibrate/RegressionTraining
+echo "Changed directory."
+make clean &> /dev/null || { echo "make clean failed"; exit 1; }
+make
+# make &> /dev/null || { echo "make failed"; exit 1; }
 # make clean &> /dev/null; make &> /dev/null
-# create_config_file "${pwd}" "${1}" "${working_dir}"
-# ./regression.exe run_2024/${1}.config
+echo "Making."
+create_config_file "${pwd}" "${1}" "${working_dir}"
+echo "Creating config file."
+./regression.exe run_2024/${1}.config
 
-# cd ${pwd}/Calibrate/
+cd ${pwd}/Calibrate/
 
-# python makeTH4_LUT.py -i forests_${4}/BDT_training_optimization_"${1}"_results.root \
-#                       -o corrections_${4}/corrections_BDT_training_"${1}".root
+python3 makeTH4_LUT.py -i forests_2024/BDT_training_optimization_"${1}"_results.root \
+                      -o corrections_2024/corrections_BDT_training_"${1}".root
 
-# root -l -b <<EOF
-# .L ApplyCalibration.C+
-# ApplyCalibration("${working_dir}${1}_COMPRESSED.root", "${working_dir}${1}_CALIBRATED.root", \
-#                  "corrections_${4}/corrections_BDT_training_${1}.root")
-# .q
-# EOF
+root -l -b <<EOF
+.L ApplyCalibration.C+
+ApplyCalibration("${working_dir}${1}_COMPRESSED.root", "${working_dir}${1}_CALIBRATED.root", \
+                 "corrections_${4}/corrections_BDT_training_${1}.root")
+.q
+EOF
 
-# root -l -b <<EOF
-# .L ApplyCalibration_ZeroBias.C+
-# ApplyCalibrationZeroBias("${working_dir}${2}.root", "${working_dir}${2}_CALIBRATED.root", \
-#                          "corrections_2024/corrections_BDT_training_${1}.root")
-# .q
-# EOF
+root -l -b <<EOF
+.L ApplyCalibration_ZeroBias.C+
+ApplyCalibrationZeroBias("${working_dir}${2}.root", "${working_dir}${2}_CALIBRATED.root", \
+                         "corrections_2024/corrections_BDT_training_${1}.root")
+.q
+EOF
 
-# root -l -b <<EOF
-# .L MakeTauCalibLUT.C+
-# MakeTauCalibLUT("LUTs_2024/LUTcalibration_${1}.txt", "corrections_2024/corrections_BDT_training_${1}.root")
-# .q
-# EOF
+root -l -b <<EOF
+.L MakeTauCalibLUT.C+
+MakeTauCalibLUT("LUTs_2024/LUTcalibration_${1}.txt", "corrections_2024/corrections_BDT_training_${1}.root")
+.q
+EOF
 
 # Isolation
 echo 'Isolation..'
