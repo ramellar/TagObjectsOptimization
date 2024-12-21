@@ -22,21 +22,20 @@ class GBR2LUTEmulator:
         cmsswBase = os.environ["CMSSW_BASE"]
         scram_arch = os.environ["SCRAM_ARCH"]
         ROOT.gSystem.AddDynamicPath("{0}/lib/{1}/".format(cmsswBase, scram_arch))
-        ROOT.gSystem.Load("libHiggsAnalysisGBRLikelihood.so") 
-        # print "inputFileName",self.inputFileName
+        ROOT.gSystem.Load("libHiggsAnalysisGBRLikelihood.so")
+        # print("inputFileName",self.inputFileName)
         self.inputFile = ROOT.TFile.Open(self.inputFileName)
-        self.forest = ROOT.MakeNullPointer( "GBRForest" ) 
+        self.forest = ROOT.MakeNullPointer( "GBRForest" )
         #self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
-        self.inputFile.GetObject(self.forestName, self.forest)
-        #
-        varlist = ROOT.MakeNullPointer( ROOT.vector("string") )
-        self.inputFile.GetObject("varlistEB", varlist)
+        # self.inputFile.Get(self.forestName) #, self.forest)
+        # varlist = ROOT.MakeNullPointer( ROOT.vector("string") )
+        self.inputFile.Get("varlistEB") #, varlist)
         #if len(varlist)!=2:
         #    raise StandardError("ERROR: Number of input variables != 2. Not implemented for the moment.")
-        for i,name in enumerate(varlist):
-            # print "var ",i
-            # print name
-            # print self.variablePoints[i][0]
+        for i,name in enumerate(self.inputFile.Get("varlistEB")):
+            # print("var ",i)
+            # print(name)
+            # print(self.variablePoints[i][0])
             if self.variablePoints[i][0]!=name:
                 raise StandardError("ERROR: Input variables are not given in the correct order in self.variablePoints")
             self.inputVariables.append(name)
@@ -50,7 +49,7 @@ class GBR2LUTEmulator:
                 if not int(a) in sortedShapes:
                     sortedShapes[int(a)] = int(b)
                 else:
-                    print "WARNING: shape already filled"
+                    print("WARNING: shape already filled")
         with open(self.outputFileName, 'w') as output:
             inputPoints = [ it[1] for it in self.variablePoints ]
             address = 0
@@ -142,18 +141,18 @@ class GBR2LUTEmulator:
                 corr = offset + scale*math.sin(resp);
                 corr = resp
                 self.lut.SetBinContent(bin1, corr)
-                print "bin1 = ",bin1
-                print "corr = ",corr
+                print("bin1 = ",bin1)
+                print("corr = ",corr)
                 strInputs = ""
                 for inp in inputs:
                     strInputs += str(inp)+" "
-                print >>output, strInputs, resp
+                print(output, strInputs, resp)
 
         outputRooFile = ROOT.TFile(self.outputFileName,"RECREATE")
         outCanvasName = self.outputFileName
         #print  self.outputFileName
         outCanvasName = outCanvasName.replace(".root",".pdf")
-        print outCanvasName
+        print(outCanvasName)
         canvas = ROOT.TCanvas("c_test","c_test",800,800)
 
         outputRooFile.cd()
@@ -488,7 +487,8 @@ class GBR2LUTEmulator:
                 value4 = inputs[3]
                 if self.variablePoints[3][1]: value4 = self.variablePoints[3][1][value4] ## value mapping
 
-                resp = self.forest.GetResponse(array.array('f',inputs))
+                resp = self.inputFile.Get(self.forestName).GetResponse(array.array('f',inputs))
+                # resp = self.forest.GetResponse(array.array('f',inputs))
                 bin1 = self.lut.GetXaxis().FindBin(value1)
                 bin2 = self.lut.GetYaxis().FindBin(value2)
                 bin3 = self.lut.GetZaxis().FindBin(value3)

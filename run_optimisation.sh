@@ -2,7 +2,7 @@
 set -e
 # sh run_optimisation.sh <tag_to_name_folder> <tag_given_to_zerobias> <miniaod_file> <run>
 
-working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/MC24_Winter_optimization/'
+working_dir='/data_CMS/cms/mchiusi/Run3preparation/ruth_MC24_Winter_optimization/'
 pwd=$(pwd)
 
 create_config_file() {
@@ -45,77 +45,71 @@ OutputFile:  ${4}${2}_MERGED_${3}.root
 EOF
 }
 
-# # merging
-# echo 'Merging..'
+# merging
+echo 'Merging..'
 
-# cd ${pwd}/MergeTrees
-# make clean &> /dev/null; make &> /dev/null
+cd ${pwd}/MergeTrees
+make clean &> /dev/null; make &> /dev/null
 
-# if [ ! -d ${pwd}/MergeTrees/run_2024/${1} ]; then
-#     mkdir ${pwd}/MergeTrees/run_2024/${1}
-#     echo "Directory created."
-# else
-#     echo "Directory already exists."
-# fi
-
-
-# # prefixes=("VBF_" "GluGlu" "VBFp")
-# prefixes=("VBF_")
-# for prefix in "${prefixes[@]}"
-# do
-#   raw_file=$(ls ${working_dir}${prefix}*RAW*.root 2>/dev/null)
-#   aod_file=$(ls ${working_dir}${prefix}*MINIAOD*.root 2>/dev/null)
-#   echo 'raw file'
-#   echo ${raw_file}
-#   if [[ -n "$raw_file" && -n "$aod_file" ]]; then
-#     echo "Processing RAW file: $raw_file and MINIAOD file: $aod_file..."
-#     create_file_merge "${pwd}" "${1}" "${prefix}" "${working_dir}" "${aod_file}" "${raw_file}"
-#     ./merge.exe ${pwd}/MergeTrees/run_2024/${1}/${1}_${prefix}.config
-#   else
-#    echo "No matching RAW and MINIAOD files found for prefix ${prefix}"
-#    continue
-#   fi
-# done
+if [ ! -d ${pwd}/MergeTrees/run_2024/${1} ]; then
+    mkdir ${pwd}/MergeTrees/run_2024/${1}
+    echo "Directory created."
+else
+    echo "Directory already exists."
+fi
 
 
-# # hadd files
-# echo 'Hadding merged files..'
-# hadd ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
+# prefixes=("VBF_" "GluGlu" "VBFp")
+prefixes=("VBF_")
+for prefix in "${prefixes[@]}"
+do
+  raw_file=$(ls ${working_dir}${prefix}*RAW*.root 2>/dev/null)
+  aod_file=$(ls ${working_dir}${prefix}*MINIAOD*.root 2>/dev/null)
+  echo 'raw file'
+  echo ${raw_file}
+  if [[ -n "$raw_file" && -n "$aod_file" ]]; then
+    echo "Processing RAW file: $raw_file and MINIAOD file: $aod_file..."
+    create_file_merge "${pwd}" "${1}" "${prefix}" "${working_dir}" "${aod_file}" "${raw_file}"
+    ./merge.exe ${pwd}/MergeTrees/run_2024/${1}/${1}_${prefix}.config
+  else
+   echo "No matching RAW and MINIAOD files found for prefix ${prefix}"
+   continue
+  fi
+done
 
 
-# # matching
-# echo 'Matching..'
+# hadd files
+echo 'Hadding merged files..'
+hadd ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
 
-# cd ${pwd}/MatchAndCompress
-# root -l -b <<EOF
-# .L MakeTreeForCalibration.C+
-# MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_noTagAndProbe_TagAndProbe")
-# .q
-# EOF
 
-# #Compressed
+# matching
+echo 'Matching..'
 
-# python3 produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
+cd ${pwd}/MatchAndCompress
+root -l -b <<EOF
+.L MakeTreeForCalibration.C+
+MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_noTagAndProbe_TagAndProbe")
+.q
+EOF
+
+#Compressed
+python3 produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
 
 # Calibration
 echo 'Calibrating..'
 
-if [ ! -d ${pwd}/Calibrate/forests_2024 ]; then
-    mkdir ${pwd}/Calibrate/forests_2024
-    echo "Directory created."
-else
-    echo "Directory already exists."
+if [ ! -d ${pwd}/calibrate/forests_2024 ]; then
+    mkdir ${pwd}/calibrate/forests_2024
+    echo "directory calibrate/forests_2024 created."
 fi
 
 if [ ! -d ${pwd}/Calibrate/corrections_2024 ]; then
     mkdir ${pwd}/Calibrate/corrections_2024
-    echo "Directory created."
-else
-    echo "Directory already exists."
+    echo "Directory Calibrate/corrections_2024 created."
 fi
 
 cd ${pwd}/Calibrate/RegressionTraining
-echo "Changed directory."
 make clean &> /dev/null || { echo "make clean failed"; exit 1; }
 make
 # make &> /dev/null || { echo "make failed"; exit 1; }
@@ -128,12 +122,12 @@ echo "Creating config file."
 cd ${pwd}/Calibrate/
 
 python3 makeTH4_LUT.py -i forests_2024/BDT_training_optimization_"${1}"_results.root \
-                      -o corrections_2024/corrections_BDT_training_"${1}".root
+                       -o corrections_2024/corrections_BDT_training_"${1}".root
 
 root -l -b <<EOF
 .L ApplyCalibration.C+
 ApplyCalibration("${working_dir}${1}_COMPRESSED.root", "${working_dir}${1}_CALIBRATED.root", \
-                 "corrections_${4}/corrections_BDT_training_${1}.root")
+                 "corrections_2024/corrections_BDT_training_${1}.root")
 .q
 EOF
 
@@ -154,12 +148,9 @@ EOF
 echo 'Isolation..'
 
 cd ${pwd}/Isolate
-
-if [ ! -d ${pwd}/Isolate/ROOTs4LUTs_${4} ]; then
-    mkdir ${pwd}/Isolate/ROOTs4LUTs_${4}
-    echo "Directory created."
-else
-    echo "Directory already exists."
+if [ ! -d ${pwd}/Isolate/ROOTs4LUTs_2024 ]; then
+    mkdir ${pwd}/Isolate/ROOTs4LUTs_2024
+    echo "Directory Isolate/ROOTs4LUTs_2024 created."
 fi
 
 root -l -b <<EOF
@@ -178,12 +169,9 @@ EOF
 echo 'Making rates..'
 
 cd ${pwd}/MakeRates
-
-if [ ! -d ${pwd}/MakeRates/Isolate/histos_${4} ]; then
-    mkdir ${pwd}/MakeRates/Isolate/histos_${4}
-    echo "Directory created."
-else
-    echo "Directory already exists."
+if [ ! -d ${pwd}/MakeRates/histos_2024 ]; then
+    mkdir ${pwd}/MakeRates/histos_2024
+    echo "Directory MakeRates/histos_2024 created."
 fi
 root -l -b <<EOF
 .L Rate_ZeroBias_unpacked.C+
@@ -198,40 +186,45 @@ Rate("${working_dir}${2}_CALIBRATED.root", "histos_2024/histos_rate_ZeroBias_Run
 .q
 EOF
 
-# # Threshold at Fixed rate 14kHz
-# echo 'Computing Thresholds..'
+# Threshold at Fixed rate 14kHz
+echo 'Computing Thresholds..'
 
-# cd ${pwd}/CompareRates
-# root -l -b <<EOF
-# .L CompareRates_ZeroBias_gridSearch_withUnpacked.C+
-# compare("../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", \
-#         "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_optimisation.root", \
-#         "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root")
-# .q
-# EOF
- 
-# # TunrOns
-# echo 'Making TunrOns..'
+cd ${pwd}/CompareRates
+root -l -b <<EOF
+.L CompareRates_ZeroBias_gridSearch_withUnpacked.C+
+compare("../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", \
+        "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_optimisation.root", \
+        "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root")
+.q
+EOF
 
-# cd ${pwd}/MakeTurnOns
-# root -l -b <<EOF
-# .L ApplyIsolationForTurnOns_gridSearch.C+
-# ApplyIsolationForTurnOns("${working_dir}${1}_CALIBRATED.root", \
-#                          "${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
-#                          "../Isolate/ROOTs4LUTs_2024/LUTrelaxation_${1}.root", \
-#                          "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root", \
-#                          "${working_dir}${3}", 14, 0)
-# .q
-# EOF
+# TunrOns
+echo 'Making TunrOns..'
 
-# cd ${pwd}/CompareGridSearchTrunons
-# root -l -b <<EOF
-# .L BestFMturnOns_gridSearch.C+
-# compare("${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
-#         "FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run${4}_${1}.txt", \
-#         "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root", \
-#         "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", "FM")
-# .q
-# EOF
+cd ${pwd}/MakeTurnOns
+root -l -b <<EOF
+.L ApplyIsolationForTurnOns_gridSearch.C+
+ApplyIsolationForTurnOns("${working_dir}${1}_CALIBRATED.root", \
+                         "${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
+                         "../Isolate/ROOTs4LUTs_2024/LUTrelaxation_${1}.root", \
+                         "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root", \
+                         "${working_dir}${3}.root", 14, 0)
+.q
+EOF
+
+cd ${pwd}/CompareGridSearchTrunons
+if [ ! -d ${pwd}/CompareGridSearchTrunons/FMs/FMs_2024 ]; then
+    mkdir ${pwd}/CompareGridSearchTrunons/FMs/FMs_2024
+    echo "Directory CompareGridSearchTrunons/FMs/FMs_2024 created."
+fi
+
+root -l -b <<EOF
+.L BestFMturnOns_gridSearch.C+
+compare("${working_dir}Tau_MC_TURNONS_FIXEDRATE_14kHz_${1}.root", \
+        "FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run${4}_${1}.txt", \
+        "../MakeRates/histos_2024/thresholds_fixedrate_ZeroBias_Run${4}_${1}unpacked_optimization.root", \
+        "../MakeRates/histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", "FM")
+.q
+EOF
 
 echo "Finish -- All good, best turnOns in CompareGridSearchTrunons/FMs/FMs_2024/FM_orderd_turnons_FIXEDRATE_14kHz_Run$4_$1.txt"

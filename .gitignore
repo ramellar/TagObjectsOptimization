@@ -22,5 +22,8 @@ fullBlownCreator.*
 *.nfs*
 *.o
 *.exe
-*.h
+*ACLiC*
 *ruth*
+MergeTrees/run_202*
+CompareGridSearchTrunons/FMs/FMs_202*
+Calibrate/RegressionTraining/run_202*/*.config

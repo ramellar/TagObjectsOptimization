@@ -37,7 +37,7 @@
 #include "HiggsAnalysis/GBRLikelihood/interface/RooHybridBDTAutoPdf.h"
 #include "HiggsAnalysis/GBRLikelihood/interface/RooDoubleCBFast.h"
 #include "HiggsAnalysis/GBRLikelihood/interface/HybridGBRForestFlex.h"
-#include "CondFormats/EgammaObjects/interface/GBRForestD.h"
+#include "CondFormats/GBRForest/interface/GBRForestD.h"
 
 #include <iostream>
 #include <sstream>

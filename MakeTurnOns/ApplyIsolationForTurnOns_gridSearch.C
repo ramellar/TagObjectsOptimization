@@ -106,21 +106,21 @@ void ApplyIsolationForTurnOns(TString InputFileName, TString FileNameOut, TStrin
                 TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
                 Int_t Emin = Emins[iEmin];
                 Int_t Emax = Emins[iEmin] + Emaxs_sum[iEmax];
-                TString ProgressionName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString ProgressionName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH3F* currentProgression = (TH3F*)f_Isolation.Get(ProgressionName);
                 std::cout << " Running " << ProgressionName << std::endl;
 
-                TString TotName = "tot_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString TotName = "tot_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH1F* tot = new TH1F(TotName, TotName, 21, binning);
 
-                TString PassName = "passIso_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString PassName = "passIso_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH1F* pass_Iso  = new TH1F(PassName, PassName, 21, binning);
 
                 Float_t Threshold_Iso;
                 if (fixedThr != 0) { Threshold_Iso = fixedThr; }
                 else
                 {
-                    TString ThresholdsName = "Thresholds_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                    TString ThresholdsName = "Thresholds_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                     TVectorD* ThresholdsVect_Iso  = (TVectorD*)f_Thresholds.Get(ThresholdsName);
                     Threshold_Iso = ThresholdsVect_Iso[0][targetIdx];
                 }
@@ -137,7 +137,7 @@ void ApplyIsolationForTurnOns(TString InputFileName, TString FileNameOut, TStrin
                     if(in_L1Tau_CalibPt>=Threshold_Iso && in_L1Tau_Iso<=IsoCut) { pass_Iso->Fill(in_OfflineTau_pt); }
                 }
 
-                TString TurnonName = "TurnOn_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString TurnonName = "TurnOn_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TGraphAsymmErrors* turnOn = new TGraphAsymmErrors(pass_Iso, tot, "cp");
                 turnOn->Write(TurnonName);
 
@@ -147,7 +147,7 @@ void ApplyIsolationForTurnOns(TString InputFileName, TString FileNameOut, TStrin
                 acceptance[1] = acceptacePercentage(pass_Iso, tot, 20);
                 acceptance[2] = acceptacePercentage(pass_Iso, tot, 40);
                 acceptance[3] = acceptacePercentage(pass_Iso, tot, 60);
-                TString AcceptanceName = "Acceptance_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString AcceptanceName = "Acceptance_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 acceptance.Write(AcceptanceName);
 
             }

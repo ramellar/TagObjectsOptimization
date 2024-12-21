@@ -38,6 +38,7 @@ class GBR2LUT:
         ROOT.gSystem.Load("libHiggsAnalysisGBRLikelihood.so") 
         self.inputFile = ROOT.TFile.Open(self.inputFileName)
         self.forest = ROOT.MakeNullPointer( "GBRForestD" ) 
+        print("ciaooo", self.inputFile.Get(self.forestName).ClassName())
         self.inputFile.GetObject(self.forestName, self.forest)
         #
         varlist = ROOT.MakeNullPointer( ROOT.vector("string") )

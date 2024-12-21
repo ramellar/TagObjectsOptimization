@@ -1,7 +1,8 @@
 #include "GBRApply.h"
 #include "GBREvent.h"
-#include "CondFormats/EgammaObjects/interface/GBRForest.h"
-#include "CondFormats/EgammaObjects/interface/GBRForestD.h"
+#include "CondFormats/GBRForest/interface/GBRForest.h"
+#include "CondFormats/GBRForest/interface/GBRForestD.h"
+
 #include "ICorrection.h"
 
 

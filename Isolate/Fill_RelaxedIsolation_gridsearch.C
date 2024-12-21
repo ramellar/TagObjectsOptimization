@@ -148,7 +148,7 @@ void Fill_RelaxedIsolation_TH3(TString isolation_file, TString relaxation_file, 
                 TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
                 Double_t Emin = Emins[iEmin];
                 Double_t Emax = Emins[iEmin] + Emaxs_sum[iEmax];
-                TString HistoName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(int(Emin))+"_eMax"+to_string(int(Emax));
+                TString HistoName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH3F* currentHisto = new TH3F(HistoName, HistoName, NbinsIEta-1 , 0, NbinsIEta-1, NbinsIEt-1, 0, NbinsIEt-1, NbinsnTT-1, 0, NbinsnTT-1);
                 // std::cout << " Running " << HistoName << std::endl;
 

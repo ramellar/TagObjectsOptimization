@@ -165,7 +165,7 @@ void compare(TString inFile, TString outFile, TString thresholds, TString rates_
                 TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
                 Int_t Emin = Emins[iEmin];
                 Int_t Emax = Emins[iEmin] + Emaxs_sum[iEmax];
-                TString TurnonName = "TurnOn_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString TurnonName = "TurnOn_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 std::cout << " Running " << TurnonName << std::endl;
 
                 TGraphAsymmErrors* currentTurnon = (TGraphAsymmErrors*)f_Turnons->Get(TurnonName);
@@ -174,12 +174,12 @@ void compare(TString inFile, TString outFile, TString thresholds, TString rates_
                 if (fixedThr != 0) { Threshold = fixedThr; }
                 else
                 {
-                    TString ThresholdsName = "Thresholds_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                    TString ThresholdsName = "Thresholds_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                     TVectorD* ThresholdsVect  = (TVectorD*)f_Thresholds.Get(ThresholdsName);
                     Threshold = ThresholdsVect[0][targetIdx];
                 }
 
-                TString AcceptanceName = "Acceptance_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString AcceptanceName = "Acceptance_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TVectorD* AcceptancesVect  = (TVectorD*)f_Turnons->Get(AcceptanceName);
                 Float_t Acceptance = AcceptancesVect[0][0];
 
@@ -195,7 +195,7 @@ void compare(TString inFile, TString outFile, TString thresholds, TString rates_
                     if (fixedThr != 0)
                     { 
                         Threshold = fixedThr;
-                        TString FixedThresholdDiTauRateName = "FixedThresholdDiTauRates_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                        TString FixedThresholdDiTauRateName = "FixedThresholdDiTauRates_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                         TVectorD* FixedThresholdDiTauRate = (TVectorD*)f_rate.Get(FixedThresholdDiTauRateName);
                         Float_t currentRate = FixedThresholdDiTauRate[0][thresholdBin];
 

@@ -46,7 +46,7 @@ void compare(TString unpackedFile, TString gridsearchFile, TString outputFile, b
                 TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
                 Int_t Emin = int(Emins[iEmin]);
                 Int_t Emax = int(Emins[iEmin] + Emaxs_sum[iEmax]);
-                TString DiTauRateName = "DiTauRate_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString DiTauRateName = "DiTauRate_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH1F* DiTauRate = (TH1F*)f_gridseacrh->Get(DiTauRateName);
                 std::cout << " Running " << DiTauRateName << std::endl;
 
@@ -67,7 +67,7 @@ void compare(TString unpackedFile, TString gridsearchFile, TString outputFile, b
                     } 
                 }
 
-                TString ThresholdsName = "Thresholds_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString ThresholdsName = "Thresholds_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 CurrentRelaxationThreshold.Write(ThresholdsName);
 
             }

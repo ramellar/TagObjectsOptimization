@@ -1,6 +1,6 @@
 #include "GBRTrainer.h"
 #include "GBREvent.h"
-#include "CondFormats/EgammaObjects/interface/GBRForest.h"
+#include "CondFormats/GBRForest/interface/GBRForest.h"
 #include "TTree.h"
 #include "TTreeFormula.h"
 #include <assert.h>

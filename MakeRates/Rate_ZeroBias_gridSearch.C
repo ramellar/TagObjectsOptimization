@@ -64,7 +64,7 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
     inTree->GetEntry(0);
     if (in_RunNumber == 362616) { nb = 2450; thisLumiRun = 2.05E34; }
     if (in_RunNumber == 362617) { nb = 2450; thisLumiRun = 2.50E34; }
-    if (in_RunNumber == 369978) { nb = 1165; thisLumiRun = 1.0E34; }
+    if (in_RunNumber == 386604) { nb = 2340; thisLumiRun = 2.10E34; }
     if (thisLumiRun == 0. || nb == 0) { std::cout << "ERROR: something went wrong with the run selection and the lumi/nb initialization" << std::endl; return; }
     scale = 0.001 * nb * 11245.6;
     if (doScaleToLumi) scale *= scaleToLumi / thisLumiRun;
@@ -85,13 +85,13 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
                 TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
                 Int_t Emin = int(Emins[iEmin]);
                 Int_t Emax = int(Emins[iEmin] + Emaxs_sum[iEmax]);
-                TString ProgressionName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString ProgressionName = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH3F* currentProgression = (TH3F*)f_Isolation.Get(ProgressionName);
                 std::cout << " Running " << ProgressionName << std::endl;
 
                 // create histograms for single and double tau pt distributions of passing candidates
-                TString TauPtPassDistributionName = "TauPtPassDistribution_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
-                TString DiTauPtPassDistributionName = "DiTauPtPassDistribution_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString TauPtPassDistributionName = "TauPtPassDistribution_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
+                TString DiTauPtPassDistributionName = "DiTauPtPassDistribution_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH1F* TauPtPassDistribution = new TH1F(TauPtPassDistributionName, TauPtPassDistributionName, 240, 0., 240.);
                 TH2F* DiTauPtPassDistribution = new TH2F(DiTauPtPassDistributionName, DiTauPtPassDistributionName, 240, 0., 240., 240, 0., 240.);
 
@@ -99,10 +99,10 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
 
                 // loop over events
                 // for(UInt_t ievt = 0 ; ievt < Nevents ; ++ievt)
-                for(UInt_t ievt = 0 ; ievt < 100000 ; ++ievt)
+                for(UInt_t ievt = 0 ; ievt <= 100000 ; ++ievt)
                 {
                     inTree->GetEntry(ievt);
-                    if(ievt%100000==0) cout<<"Entry #"<<ievt<<endl; 
+                    if(ievt%50000==0) cout<<"Entry #"<<ievt<<endl; 
                     // SET RUN INFO
                     if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
                     if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
@@ -154,8 +154,8 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
                 DiTauPtPassDistribution->Write();
 
                 // create, fill, and write rate histograms
-                TString TauRateName = "TauRate_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
-                TString DiTauRateName = "DiTauRate_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString TauRateName = "TauRate_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
+                TString DiTauRateName = "DiTauRate_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 TH1F* TauRate = new TH1F(TauRateName, TauRateName, 240, 0., 240.);
                 TH1F* DiTauRate = new TH1F(DiTauRateName, DiTauRateName, 240, 0., 240.);
 
@@ -178,7 +178,7 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
                 CurrentRelaxationRate[4] = DiTauRate->GetBinContent(35); // 34Gev
                 CurrentRelaxationRate[5] = DiTauRate->GetBinContent(36); // 35Gev
                 CurrentRelaxationRate[6] = DiTauRate->GetBinContent(37); // 36Gev
-                TString FixedThresholdDiTauRateName = "FixedThresholdDiTauRates_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+                TString FixedThresholdDiTauRateName = "FixedThresholdDiTauRates_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+TString(Form("%d", int(Emin)))+"_eMax"+TString(Form("%d", int(Emax)));
                 CurrentRelaxationRate.Write(FixedThresholdDiTauRateName);
             }
         }
