@@ -2,23 +2,22 @@
 Set of tools to evaluate tau trigger performance on T&amp;P
 
 ## Foreword
-This package is based on the developments done by Olivier Davignon, Luca Cadamuro, Jean-Baptiste Sauvan, and Jona Motta.
+This package is based on the developments done by Olivier Davignon, Luca Cadamuro, Jean-Baptiste Sauvan, Jona Motta, Marco Chiusi and Ruth Amella Ranz.
 The original work done by the first three can be found mainly at these two links: [NTuples production](https://github.com/davignon/TauTagAndProbe/tree/master/TauTagAndProbe), [Objects calibration](https://github.com/jbsauvan/RegressionTraining)
 
-This forlder is an attempt to put together all of the developments done on top of these two folders in one single repositoty and one tool: ONE TOOL TO OPTIMIZE THEM ALL - CIT.
+This forlder is an attempt to put together all of the developments done on top of these two folders in one single repository and one tool. In May 2024, new optimization scripts were developed to streamline the processes of running optimization and re-emulation automatically.
 
 ## Install instructions
-These instalation instructions work only for CMSSW_11_0_2. To use the updated CMSSW_12_0_2 version for the TauTagAndProbe package and the production of the NTuples refer to [these instructions](https://github.com/jonamotta/TauTagAndProbe/tree/CMSSW_12_0_2-l1t-integration-v110.0). On the other hand, still use the following instructions to do the optimization of the objects (even if NTuples are produced with CMSSW_12_0_2).
-
+These installation instructions are tailored for CMSSW_13_2_0_pre3, the latest version of CMSSW available as of December 2024 in the [L1T Offline](https://github.com/cms-l1t-offline/cmssw) repository. Since the original version used CMSSW_11, several updates have been implemented, and the entire codebase has undergone validation.
 
 ```bash
-cmsrel CMSSW_11_0_2
-cd CMSSW_11_0_2/src
+cmsrel CMSSW_13_2_0_pre3
+cd CMSSW_13_2_0_pre3/src
 cmsenv
 git cms-init
 git remote add cms-l1t-offline git@github.com:cms-l1t-offline/cmssw.git
-git fetch cms-l1t-offline l1t-integration-CMSSW_11_0_2
-git cms-merge-topic -u cms-l1t-offline:l1t-integration-v104.5
+git fetch cms-l1t-offline l1t-integration-CMSSW_13_2_0_pre3
+git cms-merge-topic -u cms-l1t-offline:l1t-integration-v164-CMSSW_13_2_0_pre3
 git cms-addpkg L1Trigger/L1TCommon
 git cms-addpkg L1Trigger/L1TMuon
 git clone https://github.com/cms-l1t-offline/L1Trigger-L1TMuon.git L1Trigger/L1TMuon/data
@@ -27,14 +26,14 @@ git clone https://github.com/cms-l1t-offline/L1Trigger-L1TCalorimeter.git L1Trig
 
 mkdir HiggsAnalysis
 cd HiggsAnalysis
-git clone git@github.com:bendavid/GBRLikelihood.git
-# modify the first line of `HiggsAnalysis/GBRLikelihood/BuildFile.xml` to have `-std=c++17`
+git clone -b fix-cmssw13-comp git@github.com:adewit/GBRLikelihood.git
+cd ../
 
 git cms-checkdeps -A -a
 
 scram b -j 10
 
-git clone https://github.com/jonamotta/TauObjectsOptimization # package for the full optimization
+git clone -b fix_CMSSW13 git@github.com:mchiusi/TagObjectsOptimization.git
 ```
 
 ## Deriving Calibration and Isolation LUTs using bash script
@@ -43,24 +42,15 @@ git clone https://github.com/jonamotta/TauObjectsOptimization # package for the 
 To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages. Generally what you need to derive the calibration and isolation LUTs are the following files:
 * `MERGED` file : resulting from the merging of RAW ntuples with `MINIAOD` 
 * `MINIAOD` : offline reconstructed taus
-* `ZeroBias` : RAW ntuples reEmulated using same caloParams of the RAW ntuples. Generally a high pile-up and high rate (110kHz) run is choosen
-
-### Merging, matching, and compression
-Enter `MergeTrees` and run `make clean ; make`.
-
-To merge the files first create/modify the needed `.config` file inside the `MergeTrees/run` directory. There the `MINIAOD` file has to be specified as primary and the `RAW` one as secondary (always use absolute paths). Check that the files really contain the TTrees that the executable will look for. 
-Then jus run:
-```bash
-./merge.exe run_<year>/<optimization_version>/<config>.config 
-```
+* `ZeroBias` : RAW ntuples reEmulated using same caloParams of the RAW ntuples. Generally a high pile-up and high rate (110kHz) run is choosen. Do NOT forget to include, in the key points of the scripts, the number of bunches, the good lumisections, and the average instantaneous luminosity (available on [CMSOMS](https://cmsoms.cern.ch/cms/run_3/index)).
 
 ### Running the optimisation
-Once you have the `MERGED` file in your folder, simply lauch: 
+Once you have all the inredients in your folder (for example in `/data_CMS/cms/user/`), simply lauch the following script: 
 ```bash
-sh run_optimisation.sh <tag_given_to_merged> <tag_given_to_zerobias> <miniaod_file>
+sh run_optimisation.sh <tag_given_to_merged> <tag_given_to_zerobias> <miniaod_file> <run_number>
 ```
 
-An example is provided in the bash script itself. The `working\_directory` in the basj script has to be configured.
+An example of command is provided in the bash script itself. The `working_directory` in the bash script has to be configured.
 The script will produce in a few hours the following files:
 * `ROOT` file in you working directory containing all the TurnOns at 14kHz resulting from the gridsearch
 * `txt` file in `CompareGridSearchTrunons/FMs/FMs_2024/` containing each processed TunrOns and the corresponding FigureOfMerit
@@ -79,6 +69,7 @@ sh produce_plots.sh <tag_given_to_data_file> <miniaod_file>
 ```
 
 To produce public plots, new python files have been included in `MakePublicTauPlots` folder.
+
 
 ## Else, without bash script
 

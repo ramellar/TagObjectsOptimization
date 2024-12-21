@@ -45,79 +45,79 @@ OutputFile:  ${4}${2}_MERGED_${3}.root
 EOF
 }
 
-# merging
-echo 'Merging..'
+# # merging
+# echo 'Merging..'
 
-cd ${pwd}/MergeTrees
-make clean &> /dev/null; make &> /dev/null
-
-if [ ! -d ${pwd}/MergeTrees/run_2024/${1} ]; then
-    mkdir ${pwd}/MergeTrees/run_2024/${1}
-    echo "Directory created."
-else
-    echo "Directory already exists."
-fi
-
-
-# prefixes=("VBF_" "GluGlu" "VBFp")
-prefixes=("VBF_")
-for prefix in "${prefixes[@]}"
-do
-  raw_file=$(ls ${working_dir}${prefix}*RAW*.root 2>/dev/null)
-  aod_file=$(ls ${working_dir}${prefix}*MINIAOD*.root 2>/dev/null)
-  echo 'raw file'
-  echo ${raw_file}
-  if [[ -n "$raw_file" && -n "$aod_file" ]]; then
-    echo "Processing RAW file: $raw_file and MINIAOD file: $aod_file..."
-    create_file_merge "${pwd}" "${1}" "${prefix}" "${working_dir}" "${aod_file}" "${raw_file}"
-    ./merge.exe ${pwd}/MergeTrees/run_2024/${1}/${1}_${prefix}.config
-  else
-   echo "No matching RAW and MINIAOD files found for prefix ${prefix}"
-   continue
-  fi
-done
-
-
-# hadd files
-echo 'Hadding merged files..'
-hadd ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
-
-
-# matching
-echo 'Matching..'
-
-cd ${pwd}/MatchAndCompress
-root -l -b <<EOF
-.L MakeTreeForCalibration.C+
-MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_noTagAndProbe_TagAndProbe")
-.q
-EOF
-
-#Compressed
-python3 produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
-
-# Calibration
-echo 'Calibrating..'
-
-if [ ! -d ${pwd}/calibrate/forests_2024 ]; then
-    mkdir ${pwd}/calibrate/forests_2024
-    echo "directory calibrate/forests_2024 created."
-fi
-
-if [ ! -d ${pwd}/Calibrate/corrections_2024 ]; then
-    mkdir ${pwd}/Calibrate/corrections_2024
-    echo "Directory Calibrate/corrections_2024 created."
-fi
-
-cd ${pwd}/Calibrate/RegressionTraining
-make clean &> /dev/null || { echo "make clean failed"; exit 1; }
-make
-# make &> /dev/null || { echo "make failed"; exit 1; }
+# cd ${pwd}/MergeTrees
 # make clean &> /dev/null; make &> /dev/null
-echo "Making."
-create_config_file "${pwd}" "${1}" "${working_dir}"
-echo "Creating config file."
-./regression.exe run_2024/${1}.config
+
+# if [ ! -d ${pwd}/MergeTrees/run_2024/${1} ]; then
+#     mkdir ${pwd}/MergeTrees/run_2024/${1}
+#     echo "Directory created."
+# else
+#     echo "Directory already exists."
+# fi
+
+
+# # prefixes=("VBF_" "GluGlu" "VBFp")
+# prefixes=("VBF_")
+# for prefix in "${prefixes[@]}"
+# do
+#   raw_file=$(ls ${working_dir}${prefix}*RAW*.root 2>/dev/null)
+#   aod_file=$(ls ${working_dir}${prefix}*MINIAOD*.root 2>/dev/null)
+#   echo 'raw file'
+#   echo ${raw_file}
+#   if [[ -n "$raw_file" && -n "$aod_file" ]]; then
+#     echo "Processing RAW file: $raw_file and MINIAOD file: $aod_file..."
+#     create_file_merge "${pwd}" "${1}" "${prefix}" "${working_dir}" "${aod_file}" "${raw_file}"
+#     ./merge.exe ${pwd}/MergeTrees/run_2024/${1}/${1}_${prefix}.config
+#   else
+#    echo "No matching RAW and MINIAOD files found for prefix ${prefix}"
+#    continue
+#   fi
+# done
+
+
+# # hadd files
+# echo 'Hadding merged files..'
+# hadd ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
+
+
+# # matching
+# echo 'Matching..'
+
+# cd ${pwd}/MatchAndCompress
+# root -l -b <<EOF
+# .L MakeTreeForCalibration.C+
+# MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_noTagAndProbe_TagAndProbe")
+# .q
+# EOF
+
+# #Compressed
+# python3 produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
+
+# # Calibration
+# echo 'Calibrating..'
+
+# if [ ! -d ${pwd}/Calibrate/forests_2024 ]; then
+#     mkdir ${pwd}/Calibrate/forests_2024
+#     echo "directory Calibrate/forests_2024 created."
+# fi
+
+# if [ ! -d ${pwd}/Calibrate/corrections_2024 ]; then
+#     mkdir ${pwd}/Calibrate/corrections_2024
+#     echo "Directory Calibrate/corrections_2024 created."
+# fi
+
+# cd ${pwd}/Calibrate/RegressionTraining
+# make clean &> /dev/null || { echo "make clean failed"; exit 1; }
+# make
+# # make &> /dev/null || { echo "make failed"; exit 1; }
+# # make clean &> /dev/null; make &> /dev/null
+# echo "Making."
+# create_config_file "${pwd}" "${1}" "${working_dir}"
+# echo "Creating config file."
+# ./regression.exe run_2024/${1}.config
 
 cd ${pwd}/Calibrate/
 
