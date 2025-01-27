@@ -24,6 +24,7 @@ fullBlownCreator.*
 *.exe
 *ACLiC*
 *ruth*
+*bckp*
 MergeTrees/run_202*
 CompareGridSearchTrunons/FMs/FMs_202*
 Calibrate/RegressionTraining/run_202*/*.config

@@ -18,7 +18,7 @@
 #include <fstream>
 #include "../Calibrate/ApplyCalibration.C"
 
-void MakeTauIsoLUT_Options(Float_t effMin, Int_t Emin, Int_t Emax, float calibThr = 1.7, bool includeCompression = false)
+void MakeTauIsoLUT_Options(TString inFile, TString outFile, Float_t effMin, Int_t Emin, Int_t Emax, float calibThr = 1.7, bool includeCompression = false)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -26,12 +26,24 @@ void MakeTauIsoLUT_Options(Float_t effMin, Int_t Emin, Int_t Emax, float calibTh
   TString effMin_intgr = to_string(effMin).substr(0, to_string(effMin).find("."));
   TString effMin_decim = to_string(effMin).substr(2, to_string(effMin).find("."));
 
-  TFile* fLUTS = new TFile ("ROOTs4LUTs_2024/LUTrelaxation_Run3Summer23_caloParams_2023_v0_4.root","READ");
-  TString outFile = "LUTs/LUTs_2024/LUTrelaxation_optimization24_23Summer_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax)+".txt";
+  TFile* fLUTS = new TFile (inFile, "READ");
+
+  std::cout<<"INFILE = " << inFile << std::endl;
   std::cout<<"OUTFILE = " << outFile << std::endl;
   
   TH3F* LUT ;
-  TString LUT_name = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+ //   TString LUT_name = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+ //   TString LUT_name = "LUT_progression_effMin"+effMin_intgr+"p"+effMin_decim+"_eMin"+to_string(Emin)+"_eMax"+to_string(Emax);
+    //   TString LUT_name = "LUTs/LUTs_2024/LUTrelaxation_optimization24_23Summer_progression_effMin" +
+    //                   effMin_intgr + "p" + 
+    //                   effMin_decim + 
+    //                   "_eMin" + TString(to_string(Emin).c_str()) + 
+    //                   "_eMax" + TString(to_string(Emax).c_str()) + ".txt";
+ TString LUT_name = "LUT_progression_effMin" + effMin_intgr + "p" + 
+                   effMin_decim + "_eMin" + TString::Format("%d", Emin) + 
+                   "_eMax" + TString::Format("%d", Emax);
+
+
   LUT = (TH3F*) fLUTS->Get ( LUT_name.Data());
   
   TH3F* binning = new TH3F ("binning", "binning", NbinsIEta-1, hardcodedIetaBinsFloat, compressedNbinsIEt-1, hardcodedCompressedIetBinsFloat, compressedNbinsnTT-1, hardcodedCompressednTTBinsFloat);

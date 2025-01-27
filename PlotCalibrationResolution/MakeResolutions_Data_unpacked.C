@@ -165,12 +165,26 @@ void createHistograms(const std::vector<double>& tauPt,
  
 void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
 {
-    TString run_nmbr_str = to_string(run_nmbr);
+    std::cout << "Starting" << std::endl;
+    // TString run_nmbr_str = to_string(run_nmbr);
+    TString run_nmbr_str = TString::Format("%d", run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
+
 
     TString InputFileName = file;
     TFile f(InputFileName.Data(),"READ");
+    if (f.IsZombie()) {
+    std::cerr << "Error: Could not open file " << InputFileName << std::endl;
+    return;
+    }
     TTree* inTree = (TTree*)f.Get(tree); // "Ntuplizer/TagAndProbe" "Ntuplizer_noTagAndProbe/TagAndProbe"
+
+    if (!inTree) {
+    std::cerr << "Error: Could not find tree " << tree << " in file " << InputFileName << std::endl;
+    return;
+    }
+
+
     Int_t   in_RunNumber =  0;
     Float_t tauPt = 0;
     Float_t tauEta = 0;
@@ -196,6 +210,8 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     TH1F* eta = new TH1F("eta","eta",12,-2.1,2.1);
     TH1F* l1tpt = new TH1F("l1tpt","l1tpt",50,0,100);
 
+    std::cout << " Initializing bins" << std::endl;
+
     std::vector<float> ptBins        = {20, 25, 30, 35, 40, 45, 50, 60, 70, 90, 110, 130, 160, 200, 500};
     std::vector<float> etaBins       = {0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
     std::vector<float> signedEtaBins = {-2.1, -1.8, -1.479, -1.305, -1.0, -0.5, 0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
@@ -209,6 +225,8 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     TH1F* empty = new TH1F("empty","empty",60,0.,3.);
 
     // PT RESPONSE - INCLUSIVE HISTOGRAMS
+
+    std::cout << "Pt response histograms" << std::endl;
     TH1F* pt_response_ptInclusive = new TH1F("pt_response_ptInclusive","pt_response_ptInclusive",60,0,3);
     TH1F* pt_barrel_resp_ptInclusive = new TH1F("pt_barrel_resp_ptInclusive","pt_barrel_resp_ptInclusive",60,0,3);
     TH1F* pt_endcap_resp_ptInclusive = new TH1F("pt_endcap_resp_ptInclusive","pt_endcap_resp_ptInclusive",60,0,3);
@@ -482,12 +500,26 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     TH2F* PTvsETA_resolution = new TH2F("PTvsETA_resolution","PTvsETA_resolution",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
     TH2F* PTvsETA_scale = new TH2F("PTvsETA_events","PTvsETA_events",ptBins.size()-1, ptBins_t ,etaBins.size()-1, etaBins_t);
 
+
     double median_barrel;
     double mad_barrel;
     double median_endcap;
     double mad_endcap;
-    for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
-    {
+    for(long unsigned int i = 0; i < ptBins.size()-1; ++i){
+        
+        std::cout << "Processing ptBin " << i << std::endl;
+
+        if (response_ptBins[i] && response_ptBins[i]->GetMean() != 0.0) {
+        // Safe to access the histogram
+        }
+
+        if (response_ptBins.size() != ptBins.size() - 1) {
+            std::cerr << "Error: Mismatched array sizes!" << std::endl;
+            return;
+        }
+        
+        std::cout << "Median Barrel: " << median_barrel << ", MAD Barrel: " << mad_barrel << std::endl;
+
         if (method == "median")
         {
         if (response_ptBins[i]->GetMean() != 0.0) {median_barrel = Median(barrel_response_ptBins[i]);}

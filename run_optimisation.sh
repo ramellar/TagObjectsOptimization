@@ -2,7 +2,7 @@
 set -e
 # sh run_optimisation.sh <tag_to_name_folder> <tag_given_to_zerobias> <miniaod_file> <run>
 
-working_dir='/data_CMS/cms/mchiusi/Run3preparation/ruth_MC24_Winter_optimization/'
+working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/MC24_Winter_optimization/'
 pwd=$(pwd)
 
 create_config_file() {
@@ -119,65 +119,65 @@ EOF
 # echo "Creating config file."
 # ./regression.exe run_2024/${1}.config
 
-cd ${pwd}/Calibrate/
+# cd ${pwd}/Calibrate/
 
-python3 makeTH4_LUT.py -i forests_2024/BDT_training_optimization_"${1}"_results.root \
-                       -o corrections_2024/corrections_BDT_training_"${1}".root
+# python3 makeTH4_LUT.py -i forests_2024/BDT_training_optimization_"${1}"_results.root \
+#                        -o corrections_2024/corrections_BDT_training_"${1}".root
 
-root -l -b <<EOF
-.L ApplyCalibration.C+
-ApplyCalibration("${working_dir}${1}_COMPRESSED.root", "${working_dir}${1}_CALIBRATED.root", \
-                 "corrections_2024/corrections_BDT_training_${1}.root")
-.q
-EOF
+# root -l -b <<EOF
+# .L ApplyCalibration.C+
+# ApplyCalibration("${working_dir}${1}_COMPRESSED.root", "${working_dir}${1}_CALIBRATED.root", \
+#                  "corrections_2024/corrections_BDT_training_${1}.root")
+# .q
+# EOF
 
-root -l -b <<EOF
-.L ApplyCalibration_ZeroBias.C+
-ApplyCalibrationZeroBias("${working_dir}${2}.root", "${working_dir}${2}_CALIBRATED.root", \
-                         "corrections_2024/corrections_BDT_training_${1}.root")
-.q
-EOF
+# root -l -b <<EOF
+# .L ApplyCalibration_ZeroBias.C+
+# ApplyCalibrationZeroBias("${working_dir}${2}.root", "${working_dir}${2}_CALIBRATED.root", \
+#                          "corrections_2024/corrections_BDT_training_${1}.root")
+# .q
+# EOF
 
-root -l -b <<EOF
-.L MakeTauCalibLUT.C+
-MakeTauCalibLUT("LUTs_2024/LUTcalibration_${1}.txt", "corrections_2024/corrections_BDT_training_${1}.root")
-.q
-EOF
+# root -l -b <<EOF
+# .L MakeTauCalibLUT.C+
+# MakeTauCalibLUT("LUTs_2024/LUTcalibration_${1}.txt", "corrections_2024/corrections_BDT_training_${1}.root")
+# .q
+# EOF
 
-# Isolation
-echo 'Isolation..'
+# # Isolation
+# echo 'Isolation..'
 
-cd ${pwd}/Isolate
-if [ ! -d ${pwd}/Isolate/ROOTs4LUTs_2024 ]; then
-    mkdir ${pwd}/Isolate/ROOTs4LUTs_2024
-    echo "Directory Isolate/ROOTs4LUTs_2024 created."
-fi
+# cd ${pwd}/Isolate
+# if [ ! -d ${pwd}/Isolate/ROOTs4LUTs_2024 ]; then
+#     mkdir ${pwd}/Isolate/ROOTs4LUTs_2024
+#     echo "Directory Isolate/ROOTs4LUTs_2024 created."
+# fi
 
-root -l -b <<EOF
-.L Build_Isolation.C+
-Build_Isolation("${working_dir}${1}_CALIBRATED.root", "ROOTs4LUTs_2024/LUTisolation_${1}.root", 3 , 14)
-.q
-EOF
+# root -l -b <<EOF
+# .L Build_Isolation.C+
+# Build_Isolation("${working_dir}${1}_CALIBRATED.root", "ROOTs4LUTs_2024/LUTisolation_${1}.root", 3 , 14)
+# .q
+# EOF
 
-root -l -b <<EOF
-.L Fill_RelaxedIsolation_gridsearch.C+
-Fill_RelaxedIsolation_TH3("ROOTs4LUTs_2024/LUTisolation_${1}.root", "ROOTs4LUTs_2024/LUTrelaxation_${1}.root")
-.q
-EOF
+# root -l -b <<EOF
+# .L Fill_RelaxedIsolation_gridsearch.C+
+# Fill_RelaxedIsolation_TH3("ROOTs4LUTs_2024/LUTisolation_${1}.root", "ROOTs4LUTs_2024/LUTrelaxation_${1}.root")
+# .q
+# EOF
 
-# Rates
-echo 'Making rates..'
+# # Rates
+# echo 'Making rates..'
 
 cd ${pwd}/MakeRates
-if [ ! -d ${pwd}/MakeRates/histos_2024 ]; then
-    mkdir ${pwd}/MakeRates/histos_2024
-    echo "Directory MakeRates/histos_2024 created."
-fi
-root -l -b <<EOF
-.L Rate_ZeroBias_unpacked.C+
-Rate("${working_dir}${2}.root", "histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
-.q
-EOF
+# if [ ! -d ${pwd}/MakeRates/histos_2024 ]; then
+#     mkdir ${pwd}/MakeRates/histos_2024
+#     echo "Directory MakeRates/histos_2024 created."
+# fi
+# root -l -b <<EOF
+# .L Rate_ZeroBias_unpacked.C+
+# Rate("${working_dir}${2}.root", "histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+# .q
+# EOF
 
 root -l -b <<EOF
 .L Rate_ZeroBias_gridSearch.C+

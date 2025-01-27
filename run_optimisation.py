@@ -3,7 +3,7 @@ import subprocess
 import argparse
 
 # Set variables
-working_dir = '/data_CMS/cms/mchiusi/Run3preparation/ruth_MC24_Winter_optimization/'
+working_dir = '/data_CMS/cms/amella/Run3_2024/Run3_2024/MC24_Winter_optimization/'
 pwd = os.getcwd()
 
 # Function to create the config file
@@ -174,13 +174,13 @@ def rate(tag_raw, tag_zerobias, run):
     os.chdir(f"{pwd}/MakeRates")
     os.makedirs(f"{pwd}/MakeRates/histos_2024", exist_ok=True)
 
-    subprocess.run(f"""
-    root -l -b <<EOF
-    .L Rate_ZeroBias_unpacked.C+
-    Rate("{working_dir}{tag_zerobias}.root", "histos_2024/histos_rate_ZeroBias_Run{run}_{tag_raw}_unpacked.root", {run})
-    .q
-    EOF
-    """, shell=True)
+    # subprocess.run(f"""
+    # root -l -b <<EOF
+    # .L Rate_ZeroBias_unpacked.C+
+    # Rate("{working_dir}{tag_zerobias}.root", "histos_2024/histos_rate_ZeroBias_Run{run}_{tag_raw}_unpacked.root", {run})
+    # .q
+    # EOF
+    # """, shell=True)
 
     subprocess.run(f"""
     root -l -b <<EOF
@@ -250,8 +250,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Run all the functions with user-provided arguments
-    merge_and_match(args.tag_raw)
-    calibration(args.tag_raw, args.tag_zerobias)
-    isolation(args.tag_raw)
+    # merge_and_match(args.tag_raw)
+    # calibration(args.tag_raw, args.tag_zerobias)
+    # isolation(args.tag_raw)
     rate(args.tag_raw, args.tag_zerobias, args.run)
     final_comparison(args.tag_raw, args.tag_aod, args.run)
