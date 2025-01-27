@@ -96,8 +96,8 @@ EOF
 # #Compressed
 # python produceTreeWithCompressedVars.py -i "${working_dir}${1}"_MATCHED.root -o "${working_dir}${1}"_COMPRESSED.root
 
-# # Calibration
-# echo 'Calibrating..'
+# Calibration
+echo 'Calibrating..'
 
 # if [ ! -d ${pwd}/Calibrate/forests_2024 ]; then
 #     mkdir ${pwd}/Calibrate/forests_2024
@@ -119,7 +119,7 @@ EOF
 # echo "Creating config file."
 # ./regression.exe run_2024/${1}.config
 
-# cd ${pwd}/Calibrate/
+cd ${pwd}/Calibrate/
 
 # python makeTH4_LUT.py -i forests_2024/BDT_training_optimization_"${1}"_results.root \
 #                        -o corrections_2024/corrections_BDT_training_"${1}".root
@@ -131,18 +131,18 @@ EOF
 # .q
 # EOF
 
-# root -l -b <<EOF
-# .L ApplyCalibration_ZeroBias.C+
-# ApplyCalibrationZeroBias("${working_dir}${2}.root", "${working_dir}${2}_CALIBRATED.root", \
-#                          "corrections_2024/corrections_BDT_training_${1}.root")
-# .q
-# EOF
+root -l -b <<EOF
+.L ApplyCalibration_ZeroBias.C+
+ApplyCalibrationZeroBias("${working_dir}${2}.root", "${working_dir}${2}_CALIBRATED.root", \
+                         "corrections_2024/corrections_BDT_training_${1}.root")
+.q
+EOF
 
-# root -l -b <<EOF
-# .L MakeTauCalibLUT.C+
-# MakeTauCalibLUT("LUTs_2024/LUTcalibration_${1}.txt", "corrections_2024/corrections_BDT_training_${1}.root")
-# .q
-# EOF
+root -l -b <<EOF
+.L MakeTauCalibLUT.C+
+MakeTauCalibLUT("LUTs_2024/LUTcalibration_${1}.txt", "corrections_2024/corrections_BDT_training_${1}.root")
+.q
+EOF
 
 # # Isolation
 # echo 'Isolation..'

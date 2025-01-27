@@ -38,7 +38,7 @@ def sortShapes(shapeHisto):
     for b in range(1,nbins+1):
         numbers[b-1] = shapeHisto.GetBinContent(b)
     #
-    sortedShapes = sorted(numbers.iteritems(), key=operator.itemgetter(1))
+    sortedShapes = sorted(numbers.items(), key=operator.itemgetter(1))
     #
     zeros = []
     nonzeros = []
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     
     # print "First pass: reading tree to build compressed shape histo"
     nentries = inputTree.GetEntriesFast()
-    for e in xrange(nentries):
+    for e in range(nentries):
         if inputTree.OfflineTau_isMatched!=1: continue
         inputTree.GetEntry(e)
         data["RunNumber"][0]    = int(inputTree.RunNumber) #Retrieves the first (and only) element of the array associated with the "RunNumber" key.
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     shapeHisto.Write()
     
     # print "Second pass: reading tree for filling output tree"
-    for e in xrange(nentries):
+    for e in range(nentries):
         inputTree.GetEntry(e)
         if inputTree.OfflineTau_isMatched!=1: continue
         data["RunNumber"][0]    = int(inputTree.RunNumber)
