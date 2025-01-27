@@ -22,6 +22,13 @@
 using namespace std;
 
 // VARIABLES DEFINING THE GRID SEARCH PHASE SPACE
+// const UInt_t NEffsMin = 2;
+// const UInt_t NEmins = 2;
+// const UInt_t NEmaxs_sum = 2;
+// const Float_t EffsMin[NEffsMin] = {0.8, 0.9};
+// const Float_t Emins[NEmins] = {43., 46.};
+// const Float_t Emaxs_sum[NEmaxs_sum] = {61., 64.};
+
 const UInt_t NEffsMin = 10;
 const UInt_t NEmins = 13;
 const UInt_t NEmaxs_sum = 18;

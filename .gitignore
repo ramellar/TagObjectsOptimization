@@ -24,3 +24,6 @@ fullBlownCreator.*
 *.exe
 *.h
 *ruth*
+*bckp*
+*bkp*
+MergeTrees/run_202*

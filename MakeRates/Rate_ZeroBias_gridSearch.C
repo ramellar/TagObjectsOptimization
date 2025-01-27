@@ -25,8 +25,6 @@ using namespace std;
 
 void Rate(TString FileName_in, TString FileName_out, TString isolation, int run, bool doScaleToLumi=false, float calibThr = 1.7)
 {
-    TString run_str = to_string(run);
-
     TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
     TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
@@ -59,20 +57,27 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
     // SET RUN INFO
     float thisLumiRun = 0.;
     float nb = 0.;
+    int lumi_min = 0;
+    int lumi_max = 0;
     float scaleToLumi = 2.00E34;
     float scale = 0.;
     inTree->GetEntry(0);
-    if (in_RunNumber == 362616) { nb = 2450; thisLumiRun = 2.05E34; }
-    if (in_RunNumber == 362617) { nb = 2450; thisLumiRun = 2.50E34; }
-    if (in_RunNumber == 369978) { nb = 1165; thisLumiRun = 1.0E34; }
-    if (thisLumiRun == 0. || nb == 0) { std::cout << "ERROR: something went wrong with the run selection and the lumi/nb initialization" << std::endl; return; }
-    scale = 0.001 * nb * 11245.6;
+    // SET RUN INFO
+    if (in_RunNumber == run) { 
+        lumi_min = 114;
+        lumi_max = 1685; 
+        nb = 2340;
+        thisLumiRun = 2.10E34;
+    } else {
+        std::cout << "ERROR: something went wrong with the run selection and the lumi/nb initialization" << std::endl; 
+        return;
+    }
+    scale = nb * 11.2456;
     if (doScaleToLumi) scale *= scaleToLumi / thisLumiRun;
 
     // CREATE OUTPUT FILE
     TFile f_out(FileName_out, "RECREATE");
-    // "histos_2024/histos_rate_ZeroBias_Run"+run_str+"_optimization_Run3Summer23_caloParams_2023_v0_4.root"
-
+    
     // START OF GRID SEARCH
     for (UInt_t iEff = 0; iEff < NEffsMin; ++iEff)
     {
@@ -99,14 +104,13 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
 
                 // loop over events
                 // for(UInt_t ievt = 0 ; ievt < Nevents ; ++ievt)
-                for(UInt_t ievt = 0 ; ievt < 100000 ; ++ievt)
+                for(UInt_t ievt = 0 ; ievt < 1000000 ; ++ievt)
                 {
                     inTree->GetEntry(ievt);
                     if(ievt%100000==0) cout<<"Entry #"<<ievt<<endl; 
                     // SET RUN INFO
-                    if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
-                    if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
-
+                    if(in_lumi<lumi_min || in_lumi>lumi_max) continue;
+                    
                     ++Denominator;
 
                     // double tau filling pairs
@@ -199,8 +203,10 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
         inTree->GetEntry(ievt);
         if(ievt%100000==0) cout<<"Entry #"<<ievt<<endl; 
         // SET RUN INFO
-        if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
-        if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
+        // if (in_RunNumber == 362616) { if(in_lumi<0) continue; }
+        // if (in_RunNumber == 362617) { if(in_lumi<0) continue; }
+
+        if(in_lumi<lumi_min || in_lumi>lumi_max) continue;
 
         ++Denominator;
 

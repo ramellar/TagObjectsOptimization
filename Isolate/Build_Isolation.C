@@ -26,12 +26,14 @@ using namespace std;
 
 // THE DEFAULT WE HAVE BEEN USING IN 2022 IS BUILD WITH SUPERCOMPRESSED, AND FILL+LUT WITH COMPRESSED
 
+// The goal of the isaltion and relaxation procedure is to find the value of the Isolation threashold that then will be applied in the L1 level 2 algorithm
+
 /*This function outputs:
   -Inclusive histograms:
     -done with the compressed variables in "../Calibrate/ApplyCalibration.C"
     -done with the calibrated variables given as input
-  -It defines histograms per bins in eta, Et and nTT and 3 main maps are defined:
-    - HistosPerBin: which gives in the output Histo_eta_Et_nTT which is the number of counts as a function of the isaltion energy
+  -It defines histograms per bins in eta, Et and nTT and 2 more main maps which are defined as :
+    - HistosPerBin: which gives as output a string Histo_eta_Et_nTT associated to the corresponding histogram (in bins of eta, Et and nTT) showing the number of counts as a function of the isaltion energy
     - Isocut_Per_bin: which for a value of the efficiency gives the 3D histogram with eta, Et and nTT as axis containing the information of the IsoCuts for that efficiency
     - Iso_Per_effciiency_Per_bin: which gives the value of the isolation cut for each value of efficnecy and each histogram
   -From these maps ("dictionnaries") we plot in the output:
