@@ -1,3 +1,4 @@
+
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
@@ -163,7 +164,7 @@ void createHistograms(const std::vector<double>& tauPt,
     }
 
  
-void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
+void MakeResolutions(TString file, TString tree, int run_nmbr, int gen_cut=0, Tstring cut="", TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
 {
     std::cout << "Starting" << std::endl;
     // TString run_nmbr_str = to_string(run_nmbr);
@@ -189,6 +190,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     Float_t tauPt = 0;
     Float_t tauEta = 0;
     Float_t tauPhi = 0;
+    Float_t MatchedGenPt = 0;
+    Float_t MatchedGenEta = 0;
+    Float_t MatchedGenPhi = 0;
     Int_t tauDM = -1;
     Float_t l1tTauPt = 0;
     Float_t l1tTauEta = 0;
@@ -199,6 +203,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     inTree->SetBranchAddress("tauPt",     &tauPt);
     inTree->SetBranchAddress("tauEta",    &tauEta);
     inTree->SetBranchAddress("tauPhi",    &tauPhi);
+    inTree->SetBranchAddress("MatchedGenPt",     &MatchedGenPt);
+    inTree->SetBranchAddress("MatchedGenEta",    &MatchedGenEta);
+    inTree->SetBranchAddress("MatchedGenPhi",    &MatchedGenPhi);
     // inTree->SetBranchAddress("tauDM",     &tauDM);
     inTree->SetBranchAddress("tauDecayMode",     &tauDM);
     inTree->SetBranchAddress("l1tPt",     &l1tTauPt);
@@ -354,6 +361,15 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         Nvtx->Fill(nvtx);
         // if (nvtx < 30 and nvtx > 40) { continue; }
 
+        // Setting a cut on the MatchedGenPt
+        if(MatchedGenPt < gen_cut && cut="pt") { continue; }
+
+        //Selecting only gen level taus in the barrel region
+        if(abs(MatchedGenEta) < 2.1 and abs(MatchedGenEta) > 1.479 && cut="eta_barrel") { continue; }
+        
+        //Selecting only gen level taus in the endcap region
+        if(abs(MatchedGenEta) < 1.305 && cut="eta_endcap") { continue; }
+
         // fill inclusive distributions skipping low energy taus
         if(tauPt>30)
         {
@@ -388,7 +404,6 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
                 //     //continue; 
                 //     }
                 response_ptBins[i]->Fill(l1tTauPt/tauPt);
-    
                 if (tauPt > 30 and tauPt < 50) {
                    l1tau_histo->Fill(l1tTauPt);
                    tauPt_histo->Fill(tauPt);
@@ -625,21 +640,6 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         fit_pt_resol_fctEta->SetBinContent(i+etaBins.size(), fit_plusEta_response_ptBins[i]->GetParameter("Sigma")/fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
         fit_pt_resol_fctEta->SetBinError(i+etaBins.size(), fit_plusEta_response_ptBins[i]->GetParError(3)/fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
     }
-
-     // FIT PT RESPONSE -  ETA BINS HISTIGRAMS
-        // std::vector<TF1*> fit_absEta_response_ptBins = {};
-        // std::vector<TF1*> fit_minusEta_response_ptBins = {};
-        // std::vector<TF1*> fit_plusEta_response_ptBins = {};
-        // for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
-        // {
-        // TString lowE;
-        // lowE.Form("%.3f", etaBins[i]);
-        // TString highE;
-        // highE.Form("%.3f", etaBins[i+1]);
-        // fit_absEta_response_ptBins.push_back(new TF1("fit_pt_resp_AbsEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
-        // fit_minusEta_response_ptBins.push_back(new TF1("fit_pt_resp_MinusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
-        // fit_plusEta_response_ptBins.push_back(new TF1("fit_pt_resp_PlusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
-        // }
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity

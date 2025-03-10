@@ -103,63 +103,63 @@ void DrawHistogramsWithFits(std::vector<TH1F*> barrel_response_ptBins,
     }
 
 
-void createHistograms(const std::vector<double>& tauPt,
+void createHistograms(const std::vector<double>& MatchedGenPt,
                       const std::vector<double>& l1tTauPt,
-                      const std::vector<double>& tauEta,
-                      const std::vector<double>& tauPhi,
+                      const std::vector<double>& MatchedGenEta,
+                      const std::vector<double>& MatchedGenPhi,
                       const std::vector<int>& nvtx) {
 
-    TCanvas *canvas_tauPt = new TCanvas("canvas_tauPt", "Histograms for tauPt and L1 Pt", 800, 600);
-    TCanvas *canvas_tauEta_Phi = new TCanvas("canvas_tauEta_Phi", "Histograms for tauEta and tauPhi", 800, 600);
+    TCanvas *canvas_MatchedGenPt = new TCanvas("canvas_MatchedGenPt", "Histograms for MatchedGenPt and L1 Pt", 800, 600);
+    TCanvas *canvas_MatchedGenEta_Phi = new TCanvas("canvas_MatchedGenEta_Phi", "Histograms for MatchedGenEta and MatchedGenPhi", 800, 600);
 
     TH1D *hist_l1tTauPt = new TH1D("hist_l1tTauPt", "Histogram for L1 Pt", 50, 0, 50);
     hist_l1tTauPt->SetLineColor(kBlue);
     for (const auto& value : l1tTauPt) {
         hist_l1tTauPt->Fill(value);
     }
-    canvas_tauPt->cd();
+    canvas_MatchedGenPt->cd();
     hist_l1tTauPt->Draw();
 
-    TH1D *hist_tauPt = new TH1D("hist_tauPt", "Histogram for tauPt", 50, 0, 50);
-    hist_tauPt->SetLineColor(kRed);
-    for (const auto& value : tauPt) {
-        hist_tauPt->Fill(value);
+    TH1D *hist_MatchedGenPt = new TH1D("hist_MatchedGenPt", "Histogram for MatchedGenPt", 50, 0, 50);
+    hist_MatchedGenPt->SetLineColor(kRed);
+    for (const auto& value : MatchedGenPt) {
+        hist_MatchedGenPt->Fill(value);
     }
-    canvas_tauPt->cd();
-    hist_tauPt->Draw("SAME");
+    canvas_MatchedGenPt->cd();
+    hist_MatchedGenPt->Draw("SAME");
 
-    TH1D *hist_tauEta = new TH1D("hist_tauEta", "Histogram for tauEta", 50, -3, 3);
-    hist_tauEta->SetLineColor(kGreen);
-    for (const auto& value : tauEta) {
-        hist_tauEta->Fill(value);
+    TH1D *hist_MatchedGenEta = new TH1D("hist_MatchedGenEta", "Histogram for MatchedGenEta", 50, -3, 3);
+    hist_MatchedGenEta->SetLineColor(kGreen);
+    for (const auto& value : MatchedGenEta) {
+        hist_MatchedGenEta->Fill(value);
     }
-    canvas_tauEta_Phi->cd();
-    hist_tauEta->Draw();
+    canvas_MatchedGenEta_Phi->cd();
+    hist_MatchedGenEta->Draw();
 
-    TH1D *hist_tauPhi = new TH1D("hist_tauPhi", "Histogram for tauPhi", 50, -3.14, 3.14);
-    hist_tauPhi->SetLineColor(kOrange);
-    for (const auto& value : tauPhi) {
-        hist_tauPhi->Fill(value);
+    TH1D *hist_MatchedGenPhi = new TH1D("hist_MatchedGenPhi", "Histogram for MatchedGenPhi", 50, -3.14, 3.14);
+    hist_MatchedGenPhi->SetLineColor(kOrange);
+    for (const auto& value : MatchedGenPhi) {
+        hist_MatchedGenPhi->Fill(value);
     }
-    canvas_tauEta_Phi->cd();
-    hist_tauPhi->Draw("SAME");
+    canvas_MatchedGenEta_Phi->cd();
+    hist_MatchedGenPhi->Draw("SAME");
 
-    canvas_tauPt->cd();
-    TLegend *legend_tauPt = new TLegend(0.7, 0.7, 0.9, 0.9);
-    legend_tauPt->AddEntry(hist_tauPt, "tauPt", "l");
-    legend_tauPt->AddEntry(hist_l1tTauPt, "L1 Pt", "l");
-    legend_tauPt->Draw();
+    canvas_MatchedGenPt->cd();
+    TLegend *legend_MatchedGenPt = new TLegend(0.7, 0.7, 0.9, 0.9);
+    legend_MatchedGenPt->AddEntry(hist_MatchedGenPt, "MatchedGenPt", "l");
+    legend_MatchedGenPt->AddEntry(hist_l1tTauPt, "L1 Pt", "l");
+    legend_MatchedGenPt->Draw();
 
-    canvas_tauEta_Phi->cd();
-    TLegend *legend_tauEta_Phi = new TLegend(0.7, 0.7, 0.9, 0.9);
-    legend_tauEta_Phi->AddEntry(hist_tauEta, "tauEta", "l");
-    legend_tauEta_Phi->AddEntry(hist_tauPhi, "tauPhi", "l");
-    legend_tauEta_Phi->Draw();
+    canvas_MatchedGenEta_Phi->cd();
+    TLegend *legend_MatchedGenEta_Phi = new TLegend(0.7, 0.7, 0.9, 0.9);
+    legend_MatchedGenEta_Phi->AddEntry(hist_MatchedGenEta, "MatchedGenEta", "l");
+    legend_MatchedGenEta_Phi->AddEntry(hist_MatchedGenPhi, "MatchedGenPhi", "l");
+    legend_MatchedGenEta_Phi->Draw();
 
-    canvas_tauPt->Update();
-    canvas_tauEta_Phi->Update();
-    canvas_tauPt->SaveAs("various/discarted_events_tauPt.png");
-    canvas_tauEta_Phi->SaveAs("various/discarted_events_tauEta_Phi.png");
+    canvas_MatchedGenPt->Update();
+    canvas_MatchedGenEta_Phi->Update();
+    canvas_MatchedGenPt->SaveAs("various/discarted_events_MatchedGenPt.png");
+    canvas_MatchedGenEta_Phi->SaveAs("various/discarted_events_MatchedGenEta_Phi.png");
     }
 
  
@@ -186,9 +186,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
 
 
     Int_t   in_RunNumber =  0;
-    Float_t tauPt = 0;
-    Float_t tauEta = 0;
-    Float_t tauPhi = 0;
+    Float_t MatchedGenPt = 0;
+    Float_t MatchedGenEta = 0;
+    Float_t MatchedGenPhi = 0;
     Int_t tauDM = -1;
     Float_t l1tTauPt = 0;
     Float_t l1tTauEta = 0;
@@ -196,9 +196,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     Int_t   l1tTauIso = 0;
     Int_t   nvtx = 0;
     inTree->SetBranchAddress("RunNumber", &in_RunNumber);
-    inTree->SetBranchAddress("tauPt",     &tauPt);
-    inTree->SetBranchAddress("tauEta",    &tauEta);
-    inTree->SetBranchAddress("tauPhi",    &tauPhi);
+    inTree->SetBranchAddress("MatchedGenPt",     &MatchedGenPt);
+    inTree->SetBranchAddress("MatchedGenEta",    &MatchedGenEta);
+    inTree->SetBranchAddress("MatchedGenPhi",    &MatchedGenPhi);
     // inTree->SetBranchAddress("tauDM",     &tauDM);
     inTree->SetBranchAddress("tauDecayMode",     &tauDM);
     inTree->SetBranchAddress("l1tPt",     &l1tTauPt);
@@ -320,7 +320,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
     TH1F* phi_resp_inclusive = new TH1F("phi_resp_inclusive","phi_resp_inclusive",200,-1,1);
 
     TH1F* l1tau_histo = new TH1F("l1tau","l1tau",20,30,100);
-    TH1F* tauPt_histo = new TH1F("tauPt","tauPt",20,30,100);
+    TH1F* MatchedGenPt_histo = new TH1F("MatchedGenPt","MatchedGenPt",20,30,100);
     // ADDITIONAL USEFULL PLOTS
     TH1F* Nvtx = new TH1F("Nvtx","Nvtx",70,0,70);
     // std::vector<double> collection_tauPt;
@@ -355,28 +355,28 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         // if (nvtx < 30 and nvtx > 40) { continue; }
 
         // fill inclusive distributions skipping low energy taus
-        if(tauPt>30)
+        if(MatchedGenPt>30)
         {
-            pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
-            eta_resp_inclusive->Fill(l1tTauEta - tauEta);
-            phi_resp_inclusive->Fill(l1tTauPhi - tauPhi);
-            if(abs(tauEta) < 1.305)
+            pt_response_ptInclusive->Fill(l1tTauPt/MatchedGenPt);
+            eta_resp_inclusive->Fill(l1tTauEta - MatchedGenEta);
+            phi_resp_inclusive->Fill(l1tTauPhi - MatchedGenPhi);
+            if(abs(MatchedGenEta) < 1.305)
             {
-                pt_barrel_resp_ptInclusive->Fill(l1tTauPt/tauPt);
-                eta_resp_barrel->Fill(l1tTauEta - tauEta);
-                phi_resp_barrel->Fill(l1tTauPhi - tauPhi);
+                pt_barrel_resp_ptInclusive->Fill(l1tTauPt/MatchedGenPt);
+                eta_resp_barrel->Fill(l1tTauEta - MatchedGenEta);
+                phi_resp_barrel->Fill(l1tTauPhi - MatchedGenPhi);
             }
-            else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479)
+            else if (abs(MatchedGenEta) < 2.1 and abs(MatchedGenEta) > 1.479)
             {
-                pt_endcap_resp_ptInclusive->Fill(l1tTauPt/tauPt);
-                eta_resp_endcap->Fill(l1tTauEta - tauEta);
-                phi_resp_endcap->Fill(l1tTauPhi - tauPhi);
+                pt_endcap_resp_ptInclusive->Fill(l1tTauPt/MatchedGenPt);
+                eta_resp_endcap->Fill(l1tTauEta - MatchedGenEta);
+                phi_resp_endcap->Fill(l1tTauPhi - MatchedGenPhi);
             }
         }
 
         for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
         {
-            if(tauPt > ptBins[i] and tauPt <= ptBins[i+1])
+            if(MatchedGenPt > ptBins[i] and MatchedGenPt <= ptBins[i+1])
             {
                 // if (l1tTauPt/tauPt < 0.5 or l1tTauPt/tauPt >= 1.5) { 
                 //     // cout << tauPt << ", L1 Pt" << l1tTauPt << ", eta" << tauEta << ", phi" << tauPhi << ", vertices" << nvtx << " => bad event" << endl;
@@ -387,23 +387,22 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
                 //     collection_nvtx.push_back(nvtx);
                 //     //continue; 
                 //     }
-                response_ptBins[i]->Fill(l1tTauPt/tauPt);
-    
-                if (tauPt > 30 and tauPt < 50) {
+                response_ptBins[i]->Fill(l1tTauPt/MatchedGenPt);
+                if (MatchedGenPt > 30 and MatchedGenPt < 50) {
                    l1tau_histo->Fill(l1tTauPt);
-                   tauPt_histo->Fill(tauPt);
+                   MatchedGenPt_histo->Fill(MatchedGenPt);
                 }
-                if (abs(tauEta) < 1.305) { barrel_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
-                else if (abs(tauEta) < 2.1 and abs(tauEta) > 1.479) { endcap_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+                if (abs(MatchedGenEta) < 1.305) { barrel_response_ptBins[i]->Fill(l1tTauPt/MatchedGenPt); }
+                else if (abs(MatchedGenEta) < 2.1 and abs(MatchedGenEta) > 1.479) { endcap_response_ptBins[i]->Fill(l1tTauPt/MatchedGenPt); }
             }
         }
 
         for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
         {
-            if(abs(tauEta) > etaBins[i] and abs(tauEta) < etaBins[i+1]) { absEta_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+            if(abs(MatchedGenEta) > etaBins[i] and abs(MatchedGenEta) < etaBins[i+1]) { absEta_response_ptBins[i]->Fill(l1tTauPt/MatchedGenPt); }
 
-            if(tauEta > etaBins[i] and tauEta < etaBins[i+1]) { plusEta_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
-            else if (tauEta < -etaBins[i] and tauEta > -etaBins[i+1]) { minusEta_response_ptBins[i]->Fill(l1tTauPt/tauPt); }
+            if(MatchedGenEta > etaBins[i] and MatchedGenEta < etaBins[i+1]) { plusEta_response_ptBins[i]->Fill(l1tTauPt/MatchedGenPt); }
+            else if (MatchedGenEta < -etaBins[i] and MatchedGenEta > -etaBins[i+1]) { minusEta_response_ptBins[i]->Fill(l1tTauPt/MatchedGenPt); }
         }
         
         int k = 0;
@@ -411,9 +410,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         {
             for(long unsigned int j = 0; j < etaBins.size()-1; ++j)
             {
-                if (abs(tauEta) > etaBins[j] and abs(tauEta) < etaBins[j+1] and tauPt > ptBins[i] and tauPt < ptBins[i+1])
+                if (abs(MatchedGenEta) > etaBins[j] and abs(MatchedGenEta) < etaBins[j+1] and MatchedGenPt > ptBins[i] and MatchedGenPt < ptBins[i+1])
                 {
-                    pt_resp_PtEtaBin[k]->Fill(l1tTauPt/tauPt);
+                    pt_resp_PtEtaBin[k]->Fill(l1tTauPt/MatchedGenPt);
                 }
 
                 k += 1;
@@ -626,24 +625,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         fit_pt_resol_fctEta->SetBinError(i+etaBins.size(), fit_plusEta_response_ptBins[i]->GetParError(3)/fit_plusEta_response_ptBins[i]->GetParameter("Mean"));
     }
 
-     // FIT PT RESPONSE -  ETA BINS HISTIGRAMS
-        // std::vector<TF1*> fit_absEta_response_ptBins = {};
-        // std::vector<TF1*> fit_minusEta_response_ptBins = {};
-        // std::vector<TF1*> fit_plusEta_response_ptBins = {};
-        // for(long unsigned int i = 0; i < etaBins.size()-1; ++i)
-        // {
-        // TString lowE;
-        // lowE.Form("%.3f", etaBins[i]);
-        // TString highE;
-        // highE.Form("%.3f", etaBins[i+1]);
-        // fit_absEta_response_ptBins.push_back(new TF1("fit_pt_resp_AbsEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
-        // fit_minusEta_response_ptBins.push_back(new TF1("fit_pt_resp_MinusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
-        // fit_plusEta_response_ptBins.push_back(new TF1("fit_pt_resp_PlusEtaBin"+lowE+"to"+highE, fit_option, 0, 3));
-        // }
-
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2025/resolutions_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_2025/gen_studies/resolutions_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();

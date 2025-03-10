@@ -4,7 +4,7 @@ set -e
 # source ~/.bashrc
 pwd=$(pwd)
 # tau_aod=$(tau_aod)
-tau_aod=/home/llr/cms/amella/Run3_tau/CMSSW_14_0_4/src
+tau_aod=/home/llr/cms/amella/Run3_tau_test/CMSSW_14_2_2/src
 
 cd ${pwd}/Isolate
 
@@ -25,7 +25,7 @@ EOF
 
 echo "LUT created!"
 echo "LUTrelaxation_${4}_progression_effMin0p${1: -1}_eMin${2}_eMax${3}.txt"
-mv LUTs/LUTs_2024/LUTrelaxation_${4}_progression_effMin0p${1: -1}_eMin${2}_eMax${3}.txt ${tau_aod}/L1Trigger/L1TCalorimeter/data/
+cp LUTs/LUTs_2024/LUTrelaxation_${4}_progression_effMin0p${1: -1}_eMin${2}_eMax${3}.txt ${tau_aod}/L1Trigger/L1TCalorimeter/data/
 
 cd ${pwd}/Calibrate/
 cp LUTs_2024/LUTcalibration_${4}.txt ${tau_aod}/L1Trigger/L1TCalorimeter/data/

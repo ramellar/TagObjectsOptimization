@@ -323,6 +323,9 @@ def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
 #######################################################################
 
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Run2024W-MC_caloParams_2023_v0_4_cfi_reEmulated.root --inFile2 Tau_MC_TURNONS_FIXEDRATE14kHz_Run369978_v0.root --tag 2024W-MC_23_vs_24LUTs '''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25_VBF_GluGlu_unpacked.root --inFile2 "" --tag RunMC25_VBF_GluGlu_unpacked '''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25_VBF_GluGlu_below30_unpacked.root --inFile2 "" --tag RunMC25_VBF_GluGlu_below_30_unpacked '''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25W_conservative_MiniAOD_unpacked.root --inFile2 "" --tag RunMC25W_full_process_new_production '''
 
 if __name__ == "__main__" :
     parser = OptionParser()
@@ -336,39 +339,46 @@ if __name__ == "__main__" :
     print(options)
 
     
-    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
+    # main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
+    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'
     opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
-    inFile2 = ROOT.TFile(main_folder+options.inFile2)
+    # inFile2 = ROOT.TFile(main_folder+options.inFile2)
     # inFile3 = ROOT.TFile(main_folder+options.inFile3)
     # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
     # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
    
-    label1 = r'Unpacked 2024 EraI'
-    label2 = r'Unpacked 2024 EraI Iso'
+    # label1 = r'Run2025W-MC-MiniAOD'
+    # label2 = r'Run2025W-MC-MiniAOD Iso'
+    label1 = r'Run2025W-MC-MiniAOD'
+    label2 = r'Run2025W-MC-MiniAOD'
+    label3 = r'Run2025W-MC-MiniAOD'
+    # label1 = r'Unpacked 2024 EraI'
+    # label2 = r'Unpacked 2024 EraI Iso'
     # label3 = r'Re-Emu pedestals + corrections'
     
-    thr1 = '34'
-    thr2 = '34Iso'
+    thr1 = '32'
+    thr2 = '34'
+    thr3 = '36'
     # thr3 = '34Iso'
 
     thr1_string, iso1_string = thr1[:2], thr1[2:]
     thr2_string, iso2_string = thr2[:2], thr2[2:]
-    # thr3_string, iso3_string = thr3[:2], thr3[2:]
+    thr3_string, iso3_string = thr3[:2], thr3[2:]
     
     eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
-    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
-    # eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    eff_TGraph2, label2 = read_file(inFile1, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
+    eff_TGraph3, label3 = read_file(inFile1, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
    
     # PLOT TURNONS
     fig, ax = plt.subplots(figsize=(10,10))
     plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 0, ax, options)
     plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 1, ax, options)
-    # plot_TurnOn(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
+    plot_TurnOn(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
 
-    plot_name = 'turnons/turnons_Run'+options.tag
+    plot_name = 'turnons/2025/turnons_Run'+options.tag
     plot_name += '_iso' if iso1_string else '_no_iso'
-    print(plot_name+'.pdf')
+    print(plot_name+'.png')
     plt.grid()
     if options.logx: plot_name += 'log_'
     plt.savefig(plot_name+'.pdf')

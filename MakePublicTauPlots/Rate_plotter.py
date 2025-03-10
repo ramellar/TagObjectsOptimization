@@ -16,6 +16,7 @@ plt.style.use(mplhep.style.CMS)
 
 if __name__ == "__main__" :
     ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run369978_reEmulated_Tau2023_v4.root --inFile2 histos_rate_ZeroBias_Run369978_reEmulated_Tau2023_v4_HCAL_corr.root --tag 2023LUTs_2024conditions_HCAL_new_calib '''
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_MC_conservative_ZS_unpacked.root --inFile2 histos_rate_ZeroBias_Run386604_MC_conservative_ZS_unpacked.root --tag 2023LUTs_2024conditions_HCAL_new_calib '''
 
     parser = OptionParser()
     parser.add_option("--inFile1", dest="inFile1", default=None)
@@ -24,7 +25,7 @@ if __name__ == "__main__" :
     (options, args) = parser.parse_args()
     print(options)
 
-    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2024/'
+    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2025/'
     inFile1 = ROOT.TFile(main_folder + options.inFile1)
     inFile2 = ROOT.TFile(main_folder + options.inFile2)
 
@@ -33,14 +34,15 @@ if __name__ == "__main__" :
     markers = ['o', 's', '^', 'D']
 
     #DoubleTau = inFile.Get('DiTauRate_noIso')
-    DoubleTau_Iso_1 = inFile1.Get('DiTauRate')
+    DoubleTau_Iso_1 = inFile1.Get('DiTauRate_noIso')
     DoubleTau_Iso_2 = inFile2.Get('DiTauRate_Iso')
 
-
-    legend_title=r'Double-$\tau$ & Isolation rate comparison'
+    print(DoubleTau_Iso_1.ClassName())
+    legend_title=r'Inclusive |$\eta$| < 2.1'
     #legend_title=r'Inst. Lumi = $3.5\times10^{33}\ cm^{-2}s^{-1}$'
-    label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso Run 369978 re-Emu w/o HCAL'
-    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso Run 369978 re-Emu w/ HCAL'
+    label_DoubleIso_Iso_1 = r' 2024I Run 386604 re-Emu w/ Conservative ZS'
+    # label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso Run 369978 re-Emu w/o HCAL'
+    label_DoubleIso_Iso_2 = r'2024I Run 386604 & Iso re-Emu w/ Conservative ZS'
 
     fig, ax = plt.subplots(figsize=(10,10))
     
@@ -77,6 +79,6 @@ if __name__ == "__main__" :
         xtick.set_pad(10)
     #mplhep.cms.label('Preliminary', data=True, rlabel=r'107 pb$^{-1}$ (13.6 TeV)')
     mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-    plt.savefig('various/tau_rate_'+options.tag+'.pdf')
-    plt.savefig('various/tau_rate_'+options.tag+'.png')
+    plt.savefig('rates/tau_rate_'+options.tag+'.pdf')
+    plt.savefig('rates/tau_rate_'+options.tag+'.png')
     plt.close()
