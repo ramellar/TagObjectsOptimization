@@ -17,36 +17,64 @@ plt.style.use(mplhep.style.CMS)
 if __name__ == "__main__" :
     ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run369978_reEmulated_Tau2023_v4.root --inFile2 histos_rate_ZeroBias_Run369978_reEmulated_Tau2023_v4_HCAL_corr.root --tag 2023LUTs_2024conditions_HCAL_new_calib '''
     ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_MC_conservative_ZS_unpacked.root --inFile2 histos_rate_ZeroBias_Run386604_MC_conservative_ZS_unpacked.root --tag 2023LUTs_2024conditions_HCAL_new_calib '''
+    
+    
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile2 histos_rate_ZeroBias_Run386604_Zero_bias_noHCALc_2024calop_unpacked.root  --tag 2024I_data_2025calopHCAlc_vs_2024calopnHCALc '''
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_HCALcFeb-caloParams_2025_conservative-ZS-MC25W_target_unpacked.root --inFile2 histos_rate_ZeroBias_Run386604_HCALcFeb-caloParams_2025_conservative-ZS-MC25W_target_optimisation.root  --tag Different_training_rates'''
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_HCALcFeb-caloParams_2025_conservative-ZS-MC25W_optimisation.root --inFile2 histos_rate_ZeroBias_Run386604_HCALcFeb-caloParams_2025_conservative-ZS-MC25W_corrected_optimisation.root  --tag Corrected_post_BDT_response'''
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --inFile2 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile3 histos_rate_ZeroBias_Run386604_Corrected-re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --tag Re-emu-comparison-correction'''
+
+
 
     parser = OptionParser()
     parser.add_option("--inFile1", dest="inFile1", default=None)
     parser.add_option("--inFile2", dest="inFile2", default=None)
+    parser.add_option("--inFile3", dest="inFile3", default=None)
     parser.add_option("--tag",     dest="tag",     default=None)
     (options, args) = parser.parse_args()
     print(options)
 
     main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2025/'
+    main_folder2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2025/'
     inFile1 = ROOT.TFile(main_folder + options.inFile1)
-    inFile2 = ROOT.TFile(main_folder + options.inFile2)
+    inFile2 = ROOT.TFile(main_folder2 + options.inFile2)
+    inFile3 = ROOT.TFile(main_folder + options.inFile3)
 
     plt.rcParams['legend.title_fontsize'] = 'x-small'
-    cmap = matplotlib.cm.get_cmap('Set1'); imap=-1
+    # cmap = matplotlib.colormaps.get_cmap('Set1'); imap=-1
+    cmap = matplotlib.colormaps.get_cmap('Set1')
     markers = ['o', 's', '^', 'D']
 
     #DoubleTau = inFile.Get('DiTauRate_noIso')
-    DoubleTau_Iso_1 = inFile1.Get('DiTauRate_noIso')
+    DoubleTau_Iso_1 = inFile1.Get('DiTauRate_Iso')
     DoubleTau_Iso_2 = inFile2.Get('DiTauRate_Iso')
+    DoubleTau_Iso_3 = inFile3.Get('DiTauRate_Iso')
+    # DoubleTau_Iso_1 = inFile1.Get('DiTauRate_effMin0p9_eMin28_eMax43')
+    # DoubleTau_Iso_2 = inFile2.Get('DiTauRate_effMin0p9_eMin28_eMax43')
+    # DoubleTau_Iso_1 = inFile1.Get('DiTauRate_effMin0p9_eMin22_eMax37')
+    # DoubleTau_Iso_2 = inFile2.Get('DiTauRate_effMin0p9_eMin22_eMax37')
+    # DoubleTau_Iso_3 = inFile2.Get('DiTauRate_effMin0p9_eMin22_eMax37')
 
     print(DoubleTau_Iso_1.ClassName())
+    plt.rcParams['legend.title_fontsize'] = 'x-small'
     legend_title=r'Inclusive |$\eta$| < 2.1'
+    # legend_title=r'Inclusive |$\eta$| < 2.1'+ "\n" + "2024 Era I ReEmu w/ 2025 conditions"
     #legend_title=r'Inst. Lumi = $3.5\times10^{33}\ cm^{-2}s^{-1}$'
-    label_DoubleIso_Iso_1 = r' 2024I Run 386604 re-Emu w/ Conservative ZS'
-    # label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso Run 369978 re-Emu w/o HCAL'
-    label_DoubleIso_Iso_2 = r'2024I Run 386604 & Iso re-Emu w/ Conservative ZS'
+    # label_DoubleIso_Iso_1 = r'No Iso'
+    # label_DoubleIso_Iso_2 = r'Iso'
+    # label_DoubleIso_Iso_1= r"No Iso"
+    # label_DoubleIso_Iso_2= r"Iso"
+    label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2024 Era I '
+    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions'
+    label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions ' + "\n" + 'and corrected BDT response'
+
+    # label_DoubleIso_Iso_1 = r'Double-$\tau$' +"\n" + r"MC25W w/ BDT calibration"
+    # label_DoubleIso_Iso_2 = r'Double-$\tau$' +"\n" + r"MC25W w/ corrected" + "\n" + "BDT calibration"
 
     fig, ax = plt.subplots(figsize=(10,10))
-    
-    for rate_TH1, label in zip([DoubleTau_Iso_1, DoubleTau_Iso_2], [label_DoubleIso_Iso_1, label_DoubleIso_Iso_2]):
+
+
+    for rate_TH1, label , color in zip([DoubleTau_Iso_1, DoubleTau_Iso_2, DoubleTau_Iso_3], [label_DoubleIso_Iso_1, label_DoubleIso_Iso_2, label_DoubleIso_Iso_3],[1,0,2]):
         x = []
         y = []
         x_err = []
@@ -59,13 +87,17 @@ if __name__ == "__main__" :
             y_err.append(rate_TH1.GetBinError(ibin+1))
 
         print(len(y))
-        if imap == -1: color = 'black'
-        else:         color = cmap(imap)
-
-        ax.errorbar(x, y, xerr=x_err, yerr=y_err, ls='None', label=label, lw=2) #, marker=markers[imap], color=color)
+        #print elements 30 to 50 from the x and y lists
+        print("x",x[30:38])
+        print("y",y[30:38])
+        # if imap == -1: color = 'black'
+        # else:         color = cmap(imap)
+        # print(color)
+        imap =-1
+        ax.errorbar(x, y, xerr=x_err, yerr=y_err, ls='None', color=cmap(color), label=label, lw=2,  marker=markers[imap]) #, marker=markers[imap], color=color)
         imap += 1
 
-    leg = plt.legend(loc='upper right', fontsize=16, title=legend_title)
+    leg = plt.legend(loc='upper right', fontsize=18, title=legend_title)
     leg._legend_box.align = "left"
     plt.ylim(1,4E4)
     plt.xlim(0,60)
@@ -81,4 +113,5 @@ if __name__ == "__main__" :
     mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
     plt.savefig('rates/tau_rate_'+options.tag+'.pdf')
     plt.savefig('rates/tau_rate_'+options.tag+'.png')
+    print('rates/tau_rate_'+options.tag+'.png')
     plt.close()

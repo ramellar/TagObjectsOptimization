@@ -276,15 +276,16 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     plot_x = np.linspace(0,1000,2000)
     markers = ['o', 's', '^', 'D']
     marker=markers[color]
-
+    plt.rcParams['legend.title_fontsize'] = 'xx-small'
+    # pt_leg = ax.legend(title=r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37', loc='lower right', fontsize=15)
     x, y, x_err, y_err = compute_TurnOn(eff_TGraph)
     ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
-
+    # pt_leg._legend_box.align = "right"
     ##vectCBconvATAN
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr    ,    3.,   3. , 100.,     0.95,   10., 0.8,   80.]
-    param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+10.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    p0 =          [thr+15  ,  1.,   3. , 80.,     0.95,   3., 0.8,   80.]
+    param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
     print(x[:-2], y[:-2])
     popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
     print(popt)
@@ -298,23 +299,76 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
         ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$100$', r'$500$']))
     else:
         plt.xlim(15., 150.)
+    # leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$'+"\n"+r'2024 Era I ReEmu w/ 2025 conditions')
     leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$')
     leg._legend_box.align = "left"
     plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
     plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'2024 - 13.6 TeV')
-    
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'2025 - 13.6 TeV')
+
+def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
+    plt.ylim(0.000, 1.05)
+    plt.rcParams['legend.title_fontsize'] = 'small'
+    cmap = matplotlib.cm.get_cmap('Set1')
+    plot_x = np.linspace(0,1000,2000)
+    markers = ['o', 's', '^', 'D']
+    marker=markers[color]
+    plt.rcParams['legend.title_fontsize'] = 'xx-small'
+    # pt_leg = ax.legend(title=r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37', loc='lower right', fontsize=15)
+    x, y, x_err, y_err = compute_TurnOn(eff_TGraph)
+    ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
+    # pt_leg._legend_box.align = "right"
+    ##vectCBconvATAN
+    #             [mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr+8  ,  1.,   3. , 90.,     0.95,   3., 0.8,   80.]
+    param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+10.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    print(x[:-2], y[:-2])
+    i_to_skip=[8,9]
+    x_fit = np.delete(x, i_to_skip)
+    y_fit = np.delete(y, i_to_skip)
+    popt, pcov = curve_fit(vectCBconvATAN, x_fit, y_fit, p0, maxfev=5000, bounds=param_bounds)
+    print(popt)
+
+    ##vectApproxATAN
+    #             # [xturn,    p, width]
+    # p0 =          [10., 0.8,   80.]
+    # param_bounds=([0., 0.2,   10.],
+    #               [110., 1. ,   100.])
+    # popt, pcov = curve_fit(vectApproxATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
+    # ax.plot(plot_x, vectApproxATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
+
+    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
+        
+    if options.logx:
+        plt.xlim(10., 500.)
+        plt.xscale('log')
+        ax.xaxis.set_major_locator(FixedLocator([10, 100, 500]))
+        ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$100$', r'$500$']))
+    else:
+        plt.xlim(15., 150.)
+    # leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$'+"\n"+r'2024 Era I ReEmu w/ 2025 conditions')
+    leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$')
+    leg._legend_box.align = "left"
+    plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
+    plt.ylabel(r'Efficiency')
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'2025 - 13.6 TeV')
+
+ 
 def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
     if iso:
         eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_Iso_by_pt') if not opt else \
                      inFile.Get(tunrOn)
-        label = r'$E_{T}^{\tau, L1} > %s$ GeV & Iso - %s' % (thr, label)
+        label = r'$E_{T}^{\tau, L1} > %s$ GeV & Iso  %s' % (thr, label)
     else:
         eff_TGraph = inFile.Get('divide_ptProgressionAt'+thr+'_noIso_by_pt') if not opt else \
                      inFile.Get('TurnOn_noIso')
-        label = r'$E_{T}^{\tau, L1} > %s$ GeV - %s' % (thr, label)
+        label = r'$E_{T}^{\tau, L1} > %s$ GeV  %s' % (thr, label)
 
     return eff_TGraph, label
     
@@ -327,11 +381,20 @@ def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25_VBF_GluGlu_below30_unpacked.root --inFile2 "" --tag RunMC25_VBF_GluGlu_below_30_unpacked '''
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25W_conservative_MiniAOD_unpacked.root --inFile2 "" --tag RunMC25W_full_process_new_production '''
 
+
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25W_conservative_MiniAOD_unpacked.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --tag RunMC25W_full_process_new_production '''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --inFile2 "" --tag RunMC25W_full_process_new_production '''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile3 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_reEmulated.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile3 efficiencies_of_23GeVturnon_reEmulated.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 efficiencies_of_23GeVturnon_uncorrected_reEmulated.root --inFile3 efficiencies_of_23GeVturnon_corrected_reEmulated.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
+ 
+
 if __name__ == "__main__" :
     parser = OptionParser()
     parser.add_option("--inFile1",     dest="inFile1",                                    default=None)
     parser.add_option("--inFile2",     dest="inFile2",                                    default=None)
-    # parser.add_option("--inFile3",     dest="inFile3",                                    default=None)
+    parser.add_option("--inFile3",     dest="inFile3",                                    default=None)
     parser.add_option("--tag",         dest="tag",                                        default=None)
     parser.add_option("--logx",        dest="logx",                  action='store_true', default=False)
     parser.add_option("--smallFitErr", dest="smallFitErr",           action='store_true', default=False)
@@ -341,43 +404,55 @@ if __name__ == "__main__" :
     
     # main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
     main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'
+    main_folder2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
     opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
-    # inFile2 = ROOT.TFile(main_folder+options.inFile2)
-    # inFile3 = ROOT.TFile(main_folder+options.inFile3)
+    inFile2 = ROOT.TFile(main_folder2+options.inFile2)
+    inFile3 = ROOT.TFile(main_folder2+options.inFile3)
     # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
     # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
    
     # label1 = r'Run2025W-MC-MiniAOD'
     # label2 = r'Run2025W-MC-MiniAOD Iso'
-    label1 = r'Run2025W-MC-MiniAOD'
-    label2 = r'Run2025W-MC-MiniAOD'
-    label3 = r'Run2025W-MC-MiniAOD'
+    # label1 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'
+    # label2 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax3'
+    # label3 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax3'
+    # label1 = "ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37"
+    label1= r"Unpacked 2024 Era I"
+    label2= r"2024 Era I ReEmu w/ 2025 conditions"
+    label3= r"2024 Era I ReEmu w/ 2025 conditions" + "\n" + 'and corrected BDT response'
+    # label3 = ""
+    # label1 = ""
+    # label2 = ""
     # label1 = r'Unpacked 2024 EraI'
     # label2 = r'Unpacked 2024 EraI Iso'
     # label3 = r'Re-Emu pedestals + corrections'
     
-    thr1 = '32'
-    thr2 = '34'
-    thr3 = '36'
+    # thr1 = '26Iso'
+    # thr2 = '26Iso'
+    # thr3 = '26Iso'
+    thr1 = '26Iso'
+    thr2 = '23Iso'
+    thr3 = '23Iso'
+    # thr3 = '36'
     # thr3 = '34Iso'
 
     thr1_string, iso1_string = thr1[:2], thr1[2:]
     thr2_string, iso2_string = thr2[:2], thr2[2:]
     thr3_string, iso3_string = thr3[:2], thr3[2:]
-    
+    print(thr2_string, iso2_string)
     eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
-    eff_TGraph2, label2 = read_file(inFile1, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
-    eff_TGraph3, label3 = read_file(inFile1, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
+    eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
    
     # PLOT TURNONS
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 0, ax, options)
-    plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 1, ax, options)
-    plot_TurnOn(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
+    plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
+    plot_TurnOn2(eff_TGraph2, int(thr2_string), label2, 0, ax, options)
+    plot_TurnOn2(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
 
     plot_name = 'turnons/2025/turnons_Run'+options.tag
-    plot_name += '_iso' if iso1_string else '_no_iso'
+    plot_name += '_iso' if iso2_string else '_no_iso'
     print(plot_name+'.png')
     plt.grid()
     if options.logx: plot_name += 'log_'

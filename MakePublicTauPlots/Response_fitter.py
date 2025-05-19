@@ -160,7 +160,7 @@ def compute_resol(inFile, inclusive='pt_resol_fctPt'):
         x_err_ptResol_inclusive.append(ptResol_inclusive.GetBinWidth(ibin+1)/2.)
         y_err_ptResol_inclusive.append(ptResol_inclusive.GetBinError(ibin+1))
 
-        print("mean",ptResol_inclusive.GetMean())
+        print("mean",ptResol_inclusive.GetBinContent(ibin+1))
 
     return x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive
 
@@ -193,16 +193,19 @@ def plot_pt_scale(inFile, label, color, ax, bin_tree='pt_response_ptInclusive'):
     
     fit_mean = popt[0]
     variance= popt[1]
-    # ax.axvline(x=fit_mean, color=cmap(16), linestyle='--', label=f'Mean: {fit_mean:.2f}')
-    # ax.axvline(x=fit_mean+variance, color=cmap(18), linestyle='--', label=f'Mean: $\pm${variance:.2f}')
-    # ax.axvline(x=fit_mean-variance, color=cmap(18), linestyle='--')
+    ax.axvline(x=fit_mean, color=cmap(color), linestyle='--', label=f'Mean: {fit_mean:.2f}')
+    # ax.axvline(x=fit_mean+variance, color=cmap(color), linestyle='--', label=f'Sigma: $\pm${variance:.2f}')
+    # ax.axvline(x=fit_mean-variance, color=cmap(color), linestyle='--')
 
     # Title legend setup
     if bin_tree=='pt_response_ptInclusive':
-        pt_leg = ax.legend(title=r'$p_t^{\tau,gen} < 30 $ GeV'+ "\n" +r'$Inclusive\ |\eta^{\tau, gen}|<2.1$:', loc='upper right', fontsize=15)
+        pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 20 $ GeV'+ "\n" +r'$Inclusive\ |\eta^{\tau, offline}|<2.1$:', loc='upper right', fontsize=12)
         # pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$' + "\n" + r"Gen Matched MC25W cut on", loc='upper right', fontsize=15)
     else:
-        pt_leg = ax.legend(title=r'$Inclusive\ |\eta^{\tau, gen}|<2.1$:', loc='upper right', fontsize=15)
+        pt_leg = ax.legend(loc='upper right', fontsize=12)
+        # pt_leg = ax.legend(title=r'$Inclusive\ |\eta^{\tau, offline}|<2.1$:', loc='upper right', fontsize=12)
+        # pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 30 $ GeV'+ "\n" +r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$:', loc='upper right', fontsize=15)
+        # pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 30 $ GeV'+ "\n" +r'$Barrel\ |\eta^{\tau, offline}|<1.305$:', loc='upper right', fontsize=15)
     # inclusive_leg = ax.legend(title=r'$Inclusive\ |\eta^{\tau, offline}|<2.1$:', loc='upper left', fontsize=15)
     # barrel = ax.legend(title=r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$', loc='upper left', fontsize=15)
     # endcap_leg = ax.legend(title=r'$Barrel\ |\eta^{\tau, offline}|<1.305$', loc='upper left', fontsize=15) 
@@ -237,23 +240,47 @@ def plot_pt_resolution(inFile, label, color, ax, bin_tree='pt_resol_fctPt', obse
 
     x_ptResol_inclusive, y_ptResol_inclusive, x_err_ptResol_inclusive, y_err_ptResol_inclusive = compute_resol(inFile, bin_tree)
 
+    print(color, y_ptResol_inclusive)
+
     ax.errorbar(x_ptResol_inclusive, y_ptResol_inclusive, xerr=x_err_ptResol_inclusive, yerr=y_err_ptResol_inclusive, 
                 ls='None', label= inclusive_label +label, lw=2, marker='o', color=cmap(color))
 
     if observable == "pt":
         x_lim = (20.,110.)
-        y_lim=(0.05,0.3)
+        y_lim=(0.0,0.45)
         x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
 
-        # pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$' + "\n" + r"Gen Matched MC25W cut on", loc='upper right', fontsize=15)
-        # pt_leg._legend_box.align = "left"
+        pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
+        # pt_leg = ax.legend(title= r'$Barrel\ |\eta^{\tau, offline}|<1.305$', loc='upper right', fontsize=16)
+        # pt_leg = ax.legend(title= r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
+        pt_leg._legend_box.align = "left"
 
-        leg = plt.legend(title= r'$MiniAOD-MC25W-DY$',loc = 'lower right', fontsize=18)
-        leg._legend_box.align = "left"
-        plt.ylim(y_lim)
+        # leg = plt.legend(title= r'$MiniAOD-MC25W-DY$',loc = 'lower right', fontsize=18)
+        # leg._legend_box.align = "left"
+        # plt.ylim(y_lim)
         plt.xlim(x_lim)
         plt.xlabel(x_label)
         plt.ylabel(r'Energy resolution')
+        for xtick in ax.xaxis.get_major_ticks():
+            xtick.set_pad(10)
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
+
+    if observable == "pt_scale":
+        x_lim = (20.,110.)
+        y_lim=(0.8,1.1)
+        x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
+
+        pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
+        # pt_leg = ax.legend(title= r'$Barrel\ |\eta^{\tau, offline}|<1.305$', loc='upper right', fontsize=16)
+        # pt_leg = ax.legend(title= r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
+        pt_leg._legend_box.align = "left"
+
+        # leg = plt.legend(title= r'$MiniAOD-MC25W-DY$',loc = 'lower right', fontsize=18)
+        # leg._legend_box.align = "left"
+        # plt.ylim(y_lim)
+        plt.xlim(x_lim)
+        plt.xlabel(x_label)
+        plt.ylabel(r"$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$")
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
@@ -279,7 +306,7 @@ def plot_pt_resolution(inFile, label, color, ax, bin_tree='pt_resol_fctPt', obse
 
         # leg = plt.legend(loc = 'lower right', fontsize=18)
         # Create the legend with custom positioning and font size
-        leg = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 0.95), fontsize=18, frameon=True)
+        leg = plt.legend(loc='center', bbox_to_anchor=(0.5, 0.2), fontsize=18, frameon=True)
         # pt_leg = ax.legend(title= r"Gen Matched MC25W cut on", loc='upper center', bbox_to_anchor=(0.5, 0.95), fontsize=18, frameon=True)
 
         # Set a white background for the legend
@@ -288,7 +315,7 @@ def plot_pt_resolution(inFile, label, color, ax, bin_tree='pt_resol_fctPt', obse
         # Optionally, add a border around the legend (if desired)
         leg.get_frame().set_edgecolor('black')
         # leg._legend_box.align = "left"
-        plt.ylim(y_lim)
+        # plt.ylim(y_lim)
         plt.xlim(x_lim)
         plt.xlabel(x_label)
         plt.ylabel(r'Energy resolution')
@@ -297,13 +324,15 @@ def plot_pt_resolution(inFile, label, color, ax, bin_tree='pt_resol_fctPt', obse
         mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
 
 
-def create_and_save_plot(single_bin, label, in_file, plot_tag,color,in_file_1="", color_1=0):
+def create_and_save_plot(single_bin, label_1, in_file_1, plot_tag,color_1,in_file_2="", label_2="", color_2=1, in_file_3="", label_3="", color_3=2):
     print('Producing plot for', single_bin)
     fig, ax = plt.subplots(figsize=(10, 10))
     # plot_pt_scale(in_file, label, 0, ax, single_bin)
-    mean, variance=plot_pt_scale(in_file, label, color, ax, single_bin)
-    # mean2, variance2=plot_pt_scale(in_file_1, label, color_1, ax, single_bin)
+    mean1, variance1=plot_pt_scale(in_file_1, label_1, color_1, ax, single_bin)
+    mean2, variance2=plot_pt_scale(in_file_2, label_2, color_2, ax, single_bin)
+    mean3, variance3 = plot_pt_scale(in_file_3, label_3, color_3, ax, single_bin)
     plot_name = f'responses/2025_studies/tau_pt_scale_{plot_tag}_{single_bin}'
+    print(plot_name+'.png')
     plt.savefig(f'{plot_name}.pdf')
     plt.savefig(f'{plot_name}.png')
     # plot_pt_resolution(in_file, label, 0, ax, single_bin)
@@ -311,9 +340,10 @@ def create_and_save_plot(single_bin, label, in_file, plot_tag,color,in_file_1=""
     # plt.savefig(f'{plot_name}.pdf')
     # plt.savefig(f'{plot_name}.png')
     # plt.close()
+
     plt.clf()
-    # return mean, variance, mean2, variance2
-    return mean, variance
+    return mean1, variance1, mean2, variance2, mean3, variance3
+    # return mean, variance
  
 
 #######################################################################
@@ -329,6 +359,15 @@ def create_and_save_plot(single_bin, label, in_file, plot_tag,color,in_file_1=""
 ''' python3 Response_fitter.py --inFile1 resolutions_of_RunMC25_CompleteProcesses_unpacked.root --inFile2 "" --tag MC25_CompleteProcesses '''
 ''' python3 Response_fitter.py --inFile1 resolutions_of_RunMC25W_conservative_GluGlu_unpacked.root --inFile2 resolutions_of_RunMC25W_conservative_VBF_unpacked.root --inFile3 resolutions_of_RunMC25W_conservative_DY_unpacked.root --tag MC25_Processes_comparisons_new_production '''
 
+''' python3 Response_fitter.py --inFile1 resolutions_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated_calibrated.root --inFile2 resolutions_of_RunRe-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --tag New_2025_LUTfor_data_2024I '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_test_CALIBRATED_500_trees_reEmulated.root --inFile2 resolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_test_CALIBRATED_reEmulated.root --tag MC25W_20GeV_Tree_comp '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_CALIBRATED_30GeV_reEmulated_test.root --inFile2 resolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_test_target_CALIBRATED_30GeV_reEmulated_test.root --tag MC25W_diff_training_comparison_30GeV '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_30GeV_reEmulated_calibrated.root --inFile2 resolutions_of_RunRe-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_30GeV_unpacked.root --tag L1taupt_gt_10_vs_unpacked '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_test_CALIBRATED_500_trees_reEmulated.root --inFile2 resolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_mean_fit_1_target_reEmulated_test.root --tag L1taupt_gt_10_vs_unpacked '''
+''' python3 Response_fitter.py --inFile1 esolutions_of_RunHCALcFeb-caloParams_2025_conservative-ZS-MC25W_test_CALIBRATED_reEmulated.root --inFile2 resolutions_of_Runinclusive_correction_reEmulated_test.root --tag L1taupt_gt_10_vs_unpacked '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_RunRe-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 resolutions_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated_calibrated.root --inFile3 resolutions_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_reEmulated_calibrated.root  --tag New_corrected_responses_2025_LUTfor_data_2024I '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_Rununpacked_20GeV_unpacked.root --inFile2 resolutions_of_uncorrected_20GeV_reEmulated_calibrated.root --inFile3 resolutions_of_uncorrected_20GeV_reEmulated_calibrated.root  --tag 20GeV_new_corrected_responses_2025_LUTfor_data_2024I '''
+
 if __name__ == "__main__" :
     parser = OptionParser()
     parser = OptionParser()
@@ -342,11 +381,12 @@ if __name__ == "__main__" :
     print(options)
 
     main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2025/'
+    main_folder2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2024/'
     # main_folder_2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_2025/gen_studies/'
     # main_folder = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
-    # inFile2 = ROOT.TFile(main_folder+options.inFile2)
-    # inFile3 = ROOT.TFile(main_folder+options.inFile3)
+    inFile2 = ROOT.TFile(main_folder2+options.inFile2)
+    inFile3 = ROOT.TFile(main_folder2+options.inFile3)
 
     # label1 = r'Unpacked 2024 EraH'
     # label2 = r'Re-Emu 2024H w/ 24W opt'
@@ -361,14 +401,22 @@ if __name__ == "__main__" :
     # label1= r"$p_t^{gen} > 20$ GeV"
     # label2= r"$p_t^{gen} > 40$ GeV"
     # label3= r"$p_t^{gen} > 60$ GeV"
-    label1= r"$barrel\ |\eta^{gen}|<1.305$"
-    label2= r"$endcap\ 1.479<|\eta^{gen}|<2.1$"
+    # label1= r"$barrel\ |\eta^{gen}|<1.305$"
+    # label2= r"$endcap\ 1.479<|\eta^{gen}|<2.1$"
+    # label1= r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions gt10"
+    label1= r"Unpacked 2024 Era I"
+    label2= r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions"
+    label3= r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions" + "\n" + "corrected BDT response"
+    # label1= r"MC25W w/ BDT calibration"
+    # label2= r"MC25W w/ corrected" + "\n" + "BDT calibration"
 
     # PLOT PT SCALE
 
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_pt_scale(inFile1, label1, 0, ax, "pt_barrel_resp_ptInclusive") # , 'pt_barrel_resp_ptInclusive')
-    plot_pt_scale(inFile1, label1, 0, ax, "pt_endcap_resp_ptInclusive") # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile1, label1, 1, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile2, label2, 0, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile3, label3, 2, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    # plot_pt_scale(inFile2, label2, 1, ax, "pt_endcap_resp_ptInclusive") # , 'pt_barrel_resp_ptInclusive')
     # plot_pt_scale(inFile2, label2, 1, ax) # , 'pt_endcap_resp_ptInclusive')
     # plot_pt_scale(inFile3, label3, 2, ax)
 
@@ -382,102 +430,14 @@ if __name__ == "__main__" :
     plt.savefig(plot_name+'.png')
     plt.close()
 
-    if options.bins:
-        # bins_to_process = single_pt_bins + single_eta_bins
-        mean_pt=[]
-        mean_pt_2=[]
-        mean_eta=[]
-        variance_pt=[]
-        variance_pt_2=[]
-        variance_eta=[]
-
-        for single_bin in single_pt_bins:
-            # label_1_bins = "MC25W-MINIAOD\n" + \
-            #     "caloparams 2023\n" + \
-            #    f"{single_bin.split('pt_resp_')[-1]}"
-            label_1_bins = "MC25W-VBF-MINIAOD\n" + \
-               f"{single_bin.split('pt_resp_')[-1]}"
-            # label1 = f'Muon Run2024I MINIAOD_{single_bin.split("pt_resp_")[-1]}'
-            # create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag)
-            mean_i,variance_i=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 0, inFile2, 1)
-            mean_pt.append(mean_i)
-        #     variance_pt.append(variance_i)
-        #     mean_pt_2.append(mean_i2)
-        #     variance_pt_2.append(variance_i2)
-
-        # print("mean1",len(mean_pt))
-        # print("mean",mean_pt)
-        # print(len(variance_pt))
-        # print("mean2",len(mean_pt_2))
-        # print("mean2",mean_pt_2)
-        # print(len(variance_pt_2))
-        # print((pt_bin_centers))
-
-        # print("variance",variance_pt)
-
-        for single_bin in single_eta_bins:
-            # label_1_bins = "2025W-MC-VBF-MINIAOD\n" + \
-            #     "caloparams 2023\n" + \
-            #    f"{single_bin.split('pt_resp_')[-1]}"
-            label_1_bins = "2025W-MC-VBF-MINIAOD\n" + \
-                f"{single_bin.split('pt_resp_')[-1]}"
-            # label1 = f'Muon Run2024I MINIAOD_{single_bin.split("pt_resp_")[-1]}'
-            # create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag)
-            mean_i,variance_i=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 0)
-            mean_eta.append(mean_i)
-            variance_eta.append(variance_i)
-
-        # Plot the mean as a function of pt bin
-
-        plt.scatter(pt_bin_centers, mean_pt, color='orange', label='Mean')
-        plt.plot(pt_bin_centers, mean_pt, linestyle='--', color='orange', alpha=0.7)
-        plt.errorbar(pt_bin_centers, mean_pt, yerr=variance_pt, fmt='o', color='lightseagreen', 
-             ecolor='lightseagreen', elinewidth=1.5, capsize=4,label=r"$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$")
-        plt.errorbar(pt_bin_centers, mean_pt_2, yerr=variance_pt_2, fmt='o', color='orange', 
-             ecolor='orange', elinewidth=1.5, capsize=4, label=r'$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, gen}\rangle$')
-        plt.xlabel(r'$p_t$')
-        plt.ylabel(r"$\mu$")
-        plt.legend()
-        plt.grid(True, linestyle=':', alpha=0.6)
-        for xtick in ax.xaxis.get_major_ticks():
-            xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-        plot_name = f'responses/2025_studies/tau_mean_pt_scale_{options.tag}'
-        plt.savefig(f'{plot_name}.pdf')
-        plt.savefig(f'{plot_name}.png')
-        plt.close()
-
-        # Plot the mean as a function of eta bin
-
-        plt.scatter(pt_bin_centers, mean_pt, color='blue', label='Mean')
-        plt.plot(pt_bin_centers, mean_pt, linestyle='--', color='blue', alpha=0.7)
-        plt.errorbar(eta_bin_centers, mean_eta, yerr=variance_eta, fmt='o', color='orange', 
-             ecolor='orange', elinewidth=1.5, capsize=4)
-        plt.xlabel(r'$|\eta|^{\tau, offline}$')
-        plt.ylabel(r"$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$")
-        plt.legend()
-        plt.grid(True, linestyle=':', alpha=0.6)
-        for xtick in ax.xaxis.get_major_ticks():
-            xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-        plot_name = f'responses/2025_studies/tau_mean_eta_scale_{options.tag}'
-        plt.savefig(f'{plot_name}.pdf')
-        plt.savefig(f'{plot_name}.png')
-        plt.close()
-
-        # Handle inclusive plot saving
-        if options.inclusive:
-            plot_name = f'responses/2025_studies/tau_pt_scale_{options.tag}_{single_bin}_inclusive'
-            plt.savefig(f'{plot_name}.pdf')
-            plt.savefig(f'{plot_name}.png')
-            plt.close()
-
     # PLOT PT RESOLUTION
 
     # First Plot: Plot pt_resolution with 'pt_resol_fctPt'
     fig1, ax1 = plt.subplots(figsize=(10, 10))
-    plot_pt_resolution(inFile1, label1, 0, ax1, "pt_resol_barrel_fctPt")
-    plot_pt_resolution(inFile1, label2, 1, ax1, "pt_resol_endcap_fctPt")
+    plot_pt_resolution(inFile1, label1, 1, ax1, "pt_resol_fctPt")
+    plot_pt_resolution(inFile2, label2, 0, ax1, "pt_resol_fctPt")
+    # plot_pt_resolution(inFile1, label1, 0, ax1, "pt_resol_barrel_fctPt")
+    # plot_pt_resolution(inFile1, label2, 1, ax1, "pt_resol_endcap_fctPt")
     # plot_pt_resolution(inFile2, label2, 1, ax1 ,"pt_resol_fctPt") 
     # plot_pt_resolution(inFile3, label3, 2, ax1 ,"pt_resol_fctPt") 
     plot_name1 = 'responses/2025_studies/tau_pt_resolution_' + options.tag + '_fctPt'
@@ -489,17 +449,159 @@ if __name__ == "__main__" :
     plt.savefig(plot_name1 + '.png')
     plt.close()
 
+
+    fig3, ax3 = plt.subplots(figsize=(10, 10))
+    plot_pt_resolution(inFile1, label1, 1, ax3, "pt_scale_fctPt","pt_scale")
+    plot_pt_resolution(inFile2, label2, 0, ax3, "pt_scale_fctPt","pt_scale")
+    # plot_pt_resolution(inFile1, label1, 0, ax1, "pt_resol_barrel_fctPt")
+    # plot_pt_resolution(inFile1, label2, 1, ax1, "pt_resol_endcap_fctPt")
+    # plot_pt_resolution(inFile2, label2, 1, ax1 ,"pt_resol_fctPt") 
+    plot_pt_resolution(inFile3, label3, 2, ax3 ,"pt_resol_fctPt") 
+    plot_name1 = 'responses/2025_studies/tau_pt_scale_' + options.tag + '_fctPt'
+    print(f"Saving {plot_name1}.png")
+    ax1.grid()
+    if options.inclusive:
+        plot_name1 = plot_name1[:-4] + '_inclusive'
+    plt.savefig(plot_name1 + '.pdf')
+    plt.savefig(plot_name1 + '.png')
+    plt.close()
+
     # Second Plot: Plot pt_resolution with 'pt_resol_fctEta'
     fig2, ax2 = plt.subplots(figsize=(10, 10))
-    plot_pt_resolution(inFile1, label1, 0, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    plot_pt_resolution(inFile1, label2, 0, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    plot_pt_resolution(inFile1, label1, 1, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    plot_pt_resolution(inFile2, label2, 0, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
     # plot_pt_resolution(inFile2, label2, 1, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    # plot_pt_resolution(inFile3, label3, 2, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    plot_pt_resolution(inFile3, label3, 2, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
     plot_name2 = 'responses/2025_studies/tau_pt_resolution_' + options.tag + '_fctEta'
-    print(f"Saving {plot_name2}.png")
-    ax2.grid()
-    if options.inclusive:
-        plot_name2 = plot_name2[:-4] + '_inclusive'
     plt.savefig(plot_name2 + '.pdf')
     plt.savefig(plot_name2 + '.png')
-    plt.close()
+    print(f"Saving {plot_name2}.png")
+    ax2.grid()
+
+    # if options.inclusive:
+    #     plot_name2 = plot_name2[:-4] + '_inclusive'
+    # plt.savefig(plot_name2 + '.pdf')
+    # plt.savefig(plot_name2 + '.png')
+    # plt.close()
+
+    if options.bins:
+        # bins_to_process = single_pt_bins + single_eta_bins
+        mean_pt=[]
+        mean_pt_2=[]
+        mean_eta=[]
+        variance_pt=[]
+        variance_pt_2=[]
+        variance_eta=[]
+        mean_pt_3=[]
+        variance_pt_3=[]
+
+        for single_bin in single_pt_bins:
+            # label_1_bins = "MC25W-MINIAOD\n" + \
+            #     "caloparams 2023\n" + \
+            #    f"{single_bin.split('pt_resp_')[-1]}"
+            # label_1_bins = r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions\n" + \
+            #    f"{single_bin.split('pt_resp_')[-1]}"
+            # label_2_bins = r"Unpacked 2024 Era I" + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
+            label_1_bins = label1 + "\n" + \
+               f"{single_bin.split('pt_resp_')[-1]}"
+            label_2_bins =  label2 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
+            label_3_bins =  label3 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
+            # label1 = f'Muon Run2024I MINIAOD_{single_bin.split("pt_resp_")[-1]}'
+            # create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag)
+            mean_i,variance_i,mean_i2,variance_i2, mean_i3, variance_i3=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 1, inFile2,label_2_bins, 0, inFile3,label_3_bins, 2)
+            mean_pt.append(mean_i)
+            variance_pt.append(variance_i)
+            mean_pt_2.append(mean_i2)
+            variance_pt_2.append(variance_i2)
+            mean_pt_3.append(mean_i3)
+            variance_pt_3.append(variance_i3)
+
+        # for single_bin in single_eta_bins:
+        #     # label_1_bins = "MC25W-MINIAOD\n" + \
+        #     #     "caloparams 2023\n" + \
+        #     #    f"{single_bin.split('pt_resp_')[-1]}"
+        #     # label_1_bins = r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions\n" + \
+        #     #    f"{single_bin.split('pt_resp_')[-1]}"
+        #     # label_2_bins = r"Unpacked 2024 Era I" + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
+        #     label_1_bins = label1 + "\n" + \
+        #        f"{single_bin.split('pt_resp_')[-1]}"
+        #     label_2_bins =  label2 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
+        #     # label1 = f'Muon Run2024I MINIAOD_{single_bin.split("pt_resp_")[-1]}'
+        #     # create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag)
+        #     mean_i,variance_i,mean_i2,variance_i2=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 0, inFile2,label_2_bins, 1)
+        #     mean_pt.append(mean_i)
+        #     variance_pt.append(variance_i)
+        #     mean_pt_2.append(mean_i2)
+        #     variance_pt_2.append(variance_i2)
+
+        print("mean1",len(mean_pt))
+        # print("mean",mean_pt)
+        # print(len(variance_pt))
+        print("mean2",len(mean_pt_2))
+        print("mean3",len(mean_pt_3))
+        # print("mean2",mean_pt_2)
+        # print(len(variance_pt_2))
+        # print((pt_bin_centers))
+
+        # print("variance",variance_pt)
+
+        # for single_bin in single_eta_bins:
+        #     # label_1_bins = "2025W-MC-VBF-MINIAOD\n" + \
+        #     #     "caloparams 2023\n" + \
+        #     #    f"{single_bin.split('pt_resp_')[-1]}"
+        #     label_1_bins = "2025W-MC-VBF-MINIAOD\n" + \
+        #         f"{single_bin.split('pt_resp_')[-1]}"
+        #     # label1 = f'Muon Run2024I MINIAOD_{single_bin.split("pt_resp_")[-1]}'
+        #     # create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag)
+        #     mean_i,variance_i=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 0)
+        #     mean_eta.append(mean_i)
+        #     variance_eta.append(variance_i)
+
+        # Plot the mean as a function of pt bin
+
+        # plt.scatter(pt_bin_centers, mean_pt, color='orange', label='Mean')
+        # plt.plot(pt_bin_centers, mean_pt, linestyle='--', color='orange', alpha=0.7)
+        plt.errorbar(pt_bin_centers, mean_pt, yerr=variance_pt, fmt='o', color='blue', 
+             ecolor='blue', elinewidth=1.5, capsize=4,label=r"$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$" +"\n"+ label1)
+        plt.errorbar(pt_bin_centers, mean_pt_2, yerr=variance_pt_2, fmt='o', color='red', 
+             ecolor='red', elinewidth=1.5, capsize=4, label=r'$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$'+"\n"+ label2)
+        plt.errorbar(pt_bin_centers, mean_pt_3, yerr=variance_pt_3, fmt='o', color='green', 
+             ecolor='green', elinewidth=1.5, capsize=4, label=r'$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$'+"\n"+ label3)
+        plt.xlabel(r'$p_t^{offfline}$')
+        plt.ylabel(r"Mean of the fit")
+        plt.legend(fontsize=10)
+        plt.grid(True, linestyle=':', alpha=0.6)
+        for xtick in ax.xaxis.get_major_ticks():
+            xtick.set_pad(10)
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
+        plot_name = f'responses/2025_studies/tau_mean_pt_scale_{options.tag}'
+        plt.savefig(f'{plot_name}.pdf')
+        plt.savefig(f'{plot_name}.png')
+        print(f'{plot_name}.png')
+        plt.close()
+
+        # Plot the mean as a function of eta bin
+
+        # plt.scatter(pt_bin_centers, mean_pt, color='blue', label='Mean')
+        # plt.plot(pt_bin_centers, mean_pt, linestyle='--', color='blue', alpha=0.7)
+        # plt.errorbar(eta_bin_centers, mean_eta, yerr=variance_eta, fmt='o', color='orange', 
+        #      ecolor='orange', elinewidth=1.5, capsize=4)
+        # plt.xlabel(r'$|\eta|^{\tau, offline}$')
+        # plt.ylabel(r"$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle$")
+        # plt.legend()
+        # plt.grid(True, linestyle=':', alpha=0.6)
+        # for xtick in ax.xaxis.get_major_ticks():
+        #     xtick.set_pad(10)
+        # mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
+        # plot_name = f'responses/2025_studies/tau_mean_eta_scale_{options.tag}'
+        # plt.savefig(f'{plot_name}.pdf')
+        # plt.savefig(f'{plot_name}.png')
+        # plt.close()
+
+        # Handle inclusive plot saving
+        if options.inclusive:
+            plot_name = f'responses/2025_studies/tau_pt_scale_{options.tag}_{single_bin}_inclusive'
+            plt.savefig(f'{plot_name}.pdf')
+            plt.savefig(f'{plot_name}.png')
+            plt.close()
+
