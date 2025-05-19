@@ -57,6 +57,9 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     TH1F* eta = new TH1F("eta","eta",12,-2.1,2.1);
     TH1F* l1tpt = new TH1F("l1tpt","l1tpt",50,0,100);
 
+    TH1F* l1tau_histo = new TH1F("l1tau","l1tau",20,10,30);
+    TH1F* tauPt_histo = new TH1F("tauPt","tauPt",20,30,100);
+
     std::vector<float> ptBins        = {20, 25, 30, 35, 40, 45, 50, 60, 70, 90, 110, 130, 160, 200, 500};
     std::vector<float> etaBins       = {0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
     std::vector<float> signedEtaBins = {-2.1, -1.8, -1.479, -1.305, -1.0, -0.5, 0., 0.5, 1.0, 1.305, 1.479, 1.8, 2.1};
@@ -184,7 +187,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
         Nvtx->Fill(nvtx);
 
         // fill inclusive distributions skipping low energy taus
-        if(tauPt<30)
+        if(tauPt>30)
         {
             pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
             eta_resp_inclusive->Fill(l1tTauEta - tauEta);
@@ -202,6 +205,12 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
                 phi_resp_endcap->Fill(l1tTauPhi - tauPhi);
             }
         }
+
+        if (l1tTauPt > 20 and l1tTauPt < 27) {
+            l1tau_histo->Fill(l1tTauPt);
+            tauPt_histo->Fill(tauPt);
+        }
+        
 
         for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
         {
@@ -399,7 +408,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2024/resolutions_of_Run"+run_nmbr_str+"_reEmulated.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_2025/resolutions_of_Run"+run_nmbr_str+"_reEmulated_test.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();
@@ -418,6 +427,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "",  TString fit_
     phi_resp_inclusive->Write();
     PTvsETA_resolution->Write();
     PTvsETA_scale->Write();
+    l1tau_histo->Write();
     for(long unsigned int i = 0; i < ptBins.size()-1; ++i)
     {
         response_ptBins[i]->Write();
