@@ -3,11 +3,14 @@ set -e
 
 # sh produce_plots_unpacked.sh <tag> <miniaod_root_file> <rate_file> <run_number>
 # sh produce_plots_unpacked.sh MC25W_conservative_ZS MC25_MiniAOD.root Zerobias_Run386604.root 386604
+# sh produce_plots_unpacked.sh 2024I_HCALcFeb_calop_0p9_22_37 Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37.root Zerobias_Run386604.root 386604
+# sh produce_plots_unpacked.sh Zero_bias_noHCALc_2024calop nothing Zerobias_Run386604.root 386604
 
 
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/unpacked_2024/Muon_Run2024I_MINIAOD/'
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/'
-working_dir='/data_CMS/cms/amella/Run3_2025/MC25_Winter_optmization/'
+# working_dir='/data_CMS/cms/amella/Run3_2025/MC25_Winter_optmization/'
+working_dir='/data_CMS/cms/amella/Run3_2025/2024I-data'
 pwd=$(pwd)
 
 # # Responses
@@ -34,7 +37,7 @@ echo 'Making rates..'
 cd ${pwd}/MakeRates
 root -l -b <<EOF
 .L Rate_ZeroBias_unpacked.C+
-Rate("${working_dir}${3}", "histos_2024/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
 .q
 EOF
 
