@@ -21,14 +21,14 @@
 
 using namespace std;
 
-void Rate(TString tag, int run, bool doScaleToLumi = kFALSE, float calibThr = 1.7)
+void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi = kFALSE, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
 
   TString run_str = to_string(run);
 
-  TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW/EphemeralZeroBias_362616_olivier.root";
+  // TString FileName_in = "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_07_27_olivier/EphemeralZeroBias0__Run2022G_Run362616__RAW/EphemeralZeroBias_362616_olivier.root";
   // "/data_CMS/cms/mchiusi/Run3preparation/Run3preparation_2023/2023_05_11_rate/RAW_"+run_str+"/Run"+run_str+"_2023v1Tau1.root";
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias"); // tree of uncalibrated EphemeralZeroBias NTuples
@@ -68,6 +68,7 @@ void Rate(TString tag, int run, bool doScaleToLumi = kFALSE, float calibThr = 1.
       inTree->GetEntry(i);
       if(i%100000==0) cout<<"Entry #"<<i<<endl; 
       // SET RUN INFO
+      if (run == 386604) { if(in_lumi<114 || in_lumi>1685) continue; }
       if (run == 355414) { if(in_lumi<0) continue; }
       if (run == 355417) { if(in_lumi>40) continue; }
       if (run == 355418) { if((in_lumi>38 && in_lumi<60) || in_lumi>98) continue; }
@@ -154,6 +155,8 @@ void Rate(TString tag, int run, bool doScaleToLumi = kFALSE, float calibThr = 1.
 
   // SET RUN INFO
   float nb = 0.;
+  if (run == 386604) { nb = 2340; }
+
   if (run == 355414 or run == 355417 or run == 355418) { nb = 62.; }
   if (run == 355769) { nb = 302.; }
   if (run == 355865 or run == 355872 or run == 355913) { nb = 590.; }
@@ -222,7 +225,8 @@ void Rate(TString tag, int run, bool doScaleToLumi = kFALSE, float calibThr = 1.
 
   TString scaledToLumi = "";
   if (doScaleToLumi) scaledToLumi = "_scaledTo2e34Lumi";
-  TFile f_out("histos_2023/olivier/histos_rate_ZeroBias_Run"+run_str+"_reEmulated_Tau2023v1"+scaledToLumi+".root","RECREATE");
+  // TFile f_out("histos_2023/olivier/histos_rate_ZeroBias_Run"+run_str+"_reEmulated_Tau2023v1"+scaledToLumi+".root","RECREATE");
+  TFile f_out(FileName_out,"RECREATE");
 
   DiTauPtPassDistribution_noIso->Write();
   DiTauPtPassDistribution_Iso->Write();

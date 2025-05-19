@@ -120,6 +120,9 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
                     std::vector<Float_t> PtTausProgression;
                     PtTausProgression.push_back(-99.); PtTausProgression.push_back(-99.);
 
+                    //PtTausProgression : Stores the top two highest pT values.
+                    //IndexTausProgression : Stores the indices of those two taus.
+
                     // loop over l1 tau candidates to get the single and double highest pt candidates
                     Float_t highestPt = -99.;
                     for(UInt_t iL1Tau = 0 ; iL1Tau < in_CalibPt->size() ; ++iL1Tau)
@@ -135,6 +138,7 @@ void Rate(TString FileName_in, TString FileName_out, TString isolation, int run,
                         // get double tau highest pts
                         if(in_CalibPt->at(iL1Tau)>=PtTausProgression.at(0) && in_l1tEmuIsoEt->at(iL1Tau)<=IsoCut)
                         {
+                            //The previous highest pT tau (index 0) moves down to position 1.
                             IndexTausProgression.at(1)=IndexTausProgression.at(0);
                             PtTausProgression.at(1)=PtTausProgression.at(0);
                             IndexTausProgression.at(0)=iL1Tau;
