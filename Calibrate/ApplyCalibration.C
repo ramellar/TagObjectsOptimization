@@ -253,7 +253,7 @@ Int_t FindBinCorrespondencenTT(Int_t nTT_fine)
   return -1;
 }
 
-void ApplyCalibration(TString InputFileName, TString OutputFileName, TString corrections, float calibThr = 1.7)
+void ApplyCalibration(TString InputFileName, TString OutputFileName, TString corrections, float calibThr = 1.7, float calibCorrection = 1.00)
 {
   TH2F* isolation_vs_pt = new TH2F("isolation_vs_pt","isolation_vs_pt",100,0,100,compressedNbinsIEt-1,hardcodedCompressedIetBinsDouble);
   isolation_vs_pt->Clear();
@@ -457,7 +457,7 @@ void ApplyCalibration(TString InputFileName, TString OutputFileName, TString cor
           out_L1Tau_CalibConstant = h_LUT_isMerged0->GetBinContent(abs(compressedieta)+1,compressedE+1,L1Tau_hasEM+1);
           // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
           if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
-          out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
+          out_L1Tau_CalibPt = out_L1Tau_CalibConstant * calibCorrection *L1Tau_IEt/2.;
         }
       else
         {
@@ -465,7 +465,7 @@ void ApplyCalibration(TString InputFileName, TString OutputFileName, TString cor
           // std::cout << out_L1Tau_CalibConstant << endl;
           // if(out_L1Tau_CalibConstant>1.3) out_L1Tau_CalibConstant = 1.3;
           if(out_L1Tau_CalibConstant>calibThr) out_L1Tau_CalibConstant = calibThr;
-          out_L1Tau_CalibPt = out_L1Tau_CalibConstant*L1Tau_IEt/2.;
+          out_L1Tau_CalibPt = out_L1Tau_CalibConstant * calibCorrection *L1Tau_IEt/2.;
         }
 
 

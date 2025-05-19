@@ -23,7 +23,7 @@
 
 using namespace std;
 
-void ApplyCalibrationZeroBias(TString InputFileName, TString OutputFileName, TString corrections, float calibThr = 1.7)
+void ApplyCalibrationZeroBias(TString InputFileName, TString OutputFileName, TString corrections, float calibThr = 1.7, float calibCorrection = 1.00)
 {
 
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
@@ -292,7 +292,7 @@ void ApplyCalibrationZeroBias(TString InputFileName, TString OutputFileName, TSt
 
           if(!out_l1tEmuIsMerged->at(iL1Tau))
             {
-              Float_t CalibConstant = h_LUT_isMerged0->GetBinContent(abs(out_compressedieta->at(iL1Tau))+1,out_compressedE->at(iL1Tau)+1,out_l1tEmuHasEM->at(iL1Tau)+1);
+              Float_t CalibConstant = calibCorrection * h_LUT_isMerged0->GetBinContent(abs(out_compressedieta->at(iL1Tau))+1,out_compressedE->at(iL1Tau)+1,out_l1tEmuHasEM->at(iL1Tau)+1);
               if(CalibConstant>calibThr) CalibConstant = calibThr;
               int thr = int(round(CalibConstant/4.*1024))*2;
               int calibPtInt = ((out_l1tEmuRawEt->at(iL1Tau)*thr)>>9);
@@ -304,7 +304,7 @@ void ApplyCalibrationZeroBias(TString InputFileName, TString OutputFileName, TSt
             }
           else
             {
-              Float_t CalibConstant = h_LUT_isMerged1->GetBinContent(abs(out_compressedieta->at(iL1Tau))+1,out_compressedE->at(iL1Tau)+1,out_l1tEmuHasEM->at(iL1Tau)+1);
+              Float_t CalibConstant = calibCorrection * h_LUT_isMerged1->GetBinContent(abs(out_compressedieta->at(iL1Tau))+1,out_compressedE->at(iL1Tau)+1,out_l1tEmuHasEM->at(iL1Tau)+1);
               if(CalibConstant>calibThr) CalibConstant = calibThr;
               int thr = int(round(CalibConstant/4.*1024))*2;
               int calibPtInt = ((out_l1tEmuRawEt->at(iL1Tau)*thr)>>9);

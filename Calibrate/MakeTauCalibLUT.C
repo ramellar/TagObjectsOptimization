@@ -19,7 +19,7 @@
 #include <string>
 #include <stdio.h>
 
-void MakeTauCalibLUT(TString outFile, TString corrections, float calibThr = 1.7, Bool_t withLayer1 = kTRUE)
+void MakeTauCalibLUT(TString outFile, TString corrections, float calibThr = 1.7, float calibCorrection = 1.00, Bool_t withLayer1 = kTRUE)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -130,8 +130,8 @@ void MakeTauCalibLUT(TString outFile, TString corrections, float calibThr = 1.7,
                   if (binhasEM >= nhasEM) { binhasEM = nhasEM -1; cout << "exceeded nhasEM!!" << endl; }
                   
                   float thr_f ;
-                  if(iisMerged==0) thr_f = LUT_isMerged0->GetBinContent(bineta+1,binEt+1,binhasEM+1);
-                  else thr_f = LUT_isMerged1->GetBinContent(bineta+1,binEt+1,binhasEM+1);
+                  if(iisMerged==0) thr_f = calibCorrection * LUT_isMerged0->GetBinContent(bineta+1,binEt+1,binhasEM+1);
+                  else thr_f = calibCorrection * LUT_isMerged1->GetBinContent(bineta+1,binEt+1,binhasEM+1);
                   // if(iisMerged==0) thr_f = LUT_isMerged0->GetBinContent(binEt+1,bineta+1,binhasEM+1);
                   // else thr_f = LUT_isMerged1->GetBinContent(binEt+1,bineta+1,binhasEM+1);
 
@@ -141,6 +141,7 @@ void MakeTauCalibLUT(TString outFile, TString corrections, float calibThr = 1.7,
 
                   // thr_f = thr_f-0.5;
                   // if(thr>=pow(2,totOutBits)-1) thr=pow(2,totOutBits-2)-1;
+                  
                   int thr = int(round(thr_f/4.*1024));
                   //yint = int(round(y/2.*512))
 
