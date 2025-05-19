@@ -22,6 +22,16 @@
 
 using namespace std;
 
+const Int_t pt_bins = 11;
+// const Int_t hardcodedPtBins[pt_bins]  = {20,25,30,35,40,45,50,60,70,90,110};
+// const Float_t hardcodedPtBins[pt_bins] = {20,25,30,35,40,45,50,60,70,90,110};
+const Double_t hardcodedPtBins[pt_bins] = {20,25,30,35,40,45,50,60,70,90,110};
+
+// const Int_t hardcodedMeanResponseBins[pt_bins]  = {0.96, 0.93, 0.91, 0.88, 0.87, 0.87, 0.88, 0.90, 0.91, 0.91, 0.89};
+// const Float_t hardcodedMeanResponseBins[pt_bins] = {0.96, 0.93, 0.91, 0.88, 0.87, 0.87, 0.88, 0.90, 0.91, 0.91, 0.89};
+// const Double_t hardcodedMeanResponseBins[pt_bins] = {0.94, 0.92, 0.90, 0.86, 0.85, 0.84, 0.90, 0.93, 0.93, 0.78, 0.89};
+const Double_t hardcodedMeanResponseBins[pt_bins] = {1.15, 0.99, 1.00, 0.95, 0.88, 0.89, 0.90, 0.97, 0.97, 0.96, 0.98};
+
 // input is a MERGED root file and output is a MATCHED root file
 
 void MakeTreeForCalibration(TString InputFileName, TString OutputFileName, TString tree="Ntuplizer_TagAndProbe")
@@ -264,8 +274,32 @@ void MakeTreeForCalibration(TString InputFileName, TString OutputFileName, TStri
         out_l1tEmuRawEt = l1tEmuRawEt->at(iMatchedL1Tau);
         out_l1tEmuIsoEt = l1tEmuIsoEt->at(iMatchedL1Tau);
 
-        //out_Target = tauPt/(l1tPt->at(iMatchedL1Tau));
+        // out_Target = tauPt/(l1tPt->at(iMatchedL1Tau));
         out_Target = tauPt/(l1tEmuRawEt->at(iMatchedL1Tau)/2.);
+
+        // off = c x L1 = c_target  x L1_calibrated
+
+        //c = off/L1_raw = ?
+        // You want the target, i.e=c to be equal to 1
+        // c_target= off/L1_calibrated = 1
+
+        // L1 x c = off --> off/L1_rawxc =1
+
+        // 1) take L1_raw and find a c
+        // 2) L1_rawxc
+        // 3) off/(L1_rawxc) does this match my target distribution? i.e is it equal to 1?
+
+        // c_target= off/(L1_raw x c)
+
+
+
+        // Find the corresponding pT bin
+        // for (int i = 0; i < pt_bins - 1; i++) {
+        //     if (tauPt >= hardcodedPtBins[i] && tauPt < hardcodedPtBins[i+1]) {
+        //         out_Target /= hardcodedMeanResponseBins[i];
+        //         break;  // Stop once the correct bin is found
+        //     }
+        // }
 
         out_Nvtx = Nvtx;
 
