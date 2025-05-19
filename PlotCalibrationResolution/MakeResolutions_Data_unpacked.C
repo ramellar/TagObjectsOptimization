@@ -163,7 +163,7 @@ void createHistograms(const std::vector<double>& tauPt,
     }
 
  
-void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString method = "RMS", TString fit_option = "crystalball")
+void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0. , TString method = "RMS", TString fit_option = "crystalball")
 {
     std::cout << "Starting" << std::endl;
     // TString run_nmbr_str = to_string(run_nmbr);
@@ -355,7 +355,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         // if (nvtx < 30 and nvtx > 40) { continue; }
 
         // fill inclusive distributions skipping low energy taus
-        if(tauPt>30)
+        if(tauPt>20)
         {
             pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
             eta_resp_inclusive->Fill(l1tTauEta - tauEta);
@@ -565,9 +565,9 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         pt_scale_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetMean());
         pt_scale_fctEta->SetBinError(i+etaBins.size(), plusEta_response_ptBins[i]->GetMeanError());
 
-        if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMS()*2.35/minusEta_response_ptBins[i]->GetMean()); }
+        if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMS()/minusEta_response_ptBins[i]->GetMean()); }
         if (minusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinError(etaBins.size()-1-i, minusEta_response_ptBins[i]->GetRMSError()/minusEta_response_ptBins[i]->GetMean()); }
-        if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMS()*2.35/plusEta_response_ptBins[i]->GetMean()); }
+        if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinContent(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMS()/plusEta_response_ptBins[i]->GetMean()); }
         if (plusEta_response_ptBins[i]->GetMean() != 0.0) { pt_resol_fctEta->SetBinError(i+etaBins.size(), plusEta_response_ptBins[i]->GetRMSError()/plusEta_response_ptBins[i]->GetMean()); }
     }
 
@@ -578,7 +578,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         {
             if (pt_resp_PtEtaBin[k]->GetMean() != 0.)
             {
-                if (pt_resp_PtEtaBin[k]->GetMean() != 0.0) { PTvsETA_resolution->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetRMS()*2.35/pt_resp_PtEtaBin[k]->GetMean()); }
+                if (pt_resp_PtEtaBin[k]->GetMean() != 0.0) { PTvsETA_resolution->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetRMS()/pt_resp_PtEtaBin[k]->GetMean()); }
                 if (pt_resp_PtEtaBin[k]->GetMean() != 0.0) { PTvsETA_resolution->SetBinError(i,j,pt_resp_PtEtaBin[k]->GetRMSError()/pt_resp_PtEtaBin[k]->GetMean()); }
                 
                 PTvsETA_scale->SetBinContent(i,j,pt_resp_PtEtaBin[k]->GetMean());
