@@ -29,11 +29,11 @@ using namespace std;
 /*This function outputs:
   -Inclusive histograms:
     -done with the compressed variables in "../Calibrate/ApplyCalibration.C"
-    -done with the calibrated variables given as input
-  -It defines histograms per bins in eta, Et and nTT and 3 main maps are defined:
-    - HistosPerBin: which gives in the output Histo_eta_Et_nTT which is the number of counts as a function of the isaltion energy
-    - Isocut_Per_bin: which for a value of the efficiency gives the 3D histogram with eta, Et and nTT as axis containing the information of the IsoCuts for that efficiency
-    - Iso_Per_effciiency_Per_bin: which gives the value of the isolation cut for each value of efficnecy and each histogram
+    -done with the uncalibrated variables from the branch L1Tau_iEt
+  -It defines histograms per bins in eta, Et and nTT. For this 3 main maps are defined:
+    - HistosPerBin: Gives as output "Histo_eta_Et_nTT". The latter represents the number of counts vs the isoltion energy (L1TauIso) in each bin of eta, Et and nTT
+    - Isocut_Per_bin: Gives for a certain value of the efficiency a 3D histogram (in eta, Et and nTT) containing the information of the IsoCuts for that efficiency. The efficiency is given by the integral_1_isocut(histogram)/total integral, so it gives how much of the distribution we want to keep
+    - Iso_Per_efficiency: is a dictionnary giving for each value of the efficiency another map in which for each string histo_eta_ntt_ietthere is associated thee value of the iso cut of that bin, i.e, this dictionnanry for each value of efficiency it gives the value of iso cut for each eta,ntt,iet bin. 
   -From these maps ("dictionnaries") we plot in the output:
     -Each histogram (inclusive and per bins of eta, Et and nTT)
     -The efficiencies as a fct of pt, eta and nTT, that we refer to as flat efficiencies
@@ -214,13 +214,13 @@ void Build_Isolation(TString inputFile, TString outFile, UInt_t tmpFitMin = 3, U
   
   cout<<"entering loop"<<endl;
 
-  //Defining profiling of the 1D histograms: L1Tau_IEt/L1Tau_IEta/L1Tau_nTT and L1Tau_Iso
+  //Defining profiling of the 1D histograms: L1Tau_Iso vs L1Tau_IEt/L1Tau_IEta/L1Tau_nTT 
   TProfile* hprof_IEt  = new TProfile("hprof_IEt","Profile L1_Iso vs. L1_IEt",100,0.,200.,0,20);
   TProfile* hprof_IEta  = new TProfile("hprof_IEta","Profile L1_Iso vs. L1_IEta",28,0.,28.,0,20);
   TProfile* hprof_nTT  = new TProfile("hprof_nTT","Profile L1_Iso vs. L1_nTT",150,0.,150.,0,20);//70,0.,70.,0,20
 
-  /*Defining the names of all the separeted histograms, filling them in with the callibrated values for matched events
-  We start by getting , the events and filling the profiled histograms
+  /*Defining the names of all the three histograms, filling them in with the uncalibrated values for matched events
+  We start by getting the events and filling the profiled histograms
   We continue by defining the compressed or supercompressed binning for the histograms (super by default)
   We finish by filling the histos previuously defined in the dictionnary Histos_PerBin with values of
   the iso energy: therefore the output will be counts vs L1Tauiso E */
