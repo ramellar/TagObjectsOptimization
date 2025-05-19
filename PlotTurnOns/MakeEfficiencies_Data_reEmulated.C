@@ -81,7 +81,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "", int DecayMod
   TH1F* barrel_nvtx  = new TH1F("barrel_nvtx" ,"barrel_nvtx" ,10, binningNvtx);
   TH1F* endcap_nvtx  = new TH1F("endcap_nvtx" ,"endcap_nvtx" ,10, binningNvtx);
 
-  std::vector<int> thrs = {24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45};
+  std::vector<int> thrs = {22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45};
   std::vector<TH1F*> ptProgressionFixedThr_noIso = {};
   std::vector<TH1F*> ptProgressionFixedThr_Iso = {};
   std::vector<TH1F*> barrel_ptProgressionFixedThr_noIso = {};
