@@ -355,7 +355,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
         // if (nvtx < 30 and nvtx > 40) { continue; }
 
         // fill inclusive distributions skipping low energy taus
-        if(tauPt>20)
+        if(tauPt>30)
         {
             pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
             eta_resp_inclusive->Fill(l1tTauEta - tauEta);
@@ -643,7 +643,7 @@ void MakeResolutions(TString file, TString tree, int run_nmbr, TString era = "",
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2025/resolutions_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_Run3_2025/resolutions_of_Run"+run_nmbr_str+"_unpacked.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();

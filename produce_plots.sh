@@ -23,36 +23,36 @@ OutputFile:  ${4}${2}_MERGED_${3}.root
 EOF
 }
 
-# # merging
-# echo 'Merging..'
+# merging
+echo 'Merging..'
 
-# cd ${pwd}/MergeTrees
-# make clean &> /dev/null; make &> /dev/null
-# # make clean &> /dev/null; make 
-# mkdir ${pwd}/MergeTrees/run_2025/${1}
+cd ${pwd}/MergeTrees
+make clean &> /dev/null; make &> /dev/null
+# make clean &> /dev/null; make 
+mkdir ${pwd}/MergeTrees/run_2025/${1}
 
-# i=0
-# for f in ${working_dir}${1}.root
-# do
-#   i=$(( i + 1 ))
-#   echo "Processing $f file..."
-#   create_file_merge "${pwd}" "${1}" "${i}" "${working_dir}" "${2}" "${f}"
-#   ./merge.exe ${pwd}/MergeTrees/run_2025/${1}/${1}_${i}.config 
-# done
+i=0
+for f in ${working_dir}${1}.root
+do
+  i=$(( i + 1 ))
+  echo "Processing $f file..."
+  create_file_merge "${pwd}" "${1}" "${i}" "${working_dir}" "${2}" "${f}"
+  ./merge.exe ${pwd}/MergeTrees/run_2025/${1}/${1}_${i}.config 
+done
 
-# # hadd files
-# echo 'Hadding merged files..'
-# hadd -f ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
+# hadd files
+echo 'Hadding merged files..'
+hadd -f ${working_dir}${1}_MERGED.root ${working_dir}${1}_MERGED_*.root
 
-# # matching
-# echo 'Matching..'
+# matching
+echo 'Matching..'
 
-# cd ${pwd}/MatchAndCompress
-# root -l -b <<EOF
-# .L MakeTreeForCalibration.C+
-# MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_TagAndProbe")
-# .q
-# EOF
+cd ${pwd}/MatchAndCompress
+root -l -b <<EOF
+.L MakeTreeForCalibration.C+
+MakeTreeForCalibration("${working_dir}${1}_MERGED.root", "${working_dir}${1}_MATCHED.root", "Ntuplizer_TagAndProbe")
+.q
+EOF
 
 # Responses
 echo 'Making responses..'
@@ -67,33 +67,33 @@ MakeResolutions("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
 .q
 EOF
   
-# # TurnOns
-# echo 'Making TurnOns..'
-# cd ${pwd}/PlotTurnOns
-# root -l -b <<EOF
-# .L MakeEfficiencies_Data_reEmulated.C+
-# MakeEfficiencies("${working_dir}${1}_MATCHED.root", -1, "${1}")
-# .L MakeEfficiencies_Data_unpacked.C+
-# MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
-# .q
-# EOF
+# TurnOns
+echo 'Making TurnOns..'
+cd ${pwd}/PlotTurnOns
+root -l -b <<EOF
+.L MakeEfficiencies_Data_reEmulated.C+
+MakeEfficiencies("${working_dir}${1}_MATCHED.root", -1, "${1}")
+.L MakeEfficiencies_Data_unpacked.C+
+MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
+.q
+EOF
 
 # Rates
-# echo 'Making rates..'
+echo 'Making rates..'
 
-# cd ${pwd}/MakeRates
+cd ${pwd}/MakeRates
 
-# root -l -b <<EOF
-# .L Rate_ZeroBias_unpacked.C++
-# Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
-# .q
-# EOF
+root -l -b <<EOF
+.L Rate_ZeroBias_unpacked.C++
+Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+.q
+EOF
 
-# root -l -b <<EOF
-# .L Rate_ZeroBias_reEmu.C++
-# Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_reEmulated.root", ${4})
-# .q
-# EOF
+root -l -b <<EOF
+.L Rate_ZeroBias_reEmu.C++
+Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_reEmulated.root", ${4})
+.q
+EOF
 
 # uncomment this part to split responses and turnons into DecayModes
 

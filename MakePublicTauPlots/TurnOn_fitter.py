@@ -321,16 +321,28 @@ def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
     ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
     # pt_leg._legend_box.align = "right"
     ##vectCBconvATAN
-    #             [mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+8  ,  1.,   3. , 90.,     0.95,   3., 0.8,   80.]
-    param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+10.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr+15  ,  2.,   3. , 80.,     0.95,   10., 0.8,   80.]
+    param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
     print(x[:-2], y[:-2])
     i_to_skip=[8,9]
     x_fit = np.delete(x, i_to_skip)
     y_fit = np.delete(y, i_to_skip)
     popt, pcov = curve_fit(vectCBconvATAN, x_fit, y_fit, p0, maxfev=5000, bounds=param_bounds)
     print(popt)
+
+    # worked for 23
+    # #             [mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    # p0 =          [thr+8  ,  10.,   3. , 80.,     0.98,   100., 0.8,   10.]
+    # param_bounds=([thr-10.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+10.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    # i_to_skip=[8,9]
+    # x_fit = np.delete(x, i_to_skip)
+    # y_fit = np.delete(y, i_to_skip)
+    # popt, pcov = curve_fit(vectCBconvATAN, x_fit, y_fit, p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
 
     ##vectApproxATAN
     #             # [xturn,    p, width]
@@ -375,19 +387,14 @@ def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
 #######################################################################
 ######################### SCRIPT BODY #################################
 #######################################################################
-
-''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Run2024W-MC_caloParams_2023_v0_4_cfi_reEmulated.root --inFile2 Tau_MC_TURNONS_FIXEDRATE14kHz_Run369978_v0.root --tag 2024W-MC_23_vs_24LUTs '''
-''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25_VBF_GluGlu_unpacked.root --inFile2 "" --tag RunMC25_VBF_GluGlu_unpacked '''
-''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25_VBF_GluGlu_below30_unpacked.root --inFile2 "" --tag RunMC25_VBF_GluGlu_below_30_unpacked '''
-''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25W_conservative_MiniAOD_unpacked.root --inFile2 "" --tag RunMC25W_full_process_new_production '''
-
-
+# This script is used to fit the turnon curves of the tau trigger
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_MC25W_conservative_MiniAOD_unpacked.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --tag RunMC25W_full_process_new_production '''
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --inFile2 "" --tag RunMC25W_full_process_new_production '''
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile3 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_reEmulated.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile3 efficiencies_of_23GeVturnon_reEmulated.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
 ''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_corrected_resolution_unpacked.root --inFile2 efficiencies_of_23GeVturnon_uncorrected_reEmulated.root --inFile3 efficiencies_of_23GeVturnon_corrected_reEmulated.root --tag Re-emu-vs-unpacked-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025B_run391884_2025C_unpacked.root --inFile2 efficiencies_of_2024_unpacked_unpacked.root --tag Unpacked_2025vs2024'''
  
 
 if __name__ == "__main__" :
@@ -403,12 +410,12 @@ if __name__ == "__main__" :
 
     
     # main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_11_0_2/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
-    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'
-    main_folder2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
-    opt_folder  = '/data_CMS/cms/mchiusi/Run3preparation/Run3_2024/'
+    # main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'
+    # main_folder2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
+    main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_Run3_2025/'
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
-    inFile2 = ROOT.TFile(main_folder2+options.inFile2)
-    inFile3 = ROOT.TFile(main_folder2+options.inFile3)
+    inFile2 = ROOT.TFile(main_folder+options.inFile2)
+    # inFile3 = ROOT.TFile(main_folder2+options.inFile3)
     # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
     # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
    
@@ -418,40 +425,34 @@ if __name__ == "__main__" :
     # label2 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax3'
     # label3 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax3'
     # label1 = "ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37"
-    label1= r"Unpacked 2024 Era I"
-    label2= r"2024 Era I ReEmu w/ 2025 conditions"
-    label3= r"2024 Era I ReEmu w/ 2025 conditions" + "\n" + 'and corrected BDT response'
-    # label3 = ""
-    # label1 = ""
-    # label2 = ""
+    label1= r"Unpacked 2025 Eras B&C"
+    label2= r"Unpacked 2024 Era I"
+    # label3= r"2024 Era I ReEmu w/ 2025 conditions" + "\n" + 'and corrected BDT response'
     # label1 = r'Unpacked 2024 EraI'
     # label2 = r'Unpacked 2024 EraI Iso'
     # label3 = r'Re-Emu pedestals + corrections'
     
-    # thr1 = '26Iso'
-    # thr2 = '26Iso'
-    # thr3 = '26Iso'
-    thr1 = '26Iso'
-    thr2 = '23Iso'
-    thr3 = '23Iso'
+
+    thr1 = '120Iso'
+    thr2 = '120Iso'
     # thr3 = '36'
     # thr3 = '34Iso'
 
-    thr1_string, iso1_string = thr1[:2], thr1[2:]
-    thr2_string, iso2_string = thr2[:2], thr2[2:]
-    thr3_string, iso3_string = thr3[:2], thr3[2:]
+    thr1_string, iso1_string = thr1[:3],thr1[3:]
+    thr2_string, iso2_string = thr2[:3], thr2[3:]
+    # thr3_string, iso3_string = thr3[:2], thr3[2:]
     print(thr2_string, iso2_string)
     eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
     eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
-    eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    # eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
    
     # PLOT TURNONS
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
+    plot_TurnOn2(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
     plot_TurnOn2(eff_TGraph2, int(thr2_string), label2, 0, ax, options)
-    plot_TurnOn2(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
+    # plot_TurnOn2(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
 
-    plot_name = 'turnons/2025/turnons_Run'+options.tag
+    plot_name = 'turnons/Run3_2025/turnons_Run'+options.tag+"_"+thr1_string
     plot_name += '_iso' if iso2_string else '_no_iso'
     print(plot_name+'.png')
     plt.grid()

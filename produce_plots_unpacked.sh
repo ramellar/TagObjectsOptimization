@@ -2,15 +2,19 @@
 set -e
 
 # sh produce_plots_unpacked.sh <tag> <miniaod_root_file> <rate_file> <run_number>
+
+#sh produce_plots_unpacked.sh 2025B_run391884_2025C unpacked_2025_eraB_C.root whatever.root 391884
+#sh produce_plots_unpacked.sh 2024_unpacked unapcked_2024I.root whatever.root 2024
+
 # sh produce_plots_unpacked.sh MC25W_conservative_ZS MC25_MiniAOD.root Zerobias_Run386604.root 386604
 # sh produce_plots_unpacked.sh 2024I_HCALcFeb_calop_0p9_22_37 Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37.root Zerobias_Run386604.root 386604
-# sh produce_plots_unpacked.sh Zero_bias_noHCALc_2024calop nothing Zerobias_Run386604.root 386604
+
 
 
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/unpacked_2024/Muon_Run2024I_MINIAOD/'
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/'
-# working_dir='/data_CMS/cms/amella/Run3_2025/MC25_Winter_optmization/'
-working_dir='/data_CMS/cms/amella/Run3_2025/2024I-data'
+working_dir='/data_CMS/cms/amella/Run3_2025/2024I-data/'
+# working_dir='/data_CMS/cms/amella/Run3_2025/unpacked_2025/Run2025_EraBfrom391884_EraC_MINIAOD/'
 pwd=$(pwd)
 
 # # Responses
@@ -18,28 +22,28 @@ pwd=$(pwd)
 # cd ${pwd}/PlotCalibrationResolution
 # root -l -b <<EOF
 # .L MakeResolutions_Data_unpacked.C+
-# MakeResolutions("${working_dir}${2}", "Ntuplizer_noTagAndProbe/TagAndProbe", -1, "${1}")
+# MakeResolutions("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
 # .q
 # EOF
 
-# #TurnOns
-# echo 'Making turnOns..'
-# cd ${pwd}/PlotTurnOns
-# root -l -b <<EOF
-# .L MakeEfficiencies_Data_unpacked.C+
-# MakeEfficiencies("${working_dir}${2}", "Ntuplizer_noTagAndProbe/TagAndProbe", -1, "${1}")
-# .q
-# EOF
-
-# Rates
-echo 'Making rates..'
-
-cd ${pwd}/MakeRates
+#TurnOns
+echo 'Making turnOns..'
+cd ${pwd}/PlotTurnOns
 root -l -b <<EOF
-.L Rate_ZeroBias_unpacked.C+
-Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+.L MakeEfficiencies_Data_unpacked.C+
+MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
 .q
 EOF
 
-echo "Finish -- All good, responses in PlotCalibrationResolution/ROOTs/ROOTs_2025/"
-echo "TurnOns in PlotTurnOns/ROOTs/ROOTs_2025/"
+# Rates
+# echo 'Making rates..'
+
+# cd ${pwd}/MakeRates
+# root -l -b <<EOF
+# .L Rate_ZeroBias_unpacked.C+
+# Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+# .q
+# EOF
+
+# echo "Finish -- All good, responses in PlotCalibrationResolution/ROOTs/ROOTs_2025/"
+# echo "TurnOns in PlotTurnOns/ROOTs/ROOTs_2025/"
