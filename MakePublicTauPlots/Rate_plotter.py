@@ -25,11 +25,25 @@ if __name__ == "__main__" :
     ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --inFile2 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile3 histos_rate_ZeroBias_Run386604_Corrected-re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --tag Re-emu-comparison-correction'''
 
 
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root 
+    --inFile2  histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p7_eMin16_eMax31_corrected_resolution_reEmulated.root 
+    --inFile3  histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin19_eMax34_corrected_resolution_reEmulated.root 
+    --inFile4  histos_rate_ZeroBias_Run386604_Corrected-re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --tag Comparison_Isolation_correction'''
+    
+
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root \
+                                --inFile2  histos_rate_ZeroBias_Run386604_Corrected-re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root \
+                                --inFile3  histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin19_eMax34_corrected_resolution_reEmulated.root \
+                                --inFile4  histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p7_eMin16_eMax31_corrected_resolution_reEmulated.root \
+                                --tag Comparison_Isolation_correction_zoommed'''
+
+
 
     parser = OptionParser()
     parser.add_option("--inFile1", dest="inFile1", default=None)
     parser.add_option("--inFile2", dest="inFile2", default=None)
     parser.add_option("--inFile3", dest="inFile3", default=None)
+    parser.add_option("--inFile4", dest="inFile4", default=None)
     parser.add_option("--tag",     dest="tag",     default=None)
     (options, args) = parser.parse_args()
     print(options)
@@ -39,8 +53,9 @@ if __name__ == "__main__" :
     inFile1 = ROOT.TFile(main_folder + options.inFile1)
     inFile2 = ROOT.TFile(main_folder2 + options.inFile2)
     inFile3 = ROOT.TFile(main_folder + options.inFile3)
+    inFile4 = ROOT.TFile(main_folder + options.inFile4)
 
-    plt.rcParams['legend.title_fontsize'] = 'x-small'
+    plt.rcParams['legend.title_fontsize'] = 'xx-small'
     # cmap = matplotlib.colormaps.get_cmap('Set1'); imap=-1
     cmap = matplotlib.colormaps.get_cmap('Set1')
     markers = ['o', 's', '^', 'D']
@@ -49,6 +64,7 @@ if __name__ == "__main__" :
     DoubleTau_Iso_1 = inFile1.Get('DiTauRate_Iso')
     DoubleTau_Iso_2 = inFile2.Get('DiTauRate_Iso')
     DoubleTau_Iso_3 = inFile3.Get('DiTauRate_Iso')
+    DoubleTau_Iso_4 = inFile4.Get('DiTauRate_Iso')
     # DoubleTau_Iso_1 = inFile1.Get('DiTauRate_effMin0p9_eMin28_eMax43')
     # DoubleTau_Iso_2 = inFile2.Get('DiTauRate_effMin0p9_eMin28_eMax43')
     # DoubleTau_Iso_1 = inFile1.Get('DiTauRate_effMin0p9_eMin22_eMax37')
@@ -56,7 +72,7 @@ if __name__ == "__main__" :
     # DoubleTau_Iso_3 = inFile2.Get('DiTauRate_effMin0p9_eMin22_eMax37')
 
     print(DoubleTau_Iso_1.ClassName())
-    plt.rcParams['legend.title_fontsize'] = 'x-small'
+    plt.rcParams['legend.title_fontsize'] = 'xx-small'
     legend_title=r'Inclusive |$\eta$| < 2.1'
     # legend_title=r'Inclusive |$\eta$| < 2.1'+ "\n" + "2024 Era I ReEmu w/ 2025 conditions"
     #legend_title=r'Inst. Lumi = $3.5\times10^{33}\ cm^{-2}s^{-1}$'
@@ -64,9 +80,13 @@ if __name__ == "__main__" :
     # label_DoubleIso_Iso_2 = r'Iso'
     # label_DoubleIso_Iso_1= r"No Iso"
     # label_DoubleIso_Iso_2= r"Iso"
+    # label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2024 Era I '
+    # label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions'
+    # label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions ' + "\n" + 'and corrected BDT response'
     label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2024 Era I '
-    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions'
-    label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions ' + "\n" + 'and corrected BDT response'
+    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions ' + "\n" + 'and corrected BDT response'
+    label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ new Iso nTT binning' + "\n" + 'and corrected BDT response'
+    label_DoubleIso_Iso_4 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ new Iso nTT and iEt binning' + "\n" + 'and corrected BDT response'
 
     # label_DoubleIso_Iso_1 = r'Double-$\tau$' +"\n" + r"MC25W w/ BDT calibration"
     # label_DoubleIso_Iso_2 = r'Double-$\tau$' +"\n" + r"MC25W w/ corrected" + "\n" + "BDT calibration"
@@ -74,7 +94,7 @@ if __name__ == "__main__" :
     fig, ax = plt.subplots(figsize=(10,10))
 
 
-    for rate_TH1, label , color in zip([DoubleTau_Iso_1, DoubleTau_Iso_2, DoubleTau_Iso_3], [label_DoubleIso_Iso_1, label_DoubleIso_Iso_2, label_DoubleIso_Iso_3],[1,0,2]):
+    for rate_TH1, label , color in zip([DoubleTau_Iso_1, DoubleTau_Iso_2, DoubleTau_Iso_3, DoubleTau_Iso_4], [label_DoubleIso_Iso_1, label_DoubleIso_Iso_2, label_DoubleIso_Iso_3, label_DoubleIso_Iso_4],[0,1,7,2]):
         x = []
         y = []
         x_err = []
@@ -97,13 +117,16 @@ if __name__ == "__main__" :
         ax.errorbar(x, y, xerr=x_err, yerr=y_err, ls='None', color=cmap(color), label=label, lw=2,  marker=markers[imap]) #, marker=markers[imap], color=color)
         imap += 1
 
-    leg = plt.legend(loc='upper right', fontsize=18, title=legend_title)
+    leg = plt.legend(loc='upper right', fontsize=12, title=legend_title)
     leg._legend_box.align = "left"
-    plt.ylim(1,4E4)
-    plt.xlim(0,60)
-    plt.yscale('log')
-    ax.yaxis.set_major_locator(FixedLocator([1, 10, 100, 1000, 10000]))
-    ax.yaxis.set_major_formatter(FixedFormatter([r'1',r'10',r'$10^2$',r'$10^3$',r'$10^4$']))
+    # plt.ylim(1,4E4)
+    ax.set_ylim(7, 30)
+    plt.xlim(32,38)
+    # plt.xlim(0,60)
+    plt.yscale('linear')
+    ax.axhline(y=14, color='black', linestyle='--', linewidth=1)
+    # ax.yaxis.set_major_locator(FixedLocator([1, 10, 100, 1000, 10000]))
+    # ax.yaxis.set_major_formatter(FixedFormatter([r'1',r'10',r'$10^2$',r'$10^3$',r'$10^4$']))
     plt.xlabel(r'$E_{T}^{\tau, L1}\ [GeV]$')
     plt.ylabel(r'Rate[kHz]')
     plt.grid()

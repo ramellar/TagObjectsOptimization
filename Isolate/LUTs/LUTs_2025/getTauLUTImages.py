@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 allLUTS={
-    
-    'tau_Iso'   : 'NewLUTrelaxation.txt'
+    'tau_binning5_original_compressed' : 'NewLUTrelaxation_sc_binning5_c_original.txt'
 }
 
 for ky in allLUTS:
@@ -23,6 +22,7 @@ for ky in allLUTS:
         val=int(l[:-1].split(' ')[1])
         items = l[:-1].split("=")[1].split(":")
         LUT[int(items[0])][int(items[1])][int(items[2])] = val
+        # print(f"eta={items[0]}, et={items[1]}, ntt={items[2]} -> {val}")
 
     f,axlist=plt.subplots(2,2,figsize=(16,16))
     axlist=np.ndarray.flatten(axlist)
@@ -35,6 +35,9 @@ for ky in allLUTS:
         #    maxIsoEt=120
         lut_proj[lut_proj>maxIsoEt]=maxIsoEt
 
+        ax.set_xlabel("iNtt")  
+        ax.set_ylabel("iEt") 
+
         c=ax.imshow(lut_proj,cmap='tab20c',origin='lower',vmin=0, vmax=maxIsoEt)
         t=ax.set_xticks(np.arange(0.0,32,4)-0.5,np.arange(0.0,32,4),minor=True)
         t=ax.set_yticks(np.arange(0.0,32,2)-0.5,np.arange(0.0,32,2),minor=True)
@@ -46,6 +49,7 @@ for ky in allLUTS:
         t.set_bbox(dict(facecolor='w',alpha=1.0, edgecolor='r'))
         plt.colorbar(c,cax=ax2)
     f.suptitle('LUT : '+ky+"\n"+fname.split('/')[-1],y=0.91)
-    f.savefig('LUTs/'+ky+'.jpeg',bbox_inches='tight')
+    f.savefig('plots/'+ky+'.jpeg',bbox_inches='tight')
+    f.savefig('plots/'+ky+'.pdf',bbox_inches='tight')
     #     if et > 2:
     #         break

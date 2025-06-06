@@ -5,21 +5,55 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import mplhep
+import uproot
+import numpy as np
 plt.style.use(mplhep.style.CMS)
 
+# def read_branch_as_array(inFile, tree_path, branch_name):
+#     """Reads a float branch from a TTree and returns it as a NumPy array"""
+#     tree = inFile.Get(tree_path)
+#     if not tree:
+#         raise ValueError(f"[ERROR] Tree '{tree_path}' not found in file {inFile.GetName()}")
+
+#     values = []
+#     for entry in tree:
+#         val = getattr(entry, branch_name, None)
+#         if val is not None:
+#             values.append(val)
+
+#     return np.array(values)
+
 def read_branch_as_array(inFile, tree_path, branch_name):
-    """Reads a float branch from a TTree and returns it as a NumPy array"""
-    tree = inFile.Get(tree_path)
-    if not tree:
-        raise ValueError(f"[ERROR] Tree '{tree_path}' not found in file {inFile.GetName()}")
+    """
+    Reads a float branch from a TTree using uproot and returns it as a NumPy array.
 
-    values = []
-    for entry in tree:
-        val = getattr(entry, branch_name, None)
-        if val is not None:
-            values.append(val)
+    Parameters:
+        file_path (str): Path to the ROOT file.
+        tree_path (str): Path to the TTree inside the ROOT file.
+        branch_name (str): Name of the branch to read.
 
-    return np.array(values)
+    Returns:
+        np.ndarray: Array of branch values.
+    """
+    file = uproot.open(inFile)
+    print(f"Opened file: {inFile}")
+    tree = file[tree_path]
+    print(f"Accessing tree: {tree_path}")
+    values = tree[branch_name].array(library="np")
+    print(values[20:30])  
+
+    # with uproot.open(file_path) as file:
+    #     try:
+    #         tree = file[tree_path]
+    #     except KeyError:
+    #         raise ValueError(f"[ERROR] Tree '{tree_path}' not found in file {file_path}")
+
+    #     try:
+    #         array = tree[branch_name].array(library="np")
+    #     except KeyError:
+    #         raise ValueError(f"[ERROR] Branch '{branch_name}' not found in tree '{tree_path}'")
+
+    return values
 
 def get_histogram_values(values, label, bins=50, range=(0, 500), normalize=False):
     counts, bin_edges = np.histogram(values, bins=bins, range=range)
@@ -37,6 +71,7 @@ def get_histogram_values(values, label, bins=50, range=(0, 500), normalize=False
 
 def plot_histogram(inFile, tree_path, branch_name, label, bins=30, range=(0, 100), normalize=False, var="pt"):
     """Plots a histogram for a given branch in a TTree"""
+    print(f"Processing file: {label}")
     values = read_branch_as_array(inFile, tree_path, branch_name)
     print(f"Number of entries in {branch_name}: {len(values)}")
     
@@ -50,29 +85,31 @@ def plot_histogram(inFile, tree_path, branch_name, label, bins=30, range=(0, 100
         ax.legend()
 
     ax.grid(linestyle=':', alpha=0.7)
-    mplhep.cms.text("Work in progress", ax=ax)
+    mplhep.cms.text("Preliminary", ax=ax)
 
 def plot_histogram_plt(inFile, tree_path, branch_name, label, color, bins=30, range=(0, 100), var="pt"):
     """Plots a histogram for a given branch in a TTree"""
+    print(f"Processing file: {label}")
     values = read_branch_as_array(inFile, tree_path, branch_name)
+    print(values[20:30])
     print(f"Number of entries in {branch_name}: {len(values)}")
-    weights = None
+    # weights = None
     cmap = matplotlib.colormaps.get_cmap('Set1')
-
+    print(f"Using color: {cmap(color)}")
     plt.hist(
         values,
         bins=bins,
         range=range,
         histtype='step',  
         label=label,
-        weights=weights,
+        # weights=weights,
         alpha=1,
         color=cmap(color),
         density= True,
         linewidth=1.5 if var == "pt" else 1.0
         # linestyle='solid' if var == "pt" else 'dashed'
     )
-
+    print(f"Histogram for {branch_name} plotted with label: {label}")
     if var == "pt":
         plt.xlabel(r"$p_T$ [GeV]")
         # plt.xlim(left=0, right=100)
@@ -84,6 +121,10 @@ def plot_histogram_plt(inFile, tree_path, branch_name, label, color, bins=30, ra
         plt.xlabel(r"Nvtx")
         plt.xlim(left=20, right=90)
         plt.legend()
+    elif var == "nTT":
+        plt.xlabel(r"nTT")
+        # plt.xlim(left=0, right=50)
+        plt.legend()
 
     plt.grid(linestyle=':', alpha=0.7)
     mplhep.cms.text("Work in progress")
@@ -93,6 +134,11 @@ def plot_histogram_plt(inFile, tree_path, branch_name, label, color, bins=30, ra
 #######################################################################
 # This script reads branches from ROOT files and plots histograms of their values.
 '''python3 plot_ntuple_branches.py --inFile1 HCALcFeb-caloParams_2025_conservative-ZS-MC25W_MATCHED.root  --inFile2 unpacked_2025_eraB_C.root --inFile3 unapcked_2024I.root --tag Unpacked_2025vs2024'''
+'''python3 plot_ntuple_branches.py --inFile1 HCALcFeb-caloParams_2025_conservative-ZS-MC25W_MATCHED.root \ 
+                                   --inFile2 unpacked_2025_eraB_C.root \
+                                   --inFile3 unapcked_2024I.root \
+                                   --tag Unpacked_2025vs2024 '''
+'''python3 plot_ntuple_branches.py --inFile1 "HCALcFeb-caloParams_2025_conservative-ZS-MC25W_MATCHED.root" --inFile2 "TnP_Ntuple_2024I_EG01_golden_200525.root" --inFile3 "TnP_Ntuple_2024I_EG01_golden_200525.root"  --tag Unpacked_2025vs2024_nTT '''
 
 # Example usage
 if __name__ == "__main__":
@@ -105,14 +151,21 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     folder_1 = '/data_CMS/cms/amella/Run3_2025/MC25_Winter_optmization/'
-    folder_2 = '/data_CMS/cms/amella/Run3_2025/unpacked_2025/Run2025_EraBfrom391884_EraC_MINIAOD/'
-    folder_3 = '/data_CMS/cms/amella/Run3_2025/2024I-data/'
+    folder_2 = '/data_CMS/cms/amella/Run3_2025/EG-samples/'
+    folder_3 = '/data_CMS/cms/amella/Run3_2025/EG-samples/'
+    # folder_2 = '/data_CMS/cms/amella/Run3_2025/unpacked_2025/Run2025_EraBfrom391884_EraC_MINIAOD/'
+    # folder_3 = '/data_CMS/cms/amella/Run3_2025/2024I-data/'
 
-    output_folder = 'variable_plots/'
+    output_folder = '2025_plots/'
 
-    inFile1 = ROOT.TFile(folder_1 + options.inFile1)
-    inFile2 = ROOT.TFile(folder_2 + options.inFile2) 
-    inFile3 = ROOT.TFile(folder_3 + options.inFile3) 
+    # inFile1 = ROOT.TFile(folder_1 + options.inFile1)
+    # inFile2 = ROOT.TFile(folder_2 + options.inFile2) 
+    # inFile3 = ROOT.TFile(folder_3 + options.inFile3) 
+    inFile1 = folder_1 + options.inFile1
+    inFile2 = folder_2 + options.inFile2
+    inFile3 = folder_3 + options.inFile3
+
+    print(f"Input files: {inFile2}, {inFile3}")
 
     fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -122,11 +175,11 @@ if __name__ == "__main__":
     bins_eta=20
     bins_nvtx=30
     
-    fig1= plt.figure(figsize=(10,10))
-    plot_histogram_plt(inFile1, tree_name_mc,"L1Tau_pt", "MC25", 0, bins=binspt, range=(0, 100), var="pt")
-    plot_histogram_plt(inFile2, tree_name_unpacked,"l1tPt", "Unpacked 2025", 1, bins=binspt, range=(0, 100), var="pt")
-    plot_histogram_plt(inFile3, tree_name_unpacked,"l1tPt", "Unpacked 2024", 2,  bins=binspt, range=(0, 100), var="pt")
-    fig1.savefig(output_folder+"l1tPt_distribution.png")
+    # fig1= plt.figure(figsize=(10,10))
+    # plot_histogram_plt(inFile1, tree_name_mc,"L1Tau_pt", "MC25", 0, bins=binspt, range=(0, 100), var="pt")
+    # plot_histogram_plt(inFile2, tree_name_unpacked,"l1tPt", "Unpacked 2025", 1, bins=binspt, range=(0, 100), var="pt")
+    # plot_histogram_plt(inFile3, tree_name_unpacked,"l1tPt", "Unpacked 2024", 2,  bins=binspt, range=(0, 100), var="pt")
+    # fig1.savefig(output_folder+"l1tPt_distribution.png")
 
     # fig2= plt.figure(figsize=(10,10))
     # plot_histogram_plt(inFile1, tree_name_mc,"L1Tau_eta", "MC25", 0, bins=bins_eta, range=(-2.5, 2.5), var="eta")
@@ -140,14 +193,28 @@ if __name__ == "__main__":
     # plot_histogram_plt(inFile3, tree_name_unpacked,"Nvtx", "Unpacked 2024", 2,  bins=bins_nvtx, range=(20, 90), var="nvtx")
     # fig3.savefig("output_folder+l1tnvtx_distribution.png")
 
-    fig4= plt.figure(figsize=(10,10))
-    plot_histogram_plt(inFile1, tree_name_mc,"OfflineTau_pt", "MC25", 0, bins=50, range=(20, 100), var="pt")
-    plot_histogram_plt(inFile2, tree_name_unpacked,"tauPt", "Unpacked 2025", 1, bins=50, range=(20, 100), var="pt")
-    plot_histogram_plt(inFile3, tree_name_unpacked,"tauPt", "Unpacked 2024", 2,  bins=50, range=(20, 100), var="pt")
-    fig4.savefig(output_folder+"offlinePt_distribution.png")
+    # fig4= plt.figure(figsize=(10,10))
+    # plot_histogram_plt(inFile1, tree_name_mc,"OfflineTau_pt", "MC25", 0, bins=50, range=(20, 100), var="pt")
+    # plot_histogram_plt(inFile2, tree_name_unpacked,"tauPt", "Unpacked 2025", 1, bins=50, range=(20, 100), var="pt")
+    # plot_histogram_plt(inFile3, tree_name_unpacked,"tauPt", "Unpacked 2024", 2,  bins=50, range=(20, 100), var="pt")
+    # fig4.savefig(output_folder+"offlinePt_distribution.png")
 
-    fig2= plt.figure(figsize=(10,10))
-    plot_histogram_plt(inFile1, tree_name_mc,"OfflineTau_eta", "MC25", 0, bins=bins_eta, range=(-2.5, 2.5), var="eta")
-    plot_histogram_plt(inFile2, tree_name_unpacked,"tauEta", "Unpacked 2025", 1, bins=bins_eta, range=(-2.5, 2.5), var="eta")
-    plot_histogram_plt(inFile3, tree_name_unpacked,"tauEta", "Unpacked 2024", 2,  bins=bins_eta, range=(-2.5, 2.5), var="eta")
-    fig2.savefig(output_folder+"OfflineEta_distribution.png")
+    # fig2= plt.figure(figsize=(10,10))
+    # plot_histogram_plt(inFile1, tree_name_mc,"OfflineTau_eta", "MC25", 0, bins=bins_eta, range=(-2.5, 2.5), var="eta")
+    # plot_histogram_plt(inFile2, tree_name_unpacked,"tauEta", "Unpacked 2025", 1, bins=bins_eta, range=(-2.5, 2.5), var="eta")
+    # plot_histogram_plt(inFile3, tree_name_unpacked,"tauEta", "Unpacked 2024", 2,  bins=bins_eta, range=(-2.5, 2.5), var="eta")
+    # fig2.savefig(output_folder+"OfflineEta_distribution.png")
+
+    # import uproot
+    # file = uproot.open("/data_CMS/cms/amella/Run3_2025/EG-samples/TnP_Ntuple_2025C_EG0123_EmuCaloParam_v0_2_dcs260525.root")
+    # tree = file["Ntuplizer/TagAndProbe"]
+    # # print(tree.keys())  # Check branch names
+    # print(tree["l1tEmuNTT"].array(library="np")[20:30])  # Print first 10 entries
+
+
+    fig3= plt.figure(figsize=(10,10))
+    plot_histogram_plt(inFile1, tree_name_mc,"L1Tau_nTT", "MC25", 0, bins=bins_nvtx, range=(0, 30), var="nTT")
+    plot_histogram_plt(inFile2, tree_name_unpacked,"l1tEmuNTT", "Unpacked 2025", 1, bins=bins_nvtx, range=(0, 30), var="nTT")
+    # plot_histogram_plt(inFile3, tree_name_unpacked,"l1tEmuNTT", "Unpacked 2024", 2,  bins=bins_nvtx, range=(0, 50), var="nTT")
+    fig3.savefig(output_folder+"nTT_distribution.png")
+

@@ -47,21 +47,21 @@ void ITrees::mergeTrees()
     resetVariables();
     Long64_t nNotFound = 0;
     Long64_t nentries = m_mainTree->GetEntries();
-    //std::cerr<<"N secondary entries = "<<m_secondaryTrees[0]->GetEntries()<<"\n";
+    std::cout<<"N secondary entries = "<<m_secondaryTrees[0]->GetEntries()<<"\n";
     for(Long64_t entry=0;entry<nentries;entry++)
     {
-      //cout<<"entry = "<<entry<<endl;
-        if(entry%10000==0) std::cout<<"[INFO]   Entry "<<entry<<"/"<<nentries<<"\n";
+      cout<<"entry = "<<entry<<endl;
+        // if(entry%10000==0) std::cout<<"[INFO]   Entry "<<entry<<"/"<<nentries<<"\n";
         m_mainTree->GetEntry(entry);
         bool fill = true;
         for(auto itr=m_secondaryTrees.begin();itr!=m_secondaryTrees.end();itr++)
         {
-	  //cout<<"m_run = "<<m_run<<endl;
-	  //cout<<"m_event = "<<m_event<<endl;
+	  cout<<"m_run = "<<m_run<<endl;
+	  cout<<"m_event = "<<m_event<<endl;
             if( (*itr)->GetEntryWithIndex(m_run, m_event)<=0 ) 
             {
                 fill = false;
-                //cout<<"[WARN] Cannot find event "<<m_run<<","<<m_event<<" in secondary tree "<<(*itr)->GetName()<<"\n";
+                cout<<"[WARN] Cannot find event "<<m_run<<","<<m_event<<" in secondary tree "<<(*itr)->GetName()<<"\n";
             }
         }
         if(fill) m_outputTree->Fill();

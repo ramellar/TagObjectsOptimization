@@ -30,7 +30,8 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "", int DecayMod
   if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
 
   TFile f(file,"READ");
-  TTree* inTree = (TTree*)f.Get("outTreeForCalibration");
+  // TTree* inTree = (TTree*)f.Get("outTreeForCalibration");
+  TTree* inTree = (TTree*)f.Get("Ntuplizer/TagAndProbe");
   ULong64_t in_EventNumber =  0;
   Int_t     in_RunNumber =  0;
   Int_t     in_lumi =  0;
@@ -49,23 +50,41 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "", int DecayMod
   Int_t   in_RawIEt = 0;
   Int_t   in_RawIEta = 0;
 
+  // inTree->SetBranchAddress("EventNumber", &in_EventNumber);
+  // inTree->SetBranchAddress("RunNumber", &in_RunNumber);
+  // inTree->SetBranchAddress("lumi", &in_lumi);
+  // inTree->SetBranchAddress("OfflineTau_pt",&in_offlineTauPt);
+  // inTree->SetBranchAddress("OfflineTau_eta",&in_offlineTauEta);
+  // inTree->SetBranchAddress("OfflineTau_phi",&in_offlineTauPhi);
+  // inTree->SetBranchAddress("OfflineTau_decayMode",&in_offlineTauDecayMode);
+  // inTree->SetBranchAddress("L1Tau_pt",&in_l1tPt);
+  // inTree->SetBranchAddress("L1Tau_eta",&in_l1tEta);
+  // inTree->SetBranchAddress("L1Tau_phi",&in_l1tPhi);
+  // inTree->SetBranchAddress("L1Tau_IsoFlag",&in_l1tIso);
+  // inTree->SetBranchAddress("Nvtx",&Nvtx);
+
+  // inTree->SetBranchAddress("L1Tau_hasEM",&in_HasEM);
+  // inTree->SetBranchAddress("L1Tau_isMerged",&in_IsMerged);
+  // inTree->SetBranchAddress("L1Tau_RawIEt",&in_RawIEt);
+  // inTree->SetBranchAddress("L1Tau_RawIEta",&in_RawIEta);
+
   inTree->SetBranchAddress("EventNumber", &in_EventNumber);
   inTree->SetBranchAddress("RunNumber", &in_RunNumber);
   inTree->SetBranchAddress("lumi", &in_lumi);
-  inTree->SetBranchAddress("OfflineTau_pt",&in_offlineTauPt);
-  inTree->SetBranchAddress("OfflineTau_eta",&in_offlineTauEta);
-  inTree->SetBranchAddress("OfflineTau_phi",&in_offlineTauPhi);
-  inTree->SetBranchAddress("OfflineTau_decayMode",&in_offlineTauDecayMode);
-  inTree->SetBranchAddress("L1Tau_pt",&in_l1tPt);
-  inTree->SetBranchAddress("L1Tau_eta",&in_l1tEta);
-  inTree->SetBranchAddress("L1Tau_phi",&in_l1tPhi);
-  inTree->SetBranchAddress("L1Tau_IsoFlag",&in_l1tIso);
+  inTree->SetBranchAddress("tauPt",&in_offlineTauPt);
+  inTree->SetBranchAddress("tauEta",&in_offlineTauEta);
+  inTree->SetBranchAddress("tauPhi",&in_offlineTauPhi);
+  inTree->SetBranchAddress("tauDM",&in_offlineTauDecayMode);
+  inTree->SetBranchAddress("l1tEmuPt",&in_l1tPt);
+  inTree->SetBranchAddress("l1tEmuEta",&in_l1tEta);
+  inTree->SetBranchAddress("l1tEmuPhi",&in_l1tPhi);
+  inTree->SetBranchAddress("l1tEmuIsoEt",&in_l1tIso);
   inTree->SetBranchAddress("Nvtx",&Nvtx);
 
-  inTree->SetBranchAddress("L1Tau_hasEM",&in_HasEM);
-  inTree->SetBranchAddress("L1Tau_isMerged",&in_IsMerged);
-  inTree->SetBranchAddress("L1Tau_RawIEt",&in_RawIEt);
-  inTree->SetBranchAddress("L1Tau_RawIEta",&in_RawIEta);
+  inTree->SetBranchAddress("l1tEmuHasEM",&in_HasEM);
+  inTree->SetBranchAddress("l1tEmuIsMerged",&in_IsMerged);
+  inTree->SetBranchAddress("l1tEmuRawEt",&in_RawIEt);
+  inTree->SetBranchAddress("l1tEmuTowerIEta",&in_RawIEta);
 
   Double_t binningPt[23] = {18,20,22,24,26,28,30,32,35,40,45,50,60,70,90,110,150,210,350,500,700,1000,2000};
   TH1F* pt = new TH1F("pt","pt",22,binningPt);
@@ -160,6 +179,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "", int DecayMod
       eta->Fill(in_offlineTauEta);
       nvtx->Fill(Nvtx);
       if (in_offlineTauEta<1.305){ barrel_nvtx->Fill(Nvtx); }
+
       if (in_offlineTauEta>1.479){ endcap_nvtx->Fill(Nvtx); }
     }
 
@@ -329,7 +349,7 @@ void MakeEfficiencies(TString file, int run_nmbr, TString era = "", int DecayMod
 
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
-  TFile* fileout = new TFile("ROOTs/ROOTs_2024/efficiencies_of_"+run_nmbr_str+"_reEmulated.root","RECREATE");
+  TFile* fileout = new TFile("ROOTs/ROOTs_Run3_2025/efficiencies_of_"+run_nmbr_str+"_reEmulated.root","RECREATE");
   for(long unsigned int i = 0; i < thrs.size(); ++i)
   {
     pt->Write();

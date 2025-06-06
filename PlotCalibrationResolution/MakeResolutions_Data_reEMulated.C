@@ -194,7 +194,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", int DecayMode
         Nvtx->Fill(nvtx);
 
         // fill inclusive distributions skipping low energy taus
-        if(tauPt>20)
+        if(tauPt>30)
         {
             pt_response_ptInclusive->Fill(l1tTauPt/tauPt);
             eta_resp_inclusive->Fill(l1tTauEta - tauEta);
@@ -413,7 +413,7 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", int DecayMode
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_2024/resolutions_of_"+run_nmbr_str+"_reEmulated_calibrated.root","RECREATE");
+    TFile* fileout = new TFile("ROOTs/ROOTs_Run3_2025/resolutions_of_"+run_nmbr_str+"_reEmulated_calibrated.root","RECREATE");
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();

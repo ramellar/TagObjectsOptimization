@@ -42,6 +42,12 @@ Double_t FindEfficiency_Progression(Double_t IEt, Double_t MinPt, Double_t Effic
   Double_t Efficiency = 0; 
   Double_t Pt = IEt/2.;
 
+  //Different parametrizations can be used to model the efficiency progression
+  // linear, quadratic, sigmoid
+  // linear: efficiency = slope * Pt + (1 - slope * Reaching_100pc_at)
+  // quadratic: efficiency = slope * Pt + (1 - slope * Reaching_100pc_at) + Kmax * Kfact * (Pt - MinPt) * (Pt - Reaching_100pc_at)
+  // sigmoid: efficiency = (1 - Efficiency_low_MinPt) / (1 + exp(-(Pt - (Reaching_100pc_at + MinPt) / 2) * Kfact)) + Efficiency_low_MinPt
+
   if(parametrisation=="linear")
     {
       if(Pt>=Reaching_100pc_at) Efficiency = 1.;

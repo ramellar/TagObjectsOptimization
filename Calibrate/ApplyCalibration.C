@@ -34,14 +34,43 @@ const Int_t hardcodedIetaBins[NbinsIEta] = {0, 6, 12, 18, 33};
 const Float_t hardcodedIetaBinsFloat[NbinsIEta] = {0, 6, 12, 18, 33};
 const Double_t hardcodedIetaBinsDouble[NbinsIEta] = {0, 6, 12, 18, 33};
 
-const Int_t hardcodedSupercompressedIetBins[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
-const Float_t hardcodedSupercompressedIetBinsFloat[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
-const Double_t hardcodedSupercompressedIetBinsDouble[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+//Binning 5
 
-const Int_t hardcodedSupercompressednTTBins[supercompressedNbinsnTT] = {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 91, 106, 255 };
-const Float_t hardcodedSupercompressednTTBinsFloat[supercompressedNbinsnTT] = {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 91, 106, 255 };
-const Double_t hardcodedSupercompressednTTBinsDouble[supercompressedNbinsnTT] = {0, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 91, 106, 255 };
+const Int_t hardcodedSupercompressedIetBins[supercompressedNbinsIEt] = {0, 15, 20, 23, 27, 30, 32, 34, 36, 40, 43, 46, 50, 55, 60, 65, 73, 255};
+const Float_t hardcodedSupercompressedIetBinsFloat[supercompressedNbinsIEt] = {0, 15, 20, 23, 27, 30, 32, 34, 36, 40, 43, 46, 50, 55, 60, 65, 73, 255};
+const Double_t hardcodedSupercompressedIetBinsDouble[supercompressedNbinsIEt] = {0, 15, 20, 23, 27, 30, 32, 34, 36, 40, 43, 46, 50, 55, 60, 65, 73, 255};
 
+const Int_t hardcodedSupercompressednTTBins[supercompressedNbinsnTT] =  {0, 2, 4, 5, 6, 7, 8, 10, 12, 15, 20, 22, 24, 26, 30, 255 };
+const Float_t hardcodedSupercompressednTTBinsFloat[supercompressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 10, 12, 15, 20, 22, 24, 26, 30, 255 };
+const Double_t hardcodedSupercompressednTTBinsDouble[supercompressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 10, 12, 15, 20, 22, 24, 26, 30, 255 };
+
+// const Int_t hardcodedCompressedIetBins[compressedNbinsIEt]  = {0, 5, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 255};
+// const Float_t hardcodedCompressedIetBinsFloat[compressedNbinsIEt] = {0, 5, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 255};
+// const Double_t hardcodedCompressedIetBinsDouble[compressedNbinsIEt] ={0, 5, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 255};
+
+// const Int_t hardcodedCompressednTTBins[compressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 50, 70, 80, 90, 100, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+// const Float_t hardcodedCompressednTTBinsFloat[compressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 50, 70, 80, 90, 100, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+// const Double_t hardcodedCompressednTTBinsDouble[compressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 40, 50, 70, 80, 90, 100, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+
+
+// Binning 1p1
+// const Int_t hardcodedSupercompressedIetBins[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+// const Float_t hardcodedSupercompressedIetBinsFloat[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+// const Double_t hardcodedSupercompressedIetBinsDouble[supercompressedNbinsIEt] = {0, 23, 27, 31, 35, 39, 43, 47, 53, 59, 65, 73, 82, 95, 105, 120, 157, 255};
+
+// const Int_t hardcodedSupercompressednTTBins[supercompressedNbinsnTT] =  {0, 2, 4, 5, 6, 7, 8, 10, 12, 15, 20, 22, 24, 26, 30, 255 };
+// const Float_t hardcodedSupercompressednTTBinsFloat[supercompressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 10, 12, 15, 20, 22, 24, 26, 30, 255 };
+// const Double_t hardcodedSupercompressednTTBinsDouble[supercompressedNbinsnTT] = {0, 2, 4, 5, 6, 7, 8, 10, 12, 15, 20, 22, 24, 26, 30, 255 };
+
+// const Int_t hardcodedCompressedIetBins[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+// const Float_t hardcodedCompressedIetBinsFloat[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+// const Double_t hardcodedCompressedIetBinsDouble[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
+
+// const Int_t hardcodedCompressednTTBins[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+// const Float_t hardcodedCompressednTTBinsFloat[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+// const Double_t hardcodedCompressednTTBinsDouble[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+
+//original binning 
 const Int_t hardcodedCompressedIetBins[compressedNbinsIEt]  = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
 const Float_t hardcodedCompressedIetBinsFloat[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
 const Double_t hardcodedCompressedIetBinsDouble[compressedNbinsIEt] = {0, 15, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 50, 53, 56, 59, 62, 65, 69, 73, 77, 82, 88, 95, 105, 120, 157, 255};
@@ -49,6 +78,7 @@ const Double_t hardcodedCompressedIetBinsDouble[compressedNbinsIEt] = {0, 15, 18
 const Int_t hardcodedCompressednTTBins[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
 const Float_t hardcodedCompressednTTBinsFloat[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
 const Double_t hardcodedCompressednTTBinsDouble[compressedNbinsnTT] = {0, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86, 91, 96, 101, 106, 111, 116, 121, 126, 131, 136, 141, 146, 161, 161, 255};
+
 
 // checks whether a specific bit in a given integer is set (1) or not (0)
 bool CheckBit (short int number, int bitpos)

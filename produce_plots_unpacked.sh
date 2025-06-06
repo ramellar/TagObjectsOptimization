@@ -10,21 +10,24 @@ set -e
 # sh produce_plots_unpacked.sh 2024I_HCALcFeb_calop_0p9_22_37 Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37.root Zerobias_Run386604.root 386604
 
 
+# sh produce_plots_unpacked.sh 2025C-Re-emu-newLUT muon01_reEmul_caloparams_2025_v0_2_newIsoLUT.root Zerobias_Run386604.root 386604
+
+
 
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/unpacked_2024/Muon_Run2024I_MINIAOD/'
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/'
-working_dir='/data_CMS/cms/amella/Run3_2025/2024I-data/'
-# working_dir='/data_CMS/cms/amella/Run3_2025/unpacked_2025/Run2025_EraBfrom391884_EraC_MINIAOD/'
+# working_dir='/data_CMS/cms/amella/Run3_2025/2024I-data/'
+working_dir='/data_CMS/cms/amella/Run3_2025/unpacked_2025/'
 pwd=$(pwd)
 
-# # Responses
-# echo 'Making responses..'
-# cd ${pwd}/PlotCalibrationResolution
-# root -l -b <<EOF
-# .L MakeResolutions_Data_unpacked.C+
-# MakeResolutions("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
-# .q
-# EOF
+# Responses
+echo 'Making responses..'
+cd ${pwd}/PlotCalibrationResolution
+root -l -b <<EOF
+.L MakeResolutions_Data_unpacked.C+
+MakeResolutions("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
+.q
+EOF
 
 #TurnOns
 echo 'Making turnOns..'
