@@ -68,6 +68,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
       inTree->GetEntry(i);
       if(i%100000==0) cout<<"Entry #"<<i<<endl; 
       // SET RUN INFO
+      if (run == 392295) { if(in_lumi>525) continue; }
       if (run == 386604) { if(in_lumi<114 || in_lumi>1685) continue; }
       if (run == 355414) { if(in_lumi<0) continue; }
       if (run == 355417) { if(in_lumi>40) continue; }
@@ -156,6 +157,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
   // SET RUN INFO
   float nb = 0.;
   if (run == 386604) { nb = 2340; }
+  if (run == 392295) { nb = 1154; }
 
   if (run == 355414 or run == 355417 or run == 355418) { nb = 62.; }
   if (run == 355769) { nb = 302.; }
