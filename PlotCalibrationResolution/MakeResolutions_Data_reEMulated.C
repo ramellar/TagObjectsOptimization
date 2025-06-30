@@ -22,13 +22,13 @@
 #include <TF1.h>
 #include <stdio.h>
 #include <math.h>
-#include "../Calibrate/ApplyCalibration.C"
+// #include "../Calibrate/ApplyCalibration.C"
 
 using namespace std;
 
 
 
-void MakeResolutions(TString file, int run_nmbr, TString era = "", int DecayMode = -1, float l1tTauPt_cut=0., TString fit_option = "crystalball")
+void MakeResolutions(TString file, int run_nmbr, TString era = "", bool doReEmul= false, int DecayMode = -1, float l1tTauPt_cut=0., TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
@@ -46,16 +46,43 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", int DecayMode
     Float_t l1tTauPhi = 0;
     Int_t   l1tTauIso = 0;
     Int_t   nvtx = 0;
+    Int_t tauDM = -1;
+  
+    if(doReEmul)
+    {
+    std::cout << "############################" << std::endl;
+    std::cout << "Using re-emulated branches" << std::endl;
+    std::cout << "############################" << std::endl;
+    inTree->SetBranchAddress("l1tEmuPt",&l1tTauPt);
+    inTree->SetBranchAddress("l1tEmuEta",&l1tTauEta);
+    inTree->SetBranchAddress("l1tEmuPhi",&l1tTauPhi);
+    inTree->SetBranchAddress("l1tEmuIso",&l1tTauIso);
+    inTree->SetBranchAddress("tauDecayMode",     &tauDM);
+    }
+    else
+    {
+    std::cout << "############################" << std::endl;
+    std::cout << "Using unpacked branches" << std::endl;
+    std::cout << "############################" << std::endl;
+    inTree->SetBranchAddress("l1tPt",&l1tTauPt);
+    inTree->SetBranchAddress("l1tEta",&l1tTauEta);
+    inTree->SetBranchAddress("l1tPhi",&l1tTauPhi);
+    inTree->SetBranchAddress("l1tIso",&l1tTauIso);
+    inTree->SetBranchAddress("tauDM",&tauDM);
+    }
+
     inTree->SetBranchAddress("RunNumber", &in_RunNumber);
     inTree->SetBranchAddress("tauPt",&tauPt);
     inTree->SetBranchAddress("tauEta",&tauEta);
     inTree->SetBranchAddress("tauPhi",&tauPhi);
-    inTree->SetBranchAddress("tauDM",&tauDecayMode);
-    inTree->SetBranchAddress("l1tEmuPt",&l1tTauPt);
-    inTree->SetBranchAddress("l1tEmuEta",&l1tTauEta);
-    inTree->SetBranchAddress("l1tEmuPhi",&l1tTauPhi);
-    inTree->SetBranchAddress("l1tEmuIsoEt",&l1tTauIso);
+    
+    // inTree->SetBranchAddress("l1tEmuPt",&l1tTauPt);
+    // inTree->SetBranchAddress("l1tEmuEta",&l1tTauEta);
+    // inTree->SetBranchAddress("l1tEmuPhi",&l1tTauPhi);
+    // inTree->SetBranchAddress("l1tEmuIsoEt",&l1tTauIso);
+
     inTree->SetBranchAddress("Nvtx",&nvtx);
+
     // inTree->SetBranchAddress("RunNumber", &in_RunNumber);
     // inTree->SetBranchAddress("OfflineTau_pt",&tauPt);
     // inTree->SetBranchAddress("OfflineTau_eta",&tauEta);
