@@ -78,7 +78,7 @@ void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = ""
   TH1F* barrel_nvtx  = new TH1F("barrel_nvtx" ,"barrel_nvtx" ,10, binningNvtx);
   TH1F* endcap_nvtx  = new TH1F("endcap_nvtx" ,"endcap_nvtx" ,10, binningNvtx);
 
-  std::vector<int> thrs = {22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 120};
+  std::vector<int> thrs = {20,21,22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 120};
   std::vector<TH1F*> ptProgressionFixedThr_noIso = {};
   std::vector<TH1F*> ptProgressionFixedThr_Iso = {};
   std::vector<TH1F*> barrel_ptProgressionFixedThr_noIso = {};
@@ -236,8 +236,7 @@ void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = ""
   nvtx->Write();
     
   for(long unsigned int i = 0; i < thrs.size(); ++i)
-  {x
-
+  {
     ptProgressionFixedThr_noIso[i]->Write();
     ptProgressionFixedThr_Iso[i]->Write();
     turnOnsFixedThr_noIso[i]->Write();
