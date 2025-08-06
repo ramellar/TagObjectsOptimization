@@ -7,8 +7,11 @@ The original work done by the first three can be found mainly at these two links
 
 This forlder is an attempt to put together all of the developments done on top of these two folders in one single repository and one tool. In May 2024, new optimization scripts were developed to streamline the processes of running optimization and re-emulation automatically.
 
+** This branch contains the new framework to derive the Isolation LUTs **
+
 ## Install instructions
 These installation instructions are tailored for CMSSW_13_2_0_pre3, the latest version of CMSSW available as of December 2024 in the [L1T Offline](https://github.com/cms-l1t-offline/cmssw) repository. Since the original version used CMSSW_11, several updates have been implemented, and the entire codebase has undergone validation.
+
 
 ```bash
 cmsrel CMSSW_13_2_0_pre3
@@ -74,27 +77,10 @@ To produce public plots, new python files have been included in `MakePublicTauPl
 ## Else, without bash script
 
 ### Merging, matching, and compression
-Enter `MergeTrees` and run `make clean ; make`.
+In the 'TagAndProbe' branch the jobs are now sent on crab which directly performs the merging and matching. Hence if this has been used no need to do this step. 
+The starting point will be the matched file so inly the compression needs to be applied
 
-To merge the files first create/modify the needed `.config` file inside the `MergeTrees/run` directory. There the `MINIAOD` file has to be specified as primary and the `RAW` one as secondary (always use absolute paths). Check that the files really contain the TTrees that the executable will look for. 
-Then jus run:
-```bash
-./merge.exe run_<year>/<optimization_version>/<config>.config 
-```
-
-After that we need to match the reco taus to the L1 taus. To do so edit the `MakeTreeForCalibration.C` file (inside the `MatchAndCompress` folder) with the correct in and out files, then just run:
-```bash
-root -l
-.L MakeTreeForCalibration.C+
-MakeTreeForCalibration()
-```
-
-After the matching the compression needs to be performed. To do so edit the `produceTreeWithCompressedVars.py` file (inside the `MatchAndCompress` folder) with the correct in and out files, then just run:
-```bash
-python produceTreeWithCompressedVars.py
-```
-
-### Calibration
+### Calibration LUT derivation
 Enter `Calibrate/RegressionTraining` and run `make clean ; make`.
 
 To do the calibration first create/modify the needed `.config` file inside the `Calibrate/RegressionTraining/run` directory, then just run:
@@ -123,128 +109,27 @@ ApplyCalibrationZeroBias() # insert needed arguments
 ```
 
 After the TH4 histos LUTs have been created we can make the LUTs that then go online; adapt to your needs the `MakeTauCalibLUT.C` file and run:
-```bash
+
+```
+bash
 root -l
 .L MakeTauCalibLUT.C+
 MakeTauCalibLUT() # insert needed arguments
 ```
 
 ### Isolation
-Now that the calibration has been done the isolation needs to be compute and applied.
-To do so go to the `Isolate` folder.
 
-To compute the isolation, adapt to your needs the `Build_Isolation_WPs.C` file and run:
-```bash
-root -l
-.L Build_Isolation_WPs.C+
-Build_Isolation_WPs() # insert needed arguments
-```
-This one has the possibility of building the WPs based on `compressed` or `supercompressed` variables. Due to statistics limits, it is always better to run in `supercompressed` mode.
+In this branch 'NewIsoLutDerivationFramework/' has been added. This allows to obtain Isolation LUTs using new python scripts. These allowed to solve the problems the derivation of isolation LUTs in 2025. This should also de used in the future. Unfortuanetly for the moment no figure of merit has been established, so in order to choose the LUT we have 3 scripts:
 
-Then the relaxation of the isolation needs to be performed. To do so, adapt to your needs `Fill_RelaxedIsolation.C` and run:
-```bash
-root -l
-.L Fill_RelaxedIsolation.C+
-Fill_RelaxedIsolation_TH3() # insert needed arguments
-```
-or adapt to your needs `Fill_RelaxedIsolation_gridsearch_nTTextrap.C` and run:
-```bash
-root -l
-.L Fill_RelaxedIsolation_gridsearch_nTTextrap.C+
-Fill_RelaxedIsolation_TH3() # insert needed arguments
-```
-to start a a grid search over the possible relaxation schemes that give rise to different turnON shapes.
-In here, the IsoEt cuts are constructed either by reading the bin's contents or making the IsoEt vs. nTT fit, the option regulating this is `byBin`.
+- 'Isolation_derivation.py' allows to create the 'LUT.txt' fixing $\epsilon_min$, $E_{min}$ and $E_{max}$ as well as an image that shows the isolation threshold in the iEt vs inTT bins for each ieta bin. 
+- 'Apply_Iso_Rates.py' and 'Efficiency_validation.py' allow to test the LUT that has just been created. The first one gives a quick estimation of the rate that this LUT will give without having to re emulate the raw data and the second one gives an estimation of how the turn on will look like without needing to re emulate data. These can be used to compare the performances of different LUTs produced and once we have one that gives the best efficiency but maitining the rates under control, we can re emulate using that LUT validate our study.
 
-### Rates
-To produce rates go to the `MakeRates` folder.
+However, a figure of merit will hopefully be impelemented soon in order to avoid the by hand grid search
 
-If you are running the 'old' version of the code, adapt to your needs `Rate_ZeroBias_unpacked.C` and `Rate_ZeroBias.C` and run:
-```bash
-root -l
-.L Rate_ZeroBias_unpacked.C+
-Rate() # insert needed arguments
-```
-and 
-```bash
-root -l
-.L Rate_ZeroBias.C+
-Rate() # insert needed arguments
-```
+To run this new isolation framework it might be necessary to install an environment, here are the instruction for the installation:
 
-Else, if you are running the gridsearch, adapt to your needs `Rate_ZeroBias_unpacked.C` and `Rate_ZeroBias_gridSearch.C` and run:
-```bash
-root -l
-.L Rate_ZeroBias_unpacked.C+
-Rate() # insert needed arguments
-```
-and
-```bash
-root -l
-.L Rate_ZeroBias_newnTT_gridSearch.C+
-Rate() # insert needed arguments
-```
-
-## Thresholds
-Having computed the rates, the next step is to compute either the thresholds at fixed rates or the rates at fixed thresholds, by going to the `CompareRates` folder.
-
-If you are running the 'old' version of the code, adapt to your needs `CompareRates_ZeroBias_withUnpacked.C`, and run:
-```bash
-root -l 
-.L CompareRates_ZeroBias_withUnpacked.C
-compare() # insert needed arguments
-```
-
-Else, if you are running the gridsearch, adapt to your needs `CompareRates_ZeroBias_gridSearch_withUnpacked.C`, and run:
-```bash
-root -l 
-.L CompareRates_ZeroBias_gridSearch_withUnpacked.C
-compare() # insert needed arguments
-```
-
-### TurnONs
-Now that also the isolation has been created we can test everything on the turn-on curves by going to the `MakeTurnOns` folder.
-Here the turnons can be made aother at fixed threshold or at fixed rates by applying the threshold computed at the previous step.
-
-If you are running the 'old' version of the code, adapt to to your needs `ApplyIsolationForTurnOns.C` and run:
-```bash
-root -l
-.L ApplyIsolationForTurnOns.C+
-ApplyIsolationForTurnOns() # insert needed arguments
-```
-
-Else, if you are running the gridsearch, adapt to to your needs `ApplyIsolationForTurnOns_gridSearch.C` and run:
-```bash
-root -l
-.L ApplyIsolationForTurnOns_gridSearch.C+
-ApplyIsolationForTurnOns() # insert needed arguments
-```
-
-### Gridsearch best options evaluation
-If in the previous steps we have been using, the gridsearch approach to theoptimisation, we can now compare the different ptions to decide which one is the best for our needs.
-
-To do so go into the `CompareGridSearchTrunons`, adapt to your needs `BestFMturnOns_gridSearch.C`, and run:
-```bash
-root -l 
-.L BestFMturnOns_gridSearch.C
-compare() # insert needed arguments
-```
-This one can compare the turnons at fixed threshold or at fixed rate.
-In both cases quality requirements are made on the turnon, and all information is saved in `.txt` files containing the optimisation figures of merit and the rates.
-
-### Validate performance on data
-All of the abve has been done on MC and needs to be validated on data. Threforre, after having re-emulated the data with the new options we need to produce the turnons.
-We can do this in the `PlotTurnOns` folder.
-
-
-We need adapting to your needs one of the three following codes:
-* `MakeEfficiencies_Data_reEmulated.C` : make performance on re-emulated data with the re-optimised taus
-* `MakeEfficiencies_Data_unpacked.C` : make performance on unpacked data from Run3 only
-* `MakeEfficiencies_Data_unpacked_withRun2.C` : make performance on unpacked data from Run3 and Run2 at the same time
-and running:
-```bash
-root -l
-.L MakeEfficiencies_Data_<tag>.C
-compare() # insert needed arguments
-```
-
+```conda create -n tau_env -c conda-forge python=3.10 root 
+pip install uproot
+pip install matplotlib
+pip install mplhep
+pip install scipy```

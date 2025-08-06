@@ -21,7 +21,7 @@
 
 using namespace std;
 
-void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi = kFALSE, float calibThr = 1.7)
+void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi = false, float calibThr = 1.7)
 {
   TString intgr = to_string(calibThr).substr(0, to_string(calibThr).find("."));
   TString decim = to_string(calibThr).substr(2, to_string(calibThr).find("."));
@@ -179,6 +179,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
     return;
   }
   float thisLumiRun = 0.;
+  if (run == 392295) thisLumiRun = 1.10E34;
   if (run == 355414) thisLumiRun = 0.265E33;
   if (run == 355417) thisLumiRun = 0.256E33;
   if (run == 355418) thisLumiRun = 0.249E33;

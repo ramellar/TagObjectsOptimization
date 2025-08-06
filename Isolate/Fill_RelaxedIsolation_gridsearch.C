@@ -25,9 +25,9 @@ using namespace std;
 const UInt_t NEffsMin = 10;
 const UInt_t NEmins = 13;
 const UInt_t NEmaxs_sum = 18;
-const Float_t EffsMin[NEffsMin] = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
-const Float_t Emins[NEmins] = {10., 13., 16., 19., 22., 25., 28., 31., 34., 37., 40., 43., 46.};
-const Float_t Emaxs_sum[NEmaxs_sum] = {15., 18., 21., 24., 27., 30., 33., 36., 39., 41., 44., 47., 50., 53., 56., 59., 61., 64.};
+const Float_t EffsMin[NEffsMin] = {0.6, 0.7, 0.8, 0.9};
+const Float_t Emins[NEmins] = {10., 13., 16., 19., 22., 25., 28., 31., 34., 37., 40.};
+const Float_t Emaxs_sum[NEmaxs_sum] = {15., 18., 21., 24., 27., 30., 33., 36., 39., 41., 44., 47., 50., 53., 56., 59.};
 
 // for comparisons and debugging with old code 
 // const UInt_t NEffsMin = 5;

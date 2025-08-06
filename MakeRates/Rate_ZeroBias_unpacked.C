@@ -143,6 +143,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
   }
   float thisLumiRun = 0.;
   if (run == 386604) thisLumiRun = 2.10E34;
+  if (run == 386604) thisLumiRun = 2.10E34;
   if (run == 392295) thisLumiRun = 1.10E34;
   if (thisLumiRun == 0. and doScaleToLumi)
   {

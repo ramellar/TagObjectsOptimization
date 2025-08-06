@@ -126,7 +126,7 @@ if __name__ == "__main__":
     
     fig2= plt.figure(figsize=(10,10))
     plot_2d_histogram(inFile1, tree_name= tree_name_mc , 
-                        branch_name_x="Nvtx", bins=100, branch_name_y="L1Tau_Iso", 
+                        branch_name_x="Nvtx", bins=[np.arange(-0.5,100.5,1) , np.arange(-0.5,100.5,1)], branch_name_y="L1Tau_Iso", 
                         xlabel='Iso Et', ylabel='nTT', 
                         x_lim=(0, 100), ylim=(0, 100),
                         title='2D Histogram of MC25')
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     
     fig3= plt.figure(figsize=(10,10))
     plot_2d_histogram(inFile2, tree_name=tree_name_unpacked , 
-                        branch_name_x="Nvtx", bins=100, branch_name_y="l1tIso" , 
+                        branch_name_x="Nvtx", bins=[np.arange(-0.5,100.5,1) , np.arange(-0.5,100.5,1)], branch_name_y="l1tIso" , 
                         xlabel='Iso Et', ylabel='nTT', 
                         x_lim=(0,100 ), ylim=(0, 100),
                         title='2D Histogram Unpacked 2025')

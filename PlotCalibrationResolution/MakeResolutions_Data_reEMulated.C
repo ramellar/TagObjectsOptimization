@@ -28,7 +28,7 @@ using namespace std;
 
 
 
-void MakeResolutions(TString file, int run_nmbr, TString era = "", bool doReEmul= false, int DecayMode = -1, float l1tTauPt_cut=0., TString fit_option = "crystalball")
+void MakeResolutions(TString file, int run_nmbr, TString era = "", bool doReEmul=false, int DecayMode = -1, float l1tTauPt_cut=0., TString fit_option = "crystalball")
 {
     TString run_nmbr_str = to_string(run_nmbr);
     if(era != "" && run_nmbr == -1) { run_nmbr_str = era; }
