@@ -30,6 +30,7 @@ if __name__ == "__main__" :
     --inFile3  histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin19_eMax34_corrected_resolution_reEmulated.root 
     --inFile4  histos_rate_ZeroBias_Run386604_Corrected-re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --tag Comparison_Isolation_correction'''
     
+    
 
     ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run392295_TAUReEmul_v4_unpacked.root \
                                 --inFile2 histos_rate_ZeroBias_Run392295_ZeroBias_2025C_392295_0p7_12_26_reEmulated.root \
@@ -38,6 +39,10 @@ if __name__ == "__main__" :
                                 --inFile5 histos_rate_ZeroBias_Run392295_crab_ZeroBiasrun3_2025C_392295_0p7_17_30_reEmulated.root \
                                 --inFile6 histos_rate_ZeroBias_Run392295_Muon_1_2025C_0p7_18_27_reEmulated.root \
                                 --tag 2025C-tighterIsoLUT-2025-final-comparisons '''
+    ''' python3 Rate_plotter.py --inFile1 histos_rate_ZeroBias_Run392295_TAUReEmul_v4_unpacked.root \
+                                --inFile2 histos_rate_ZeroBias_Run386604_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root \
+                                --inFile3 histos_rate_ZeroBias_Run394959_crab_unpacked_2025_eraD_unpacked.root \
+                                --tag Monitoring_Run3_2025D '''
 
 
 
@@ -57,9 +62,9 @@ if __name__ == "__main__" :
     inFile1 = ROOT.TFile(main_folder + options.inFile1)
     inFile2 = ROOT.TFile(main_folder + options.inFile2)
     inFile3 = ROOT.TFile(main_folder + options.inFile3)
-    inFile4 = ROOT.TFile(main_folder + options.inFile4)
-    inFile5 = ROOT.TFile(main_folder + options.inFile5)
-    inFile6 = ROOT.TFile(main_folder + options.inFile6)
+    # inFile4 = ROOT.TFile(main_folder + options.inFile4)
+    # inFile5 = ROOT.TFile(main_folder + options.inFile5)
+    # inFile6 = ROOT.TFile(main_folder + options.inFile6)
 
     plt.rcParams['legend.title_fontsize'] = 'xx-small'
     # cmap = matplotlib.colormaps.get_cmap('Set1'); imap=-1
@@ -70,9 +75,9 @@ if __name__ == "__main__" :
     DoubleTau_Iso_1 = inFile1.Get('DiTauRate_Iso')
     DoubleTau_Iso_2 = inFile2.Get('DiTauRate_Iso')
     DoubleTau_Iso_3 = inFile3.Get('DiTauRate_Iso')
-    DoubleTau_Iso_4 = inFile4.Get('DiTauRate_Iso')
-    DoubleTau_Iso_5 = inFile5.Get('DiTauRate_Iso')
-    DoubleTau_Iso_6 = inFile6.Get('DiTauRate_Iso')
+    # DoubleTau_Iso_4 = inFile4.Get('DiTauRate_Iso')
+    # DoubleTau_Iso_5 = inFile5.Get('DiTauRate_Iso')
+    # DoubleTau_Iso_6 = inFile6.Get('DiTauRate_Iso')
     # DoubleTau_Iso_1 = inFile1.Get('DiTauRate_effMin0p9_eMin28_eMax43')
     # DoubleTau_Iso_2 = inFile2.Get('DiTauRate_effMin0p9_eMin28_eMax43')
     # DoubleTau_Iso_1 = inFile1.Get('DiTauRate_effMin0p9_eMin22_eMax37')
@@ -92,11 +97,11 @@ if __name__ == "__main__" :
     # label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions'
     # label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ 2025 conditions ' + "\n" + 'and corrected BDT response'
     label_DoubleIso_Iso_1 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2025 Era C'
-    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ new Iso LUTs new workflow'
-    label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2024 Era I' 
-    label_DoubleIso_Iso_4 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ Iso params'  +"\n" +r'$\epsilon_{min}$ 0p6, $E_{T}^{min}$ 18 GeV, $E_{T}^{max}$ 60 GeV' 
-    label_DoubleIso_Iso_5 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ Iso params'  +"\n" +r'$\epsilon_{min}$ 0p7, $E_{T}^{min}$ 25 GeV, $E_{T}^{max}$ 60 GeV'
-    label_DoubleIso_Iso_6 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ Iso params'  +"\n" +r'$\epsilon_{min}$ 0p7, $E_{T}^{min}$ 26 GeV, $E_{T}^{max}$ 44 GeV'
+    label_DoubleIso_Iso_2 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2024 Era I' 
+    label_DoubleIso_Iso_3 = r'Double-$\tau$ & Iso' +"\n" + 'Unpacked 2025 Era D'
+    # label_DoubleIso_Iso_4 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ Iso params'  +"\n" +r'$\epsilon_{min}$ 0p6, $E_{T}^{min}$ 18 GeV, $E_{T}^{max}$ 60 GeV' 
+    # label_DoubleIso_Iso_5 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ Iso params'  +"\n" +r'$\epsilon_{min}$ 0p7, $E_{T}^{min}$ 25 GeV, $E_{T}^{max}$ 60 GeV'
+    # label_DoubleIso_Iso_6 = r'Double-$\tau$ & Iso' +"\n" + 'Re-emu 2025C w/ Iso params'  +"\n" +r'$\epsilon_{min}$ 0p7, $E_{T}^{min}$ 26 GeV, $E_{T}^{max}$ 44 GeV'
     # label_DoubleIso_Iso_4 = r'Double-$\tau$ & Iso' +"\n" + '2024 Era I ReEmu w/ new Iso nTT and iEt binning' + "\n" + 'and corrected BDT response'
 
     # label_DoubleIso_Iso_1 = r'Double-$\tau$' +"\n" + r"MC25W w/ BDT calibration"
@@ -105,7 +110,7 @@ if __name__ == "__main__" :
     fig, ax = plt.subplots(figsize=(10,10))
 
     i=0
-    for rate_TH1, label , color in zip([DoubleTau_Iso_1,DoubleTau_Iso_2, DoubleTau_Iso_3, DoubleTau_Iso_5, DoubleTau_Iso_6], [label_DoubleIso_Iso_1,label_DoubleIso_Iso_2,label_DoubleIso_Iso_3, label_DoubleIso_Iso_5,label_DoubleIso_Iso_6],[1,3,0,7,8]):
+    for rate_TH1, label , color in zip([DoubleTau_Iso_1,DoubleTau_Iso_2, DoubleTau_Iso_3], [label_DoubleIso_Iso_1,label_DoubleIso_Iso_2,label_DoubleIso_Iso_3],[1,0,2]):
         x = []
         y = []
         x_err = []

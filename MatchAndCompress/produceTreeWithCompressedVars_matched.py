@@ -1,0 +1,254 @@
+import ROOT
+import array
+import math
+import operator
+import argparse
+
+compressedIetaFile = "./CompressionLUTs/tauCompressEtaLUT_2bit_v8.txt"
+compressedEFile = "./CompressionLUTs/tauCompressELUT_5bit_v8.txt"
+compressedShapeFile = "./CompressionLUTs/egCompressShapesLUT_calibr_4bit_v4.txt"
+compressednTTFile = "./CompressionLUTs/tauCompressnTTLUT_5bit_v8.txt"
+
+treeName = "Ntuplizer_noTagAndProbe/TagAndProbe"
+
+#read th LUT and make a dictionary
+def readLUT(lutFileName):
+    #Initialize a dictionary
+    lut = {}
+    i=0
+    # print lutFileName
+    with open(lutFileName, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            # print "line #",i," content = ",line
+            if line[0]=='#': continue
+            if line[0]=="" : continue
+            tokens = line.split() #Splits the line into a list of words or numbers
+            # print "tokens = ",tokens
+            if len(tokens)<2: continue #Ensures there are at least two tokens
+            # print tokens[0]
+            lut[int(tokens[0])] = int(tokens[1])
+            # print "lut content",lut[int(tokens[0])]
+            ++i
+    return lut
+
+def sortShapes(shapeHisto):
+    numbers = {}
+    nbins = shapeHisto.GetNbinsX()
+    for b in range(1,nbins+1):
+        numbers[b-1] = shapeHisto.GetBinContent(b)
+    #
+    sortedShapes = sorted(numbers.items(), key=operator.itemgetter(1))
+    #
+    zeros = []
+    nonzeros = []
+    for shape,n in sortedShapes:
+        if n==0:
+            zeros.append((shape,n))
+        else:
+            nonzeros.append((shape,n))
+    #
+    nonzeros.reverse()
+    sortedShapes = nonzeros
+    sortedShapes.extend(zeros)
+    #
+    lut = {}
+    sortedShape = 0
+    for shape,n in sortedShapes:
+        lut[shape] = sortedShape
+        sortedShape += 1
+    #
+    with open("compressedSortedShapes.txt", 'w') as f:
+        for shape in range(0,128):
+            sortedShape = lut[shape]
+            # print >>f, shape, sortedShape
+    return lut
+
+ 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Process input and output file names.')
+    parser.add_argument('-i', '--input', type=str, help='Input file name')
+    parser.add_argument('-o', '--output', type=str, help='Output file name')
+
+    args = parser.parse_args()
+
+    inputFileName = args.input
+    outputFileName = args.output
+
+    print("Compressing.. ")
+    ## Read Ieta,E,shape compression mapping
+    compressedIeta  = readLUT(compressedIetaFile)
+    compressedE     = readLUT(compressedEFile)
+    compressedShape = readLUT(compressedShapeFile)
+    compressednTT = readLUT(compressednTTFile)
+    
+    # print len(compressedIeta)
+    
+    ## Reading input trees 
+    ## + filling compressed shape histo
+    inputFile = ROOT.TFile.Open(inputFileName)
+    inputTree = inputFile.Get(treeName)
+    inputTree.__class__ = ROOT.TTree
+    shapeHisto = ROOT.TH1F("compressedShapeHisto", "compressedShapeHisto", 128, -0.5, 127.5)
+    
+    
+    data = {"RunNumber"     :array.array('i',[0]), #Creates fixed-type arrays to store values from each tree entry.
+            "EventNumber"   :array.array('i',[0]), #Creates an array of type 'i' (integer) initialized with a single element, 0.
+            #"Weight"  :array.array('f',[0.]),
+            #"group"   :array.array('i',[0]),
+            #"Cluster_iEta"    :array.array('i',[0]),
+            #"Cluster_iPhi"    :array.array('i',[0]),
+            # "L1Tau_IEt"       :array.array('i',[0]),
+            # "L1Tau_IEta"       :array.array('i',[0]),
+            # "L1Tau_eta"       :array.array('f',[0]),
+            "L1Tau_IEt"       :array.array('i',[0]),
+            "L1Tau_IEta"       :array.array('i',[0]),
+            "L1Tau_eta"       :array.array('f',[0]),
+            #"Cluster_shape"   :array.array('i',[0]),
+            #"side"    :array.array('i',[0]),
+            "Target"  :array.array('f',[0.]),
+            "OfflineTau_pt"   :array.array('f',[0.]),
+            "OfflineTau_eta"   :array.array('f',[0.]),
+            # "OfflineTau_isMatched"   :array.array('i',[0]),
+            #"OfflineTau_CALOEnergy"   :array.array('f',[0.]),
+            "L1Tau_pt"    :array.array('f',[0.]),
+            "L1Tau_isMerged"    :array.array('i',[0]),
+            "L1Tau_hasEM"    :array.array('i',[0]),
+            "L1Tau_Qual"     :array.array('i',[0]),
+            "L1Tau_nTT"      :array.array('i',[0]),
+            "L1Tau_Iso"      :array.array('i',[0]),
+            "L1Tau_IsoFlag"      :array.array('i',[0]),
+            "compressedieta" :array.array('i',[0]),
+            "compressedE" :array.array('i',[0]),
+            "compressedshape" :array.array('i',[0]),
+            "compressedsortedshape" :array.array('i',[0]),
+            "compressednTT" :array.array('i',[0]),
+           }
+    
+    # print "First pass: reading tree to build compressed shape histo"
+    nentries = inputTree.GetEntriesFast()
+    for e in range(nentries):
+        inputTree.GetEntry(e)
+        data["RunNumber"][0]    = int(inputTree.RunNumber) #Retrieves the first (and only) element of the array associated with the "RunNumber" key.
+        data["EventNumber"][0]  =  int(inputTree.EventNumber)
+        data["L1Tau_IEt"][0]      =  int(inputTree.l1tEmuRawEt)
+        data["L1Tau_IEta"][0]      =  int(inputTree.l1tEmuTowerIEta)
+        data["L1Tau_eta"][0]      =  inputTree.l1tEmuEta
+        #data["Cluster_shape"][0]  =  int(inputTree.Cluster_shape)
+        #data["side"][0]   =  int(inputTree.side)
+        data["OfflineTau_pt"][0]  =  inputTree.tauPt
+        data["OfflineTau_eta"][0]  =  inputTree.tauEta
+        # data["OfflineTau_phi"][0]  =  inputTree.tauPhi
+        # data["OfflineTau_isMatched"][0]  =  inputTree.OfflineTau_isMatched
+        #data["OfflineTau_CALOEnergy"][0] = inputTree.OfflineTau_CALOEnergy
+        data["L1Tau_pt"][0]   =  inputTree.l1tEmuPt
+        data["L1Tau_isMerged"][0] =  int(inputTree.l1tEmuIsMerged)
+        data["L1Tau_hasEM"][0] =   int(inputTree.l1tEmuHasEM)
+        data["L1Tau_Qual"][0] =   int(inputTree.l1tEmuQual)
+        data["L1Tau_nTT"][0] =   int(inputTree.l1tEmuNTT)
+        data["L1Tau_Iso"][0] =   int(inputTree.l1tEmuIsoEt)
+        data["L1Tau_IsoFlag"][0] =   int(inputTree.l1tEmuIso)
+        #Compressing values
+        data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["L1Tau_IEta"][0])], data["L1Tau_IEta"][0]))
+        #data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["Cluster_iEta"][0])], data["Cluster_iEta"][0]))
+        #Ensures that the E does not exceed the 255 value
+        iet = data["L1Tau_IEt"][0]
+        if iet < 0:
+            # print(f"Warning: Skipping event {e} due to negative IEt = {iet}")
+            continue 
+        data["compressedE"][0] = compressedE[min(iet, 255)]
+        # data["compressedE"][0]     = compressedE[min(data["L1Tau_IEt"][0],255)]
+        #data["compressedshape"][0] = compressedShape[data["Cluster_shape"][0]]
+        data["compressednTT"][0] = compressednTT[data["L1Tau_nTT"][0]]
+        # data["Target"][0] =  inputTree.Target
+        shapeHisto.Fill(data["compressedshape"][0])
+        iet = data["L1Tau_IEt"][0]
+        if iet > 0:
+            data["Target"][0] = data["OfflineTau_pt"][0] / (iet / 2.0)
+        else:
+            data["Target"][0] = -1
+
+        #outputTree.Fill()
+    
+    #print "First pass: reading tree to build compressed shape histo"
+    #nentries = inputTree.GetEntriesFast()
+    #for e in xrange(nentries):
+    #    inputTree.GetEntry(e)
+    #    data["Run"][0]    = int(inputTree.Run)
+    #    data["Event"][0]  =  int(inputTree.Event)
+    #    data["Weight"][0] =  inputTree.Weight
+    #    data["group"][0]  =  int(inputTree.group)
+    #    data["ieta"][0]   =  int(inputTree.ieta)
+    #    data["iphi"][0]   =  int(inputTree.iphi)
+    #    data["E"][0]      =  int(inputTree.E)
+    #    data["shape"][0]  =  int(inputTree.shape)
+    #    data["side"][0]   =  int(inputTree.side)
+    #    data["target"][0] =  inputTree.target
+    #    data["ptoff"][0]  =  inputTree.ptoff
+    #    data["etl1"][0]   =  inputTree.etl1
+    #    data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["ieta"][0])], data["ieta"][0]))
+    #    data["compressedE"][0]     = compressedE[min(data["E"][0],255)]
+    #    data["compressedshape"][0] = compressedShape[data["shape"][0]]
+    #    shapeHisto.Fill(data["compressedshape"][0])
+    #    #outputTree.Fill()
+    
+    ## Sort compressed shapes and write in file
+    compressedSortedShape = sortShapes(shapeHisto)
+    
+    ## TODO
+    ## Reading and filling tree with compressed and sorted values
+    outputFile = ROOT.TFile.Open(outputFileName, "RECREATE")
+    outputTree = ROOT.TTree("outTreeForCalibration", "outTreeForCalibration")
+    for name, a in data.items():
+        outputTree.Branch(name, a, "{0}/{1}".format(name, a.typecode.upper()))
+    shapeHisto.Write()
+    
+    # print "Second pass: reading tree for filling output tree"
+    for e in range(nentries):
+        inputTree.GetEntry(e)
+        # if inputTree.OfflineTau_isMatched!=1: continue
+        data["RunNumber"][0]    = int(inputTree.RunNumber)
+        data["EventNumber"][0]  =  int(inputTree.EventNumber)
+        #data["Weight"][0] =  inputTree.Weight
+        #data["group"][0]  =  int(inputTree.group)
+        #data["Cluster_iEta"][0]   =  int(inputTree.Cluster_iEta)
+        #data["Cluster_iPhi"][0]   =  int(inputTree.Cluster_iPhi)
+        data["L1Tau_IEt"][0]      =  int(inputTree.l1tEmuRawEt)
+        #print inputTree.L1Tau_IEta
+        data["L1Tau_IEta"][0]      =  int(inputTree.l1tEmuTowerIEta)
+        data["L1Tau_eta"][0]      =  inputTree.l1tEmuEta
+        #data["Cluster_shape"][0]  =  int(inputTree.Cluster_shape)
+        #data["side"][0]   =  int(inputTree.side)
+        data["OfflineTau_pt"][0]  =  inputTree.tauPt
+        data["OfflineTau_eta"][0]  =  inputTree.tauEta
+        # data["OfflineTau_phi"][0]  =  inputTree.tauPhi
+        # data["OfflineTau_isMatched"][0]  =  inputTree.OfflineTau_isMatched
+        #data["OfflineTau_CALOEnergy"][0]  =  inputTree.OfflineTau_CALOEnergy
+        data["L1Tau_pt"][0]   =  inputTree.l1tEmuPt
+        data["L1Tau_isMerged"][0]   =  inputTree.l1tEmuIsMerged
+        data["L1Tau_hasEM"][0]   =  inputTree.l1tEmuHasEM
+        data["L1Tau_Qual"][0]   =  inputTree.l1tEmuQual
+        data["L1Tau_nTT"][0]   =  inputTree.l1tEmuNTT
+        data["L1Tau_Iso"][0]   =  inputTree.l1tEmuIsoEt
+        data["L1Tau_IsoFlag"][0]   =  inputTree.l1tEmuIso
+        data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["L1Tau_IEta"][0])], data["L1Tau_IEta"][0]))
+        #data["compressedieta"][0]  = int(math.copysign(compressedIeta[abs(data["Cluster_iEta"][0])], data["Cluster_iEta"][0]))
+        iet = data["L1Tau_IEt"][0]
+        if iet < 0:
+            # print(f"Warning: Skipping event {e} due to negative IEt = {iet}")
+            continue 
+        data["compressedE"][0]     = compressedE[min(data["L1Tau_IEt"][0],255)]
+        #data["compressedshape"][0] = compressedShape[data["Cluster_shape"][0]]
+        data["compressedsortedshape"][0] = compressedSortedShape[data["compressedshape"][0]]
+        data["compressednTT"][0] = compressednTT[data["L1Tau_nTT"][0]]
+        if iet > 0:
+            data["Target"][0] = data["OfflineTau_pt"][0] / (iet / 2.0)
+        else:
+            data["Target"][0] = -1
+
+        outputTree.Fill()
+    
+    outputFile.cd()
+    outputTree.Write()
+    outputFile.Close()
+    inputFile.Close()

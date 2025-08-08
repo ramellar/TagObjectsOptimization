@@ -30,3 +30,4 @@ CompareGridSearchTrunons/FMs/FMs_202*
 Calibrate/RegressionTraining/run_202*/*.config
 NewIsoLutDerivationFramework/plots*
 NewIsoLutDerivationFramework/LUTs*
+*TEST*

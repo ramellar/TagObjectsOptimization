@@ -282,14 +282,18 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     x, y, x_err, y_err = compute_TurnOn(eff_TGraph)
     ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
     # pt_leg._legend_box.align = "right"
-    ##vectCBconvATAN
-    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+15  ,  1.,   3. , 80.,     0.95,   3., 0.8,   80.]
-    param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    ##vectCBconvATAN unpacked 2025 d 24
+    p0 =          [thr+25  ,  9.,   6. , 180.,     0.94,   30., 0.7,   80.]
+    param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
     print(x[:-2], y[:-2])
-    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
     print(popt)
+
+        #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    # p0 =          [thr+15  ,  1.,   3. , 80.,     0.95,   3., 0.8,   80.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
 
     ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
         
@@ -324,10 +328,13 @@ def plot_TurnOn3(eff_TGraph, thr, label, color, ax, options):
     # pt_leg._legend_box.align = "right"
      #vectCBconvATAN for unpacked 2025 26
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+5  ,  2.,   2. , 80.,     0.95,   30., 0.4,   80.]
+    p0 =          [thr+10  ,  2.,   2. , 80.,     0.95,   30., 0.4,   80.]
     param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
                   [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
-    print(x[:-2], y[:-2])
+    # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
     popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
     print(popt)
 
@@ -378,14 +385,14 @@ def plot_TurnOn4(eff_TGraph, thr, label, color, ax, options):
 
     ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
     # pt_leg._legend_box.align = "right"
-     ##vectCBconvATAN for unpacked 2025 26
-    # #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    # p0 =          [thr+20  ,  1.,   5. , 80.,     0.95,   70., 0.8,   80.]
-    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
-    # print(x[:-2], y[:-2])
-    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
-    # print(popt)
+    #vectCBconvATAN for unpacked 2025 26
+    #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr+25  ,  9.,   6. , 80.,     0.94,   30., 0.7,   80.]
+    param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    print(x[:-2], y[:-2])
+    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    print(popt)
 
     #  ##vectCBconvATAN for unpacked 2025 32
     # #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
@@ -407,12 +414,12 @@ def plot_TurnOn4(eff_TGraph, thr, label, color, ax, options):
       # pt_leg._legend_box.align = "right"
      #vectCBconvATAN for grey LUT 26
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+5  ,  8.,   8. , 80.,     0.95,   80., 0.4,   80.]
-    param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
-    print(x[:-2], y[:-2])
-    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
-    print(popt)
+    # p0 =          [thr+5  ,  8.,   8. , 80.,     0.95,   100., 0.3,   80.]
+    # param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
 
     ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
         
@@ -467,9 +474,10 @@ def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
 
     # worked for 23
     #             [mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+10  ,  5.,   3. , 80.,     0.95,   70., 0.6,   80.]
-    param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    p0 =          [thr+15  ,  8.,   5. , 80.,     0.95,   30., 0.5,   80.]
+    param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    
     print(x, y)
     i_to_skip=[8,9]
     x_fit = np.delete(x, i_to_skip)
@@ -539,6 +547,8 @@ def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
  
 '''python3 TurnOn_fitter.py --inFile1 efficiencies_of_Muon_1_2025C_0p6_11_30_LLR_unpacked.root --inFile2 efficiencies_of_2024_unpacked_unpacked.root --inFile3 efficiencies_of_TAUReEmul_v4_reEmulated.root --inFile4 efficiencies_of_Muon_1_2025C_0p6_11_30_LLR_reEmulated.root --inFile5 efficiencies_of_Muon_1_2025C_0p7_17_30_LLR_reEmulated.root --inFile6 efficiencies_of_Muon_1_2025C_0p7_18_27_reEmulated.root --tag Unpacked_2025newLUT_0p7_18_27'''
 
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025B_run391884_2025C_unpacked.root --inFile2 efficiencies_of_2024_unpacked_unpacked.root --inFile3 efficiencies_of_crab_unpacked_2025_eraD_unpacked.root --tag Monitoring_Run3_2025'''
+
 if __name__ == "__main__" :
     parser = OptionParser()
     parser.add_option("--inFile1",     dest="inFile1",                                    default=None)
@@ -561,9 +571,9 @@ if __name__ == "__main__" :
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
     inFile3 = ROOT.TFile(main_folder+options.inFile3)
-    inFile4 = ROOT.TFile(main_folder+options.inFile4)
-    inFile5= ROOT.TFile(main_folder+options.inFile5)
-    inFile6= ROOT.TFile(main_folder+options.inFile6)
+    # inFile4 = ROOT.TFile(main_folder+options.inFile4)
+    # inFile5= ROOT.TFile(main_folder+options.inFile5)
+    # inFile6= ROOT.TFile(main_folder+options.inFile6)
     # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
     # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
    
@@ -575,50 +585,51 @@ if __name__ == "__main__" :
     # label1 = "ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37"
     label1= r"Unpacked 2025 Eras B&C"
     label2= r"Unpacked 2024 Era I"
-    label3= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT with high rates' 
-    label4= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p6 18.5 GeV 60 GeV'
-    label5= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 25 GeV 60 GeV'
-    label6= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 26 GeV 44 GeV'
+    label3= r"Unpacked 2025 Era D"
+    # label3= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT with high rates' 
+    # label4= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p6 18.5 GeV 60 GeV'
+    # label5= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 25 GeV 60 GeV'
+    # label6= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 26 GeV 44 GeV'
     # label4= '2024 Era I ReEmu w/' + "\n" + '2025 conditions' + "\n" + 'and corrected BDT response'
     # label1 = r'Unpacked 2024 EraI'
     # label2 = r'Unpacked 2024 EraI Iso'
     # label3 = r'Re-Emu pedestals + corrections'
     
 
-    thr1 = '32'
-    thr2 = '32'
-    thr3 = '32'
-    thr4 = '32'
-    thr5 = '32'
-    thr6 = '32'
+    thr1 = '25'
+    thr2 = '35'
+    thr3 = '34'
+    # thr4 = '32'
+    # thr5 = '32'
+    # thr6 = '32'
     # thr3 = '34Iso'
 
     thr1_string, iso1_string = thr1[:2], thr1[2:]
     thr2_string, iso2_string = thr2[:2], thr2[2:]
     thr3_string, iso3_string = thr3[:2], thr3[2:]
-    thr4_string, iso4_string = thr4[:2], thr4[2:]
-    thr5_string, iso5_string = thr5[:2], thr5[2:]
-    thr6_string, iso6_string = thr6[:2], thr6[2:]
+    # thr4_string, iso4_string = thr4[:2], thr4[2:]
+    # thr5_string, iso5_string = thr5[:2], thr5[2:]
+    # thr6_string, iso6_string = thr6[:2], thr6[2:]
     # print(thr2_string, iso2_string)
     eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
     eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
-    # eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
     # eff_TGraph4, label4 = read_file(inFile4, iso4_string, thr4_string, label4) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
-    eff_TGraph5, label5 = read_file(inFile5, iso5_string, thr5_string, label5) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
-    eff_TGraph6, label6 = read_file(inFile6, iso6_string, thr6_string, label6) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    # eff_TGraph5, label5 = read_file(inFile5, iso5_string, thr5_string, label5) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    # eff_TGraph6, label6 = read_file(inFile6, iso6_string, thr6_string, label6) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
     
 
     print('------------------------------\n')
     # PLOT TURNONS
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_TurnOn3(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
-    plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 0, ax, options)
-    # plot_TurnOn3(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
+    plot_TurnOn4(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
+    plot_TurnOn4(eff_TGraph2, int(thr2_string), label2, 0, ax, options)
+    plot_TurnOn3(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
     # plot_TurnOn3(eff_TGraph4, int(thr4_string), label4, 3, ax, options)
-    plot_TurnOn3(eff_TGraph5, int(thr5_string), label5, 7, ax, options)
-    plot_TurnOn3(eff_TGraph6, int(thr6_string), label6, 8, ax, options)
+    # plot_TurnOn3(eff_TGraph5, int(thr5_string), label5, 7, ax, options)
+    # plot_TurnOn3(eff_TGraph6, int(thr6_string), label6, 8, ax, options)
 
-    plot_name = 'turnons/Run3_2025/turnons_Run'+options.tag+"_"+thr1_string
+    plot_name = 'turnons/Run3_2025_monitoring/turnons_Run_fixed_rate'+options.tag+"_"+thr1_string
     plot_name += '_iso' if iso2_string else '_no_iso'
     print(plot_name+'.png')
     plt.grid()

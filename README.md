@@ -36,100 +36,28 @@ git cms-checkdeps -A -a
 
 scram b -j 10
 
-git clone -b fix_CMSSW13 git@github.com:mchiusi/TagObjectsOptimization.git
+git clone -b fix_CMSSW13 git@github.com:ramellar/TagObjectsOptimization.git
 ```
 
-## Deriving Calibration and Isolation LUTs using bash script
+## Deriving Calibration using bash script
+To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages. In the last update of these packages, the crab submission performs automatically the merging and the matching so these steps can be skipped now. To derive the calibration LUT we can directly use the script `calibration_optimization.sh` That as inputs the MC RAW and MiniAOD
 
-### Production of the input objects
-To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages. Generally what you need to derive the calibration and isolation LUTs are the following files:
-* `MERGED` file : resulting from the merging of RAW ntuples with `MINIAOD` 
-* `MINIAOD` : offline reconstructed taus
-* `ZeroBias` : RAW ntuples reEmulated using same caloParams of the RAW ntuples. Generally a high pile-up and high rate (110kHz) run is choosen. Do NOT forget to include, in the key points of the scripts, the number of bunches, the good lumisections, and the average instantaneous luminosity (available on [CMSOMS](https://cmsoms.cern.ch/cms/run_3/index)).
-
-### Running the optimisation
-Once you have all the inredients in your folder (for example in `/data_CMS/cms/user/`), simply lauch the following script: 
-```bash
-sh run_optimisation.sh <tag_given_to_merged> <tag_given_to_zerobias> <miniaod_file> <run_number>
-```
-
-An example of command is provided in the bash script itself. The `working_directory` in the bash script has to be configured.
-The script will produce in a few hours the following files:
-* `ROOT` file in you working directory containing all the TurnOns at 14kHz resulting from the gridsearch
-* `txt` file in `CompareGridSearchTrunons/FMs/FMs_2024/` containing each processed TunrOns and the corresponding FigureOfMerit
-* LUTs are stored in `Calibration` and `Isolate` folders
-
-## Computing reponses and efficiencies from Data
-
-### Production of the input objects
-To produce the input objects use the `TagAndProbe` or `TagAndProbeInegrated` packages. Input files:
-* `ROOT` file resulting from the `hadd` of the reEmulated ntuples
-* `MINIAOD` : offline reconstructed taus
-
-### Running the plot productions
-```bash
-sh produce_plots.sh <tag_given_to_data_file> <miniaod_file>
-```
-
-To produce public plots, new python files have been included in `MakePublicTauPlots` folder.
-
-
-## Else, without bash script
-
-### Merging, matching, and compression
-In the 'TagAndProbe' branch the jobs are now sent on crab which directly performs the merging and matching. Hence if this has been used no need to do this step. 
-The starting point will be the matched file so inly the compression needs to be applied
-
-### Calibration LUT derivation
-Enter `Calibrate/RegressionTraining` and run `make clean ; make`.
-
-To do the calibration first create/modify the needed `.config` file inside the `Calibrate/RegressionTraining/run` directory, then just run:
-```bash
-./regression.exe run_<year>/<config>.config
-```
-
-Now that the regression has been trained, adapt to your needs the `makeTH4_LUT.py` file  and run:
-```bash
-python makeTH4_LUT.py
-```
-
-Now that the TH4 LUTs have been created, we can apply the calibration to teh L1 objects. Adapt to your needs `ApplyCalibration.C` and `ApplyCalibrationZeroBias.C`
-```bash
-root -l
-.L ApplyCalibration.C+
-ApplyCalibration() # insert needed arguments
-```
-
-and
-
-```bash
-root -l
-.L ApplyCalibrationZeroBias.C+
-ApplyCalibrationZeroBias() # insert needed arguments
-```
-
-After the TH4 histos LUTs have been created we can make the LUTs that then go online; adapt to your needs the `MakeTauCalibLUT.C` file and run:
-
-```
-bash
-root -l
-.L MakeTauCalibLUT.C+
-MakeTauCalibLUT() # insert needed arguments
-```
-
-### Isolation
+## Deriving Isolation LUTs
 
 In this branch 'NewIsoLutDerivationFramework/' has been added. This allows to obtain Isolation LUTs using new python scripts. These allowed to solve the problems the derivation of isolation LUTs in 2025. This should also de used in the future. Unfortuanetly for the moment no figure of merit has been established, so in order to choose the LUT we have 3 scripts:
 
-- 'Isolation_derivation.py' allows to create the 'LUT.txt' fixing $\epsilon_min$, $E_{min}$ and $E_{max}$ as well as an image that shows the isolation threshold in the iEt vs inTT bins for each ieta bin. 
-- 'Apply_Iso_Rates.py' and 'Efficiency_validation.py' allow to test the LUT that has just been created. The first one gives a quick estimation of the rate that this LUT will give without having to re emulate the raw data and the second one gives an estimation of how the turn on will look like without needing to re emulate data. These can be used to compare the performances of different LUTs produced and once we have one that gives the best efficiency but maitining the rates under control, we can re emulate using that LUT validate our study.
+- `Isolation_derivation.py` allows to create the 'LUT.txt' fixing $\epsilon_min$, $E_{min}$ and $E_{max}$ as well as an image that shows the isolation threshold in the iEt vs inTT bins for each ieta bin. 
+- `Apply_Iso_Rates.py` and `Efficiency_validation.py` allow to test the LUT that has just been created. The first one gives a quick estimation of the rate that this LUT will give without having to re emulate the raw data and the second one gives an estimation of how the turn on will look like without needing to re emulate data. These can be used to compare the performances of different LUTs produced and once we have one that gives the best efficiency but maitining the rates under control, we can re emulate using that LUT validate our study.
 
 However, a figure of merit will hopefully be impelemented soon in order to avoid the by hand grid search
 
 To run this new isolation framework it might be necessary to install an environment, here are the instruction for the installation:
 
-```conda create -n tau_env -c conda-forge python=3.10 root 
+```bash
+conda create -n tau_env -c conda-forge python=3.10 root 
 pip install uproot
 pip install matplotlib
 pip install mplhep
-pip install scipy```
+pip install scipy
+
+```

@@ -11,42 +11,44 @@ set -e
 
 
 # sh produce_plots_unpacked.sh 2025C-Re-emu-newLUT muon01_reEmul_caloparams_2025_v0_2_newIsoLUT.root Zerobias_Run386604.root 386604
+# sh produce_plots_unpacked.sh crab_unpacked_2025_eraD crab_unpacked_2025_eraD.root ZeroBias_2025_eraD_394959.root 394959
 
 
 
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/unpacked_2024/Muon_Run2024I_MINIAOD/'
 # working_dir='/data_CMS/cms/amella/Run3_2024/Run3_2024/'
 # working_dir='/data_CMS/cms/amella/Run3_2025/2024I-data/'
-working_dir='/data_CMS/cms/amella/Run3_2025/unpacked_2025/'
+working_dir='/data_CMS/cms/amella/Run3_2025/'
 pwd=$(pwd)
 
-# Responses
-echo 'Making responses..'
-cd ${pwd}/PlotCalibrationResolution
-root -l -b <<EOF
-.L MakeResolutions_Data_unpacked.C+
-MakeResolutions("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
-.q
-EOF
-
-#TurnOns
-echo 'Making turnOns..'
-cd ${pwd}/PlotTurnOns
-root -l -b <<EOF
-.L MakeEfficiencies_Data_unpacked.C+
-MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
-.q
-EOF
-
-# Rates
-# echo 'Making rates..'
-
-# cd ${pwd}/MakeRates
+# # Responses
+# echo 'Making responses..'
+# cd ${pwd}/PlotCalibrationResolution
 # root -l -b <<EOF
-# .L Rate_ZeroBias_unpacked.C+
-# Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+# .L MakeResolutions_Data_reEMulated.C+
+# MakeResolutions("${working_dir}${2}", -1, "${1}")
 # .q
 # EOF
 
-# echo "Finish -- All good, responses in PlotCalibrationResolution/ROOTs/ROOTs_2025/"
-# echo "TurnOns in PlotTurnOns/ROOTs/ROOTs_2025/"
+# #TurnOns
+# echo 'Making turnOns..'
+# cd ${pwd}/PlotTurnOns
+# root -l -b <<EOF
+# .L MakeEfficiencies_Data_unpacked.C+
+# MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
+# .q
+# EOF
+
+
+# Rates
+echo 'Making rates..'
+
+cd ${pwd}/MakeRates
+root -l -b <<EOF
+.L Rate_ZeroBias_unpacked.C+
+Rate("${working_dir}${3}", "histos_2025/histos_rate_ZeroBias_Run${4}_${1}_unpacked.root", ${4})
+.q
+EOF
+
+echo "Finish -- All good"
+

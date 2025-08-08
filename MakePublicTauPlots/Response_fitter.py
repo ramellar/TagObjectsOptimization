@@ -168,7 +168,8 @@ def compute_resol(inFile, inclusive='pt_resol_fctPt'):
 def plot_pt_scale(inFile, label, color, ax, bin_tree='pt_response_ptInclusive'):
     x_lim = (0.,2.)
     x_label = r'$E_{T}^{\tau, L1}/p_{T}^{\tau, offline}$'
-    # barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
+
+    barrel_label = r'$Barrel\ |\eta^{\tau, offline}|<1.305$'
     endcap_label = r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$'
     # inclusive_label = r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'    
     # inclusive_label = r"Gen Matched MC25W-" +"\n"+ r'$Inclusive\ |\eta^{\tau, offline}|<2.1$'
@@ -182,7 +183,6 @@ def plot_pt_scale(inFile, label, color, ax, bin_tree='pt_response_ptInclusive'):
     ax.errorbar(x_scale_inclusive, y_scale_inclusive, xerr=x_err_scale_inclusive, yerr=y_err_scale_inclusive, 
                 ls='None', label=label, lw=2, marker='s', color=cmap(color))
     
-
 
     ##            [ mean, sigma, alphaL,    nL, alphaR,    nR,  norm]
     p0 =          [   1.,   0.2,     1.,    1.,     1.,    1.,  0.1]
@@ -201,9 +201,11 @@ def plot_pt_scale(inFile, label, color, ax, bin_tree='pt_response_ptInclusive'):
     if bin_tree=='pt_response_ptInclusive':
         pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 30 $ GeV'+ "\n" +r'$Inclusive\ |\eta^{\tau, offline}|<2.1$:', loc='upper right', fontsize=12)
         # pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$' + "\n" + r"Gen Matched MC25W cut on", loc='upper right', fontsize=15)
-    else:
+    elif bin_tree=='pt_barrel_resp_ptInclusive':
         # pt_leg = ax.legend(loc='upper right', fontsize=12)
         # pt_leg = ax.legend(title=r'$Inclusive\ |\eta^{\tau, offline}|<2.1$:', loc='upper right', fontsize=12)
+        pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 30 $ GeV'+ "\n" +r'$Barrel\ |\eta^{\tau, offline}|<1.305$:', loc='upper right', fontsize=15)
+    else:
         pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 30 $ GeV'+ "\n" +r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$:', loc='upper right', fontsize=15)
         # pt_leg = ax.legend(title=r'$p_t^{\tau,offline} > 30 $ GeV'+ "\n" +r'$Barrel\ |\eta^{\tau, offline}|<1.305$:', loc='upper right', fontsize=15)
     # inclusive_leg = ax.legend(title=r'$Inclusive\ |\eta^{\tau, offline}|<2.1$:', loc='upper left', fontsize=15)
@@ -249,10 +251,12 @@ def plot_pt_resolution(inFile, label, color, ax, bin_tree='pt_resol_fctPt', obse
         x_lim = (20.,110.)
         y_lim=(0.0,0.45)
         x_label = r'$p_{T}^{\tau, offline}\ [GeV]$'
-
-        pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
-        # pt_leg = ax.legend(title= r'$Barrel\ |\eta^{\tau, offline}|<1.305$', loc='upper right', fontsize=16)
-        # pt_leg = ax.legend(title= r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
+        if  bin_tree=='pt_resol_fctPt':
+            pt_leg = ax.legend(title= r'$Inclusive\ |\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
+        elif bin_tree=='pt_resol_barrel_fctPt':
+           pt_leg = ax.legend(title= r'$Barrel\ |\eta^{\tau, offline}|<1.305$', loc='upper right', fontsize=16)
+        else:
+          pt_leg = ax.legend(title= r'$Endcaps\ 1.479<|\eta^{\tau, offline}|<2.1$', loc='upper right', fontsize=16)
         pt_leg._legend_box.align = "left"
 
         # leg = plt.legend(title= r'$MiniAOD-MC25W-DY$',loc = 'lower right', fontsize=18)
@@ -333,8 +337,8 @@ def create_and_save_plot(single_bin, label_1, in_file_1, plot_tag,color_1,in_fil
     mean1, variance1=plot_pt_scale(in_file_1, label_1, color_1, ax, single_bin)
     mean2, variance2=plot_pt_scale(in_file_2, label_2, color_2, ax, single_bin)
     mean3, variance3 = plot_pt_scale(in_file_3, label_3, color_3, ax, single_bin)
-    mean4, variance4 = plot_pt_scale(in_file_4, label_4, color_4, ax, single_bin)
-    plot_name = f'responses/Run3_2025/tau_pt_scale_{plot_tag}_{single_bin}'
+    # mean4, variance4 = plot_pt_scale(in_file_4, label_4, color_4, ax, single_bin)
+    plot_name = f'responses/Run3_2025_monitoring/tau_pt_scale_{plot_tag}_{single_bin}'
     print(plot_name+'.png')
     plt.savefig(f'{plot_name}.pdf')
     plt.savefig(f'{plot_name}.png')
@@ -345,7 +349,7 @@ def create_and_save_plot(single_bin, label_1, in_file_1, plot_tag,color_1,in_fil
     # plt.close()
 
     plt.clf()
-    return mean1, variance1, mean2, variance2, mean3, variance3,  mean4, variance4
+    return mean1, variance1, mean2, variance2, mean3, variance3
     # return mean, variance
  
 
@@ -380,6 +384,12 @@ def create_and_save_plot(single_bin, label_1, in_file_1, plot_tag,color_1,in_fil
                                 --inFile4 resolutions_of_Muon_1_2025C_0p7_17_30_LLR_reEmulated_calibrated.root \
                                 --tag Unpacked_2025vs2024vsNewLUTs'''
 ''' python3 Response_fitter.py --inFile1 resolutions_of_Run2025B_run391884_2025C_unpacked.root --inFile2 resolutions_of_Run2024_unpacked_unpacked.root --inFile3 resolutions_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p7_eMin16_eMax31_corrected_resolution_reEmulated_calibrated.root --tag Unpacked_2025vs2024vsRemu '''
+''' python3 Response_fitter.py --inFile1 resolutions_of_RunMuon_1_2025C_0p7_17_30_LLR_unpacked.root \
+                                --inFile2 resolutions_of_Run2024_unpacked_unpacked.root \
+                                --inFile3 resolutions_of_Runcrab_unpacked_2025_eraD_unpacked.root\
+                                --inFile4 resolutions_of_crab_unpacked_2025_eraD_withremufile_reEmulated_calibrated.root \
+                                --tag Monitoring_Run3_2025'''
+''' python3 Response_fitter.py --inFile1 resolutions_of_RunMuon_1_2025C_0p7_17_30_LLR_unpacked.root --inFile2 resolutions_of_Run2024_unpacked_unpacked.root --inFile3 resolutions_of_Runcrab_unpacked_2025_eraD_unpacked.root --tag Monitoring_Run3_2025'''
 
 if __name__ == "__main__" :
     parser = OptionParser()
@@ -401,7 +411,7 @@ if __name__ == "__main__" :
     inFile1 = ROOT.TFile(main_folder+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
     inFile3 = ROOT.TFile(main_folder+options.inFile3)
-    inFile4 = ROOT.TFile(main_folder+options.inFile4)
+    # inFile4 = ROOT.TFile(main_folder+options.inFile4)
 
     # label1 = r'Unpacked 2024 EraH'
     # label2 = r'Re-Emu 2024H w/ 24W opt'
@@ -421,8 +431,10 @@ if __name__ == "__main__" :
     # label1= r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions gt10"
     label1= r"Unpacked 2025 Eras B&C"
     label2= r"Unpacked 2024 Era I"
-    label3= '2024 Era I ReEmu w/' + "\n" + 'Iso LUT 0p7 26 GeV 44 GeV' 
-    label4= '2024 Era I ReEmu w/' + "\n" + 'Iso LUT 0p7 25 GeV 60 GeV'
+    label3= r"Unpacked 2025 Era D"
+    # label4= r"Unpacked 2025 Era D with the other file"
+    # label3= '2024 Era I ReEmu w/' + "\n" + 'Iso LUT 0p7 26 GeV 44 GeV' 
+    # label4= '2024 Era I ReEmu w/' + "\n" + 'Iso LUT 0p7 25 GeV 60 GeV'
     # label3= r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions" + "\n" + "corrected BDT response"
     # label1= r"MC25W w/ BDT calibration"
     # label2= r"MC25W w/ corrected" + "\n" + "BDT calibration"
@@ -430,15 +442,15 @@ if __name__ == "__main__" :
     # PLOT PT SCALE
 
     fig, ax = plt.subplots(figsize=(10,10))
-    plot_pt_scale(inFile1, label1, 1, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
-    plot_pt_scale(inFile2, label2, 0, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
-    plot_pt_scale(inFile3, label3, 8, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
-    plot_pt_scale(inFile4, label4, 7, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile1, label1, 1, ax, 'pt_endcap_resp_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile2, label2, 0, ax, 'pt_endcap_resp_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    plot_pt_scale(inFile3, label3, 2, ax, 'pt_endcap_resp_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
+    # plot_pt_scale(inFile4, label4, 7, ax, 'pt_response_ptInclusive') # , 'pt_barrel_resp_ptInclusive')
     # plot_pt_scale(inFile2, label2, 1, ax, "pt_endcap_resp_ptInclusive") # , 'pt_barrel_resp_ptInclusive')
     # plot_pt_scale(inFile2, label2, 1, ax) # , 'pt_endcap_resp_ptInclusive')
     # plot_pt_scale(inFile3, label3, 2, ax)
 
-    plot_name = 'responses/Run3_2025/tau_pt_scale_'+options.tag
+    plot_name = 'responses/Run3_2025_monitoring/tau_pt_scale_endcap_'+options.tag
     print(plot_name+'.png') 
     if options.inclusive: plot_name = plot_name[:-4] + '_inclusive'
     plt.savefig(plot_name+'.pdf')
@@ -449,14 +461,14 @@ if __name__ == "__main__" :
 
     # First Plot: Plot pt_resolution with 'pt_resol_fctPt'
     fig1, ax1 = plt.subplots(figsize=(10, 10))
-    plot_pt_resolution(inFile1, label1, 1, ax1, "pt_resol_fctPt")
-    plot_pt_resolution(inFile2, label2, 0, ax1, "pt_resol_fctPt")
-    plot_pt_resolution(inFile3, label3, 8, ax1, "pt_resol_fctPt")
-    plot_pt_resolution(inFile4, label4, 7, ax1, "pt_resol_fctPt")
+    plot_pt_resolution(inFile1, label1, 1, ax1, "pt_resol_endcap_fctPt")
+    plot_pt_resolution(inFile2, label2, 0, ax1, "pt_resol_endcap_fctPt")
+    plot_pt_resolution(inFile3, label3, 2, ax1, "pt_resol_endcap_fctPt")
+    # plot_pt_resolution(inFile4, label4, 7, ax1, "pt_resol_fctPt")
     # plot_pt_resolution(inFile1, label2, 1, ax1, "pt_resol_endcap_fctPt")
     # plot_pt_resolution(inFile2, label2, 1, ax1 ,"pt_resol_fctPt") 
     # plot_pt_resolution(inFile3, label3, 2, ax1 ,"pt_resol_fctPt") 
-    plot_name1 = 'responses/Run3_2025/tau_pt_resolution_' + options.tag + '_fctPt'
+    plot_name1 = 'responses/Run3_2025_monitoring/tau_pt_resolution_' + options.tag + '_endcap_fctPt'
     print(f"Saving {plot_name1}.png")
     ax1.grid()
     plt.savefig(plot_name1+'.pdf')
@@ -467,34 +479,34 @@ if __name__ == "__main__" :
     
 
 
-    fig3, ax3 = plt.subplots(figsize=(10, 10))
-    plot_pt_resolution(inFile1, label1, 1, ax3, "pt_scale_fctPt","pt_scale")
-    plot_pt_resolution(inFile2, label2, 0, ax3, "pt_scale_fctPt","pt_scale")
-    plot_pt_resolution(inFile3, label3, 8, ax3, "pt_scale_fctPt","pt_scale")
-    plot_pt_resolution(inFile4, label4, 7, ax3, "pt_scale_fctPt","pt_scale")
-    # plot_pt_resolution(inFile1, label2, 1, ax1, "pt_resol_endcap_fctPt")
-    # plot_pt_resolution(inFile2, label2, 1, ax1 ,"pt_resol_fctPt") 
-    # plot_pt_resolution(inFile3, label3, 2, ax3 ,"pt_resol_fctPt") 
-    plot_name1 = 'responses/Run3_2025/tau_pt_scale_' + options.tag + '_fctPt'
-    print(f"Saving {plot_name1}.png")
-    plt.savefig(plot_name1 + '.pdf')
-    plt.savefig(plot_name1 + '.png')
-    plt.close()
-    # ax3.grid()
+    # fig3, ax3 = plt.subplots(figsize=(10, 10))
+    # plot_pt_resolution(inFile1, label1, 1, ax3, "pt_scale_fctPt","pt_scale")
+    # plot_pt_resolution(inFile2, label2, 0, ax3, "pt_scale_fctPt","pt_scale")
+    # plot_pt_resolution(inFile3, label3, 2, ax3, "pt_scale_fctPt","pt_scale")
+    # # plot_pt_resolution(inFile4, label4, 7, ax3, "pt_scale_fctPt","pt_scale")
+    # # plot_pt_resolution(inFile1, label2, 1, ax1, "pt_resol_endcap_fctPt")
+    # # plot_pt_resolution(inFile2, label2, 1, ax1 ,"pt_resol_fctPt") 
+    # # plot_pt_resolution(inFile3, label3, 2, ax3 ,"pt_resol_fctPt") 
+    # plot_name1 = 'responses/Run3_2025_monitoring/tau_pt_scale_' + options.tag + '_fctPt'
+    # print(f"Saving {plot_name1}.png")
+    # plt.savefig(plot_name1 + '.pdf')
+    # plt.savefig(plot_name1 + '.png')
+    # plt.close()
+    # # ax3.grid()
 
 
     # Second Plot: Plot pt_resolution with 'pt_resol_fctEta'
-    fig2, ax2 = plt.subplots(figsize=(10, 10))
-    plot_pt_resolution(inFile1, label1, 1, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    plot_pt_resolution(inFile2, label2, 0, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    # plot_pt_resolution(inFile2, label2, 1, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    plot_pt_resolution(inFile3, label3, 8, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    plot_pt_resolution(inFile4, label4, 7, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
-    plot_name2 = 'responses/Run3_2025/tau_pt_resolution_' + options.tag + '_fctEta'
-    plt.savefig(plot_name2 + '.pdf')
-    plt.savefig(plot_name2 + '.png')
-    print(f"Saving {plot_name2}.png")
-    ax2.grid()
+    # fig2, ax2 = plt.subplots(figsize=(10, 10))
+    # plot_pt_resolution(inFile1, label1, 1, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    # plot_pt_resolution(inFile2, label2, 0, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    # # plot_pt_resolution(inFile2, label2, 1, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    # plot_pt_resolution(inFile3, label3, 2, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    # # plot_pt_resolution(inFile4, label4, 7, ax2, 'pt_resol_fctEta', "eta")  # Plot for fctEta
+    # plot_name2 = 'responses/Run3_2025_monitoring/tau_pt_resolution_' + options.tag + '_fctEta'
+    # plt.savefig(plot_name2 + '.pdf')
+    # plt.savefig(plot_name2 + '.png')
+    # print(f"Saving {plot_name2}.png")
+    # ax2.grid()
 
     # if options.inclusive:
     #     plot_name2 = plot_name2[:-4] + '_inclusive'
@@ -526,18 +538,19 @@ if __name__ == "__main__" :
                f"{single_bin.split('pt_resp_')[-1]}"
             label_2_bins =  label2 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
             label_3_bins =  label3 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
-            label_4_bins =  label4 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
+            # label_4_bins =  label4 + "\n" + f"{single_bin.split('pt_resp_')[-1]}"
             # label1 = f'Muon Run2024I MINIAOD_{single_bin.split("pt_resp_")[-1]}'
             # create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag)
-            mean_i,variance_i,mean_i2,variance_i2, mean_i3, variance_i3, mean_i4, variance_i4=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 1, inFile2,label_2_bins, 0, inFile3,label_3_bins, 8, inFile4,label_4_bins, 7)
+            # mean_i,variance_i,mean_i2,variance_i2, mean_i3, variance_i3, mean_i4, variance_i4=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 1, inFile2,label_2_bins, 0, inFile3,label_3_bins, 8, inFile4,label_4_bins, 7)
+            mean_i,variance_i,mean_i2,variance_i2, mean_i3, variance_i3=create_and_save_plot(single_bin, label_1_bins, inFile1, options.tag, 1, inFile2,label_2_bins, 0, inFile3,label_3_bins, 8)
             mean_pt.append(mean_i)
             variance_pt.append(variance_i)
             mean_pt_2.append(mean_i2)
             variance_pt_2.append(variance_i2)
             mean_pt_3.append(mean_i3)
             variance_pt_3.append(variance_i3)
-            mean_pt_4.append(mean_i4)
-            variance_pt_4.append(variance_i4)
+            # mean_pt_4.append(mean_i4)
+            # variance_pt_4.append(variance_i4)
 
         # for single_bin in single_eta_bins:
         #     # label_1_bins = "MC25W-MINIAOD\n" + \
@@ -589,10 +602,10 @@ if __name__ == "__main__" :
              ecolor=cmap(1), elinewidth=1.5, capsize=4,label=label1)
         plt.errorbar(pt_bin_centers, mean_pt_2, yerr=variance_pt_2, fmt='o', color=cmap(0), 
              ecolor=cmap(0), elinewidth=1.5, capsize=4, label=label2)
-        plt.errorbar(pt_bin_centers, mean_pt_3, yerr=variance_pt_3, fmt='o', color=cmap(8), 
-             ecolor=cmap(8), elinewidth=1.5, capsize=4, label=label3)
-        plt.errorbar(pt_bin_centers, mean_pt_4, yerr=variance_pt_4, fmt='o', color=cmap(7), 
-             ecolor=cmap(7), elinewidth=1.5, capsize=4, label=label4)
+        plt.errorbar(pt_bin_centers, mean_pt_3, yerr=variance_pt_3, fmt='o', color=cmap(2), 
+             ecolor=cmap(2), elinewidth=1.5, capsize=4, label=label3)
+        # plt.errorbar(pt_bin_centers, mean_pt_4, yerr=variance_pt_4, fmt='o', color=cmap(7), 
+        #      ecolor=cmap(7), elinewidth=1.5, capsize=4, label=label4)
         plt.xlabel(r'$p_t^{offfline}$')
         plt.ylabel(r'$\langle E_{T}^{\tau, L1}/p_{T}^{\tau, offline}\rangle_{fit}$')
         plt.legend(fontsize=10)
@@ -600,7 +613,7 @@ if __name__ == "__main__" :
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
         mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-        plot_name = f'responses/Run3_2025/tau_mean_pt_scale_{options.tag}'
+        plot_name = f'responses/Run3_2025_monitoring/tau_mean_pt_scale_{options.tag}'
         plt.savefig(f'{plot_name}.pdf')
         plt.savefig(f'{plot_name}.png')
         print(f'{plot_name}.png')
@@ -619,14 +632,14 @@ if __name__ == "__main__" :
         # for xtick in ax.xaxis.get_major_ticks():
         #     xtick.set_pad(10)
         # mplhep.cms.label('Preliminary', data=True, rlabel=r'13.6 TeV')
-        # plot_name = f'responses/Run3_2025/tau_mean_eta_scale_{options.tag}'
+        # plot_name = f'responses/Run3_2025_monitoring/tau_mean_eta_scale_{options.tag}'
         # plt.savefig(f'{plot_name}.pdf')
         # plt.savefig(f'{plot_name}.png')
         # plt.close()
 
         # Handle inclusive plot saving
         if options.inclusive:
-            plot_name = f'responses/Run3_2025/tau_pt_scale_{options.tag}_{single_bin}_inclusive'
+            plot_name = f'responses/Run3_2025_monitoring/tau_pt_scale_{options.tag}_{single_bin}_inclusive'
             plt.savefig(f'{plot_name}.pdf')
             plt.savefig(f'{plot_name}.png')
             plt.close()
