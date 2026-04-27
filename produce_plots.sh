@@ -18,8 +18,9 @@ set -e
 # sh produce_plots.sh Muon_1_2025C_0p6_11_30_LLR unpacked_2025_eraB_C.root ZeroBias_2025C_392295_0p6_11_30.root 392295
 # sh produce_plots.sh Muon_1_2025C_0p7_17_30_LLR unpacked_2025_eraB_C.root ZeroBias_2025C_392295_0p7_17_30.root 392295
 # sh produce_plots.sh Muon_1_2025C_0p7_18_27 unpacked_2025_eraB_C.root ZeroBias_2025C_392295_0p7_18_27.root 392295
+# sh produce_plots.sh crab_HCALNZS_C_D_E_G_0 crab_HCALNZS_C_D_E_G_0.root
 
-working_dir='/data_CMS/cms/amella/Run3_2025/'
+working_dir='/data_CMS/cms/amella/Run3_2026/'
 pwd=$(pwd)
 create_file_merge() {
     cat <<EOF >"${1}/MergeTrees/run_2025/${2}/${2}_${3}.config"
@@ -88,16 +89,16 @@ MakeResolutions("${working_dir}${2}", -1, "${1}")
 .q
 EOF
   
-# # TurnOns
-# echo 'Making TurnOns..'
-# cd ${pwd}/PlotTurnOns
-# root -l -b <<EOF
-# .L MakeEfficiencies_Data_reEmulated.C+
-# MakeEfficiencies("${working_dir}${1}.root", -1, "${1}")
-# .L MakeEfficiencies_Data_unpacked.C+
-# MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
-# .q
-# EOF
+# TurnOns
+echo 'Making TurnOns..'
+cd ${pwd}/PlotTurnOns
+root -l -b <<EOF
+.L MakeEfficiencies_Data_reEmulated.C+
+MakeEfficiencies("${working_dir}${1}.root", -1, "${1}")
+.L MakeEfficiencies_Data_unpacked.C+
+MakeEfficiencies("${working_dir}${2}", "Ntuplizer/TagAndProbe", -1, "${1}")
+.q
+EOF
 
 # # Rates
 # echo 'Making rates..'

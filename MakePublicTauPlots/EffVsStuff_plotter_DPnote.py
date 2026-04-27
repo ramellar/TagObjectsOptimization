@@ -19,6 +19,9 @@ plt.style.use(mplhep.style.CMS)
 
 ''' python3 EffVsStuff_plotter_DPnote.py --inFile efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --tag New_2025_LUTfor_data_2024I --thr 33'''
 ''' python3 EffVsStuff_plotter_DPnote.py --inFile1 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_reEmulated.root --inFile2 efficiencies_of_Re-emu-caloParams_2025_conservative_HCALcFeb_v3_iET_effMin0p9_eMin22_eMax37_unpacked.root --tag New_2025_LUTfor_data_2024I --thr 33'''
+''' python3 EffVsStuff_plotter_DPnote.py --inFile1 efficiencies_of_2025_all_eras_unpacked.root --tag 2025_data --thr 30'''
+''' python3 EffVsStuff_plotter_DPnote.py --inFile1 efficiencies_of_2025_pre_correction_unpacked.root --tag Pre-correction-2025_data --thr 30'''
+''' python3 EffVsStuff_plotter_DPnote.py --inFile1 efficiencies_of_2025_post_correction_unpacked.root --tag Post-correction-2025_data --thr 30'''
 
 if __name__ == "__main__" :
     parser = OptionParser()
@@ -29,9 +32,10 @@ if __name__ == "__main__" :
     (options, args) = parser.parse_args()
     print(options)
 
-    inFile1 = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'+options.inFile1)
-    inFile2 = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'+options.inFile2)
-    
+    # inFile1 = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'+options.inFile1)
+    # inFile2 = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'+options.inFile2)
+    inFile1 = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_DPNOTE_Run3_2025/'+options.inFile1)
+
     thr_str = options.thr
     thr = int(thr_str)
 
@@ -39,10 +43,10 @@ if __name__ == "__main__" :
     cmap = matplotlib.cm.get_cmap('Set1')
 
     ## VERSUS NUMBER OF VERTICES
-    eff_noIso_TGraph_1 = inFile1.Get('divide_nvtxProgressionAt'+thr_str+'_noIso_by_nvtx')
-    eff_noIso_TGraph_2 = inFile2.Get('divide_nvtxProgressionAt'+thr_str+'_noIso_by_nvtx')
-    eff_Iso_TGraph_1 = inFile1.Get('divide_nvtxProgressionAt'+thr_str+'_Iso_by_nvtx')
-    eff_Iso_TGraph_2 = inFile2.Get('divide_nvtxProgressionAt'+thr_str+'_Iso_by_nvtx')
+    eff_noIso_TGraph = inFile1.Get('divide_nvtxProgressionAt'+thr_str+'_noIso_by_nvtx')
+    # eff_noIso_TGraph_2 = inFile2.Get('divide_nvtxProgressionAt'+thr_str+'_noIso_by_nvtx')
+    eff_Iso_TGraph = inFile1.Get('divide_nvtxProgressionAt'+thr_str+'_Iso_by_nvtx')
+    # eff_Iso_TGraph_2 = inFile2.Get('divide_nvtxProgressionAt'+thr_str+'_Iso_by_nvtx')
 
     # CONVERT TO LISTS FOR PYPLOT
   
@@ -83,8 +87,8 @@ if __name__ == "__main__" :
         
         if iso=="iso":
             fig, ax = plt.subplots(figsize=(10,10))
-            ax.errorbar(x, y, xerr=x_err, yerr=[y_errD, y_errU], ls='None', label=r'$E_{T}^{\tau, L1} > %i$ GeV& Isolation'% (thr) + "\n" + r"2024 Era I ReEmu"+ "\n" + "w/ 2025 conditions", lw=2, marker='o', color=cmap(0))
-            ax.errorbar(x2, y2, xerr=x_err2, yerr=[y_errD2, y_errU2], ls='None', label=r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation'% (thr) + "\n" + r"Unpacked 2024 Era I", lw=2, marker='s', color=cmap(1))
+            ax.errorbar(x, y, xerr=x_err, yerr=[y_errD, y_errU], ls='None', label=r'$E_{T}^{\tau, L1} > %i$ GeV '% (thr) , lw=2, marker='o', color=cmap(0))
+            ax.errorbar(x2, y2, xerr=x_err2, yerr=[y_errD2, y_errU2], ls='None', label=r'$E_{T}^{\tau, L1} > %i$ GeV & Isolation'% (thr) , lw=2, marker='s', color=cmap(1))
             leg = plt.legend(loc = 'lower left', fontsize=20, title=r'$p_{T}^{\tau, offline}>40\ GeV$ & $|\eta^{\tau, offline}|<2.1$')
             leg._legend_box.align = "left"
             plt.ylim(0,1.05)
@@ -95,7 +99,7 @@ if __name__ == "__main__" :
             plt.grid()
             for xtick in ax.xaxis.get_major_ticks():
                 xtick.set_pad(10)
-            mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+            mplhep.cms.label('Preliminary', data=True, rlabel=r'110.73 fb$^{-1}$ (13.6 TeV)')
             plt.savefig('various/tau_eff_vs_nvtx_'+options.tag+'_Iso.pdf')
             plt.savefig('various/tau_eff_vs_nvtx_'+options.tag+'_Iso.png')
             print('various/tau_eff_vs_nvtx_'+options.tag+'_Iso.png')
@@ -122,8 +126,8 @@ if __name__ == "__main__" :
 
 
 
-    plot_eff_vs_ntvx(eff_noIso_TGraph_1,eff_noIso_TGraph_2)
-    plot_eff_vs_ntvx(eff_Iso_TGraph_1,eff_Iso_TGraph_2,"iso")
+    plot_eff_vs_ntvx(eff_noIso_TGraph,eff_Iso_TGraph, "iso")
+    # plot_eff_vs_ntvx(eff_Iso_TGraph_1,eff_Iso_TGraph_2,"iso")
 
 
     ## VERSUS ETA
@@ -176,7 +180,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'110.73 fb$^{-1}$ (13.6 TeV)')
     plt.savefig('various/tau_eff_vs_eta_'+options.tag+'.pdf')
     plt.savefig('various/tau_eff_vs_eta_'+options.tag+'.png')
     plt.close()

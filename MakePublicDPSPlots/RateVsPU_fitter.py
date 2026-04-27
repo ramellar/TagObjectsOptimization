@@ -30,7 +30,7 @@ if __name__ == "__main__" :
     print(options)
 
     ## CAREFUL WITH THIS AND WITH THE PLOTTING RANGE SPECIFIED BELOW!!! THE PLOTTING RANGE AVOIDS PERFECT ZEROS!!!
-    minPU = 46
+    minPU = 42
     maxPU = 62+1
 
     inFile = ROOT.TFile(options.file)
@@ -142,7 +142,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'319 pb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'894 pb$^{-1}$ (13.6 TeV)')
     plt.savefig('various/tau_rate_vs_PU.pdf')
     plt.savefig('various/tau_rate_vs_PU.png')
     plt.close()

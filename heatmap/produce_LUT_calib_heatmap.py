@@ -8,7 +8,7 @@ conversion = {0: 0.0, 1: 15.0, 2: 18.0, 3: 21.0, 4: 23.0, 5: 25.0, 6: 27.0, 7: 2
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Your script description here.")
     parser.add_argument("--data_file", type=str, help="Path to the data file",
-                        default='../Calibrate/LUTs_2024/LUTcalibration_2023Summer_caloParams_2023_v0_4.txt')
+                        default='')
     args = parser.parse_args()
 
     eta_values = []
@@ -51,11 +51,47 @@ if __name__ == "__main__":
                 heat_map_calibration_eta[eta_bin][energy_bin] = calibration_factor
     
         energy_labels = [int(conversion[energy_bin]) for energy_bin in range(num_energy_bins)]
-        plt.imshow(heat_map_calibration_eta, cmap="viridis", origin="lower", aspect="auto", vmin=min(calibration_factors), vmax=max(calibration_factors))
-        plt.xlabel("Et [GeV]")
-        plt.ylabel("ieta")
-        plt.title(f"Heat Map of ieta vs. iEt (ihasEM={ihasEM_val}, iisMerged={iisMerged_val})")
-        plt.xticks(range(num_energy_bins), energy_labels, rotation=45, fontsize=8)
-        plt.colorbar(label="Calibration Factor")
-        plt.savefig(f"plots/2024_LUT_calib_heatmap_iEt_vs_iEta_ihasEM{ihasEM_val}_iisMerged{iisMerged_val}.pdf", format="pdf")
+
+        fig, ax = plt.subplots(figsize=(12, 5), dpi=300)
+
+        im = ax.imshow(
+            heat_map_calibration_eta,
+            cmap="PuRd",
+            origin="lower",
+            aspect="auto",
+            vmin=min(calibration_factors),
+            vmax=max(calibration_factors)
+        )
+
+        energy_labels = [int(conversion[energy_bin]) for energy_bin in range(num_energy_bins)]
+        ax.set_xlabel("Et [GeV]")
+        ax.set_ylabel("ieta")
+        ax.set_title(f"Heat Map of ieta vs. iEt (ihasEM={ihasEM_val}, iisMerged={iisMerged_val})")
+        ax.set_xticks(range(num_energy_bins))
+        ax.set_xticklabels(energy_labels, rotation=45, fontsize=8)
+
+        fig.colorbar(im, ax=ax, label="Calibration Factor")
+
+        for i in range(num_eta_bins):
+            for j in range(num_energy_bins):
+                val = heat_map_calibration_eta[i, j]
+                if val != 0:  # only annotate non-empty bins
+                    ax.text(
+                        j, i, f"{val:.2f}",  # format with 2 decimals
+                        ha="center", va="center",
+                        rotation=90,
+                        color="white" if val > 1.50 else "black",
+                        fontsize=6
+                    )
+
+        # plt.imshow(heat_map_calibration_eta, cmap="viridis", origin="lower", aspect="auto", vmin=min(calibration_factors), vmax=max(calibration_factors))
+        # plt.xlabel("Et [GeV]")
+        # plt.ylabel("ieta")
+        # plt.title(f"Heat Map of ieta vs. iEt (ihasEM={ihasEM_val}, iisMerged={iisMerged_val})")
+        # plt.xticks(range(num_energy_bins), energy_labels, rotation=45, fontsize=8)
+        # plt.colorbar(label="Calibration Factor")
+
+        plt.savefig(f"plots/2025_LUT_corrected_calib_heatmap_iEt_vs_iEta_ihasEM{ihasEM_val}_iisMerged{iisMerged_val}.pdf", format="pdf", bbox_inches="tight")
+        plt.savefig(f"plots/2025_LUT_corrected_calib_heatmap_iEt_vs_iEta_ihasEM{ihasEM_val}_iisMerged{iisMerged_val}.png", format="png")
+        print(f"plots/2025_LUT_corrected_calib_heatmap_iEt_vs_iEta_ihasEM{ihasEM_val}_iisMerged{iisMerged_val}.png")
         plt.clf()  # Clear the plot for the next iteration

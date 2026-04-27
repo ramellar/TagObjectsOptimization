@@ -73,8 +73,8 @@ if __name__ == "__main__" :
     print(options)
 
     if options.obj == "tau":
-        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/PlotCalibrationResolution/ROOTs/resolutions_of_Run'+options.tag+'.root')
-    
+        inFile = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotCalibrationResolution/ROOTs/ROOTs_DPNOTE_Run3_2025/resolutions_of_'+options.tag+'_unpacked.root')
+
         scale_barrel      = inFile.Get('pt_barrel_resp_ptInclusive')
         scale_endcap      = inFile.Get('pt_endcap_resp_ptInclusive')
         scale_inclusive   = inFile.Get('pt_response_ptInclusive')
@@ -112,7 +112,7 @@ if __name__ == "__main__" :
         phiResp_endcap    = inFile.Get('PhiResponse_OffEt'+cut+'_EndCap')
         phiResp_inclusive = inFile.Get('PhiResponse_OffEt'+cut+'_Barrel')
 
-    # CONVERT TO LISTS FOR PYPLOT
+    # CONVERT TO LISTS FOR PYPLOT - PT RESPONSE
     x_scale_barrel = []
     y_scale_barrel = []
     x_err_scale_barrel = []
@@ -141,7 +141,7 @@ if __name__ == "__main__" :
         x_err_scale_inclusive.append(scale_inclusive.GetBinWidth(ibin+1)/2.)
         y_err_scale_inclusive.append(scale_inclusive.GetBinError(ibin+1))
 
-    # CONVERT TO LISTS FOR PYPLOT
+    # CONVERT TO LISTS FOR PYPLOT - PT RESOLUTION
     x_ptResol_barrel = []
     y_ptResol_barrel = []
     x_err_ptResol_barrel = []
@@ -170,7 +170,7 @@ if __name__ == "__main__" :
         x_err_ptResol_inclusive.append(ptResol_inclusive.GetBinWidth(ibin+1)/2.)
         y_err_ptResol_inclusive.append(ptResol_inclusive.GetBinError(ibin+1))
 
-    # CONVERT TO LISTS FOR PYPLOT
+    # CONVERT TO LISTS FOR PYPLOT - ETA RESPONSE
     x_etaResp_barrel = []
     y_etaResp_barrel = []
     x_err_etaResp_barrel = []
@@ -199,7 +199,7 @@ if __name__ == "__main__" :
         x_err_etaResp_inclusive.append(etaResp_inclusive.GetBinWidth(ibin+1)/2.)
         y_err_etaResp_inclusive.append(etaResp_inclusive.GetBinError(ibin+1))
 
-    # CONVERT TO LISTS FOR PYPLOT
+    # CONVERT TO LISTS FOR PYPLOT - PHI RESPONSE
     x_phiResp_barrel = []
     y_phiResp_barrel = []
     x_err_phiResp_barrel = []
@@ -291,7 +291,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'110.73 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
@@ -333,7 +333,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'110.73 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
@@ -396,7 +396,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'110.73 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()
@@ -461,7 +461,7 @@ if __name__ == "__main__" :
     plt.grid()
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'18 fb$^{-1}$ (13.6 TeV)')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'110.73 fb$^{-1}$ (13.6 TeV)')
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')
     plt.close()

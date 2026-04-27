@@ -73,10 +73,11 @@ void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = ""
   Double_t binningEta[29] = {-2.100, -1.950, -1.800, -1.650, -1.479, -1.305, -1.200, -1.050, -0.9000, -0.7500, -0.6000, -0.4500, -0.3000, -0.1500, 0., 0.1500, 0.3000, 0.4500, 0.6000, 0.7500, 0.9000, 1.050, 1.200,  1.305, 1.479, 1.650, 1.800, 1.950, 2.100};
   TH1F* eta  = new TH1F("eta" ,"eta" ,28, binningEta);
 
-  Double_t binningNvtx[11] = {0., 10., 15., 20., 25., 30., 35., 40., 45., 50., 60.};
-  TH1F* nvtx  = new TH1F("nvtx" ,"nvtx" ,10, binningNvtx);
-  TH1F* barrel_nvtx  = new TH1F("barrel_nvtx" ,"barrel_nvtx" ,10, binningNvtx);
-  TH1F* endcap_nvtx  = new TH1F("endcap_nvtx" ,"endcap_nvtx" ,10, binningNvtx);
+  // Double_t binningNvtx[11] = {0., 10., 15., 20., 25., 30., 35., 40., 45., 50., 60.};
+  Double_t binningNvtx[3] = {0., 5., 11.};
+  TH1F* nvtx  = new TH1F("nvtx" ,"nvtx" ,2, binningNvtx);
+  TH1F* barrel_nvtx  = new TH1F("barrel_nvtx" ,"barrel_nvtx" ,2, binningNvtx);
+  TH1F* endcap_nvtx  = new TH1F("endcap_nvtx" ,"endcap_nvtx" ,2, binningNvtx);
 
   std::vector<int> thrs = {20,21,22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 120};
   std::vector<TH1F*> ptProgressionFixedThr_noIso = {};
@@ -132,6 +133,7 @@ void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = ""
   for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
   {
     inTree->GetEntry(i);
+    // if (Nvtx >10) { continue; }
 
     // either process the full dataset or just the events with a specific run number
     if (run_nmbr != -1) { if (run_nmbr != in_RunNumber) { continue; } }
@@ -227,7 +229,7 @@ void MakeEfficiencies(TString file, TString tree, int run_nmbr, TString era = ""
 
   // ----------------------------------------------------------------------------    
   // save in root file for future necessity
-  TFile* fileout = new TFile("ROOTs/ROOTs_Run3_2025/efficiencies_of_"+run_nmbr_str+"_unpacked.root","RECREATE");
+  TFile* fileout = new TFile("ROOTs/ROOTs_2026/efficiencies_of_"+run_nmbr_str+"_unpacked.root","RECREATE");
   
   pt->Write();
   barrel_pt->Write();

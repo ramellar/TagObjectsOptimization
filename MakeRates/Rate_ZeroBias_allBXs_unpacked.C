@@ -24,7 +24,7 @@ using namespace std;
 void Rate(TString era, bool ephemeral, bool doScaleToLumi=false)
 {
   // TString FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755_allBXbits__RAW/EphemeralZeroBias_2018D_Run323755_allBXbits__RAW.root";
-  TString FileName_in = "/data_CMS/cms/motta/Run3preparation/ZeroBias__Run2022"+era+"__RAW/ZeroBias__Run2022"+era+"__RAW.root";
+  TString FileName_in = "/data_CMS/cms/amella/Run3_2025/DPNote_samples/ZeroBias_2025E_396102.root";
   if (ephemeral) { FileName_in = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias0__Run2022"+era+"__RAW/EphemeralZeroBias0__Run2022"+era+"__RAW.root"; }
   TFile f_in(FileName_in.Data(),"READ");
   TTree* inTree = (TTree*)f_in.Get("ZeroBias/ZeroBias");
@@ -150,6 +150,12 @@ void Rate(TString era, bool ephemeral, bool doScaleToLumi=false)
           if(in_lumi<44 || in_lumi>544) continue;
           nb = 2554;
           thisLumiRun = 1.6225E34;
+        }
+      if (in_RunNumber == 396102)
+        {
+          if(in_lumi<250 || in_lumi>700) continue;
+          nb = 25244854;
+          thisLumiRun = 2.10E34;
         }
       /*if (in_RunNumber == 357438)
         { 
@@ -611,7 +617,7 @@ void Rate(TString era, bool ephemeral, bool doScaleToLumi=false)
   TString scaledToLumi = "";
   if (doScaleToLumi) { scaledToLumi = "_scaledTo2e34Lumi"; }
   // TFile f("histos/histos_rate_EphemeralZeroBias_2018D_Run323755_allBXbits_unpacked"+scaledToLumi+".root","RECREATE");
-  TString FileName_out = "histos/histos_rate_ZeroBias_Run2022"+era+"_unpacked"+scaledToLumi+".root";
+  TString FileName_out = "histos_2025/histos_rate_ZeroBias_Run2025"+era+"_unpacked"+scaledToLumi+".root";
   if (ephemeral) { FileName_out = "histos/histos_rate_EphemeralZeroBias0_Run2022"+era+"_unpacked"+scaledToLumi+".root"; }
   TFile f(FileName_out, "RECREATE");
 

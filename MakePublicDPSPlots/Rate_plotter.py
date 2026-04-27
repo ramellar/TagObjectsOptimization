@@ -26,7 +26,7 @@ if __name__ == "__main__" :
     print(options)
 
     if options.obj == "tau":
-        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/MakeRates/histos_2022/histos_rate_EphemeralZeroBias0_'+options.tag+'_unpacked.root')
+        inFile = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/MakeRates/histos_2025/histos_rate_ZeroBias_Run396102_2025_all_eras_unpacked.root')
     elif options.obj == "eg":
         inFile = ROOT.TFile('/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/atjaiswa/DPS_Jul2023/Hist_Rate_EphemeralZB_2023C_368822.root')
     else:
@@ -39,10 +39,10 @@ if __name__ == "__main__" :
     markers = ['o', 's', '^', 'D']
 
     if options.obj == "tau":
-        DoubleTau = inFile.Get('rate_DiTau')
-        DoubleTau_Iso = inFile.Get('rate_Iso_DiTau')
+        DoubleTau = inFile.Get('DiTauRate_noIso')
+        DoubleTau_Iso = inFile.Get('DiTauRate_Iso')
 
-        legend_title=r'Inst. Lumi = $2.05\times10^{18}\ cm^{-2}s^{-1}$'
+        legend_title=r'Inst. Lumi = $2.20\times10^{34}\ cm^{-2}s^{-1}$'
         label_DoubleIso = r'Double-$\tau$'
         label_DoubleIso_Iso = r'Double-$\tau$ & Isolation'
 
@@ -75,7 +75,7 @@ if __name__ == "__main__" :
         plt.grid()
         for xtick in ax.xaxis.get_major_ticks():
             xtick.set_pad(10)
-        mplhep.cms.label('Preliminary', data=True, rlabel=r'7 pb$^{-1}$ (13.6 TeV)')
+        mplhep.cms.label('Preliminary', data=True, rlabel=r'340 pb$^{-1}$ (13.6 TeV)')
         plt.savefig('various/tau_rate_'+options.tag+'.pdf')
         plt.savefig('various/tau_rate_'+options.tag+'.png')
         plt.close()

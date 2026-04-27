@@ -283,12 +283,114 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
     # pt_leg._legend_box.align = "right"
     ##vectCBconvATAN unpacked 2025 d 24
-    p0 =          [thr+25  ,  9.,   6. , 180.,     0.94,   30., 0.7,   80.]
-    param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
-    print(x[:-2], y[:-2])
-    popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
-    print(popt)
+    # p0 =          [thr+10  ,  6.,   8. , 180.,     0.92,   70., 0.3,   100.]
+    # param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # p0 =          [thr+10  , 3.,   7. , 80.,     0.95,   70., 0.5,   100.]
+    # param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    # popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
+    # p0 =          [thr+10  ,  1.,   5. , 80.,     0.95,   70., 0.,   80.]
+    # param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.,   10.],
+    #               [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    # p0 =          [thr+20  ,  2.,   2. , 80.,     1.,   110., 0.4,   80.]
+    # param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+
+    # p0 =           [thr+10 , 2., 5. , 100., 1., 110., 0.5, 80.]
+    # param_bounds=( [thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #                [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+    # p0 = [thr+10 , 2., 2. , 80., 0.95, 30., 0.4, 80.]
+
+    # param_bounds=([thr-15., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #               [thr+15., 10., 10. ,180., 1. , 110., 1. , 100.])
+    # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # # print(x[:-2], y[:-2])
+    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
+
+        #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
+    p0 =          [thr+15  ,  7.,   3. , 80.,     0.95,   3., 0.8,   80.]
+    param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+                  [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+
+    p0 = [thr+10, 5., 2.0, 10., 0.95, 5., 0.8, 40.]
+
+    param_bounds = (
+        [thr-20., 0.5, 0.05, 1.,   0.9, 0., 0.0, 5.],
+        [thr+20., 15., 25.,  50., 1.0, 40., 1.0, 200.]
+    )
+    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+
+    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
+        
+    if options.logx:
+        plt.xlim(10., 500.)
+        plt.xscale('log')
+        ax.xaxis.set_major_locator(FixedLocator([10, 100, 500]))
+        ax.xaxis.set_major_formatter(FixedFormatter(['10',r'$100$', r'$500$']))
+    else:
+        plt.xlim(15., 150.)
+    # leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$'+"\n"+r'2024 Era I ReEmu w/ 2025 conditions')
+    leg = plt.legend(loc = 'lower right', fontsize=16, title=r'$|\eta^{\tau, offline}|<2.1$')
+    leg._legend_box.align = "left"
+    plt.xlabel(r'$p_{T}^{\tau, offline}\ [GeV]$')
+    plt.ylabel(r'Efficiency')
+    for xtick in ax.xaxis.get_major_ticks():
+        xtick.set_pad(10)
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'(13.6 TeV)')
+
+def plot_TurnOn5(eff_TGraph, thr, label, color, ax, options):
+    plt.ylim(0.000, 1.05)
+    plt.rcParams['legend.title_fontsize'] = 'small'
+    cmap = matplotlib.cm.get_cmap('Set1')
+    plot_x = np.linspace(0,1000,2000)
+    markers = ['o', 's', '^', 'D', 'v', '*', 'p', 'X', 'h']
+    marker=markers[color]
+    plt.rcParams['legend.title_fontsize'] = 'xx-small'
+    # pt_leg = ax.legend(title=r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37', loc='lower right', fontsize=15)
+    x, y, x_err, y_err = compute_TurnOn(eff_TGraph)
+    ax.errorbar(x, y, xerr=x_err,yerr=y_err, ls='None', label=label, lw=2, marker=marker, color=cmap(color), zorder=color+1)
+    # pt_leg._legend_box.align = "right"
+    ##vectCBconvATAN unpacked 2025 d 24
+    # p0 =          [thr+10  ,  6.,   8. , 180.,     0.92,   70., 0.3,   100.]
+    # param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    # popt, pcov = curve_fit(vectCBconvATAN, x, y, p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
+    # p0 =          [thr+20  ,  1.,   5. , 80.,     0.95,   70., 0.,   80.]
+    # param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.,   10.],
+    #               [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    # p0 =          [thr+20  ,  2.,   2. , 80.,     1.,   110., 0.4,   80.]
+    # param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+
+    # p0 =           [thr+10 , 2., 5. , 100., 1., 110., 0.5, 80.]
+    # param_bounds=( [thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #                [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+    p0 = [thr+10 , 2., 2. , 80., 0.95, 70., 0.4, 80.]
+
+    param_bounds=([thr-15., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+                  [thr+15., 10., 10. ,180., 1. , 110., 1. , 100.])
+    # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
 
         #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
     # p0 =          [thr+15  ,  1.,   3. , 80.,     0.95,   3., 0.8,   80.]
@@ -311,7 +413,7 @@ def plot_TurnOn(eff_TGraph, thr, label, color, ax, options):
     plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'2025 - 13.6 TeV')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'$ (13.6 TeV)')
 
 def plot_TurnOn3(eff_TGraph, thr, label, color, ax, options):
     plt.ylim(0.000, 1.05)
@@ -328,15 +430,22 @@ def plot_TurnOn3(eff_TGraph, thr, label, color, ax, options):
     # pt_leg._legend_box.align = "right"
      #vectCBconvATAN for unpacked 2025 26
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+10  ,  2.,   2. , 80.,     0.95,   30., 0.4,   80.]
-    param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
-    # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
-    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # p0 =          [thr+10  ,  2.,   2. , 80.,     0.95,   30., 0.4,   80.]
+    # param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # # p0 =          [thr+10  ,  2.,   0.3 , 90.,     0.97,   80., 0.3,   70.]
+    # # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    # #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # # print(x[:-2], y[:-2])
+    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
+
+    # p0 = [thr+25 , 9., 6. , 80., 0.94, 30., 0.7, 80.]
+    # param_bounds=([thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #               [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+
     # print(x[:-2], y[:-2])
-    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
-    print(popt)
+    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
 
     #  ##vectCBconvATAN for unpacked 2025 32
     # #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
@@ -344,8 +453,14 @@ def plot_TurnOn3(eff_TGraph, thr, label, color, ax, options):
     # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
     #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
     # print(x[:-2], y[:-2])
-    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
     # print(popt)
+    # param_bounds=([thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #               [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+    # p0 = [thr+20 , 2., 2. , 80., 1., 110., 0.4, 80.]
+    p0 = [thr+10 , 2., 5. , 100., 1., 110., 0.5, 80.]
+    param_bounds=( [thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+                  [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+    popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
     #  ##vectCBconvATAN for 
     # #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
     # p0 =          [thr+10  ,  1.,   3. , 80.,     0.95,   80., 0.9,   80.]
@@ -370,7 +485,7 @@ def plot_TurnOn3(eff_TGraph, thr, label, color, ax, options):
     plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'2025 - 13.6 TeV')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'$ (13.6 TeV)')
 
 def plot_TurnOn4(eff_TGraph, thr, label, color, ax, options):
     plt.ylim(0.000, 1.05)
@@ -387,11 +502,57 @@ def plot_TurnOn4(eff_TGraph, thr, label, color, ax, options):
     # pt_leg._legend_box.align = "right"
     #vectCBconvATAN for unpacked 2025 26
     #             [   mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+25  ,  9.,   6. , 80.,     0.94,   30., 0.7,   80.]
-    param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
-    print(x[:-2], y[:-2])
+    # p0 =          [thr+25  ,  9.,   6. , 80.,     0.94,   30., 0.7,   80.]
+    # param_bounds=([thr-25.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+25.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # p0 = [thr+20 , 2., 2. , 80., 1., 110., 0.4, 80.]
+    # param_bounds=([thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #                 [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+    # print(x[:-2], y[:-2])
+    # popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+    # print(popt)
+
+    # p0 = [thr+25 , 8., 6. , 70., 0.94, 30., 0.7, 80.]
+
+    # param_bounds=([thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+
+    # [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+
+    # print(x[:-2], y[:-2])
+
+    # p0 =          [thr+15  ,  3.,   5. , 80.,     0.95,   70., 0.8,   80.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # print(x[:-2], y[:-2])
+
+    # p0 =          [thr+15  ,  1.,   2. , 80.,     0.95,   100., 0.8,   80.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+
+
+    # p0 = [thr+25 , 9., 6. , 80., 0.94, 30., 0.7, 80.]
+
+  
+
+    param_bounds=([thr-15., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+                  [thr+15., 10., 10. ,180., 1. , 110., 1. , 100.])
+    p0 =         [thr+10 , 5., 2. , 80., 0.95, 10., 0.4, 80.]
+
+    p0 = [thr+10, 5., 2.0, 10., 0.95, 5., 0.8, 40.]
+
+    param_bounds = (
+        [thr-15., 0.5, 0.05, 1.,   0.9, 0., 0.0, 5.],
+        [thr+15., 15., 25.,  50., 1.0, 40., 1.0, 200.]
+    )
+
+    p0 = [thr+15 , 9., 6. , 80., 0.94, 30., 0.7, 80.]
+    param_bounds=([thr-25., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+                  [thr+25., 10., 10. ,180., 1. , 110., 1. , 100.])
+
+    # param_bounds=([thr-15., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+    #               [thr+15., 10., 10. ,180., 1. , 110., 1. , 100.])
     popt, pcov = curve_fit(vectCBconvATAN, x[:-2], y[:-2], p0, maxfev=5000, bounds=param_bounds)
+
     print(popt)
 
     #  ##vectCBconvATAN for unpacked 2025 32
@@ -437,7 +598,7 @@ def plot_TurnOn4(eff_TGraph, thr, label, color, ax, options):
     plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'2025 - 13.6 TeV')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'$ (13.6 TeV)')
 
 def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
     plt.ylim(0.000, 1.05)
@@ -456,6 +617,11 @@ def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
     # p0 =          [thr+15  ,  1.,   2. , 80.,     0.95,   10., 0.8,   80.]
     # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
     #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+   
+    p0 = [thr+10 , 2., 2. , 80., 0.95, 10., 0.4, 80.]
+  
+    param_bounds=([thr-15., 1., 0.1, 70., 0.9 , 0., 0.2, 10.],
+                  [thr+15., 10., 10. ,180., 1. , 110., 1. , 100.])
     # print(x[:-2], y[:-2])
     # i_to_skip=[8,9]
     # x_fit = np.delete(x, i_to_skip)
@@ -474,9 +640,13 @@ def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
 
     # worked for 23
     #             [mean, sigma, alpha,    n,     norm, xturn,   p, width]
-    p0 =          [thr+15  ,  8.,   5. , 80.,     0.95,   30., 0.5,   80.]
-    param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
-                  [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    # p0 =          [thr+15  ,  5.,   7. , 80.,     0.95,   30., 0.5,   80.]
+    # param_bounds=([thr-20.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+20.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
+    
+    # p0 =          [thr+10  ,  2.,   2. , 80.,     0.95,   30., 0.4,   80.]
+    # param_bounds=([thr-15.,    1.,   0.1,  70.,     0.9 ,    0., 0.2,   10.],
+    #               [thr+15.,    10.,  10. ,180.,     1.  ,  110., 1. ,   100.])
     
     print(x, y)
     i_to_skip=[8,9]
@@ -494,7 +664,7 @@ def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
     # print(popt)
     # ax.plot(plot_x, vectApproxATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
 
-    ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
+    # ax.plot(plot_x, vectCBconvATAN(plot_x, *popt), '-', label='_', lw=2, color=cmap(color), zorder=color+1)
         
     if options.logx:
         plt.xlim(10., 500.)
@@ -510,7 +680,7 @@ def plot_TurnOn2(eff_TGraph, thr, label, color, ax, options):
     plt.ylabel(r'Efficiency')
     for xtick in ax.xaxis.get_major_ticks():
         xtick.set_pad(10)
-    mplhep.cms.label('Preliminary', data=True, rlabel=r'2025 - 13.6 TeV')
+    mplhep.cms.label('Preliminary', data=True, rlabel=r'$ (13.6 TeV)')
 
  
 def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
@@ -547,7 +717,15 @@ def read_file(inFile, iso, thr, label, opt=False, tunrOn=''):
  
 '''python3 TurnOn_fitter.py --inFile1 efficiencies_of_Muon_1_2025C_0p6_11_30_LLR_unpacked.root --inFile2 efficiencies_of_2024_unpacked_unpacked.root --inFile3 efficiencies_of_TAUReEmul_v4_reEmulated.root --inFile4 efficiencies_of_Muon_1_2025C_0p6_11_30_LLR_reEmulated.root --inFile5 efficiencies_of_Muon_1_2025C_0p7_17_30_LLR_reEmulated.root --inFile6 efficiencies_of_Muon_1_2025C_0p7_18_27_reEmulated.root --tag Unpacked_2025newLUT_0p7_18_27'''
 
-''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025B_run391884_2025C_unpacked.root --inFile2 efficiencies_of_2024_unpacked_unpacked.root --inFile3 efficiencies_of_crab_unpacked_2025_eraD_unpacked.root --tag Monitoring_Run3_2025'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025B_run391884_2025C_unpacked.root --inFile2 efficiencies_of_2024_unpacked_unpacked.root --inFile3 efficiencies_of_crab_unpacked_2025_eraD_unpacked.root --inFile4 efficiencies_of_unpacked_2025_eraE_unpacked.root --inFile5 efficiencies_of_crab_unpacked_2025_eraF_unpacked.root --inFile6 efficiencies_of_crab_unpacked_2025_eraG_unpacked.root --tag Monitoring_Run3_2025_eraGFEDCB'''
+
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025_all_eras_unpacked.root --tag Full_run2025'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025_all_eras_unpacked.root --inFile2 efficiencies_of_2025_all_eras_PU_cut_unpacked.root --tag Full_run2025_PU_10'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2025_pre_correction_unpacked.root --tag Pre-correction_run2025'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_2026_HcalNZS_0_unpacked.root --inFile2 efficiencies_of_2026_HcalNZS_3_unpacked.root --tag HCALNZS_2026'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_crab_HCALNZS_C_D_E_G_0_reEmulated.root --inFile2 efficiencies_of_crab_HCALNZS_C_D_E_G_3_reEmulated.root --tag HCALNZS_2026'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Run2026_eraB_miniAOD_unpacked.root --inFile2 efficiencies_of_crab_unpacked_2025_eraG_unpacked.root --tag EraB2026'''
+''' python3 TurnOn_fitter.py --inFile1 efficiencies_of_Run2026_eraC_miniAOD_unpacked.root --inFile2 efficiencies_of_crab_unpacked_2025_eraG_unpacked.root --tag EraC2026'''
 
 if __name__ == "__main__" :
     parser = OptionParser()
@@ -568,11 +746,12 @@ if __name__ == "__main__" :
     # main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2025/'
     main_folder2 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2024/'
     main_folder = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_Run3_2025/'
-    inFile1 = ROOT.TFile(main_folder+options.inFile1)
+    main_folder3 = '/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_2026/'
+    inFile1 = ROOT.TFile(main_folder3+options.inFile1)
     inFile2 = ROOT.TFile(main_folder+options.inFile2)
-    inFile3 = ROOT.TFile(main_folder+options.inFile3)
+    # inFile3 = ROOT.TFile(main_folder3+options.inFile3)
     # inFile4 = ROOT.TFile(main_folder+options.inFile4)
-    # inFile5= ROOT.TFile(main_folder+options.inFile5)
+    # inFile5 = ROOT.TFile(main_folder+options.inFile5)
     # inFile6= ROOT.TFile(main_folder+options.inFile6)
     # inFile2 = ROOT.TFile(opt_folder + 'MC22_Summer_optimization_june' + options.inFile2)
     # inFile3 = ROOT.TFile(opt_folder + 'MC24_Winter_optimization_june' + options.inFile3)
@@ -583,25 +762,36 @@ if __name__ == "__main__" :
     # label2 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax3'
     # label3 = r'ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax3'
     # label1 = "ReEmu-2024I-HCALcFeb-ZS2025-effMin0p9_eMin22_eMax37"
-    label1= r"Unpacked 2025 Eras B&C"
-    label2= r"Unpacked 2024 Era I"
-    label3= r"Unpacked 2025 Era D"
+    # label1= r"Unpacked 2025"
+    # label2= r"Unpacked 2024"
+    # label3= r"Unpacked 2025"
+    # label4= r"Unpacked 2025"
+    # label1=r"Re-emu 2025 HcalNZS (C,D,E,G)" +"\n"+  " - parameter 0"
+    # label2=r"Re-emu 2025 HcalNZS (C,D,E,G)" +"\n"+  " - parameter 3"
+    # label5= r"Unpacked 2025 Era F"
+    # label6= r"Unpacked 2025 Era G"
     # label3= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT with high rates' 
     # label4= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p6 18.5 GeV 60 GeV'
-    # label5= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 25 GeV 60 GeV'
-    # label6= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 26 GeV 44 GeV'
+        # label5= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 25 GeV 60 GeV'
+        # label6= 'ReEmu 2025 Era C w/' + "\n" + 'Iso LUT 0p7 26 GeV 44 GeV'
     # label4= '2024 Era I ReEmu w/' + "\n" + '2025 conditions' + "\n" + 'and corrected BDT response'
     # label1 = r'Unpacked 2024 EraI'
     # label2 = r'Unpacked 2024 EraI Iso'
     # label3 = r'Re-Emu pedestals + corrections'
+    label1 = "2026 EraB"
+    label2 = r"2025 EraG"
+    label3 = "2026 EraB New"
     
 
-    thr1 = '25'
-    thr2 = '35'
-    thr3 = '34'
-    # thr4 = '32'
-    # thr5 = '32'
-    # thr6 = '32'
+    thr2 = '38'
+    thr1 = '38'
+    thr3 = '38' 
+
+    # thr1 = '34'
+    # thr2 = '38'
+    # thr3 = '40'
+    # thr5 = '24'
+    # thr6 = '24'
     # thr3 = '34Iso'
 
     thr1_string, iso1_string = thr1[:2], thr1[2:]
@@ -613,28 +803,69 @@ if __name__ == "__main__" :
     # print(thr2_string, iso2_string)
     eff_TGraph1, label1 = read_file(inFile1, iso1_string, thr1_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
     eff_TGraph2, label2 = read_file(inFile2, iso2_string, thr2_string, label2) #, True, 'TurnOn_noIso') # progression_effMin0p0_eMin10_eMax25')
-    eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
-    # eff_TGraph4, label4 = read_file(inFile4, iso4_string, thr4_string, label4) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    # eff_TGraph3, label3 = read_file(inFile3, iso3_string, thr3_string, label3) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
+    # eff_TGraph4, label4 = read_file(inFile1, iso4_string, thr4_string, label4) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
     # eff_TGraph5, label5 = read_file(inFile5, iso5_string, thr5_string, label5) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
     # eff_TGraph6, label6 = read_file(inFile6, iso6_string, thr6_string, label6) #, True, 'TurnOn_noIso') # progression_effMin0p9_eMin10_eMax25')
     
 
     print('------------------------------\n')
     # PLOT TURNONS
-    fig, ax = plt.subplots(figsize=(10,10))
-    plot_TurnOn4(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
-    plot_TurnOn4(eff_TGraph2, int(thr2_string), label2, 0, ax, options)
-    plot_TurnOn3(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
-    # plot_TurnOn3(eff_TGraph4, int(thr4_string), label4, 3, ax, options)
-    # plot_TurnOn3(eff_TGraph5, int(thr5_string), label5, 7, ax, options)
-    # plot_TurnOn3(eff_TGraph6, int(thr6_string), label6, 8, ax, options)
+    # fig, ax = plt.subplots(figsize=(10,10))
+    # plot_TurnOn(eff_TGraph1, int(thr1_string), label1, 1, ax, options)
+    # plot_TurnOn(eff_TGraph2, int(thr2_string), label2, 0, ax, options)
+    # # plot_TurnOn(eff_TGraph3, int(thr3_string), label3, 2, ax, options)
+    # # plot_TurnOn2(eff_TGraph4, int(thr4_string), label4, 2, ax, options)
+    # # plot_TurnOn2(eff_TGraph5, int(thr5_string), label5, 4, ax, options)
+    # # plot_TurnOn2(eff_TGraph6, int(thr6_string), label6, 6, ax, options)
 
-    plot_name = 'turnons/Run3_2025_monitoring/turnons_Run_fixed_rate'+options.tag+"_"+thr1_string
-    plot_name += '_iso' if iso2_string else '_no_iso'
-    print(plot_name+'.png')
-    plt.grid()
-    if options.logx: plot_name += 'log_'
-    plt.savefig(plot_name+'.pdf')
-    plt.savefig(plot_name+'.png')
-    plt.close()
+    # plot_name = 'turnons/Run3_2025_DPNote/turnons_Run_fixed_rate'+options.tag+"_"+thr1_string
+    # plot_name += '_iso' if iso2_string else '_no_iso'
+    # print(plot_name+'.png')
+    # plt.grid()
+    # if options.logx: plot_name += 'log_'
+    # plt.savefig(plot_name+'.pdf')
+    # plt.savefig(plot_name+'.png')
+    # plt.close()
 
+    ## For multiple thresholds 
+
+    thr_low = ['23', '23Iso', '24', '24Iso', '26', '26Iso']
+    # thr_low = ['23','24Iso']
+    thr_high = ['34', '34Iso', '36', '36Iso','38', '38Iso','40', '40Iso']
+
+    for thr in thr_low:
+        label1 = "2026 Era B"
+        label2 = r"2025 Era G"
+        thr_string, iso_string = thr[:2], thr[2:]
+        eff_TGraph1, label1 = read_file(inFile1, iso_string, thr_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
+        eff_TGraph2, label2 = read_file(inFile2, iso_string, thr_string, label2)
+        fig, ax = plt.subplots(figsize=(10,10))
+        plot_TurnOn(eff_TGraph1, int(thr_string), label1, 1, ax, options)
+        plot_TurnOn(eff_TGraph2, int(thr_string), label2, 0, ax, options)
+        plot_name = 'turnons/Run3_2026/turnon_Run_fixed_rate'+options.tag+"_"+thr_string
+        plot_name += '_iso' if iso_string else '_no_iso'
+        print(plot_name+'.png')
+        plt.grid()
+        if options.logx: plot_name += 'log_'
+        plt.savefig(plot_name+'.pdf')
+        plt.savefig(plot_name+'.png')
+        plt.close()
+
+    for thr in thr_high:
+        label1 = "2026 Era B"
+        label2 = r"2025 Era G"
+        thr_string, iso_string = thr[:2], thr[2:]
+        eff_TGraph1, label1 = read_file(inFile1, iso_string, thr_string, label1) #, True, 'TurnOn_progression_effMin0p1_eMin25_eMax43')
+        eff_TGraph2, label2 = read_file(inFile2, iso_string, thr_string, label2)
+        fig, ax = plt.subplots(figsize=(10,10))
+        plot_TurnOn(eff_TGraph1, int(thr_string), label1, 1, ax, options)
+        plot_TurnOn(eff_TGraph2, int(thr_string), label2, 0, ax, options)
+        plot_name = 'turnons/Run3_2026/turnon_Run_fixed_rate'+options.tag+"_"+thr_string
+        plot_name += '_iso' if iso_string else '_no_iso'
+        print(plot_name+'.png')
+        plt.grid()
+        if options.logx: plot_name += 'log_'
+        plt.savefig(plot_name+'.pdf')
+        plt.savefig(plot_name+'.png')
+        plt.close()

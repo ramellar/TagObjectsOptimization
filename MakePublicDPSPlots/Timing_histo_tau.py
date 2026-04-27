@@ -29,7 +29,7 @@ if __name__ == "__main__" :
     (options, args)  = parser.parse_args()
     print(options)
 
-    inFile = ROOT.TFile('/eos/user/z/zpainesi/forL1DPS2023July/Timing_Taus_2023_wholeStat.root')
+    inFile = ROOT.TFile('/data_CMS/cms/amella/Run3_2025/DPNote_samples/ZeroBias_2025E_396102.root')
     
     plt.rcParams['legend.title_fontsize'] = 'small'
     cmap = matplotlib.cm.get_cmap('Set1'); imap=0
@@ -71,7 +71,7 @@ if __name__ == "__main__" :
 
     plt.yscale('log')
     plt.grid()
-    plot_name = 'various/Timing_taus_2023_' 
+    plot_name = 'various/Timing_taus_2025_' 
     plot_name = plot_name[:-1]
     plt.savefig(plot_name+'.pdf')
     plt.savefig(plot_name+'.png')

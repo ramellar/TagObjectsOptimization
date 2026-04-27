@@ -74,6 +74,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
       if (run == 386604) { if(in_lumi<114 || in_lumi>1685) continue; }
       if (run == 392295) { if(in_lumi>525) continue; }
       if (run == 394959) { if(in_lumi<645 || in_lumi>1416) continue; }
+      if (run == 396102) { if(in_lumi<250 || in_lumi>700) continue; }
       Float_t weight = 1.;
 
       ++Denominator;
@@ -138,6 +139,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
   if (run == 386604) { nb = 2340; } // colliding bunches
   if (run == 392295) { nb = 1154; } // colliding bunches
   if (run == 394959) { nb = 2448; } // colliding bunches
+  if (run == 396102) { nb = 2448; } // colliding bunches
   if (nb == 0.)
   {
     std::cout << "ERROR: something went wrong with the run selection and the nb initialization" << std::endl;
@@ -147,6 +149,7 @@ void Rate(TString FileName_in, TString FileName_out, int run, bool doScaleToLumi
   if (run == 386604) thisLumiRun = 2.10E34;
   if (run == 392295) thisLumiRun = 1.10E34;
   if (run == 394959) thisLumiRun = 2.10E34;
+  if (run == 396102) thisLumiRun = 2.10E34;
   if (thisLumiRun == 0. and doScaleToLumi)
   {
     std::cout << "ERROR: something went wrong with the run selection and the lumi initialization" << std::endl;

@@ -26,7 +26,7 @@ if __name__ == "__main__" :
     print(options)
 
     if options.obj == "tau":
-        inFile = ROOT.TFile('/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauObjectsOptimization/PlotTurnOns/ROOTs/efficiencies_of_Run'+options.tag+'.root')
+        inFile = ROOT.TFile('/home/llr/cms/amella/Plotting_efficiency/CMSSW_13_2_0_pre3/src/HiggsAnalysis/TagObjectsOptimization/PlotTurnOns/ROOTs/ROOTs_DPNOTE_Run3_2025/efficiencies_of_'+options.tag+'_unpacked.root')
     elif options.obj == "eg":
         print('qua')
         inFile = ROOT.TFile('/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/atjaiswa/DPS_Jul2023/Hist_2023Run3_EraBC_EGamma_UnpackedPerformance.root')

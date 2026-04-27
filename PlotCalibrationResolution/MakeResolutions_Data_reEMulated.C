@@ -204,11 +204,14 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", bool doReEmul
     TH1F* phi_resp_inclusive = new TH1F("phi_resp_inclusive","phi_resp_inclusive",200,-1,1);
 
     // ADDITIONAL USEFULL PLOTS
-    TH1F* Nvtx = new TH1F("Nvtx","Nvtx",70,0,70);
+    TH1F* Nvtx = new TH1F("Nvtx","Nvtx",4,0,11);
 
     for(UInt_t i = 0 ; i < inTree->GetEntries() ; ++i)
     {
         inTree->GetEntry(i);
+        
+        // Low PU tudy
+        // if (nvtx>10) { continue; }
 
         // either process the full dataset or just the events with a specific run number
         if (run_nmbr != -1) { if (run_nmbr != in_RunNumber)  { continue; } }
@@ -450,7 +453,11 @@ void MakeResolutions(TString file, int run_nmbr, TString era = "", bool doReEmul
 
     // ----------------------------------------------------------------------------    
     // save in root file for future necessity
-    TFile* fileout = new TFile("ROOTs/ROOTs_Run3_2025/resolutions_of_"+run_nmbr_str+"_reEmulated_calibrated.root","RECREATE");
+
+    TFile* fileout;
+
+    if(doReEmul){fileout = new TFile("ROOTs/ROOTs_2026/resolutions_of_"+run_nmbr_str+"_reEmulated_calibrated.root","RECREATE");}
+    else{fileout = new TFile("ROOTs/ROOTs_2026/resolutions_of_"+run_nmbr_str+"_unpacked.root","RECREATE");}
     pt_scale_fctPt->Write();
     pt_scale_fctEta->Write();
     pt_resol_fctPt->Write();
